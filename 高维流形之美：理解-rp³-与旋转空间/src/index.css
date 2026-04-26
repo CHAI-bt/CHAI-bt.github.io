@@ -1,0 +1,79 @@
+@import "tailwindcss";
+@import "katex/dist/katex.min.css";
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Playfair+Display:ital,wght@0,700;1,700&display=swap');
+
+@theme {
+  --font-serif: "Playfair Display", serif;
+  --font-mono: "JetBrains Mono", monospace;
+}
+
+:root {
+  --font-serif: 'Playfair Display', serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  
+  /* Day Mode (Light) */
+  --bg-color: #fdfdfd;
+  --text-main: #1a1a1a;
+  --text-muted: #666666;
+  --border-color: rgba(0, 0, 0, 0.1);
+  --card-bg: rgba(255, 255, 255, 0.8);
+  --accent-color: #4f46e5;
+  --grid-color: rgba(0, 0, 0, 0.05);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Night Mode (Dark) */
+    --bg-color: #050505;
+    --text-main: #e4e3e0;
+    --text-muted: #888888;
+    --border-color: rgba(255, 255, 255, 0.1);
+    --card-bg: rgba(255, 255, 255, 0.03);
+    --accent-color: #818cf8;
+    --grid-color: rgba(255, 255, 255, 0.05);
+  }
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-main);
+  transition: background-color 0.3s ease, color 0.3s ease;
+  selection-background-color: rgba(79, 70, 229, 0.2);
+}
+
+.geometric-grid {
+  background-image: radial-gradient(var(--grid-color) 1px, transparent 0);
+  background-size: 40px 40px;
+}
+
+.glass-card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  backdrop-filter: blur(12px);
+}
+
+.technical-label {
+  @apply font-mono text-[10px] uppercase tracking-[0.4em] font-bold;
+  color: var(--accent-color);
+}
+
+.accent-glow {
+  box-shadow: 0 0 30px rgba(79, 70, 229, 0.2);
+}
+
+.section-line {
+  height: 1px;
+  background-color: var(--border-color);
+  margin: 3rem 0;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-white/10 rounded-full hover:bg-white/20 transition-colors;
+}
