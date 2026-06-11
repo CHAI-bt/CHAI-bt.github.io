@@ -192,6 +192,9 @@ body { display: flex !important; flex-direction: row !important; max-width: none
 .nav-section-header { display: flex; align-items: center; gap: 8px; padding: 10px 20px; font-size: 0.85rem; font-weight: 600; color: #1a1d23; text-decoration: none; transition: 0.2s; cursor: pointer; }
 .nav-section-header:hover { background: #f1f3f6; }
 .nav-section-header .icon { width: 20px; text-align: center; flex-shrink: 0; }
+.nav-subitems { display: block; padding: 2px 0 8px 36px; }
+.nav-subitem { display: block; padding: 4px 10px; color: #5a5f6b; font-size: 0.76rem; text-decoration: none; border-radius: 8px; transition: 0.2s; }
+.nav-subitem:hover { color: #dc2626; background: #fef2f2; }
 .main-content { margin-left: var(--sidebar-width); flex: 1; min-height: 100vh; background: #fdf6e3; }
 #exampass-header { position: sticky; top: 0; z-index: 5; background: #fdf6e3; }
 @media print { .sidebar { display: none !important; } .main-content { margin-left: 0 !important; } }
@@ -217,6 +220,12 @@ body { display: flex !important; flex-direction: row !important; max-width: none
             <a class="nav-section-header" href="../index.html">
                 <span class="icon">📚</span>
                 <span style="flex:1;">返回总首页</span>
+            </a>
+        </div>
+        <div class="nav-section">
+            <a class="nav-section-header" href="ch5-knowledge.html">
+                <span class="icon">📝</span>
+                <span style="flex:1;">知识清单</span>
             </a>
         </div>
         <div class="nav-section">
