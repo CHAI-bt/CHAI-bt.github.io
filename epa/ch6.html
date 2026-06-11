@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>物理学习导航 · 北京大学</title>
+    <title>第六章：运动带电粒子的辐射 · 经典电动力学</title>
     <script>
         MathJax = {
             tex: {
@@ -23,24 +23,19 @@
             --border: #e2e5ea;
             --text: #1a1d23;
             --text-secondary: #5a5f6b;
-            --primary: #2563eb;
-            --primary-light: #eef3ff;
-            --accent: #7c3aed;
-            --accent-light: #f5f0ff;
+            --primary: #dc2626;
+            --primary-light: #fef2f2;
+            --accent: #2563eb;
+            --accent-light: #eef3ff;
             --warn: #d97706;
             --warn-light: #fffbeb;
-            --success: #059669;
-            --success-light: #ecfdf5;
-            --danger: #dc2626;
-            --danger-light: #fef2f2;
             --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
             --shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-            --shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.08);
             --radius: 12px;
             --radius-sm: 8px;
             --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             --sidebar-width: 280px;
-            --header-height: 60px;
+            --header-height: 56px;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -69,7 +64,7 @@
             overflow-y: auto;
         }
         .sidebar-header {
-            padding: 20px 22px 16px;
+            padding: 18px 20px 14px;
             border-bottom: 1px solid var(--border);
             position: sticky;
             top: 0;
@@ -77,15 +72,15 @@
             z-index: 2;
         }
         .sidebar-header h2 {
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             font-weight: 700;
             color: var(--text);
             letter-spacing: -0.01em;
         }
         .sidebar-header .subtitle {
-            font-size: 0.78rem;
+            font-size: 0.76rem;
             color: var(--text-secondary);
-            margin-top: 4px;
+            margin-top: 2px;
         }
         .sidebar-nav { flex: 1; padding: 8px 0; }
         .nav-section { border-bottom: 1px solid var(--border); }
@@ -95,7 +90,7 @@
             justify-content: space-between;
             padding: 10px 20px;
             cursor: pointer;
-            font-size: 0.86rem;
+            font-size: 0.85rem;
             font-weight: 600;
             color: var(--text);
             transition: var(--transition);
@@ -105,21 +100,21 @@
         }
         .nav-section-header:hover { background: var(--surface-hover); }
         .nav-section-header .icon {
-            width: 22px;
-            height: 22px;
+            width: 20px;
+            height: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
         }
         .nav-section-header .arrow {
-            width: 18px;
-            height: 18px;
+            width: 16px;
+            height: 16px;
             transition: transform 0.25s ease;
             flex-shrink: 0;
             opacity: 0.5;
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -131,17 +126,17 @@
         .nav-subitems {
             display: none;
             padding: 2px 0 8px 36px;
-            font-size: 0.8rem;
+            font-size: 0.78rem;
         }
         .nav-section.open .nav-subitems { display: block; }
         .nav-subitem {
-            padding: 5px 10px;
+            padding: 4px 10px;
             cursor: pointer;
             color: var(--text-secondary);
             border-radius: var(--radius-sm);
             transition: var(--transition);
             margin: 1px 0;
-            font-size: 0.78rem;
+            font-size: 0.76rem;
             display: block;
             text-decoration: none;
         }
@@ -172,23 +167,32 @@
             flex-shrink: 0;
         }
         .main-header h1 {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: 700;
             letter-spacing: -0.01em;
         }
         .main-header .badge {
-            font-size: 0.72rem;
-            padding: 3px 12px;
+            font-size: 0.7rem;
+            padding: 3px 10px;
             border-radius: 20px;
             font-weight: 500;
             background: var(--primary-light);
             color: var(--primary);
         }
+        .breadcrumb {
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+        }
+        .breadcrumb a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+        .breadcrumb a:hover { text-decoration: underline; }
         .content-area {
             flex: 1;
-            padding: 24px 28px;
+            padding: 20px 28px;
             overflow-y: auto;
-            max-width: 1000px;
+            max-width: 960px;
         }
 
         /* Cards */
@@ -203,7 +207,7 @@
         }
         .card:hover { box-shadow: var(--shadow); }
         .card h3 {
-            font-size: 0.98rem;
+            font-size: 0.95rem;
             font-weight: 700;
             margin-bottom: 8px;
             display: flex;
@@ -211,7 +215,7 @@
             gap: 8px;
         }
         .card p, .card li {
-            font-size: 0.84rem;
+            font-size: 0.82rem;
             color: var(--text-secondary);
             line-height: 1.7;
         }
@@ -220,59 +224,50 @@
         /* Module navigation grid */
         .module-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 16px;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
             margin: 10px 0;
         }
         .module-card {
             background: var(--surface);
             border: 1px solid var(--border);
             border-radius: var(--radius);
-            padding: 20px;
+            padding: 18px 16px;
             text-decoration: none;
             color: var(--text);
             transition: var(--transition);
             box-shadow: var(--shadow-sm);
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 6px;
         }
         .module-card:hover {
             box-shadow: var(--shadow);
             border-color: var(--primary);
-            transform: translateY(-2px);
+            transform: translateY(-1px);
         }
-        .module-card .module-icon { font-size: 2rem; }
+        .module-card .module-icon { font-size: 1.6rem; }
         .module-card .module-title {
             font-weight: 700;
-            font-size: 1rem;
-            margin-bottom: 4px;
+            font-size: 0.9rem;
         }
         .module-card .module-desc {
-            font-size: 0.82rem;
+            font-size: 0.76rem;
             color: var(--text-secondary);
-        }
-        .module-card .module-meta {
-            font-size: 0.72rem;
-            color: var(--text-secondary);
-            opacity: 0.7;
-            margin-top: 4px;
         }
 
         /* Tags */
         .tag {
             display: inline-block;
-            font-size: 0.7rem;
-            padding: 2px 10px;
-            border-radius: 14px;
+            font-size: 0.66rem;
+            padding: 2px 8px;
+            border-radius: 12px;
             font-weight: 500;
-            margin-right: 6px;
+            margin-right: 4px;
             margin-bottom: 4px;
         }
         .tag-primary { background: var(--primary-light); color: var(--primary); }
         .tag-accent { background: var(--accent-light); color: var(--accent); }
-        .tag-warn { background: var(--warn-light); color: var(--warn); }
-        .tag-success { background: var(--success-light); color: var(--success); }
 
         /* Highlight box */
         .highlight-box {
@@ -280,8 +275,8 @@
             border: 1px solid #c7d6f7;
             border-radius: var(--radius-sm);
             padding: 12px 16px;
-            margin: 12px 0;
-            font-size: 0.84rem;
+            margin: 10px 0;
+            font-size: 0.82rem;
         }
 
         /* Scrollbar */
@@ -300,35 +295,40 @@
     <!-- Sidebar -->
     <aside class="sidebar">
         <div class="sidebar-header">
-            <h2>📚 物理学习导航</h2>
-            <div class="subtitle">北京大学 · 赵鹏巍</div>
+            <h2>📡 第六章：运动电荷辐射</h2>
+            <div class="subtitle">经典电动力学 · 刘川</div>
         </div>
         <nav class="sidebar-nav">
+            <div class="nav-section">
+                <a class="nav-section-header" href="index.html">
+                    <span class="icon">🏠</span>
+                    <span style="flex:1;">返回电动力学首页</span>
+                </a>
+            </div>
+            <div class="nav-section">
+                <a class="nav-section-header" href="ch4.html">
+                    <span class="icon">📡</span>
+                    <span style="flex:1;">第四章：电磁波的传播</span>
+                    <span style="font-size:0.65rem;opacity:0.5;">←</span>
+                </a>
+            </div>
+            <div class="nav-section">
+                <a class="nav-section-header" href="ch5.html">
+                    <span class="icon">📡</span>
+                    <span style="flex:1;">第五章：辐射和散射</span>
+                    <span style="font-size:0.65rem;opacity:0.5;">←</span>
+                </a>
+            </div>
             <div class="nav-section open">
                 <div class="nav-section-header" onclick="toggleSection(this)">
-                    <span class="icon">🏠</span>
-                    <span style="flex:1;">首页</span>
+                    <span class="icon">📖</span>
+                    <span style="flex:1;">本章内容</span>
                     <span class="arrow">▶</span>
                 </div>
                 <div class="nav-subitems">
-                    <span class="nav-subitem active" onclick="scrollToSection('overview')">概览</span>
-                    <span class="nav-subitem" onclick="scrollToSection('theory')">理论力学</span>
-                    <span class="nav-subitem" onclick="scrollToSection('electrodynamics')">经典电动力学</span>
+                    <span class="nav-subitem active" onclick="scrollToSection('knowledge')">知识清单</span>
+                    <span class="nav-subitem" onclick="scrollToSection('test')">章节测试</span>
                 </div>
-            </div>
-            <div class="nav-section">
-                <a class="nav-section-header" href="mechanics/index.html">
-                    <span class="icon">📐</span>
-                    <span style="flex:1;">理论力学</span>
-                    <span style="font-size:0.7rem;opacity:0.6;">→</span>
-                </a>
-            </div>
-            <div class="nav-section">
-                <a class="nav-section-header" href="epa/index.html">
-                    <span class="icon">⚡</span>
-                    <span style="flex:1;">经典电动力学</span>
-                    <span style="font-size:0.7rem;opacity:0.6;">→</span>
-                </a>
             </div>
         </nav>
     </aside>
@@ -336,84 +336,36 @@
     <!-- Main Content -->
     <div class="main">
         <div class="main-header">
-            <h1>物理学习导航</h1>
-            <span class="badge">2026春</span>
+            <span class="breadcrumb"><a href="index.html">电动力学首页</a> › 第六章</span>
+            <span class="badge">核心章节</span>
         </div>
         <div class="content-area">
 
-            <!-- 概览 -->
-            <div class="card" id="overview">
-                <h3>👋 欢迎</h3>
-                <p>本课程网站包含<strong>理论力学</strong>和<strong>经典电动力学</strong>两门基础物理课程的学习资料，包括知识清单、章节测试和闪卡复习等功能。</p>
-                <p style="margin-top:8px;">请使用左侧导航栏或下方卡片进入各课程模块。</p>
+            <div class="card">
+                <h3>📡 第六章：运动带电粒子的辐射</h3>
+                <p>本章涵盖李纳-维谢尔势、拉摩公式、相对论性加速电荷的辐射、同步辐射、切伦可夫辐射、辐射阻尼等内容。</p>
             </div>
 
-            <!-- 理论力学 -->
-            <div class="card" id="theory">
-                <h3>📐 理论力学</h3>
-                <p style="margin-bottom:12px;">从牛顿力学出发，建立拉格朗日力学和哈密顿力学体系，为量子力学等现代物理奠定基础。</p>
-                <div class="module-grid">
-                    <a href="mechanics/index.html" class="module-card">
-                        <div class="module-icon">📐</div>
-                        <div class="module-title">理论力学首页</div>
-                        <div class="module-desc">课程信息、教材参考书、学习模块导航</div>
-                        <div class="module-meta">赵鹏巍 · 2026春</div>
-                    </a>
-                    <a href="mechanics/lagrange.html" class="module-card">
-                        <div class="module-icon">🔵</div>
-                        <div class="module-title">拉格朗日力学</div>
-                        <div class="module-desc">约束与广义坐标、达朗伯原理、哈密顿原理、诺特定理、有心力问题</div>
-                        <div class="module-meta">核心专题</div>
-                    </a>
-                    <a href="mechanics/hamilton.html" class="module-card">
-                        <div class="module-icon">🟣</div>
-                        <div class="module-title">哈密顿力学</div>
-                        <div class="module-desc">勒让德变换、相空间、正则方程、潘宁阱、3D转动、重陀螺</div>
-                        <div class="module-meta">核心专题</div>
-                    </a>
-                    <a href="mechanics/compare.html" class="module-card">
-                        <div class="module-icon">⚖️</div>
-                        <div class="module-title">力学体系对比</div>
-                        <div class="module-desc">牛顿·拉格朗日·哈密顿三大框架对比</div>
-                        <div class="module-meta">框架总览</div>
-                    </a>
-                    <a href="mechanics/flashcards.html" class="module-card">
-                        <div class="module-icon">🃏</div>
-                        <div class="module-title">闪卡复习</div>
-                        <div class="module-desc">翻转卡片、核心概念自测</div>
-                        <div class="module-meta">约86张卡片</div>
+            <div class="card" id="knowledge">
+                <h3>📝 知识清单</h3>
+                <p>点击下方按钮查看本章完整知识清单：</p>
+                <div class="module-grid" style="margin-top:12px;">
+                    <a href="第六章 运动带电粒子的辐射-知识清单.html" class="module-card">
+                        <div class="module-icon">📝</div>
+                        <div class="module-title">知识清单</div>
+                        <div class="module-desc">核心知识点梳理</div>
                     </a>
                 </div>
             </div>
 
-            <!-- 经典电动力学 -->
-            <div class="card" id="electrodynamics">
-                <h3>⚡ 经典电动力学</h3>
-                <p style="margin-bottom:12px;">经典电动力学（刘川）课程资料，包含知识清单和章节测试。</p>
-                <div class="module-grid">
-                    <a href="epa/index.html" class="module-card">
-                        <div class="module-icon">⚡</div>
-                        <div class="module-title">电动力学首页</div>
-                        <div class="module-desc">各章节导航入口</div>
-                        <div class="module-meta">刘川 · 经典电动力学</div>
-                    </a>
-                    <a href="epa/ch4.html" class="module-card">
-                        <div class="module-icon">📡</div>
-                        <div class="module-title">第四章：电磁波的传播</div>
-                        <div class="module-desc">均匀平面波、折射反射、色散、波导</div>
-                        <div class="module-meta">知识清单 + 章节测试</div>
-                    </a>
-                    <a href="epa/ch5.html" class="module-card">
-                        <div class="module-icon">📡</div>
-                        <div class="module-title">第五章：电磁波的辐射和散射</div>
-                        <div class="module-desc">辐射场、散射截面、多极辐射</div>
-                        <div class="module-meta">知识清单 + 章节测试</div>
-                    </a>
-                    <a href="epa/ch6.html" class="module-card">
-                        <div class="module-icon">📡</div>
-                        <div class="module-title">第六章：运动带电粒子的辐射</div>
-                        <div class="module-desc">李纳-维谢尔势、拉摩公式、同步辐射、切伦可夫辐射</div>
-                        <div class="module-meta">知识清单 + 章节测试</div>
+            <div class="card" id="test">
+                <h3>✏️ 章节测试</h3>
+                <p>点击下方按钮进入本章交互式测试：</p>
+                <div class="module-grid" style="margin-top:12px;">
+                    <a href="第六章 运动带电粒子的辐射-章节测试.html" class="module-card">
+                        <div class="module-icon">✏️</div>
+                        <div class="module-title">章节测试</div>
+                        <div class="module-desc">交互式测试练习</div>
                     </a>
                 </div>
             </div>
@@ -434,7 +386,7 @@
             if (activeItem) activeItem.classList.add('active');
         }
 
-        const sections = ['overview', 'theory', 'electrodynamics'];
+        const sections = ['knowledge', 'test'];
         const mainArea = document.querySelector('.content-area');
         mainArea.addEventListener('scroll', () => {
             let current = '';

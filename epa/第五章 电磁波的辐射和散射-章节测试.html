@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>经典电动力学（刘川） 第五章 电磁波的辐射和散射</title>
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\(', '\)']],
+    displayMath: [['$$', '$$'], ['\[', '\]']]
+  }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"></script>
+<style>
+/* === ExamPass Shared Styles === */
+/* Paper-like warm background, clean typography, responsive */
+
+:root {
+  --paper: #fdf6e3;
+  --paper-dark: #f5ecd7;
+  --ink: #2c2c2c;
+  --ink-light: #555;
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
+  --divider: #d6c8a8;
+  --card-bg: #fef9ef;
+  --card-border: #e8dcc8;
+  --correct: #22c55e;
+  --correct-bg: #f0fdf4;
+  --wrong: #ef4444;
+  --wrong-bg: #fef2f2;
+  --tag-bg: #fef3c7;
+  --tag-text: #92400e;
+  --radius: 6px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: "Microsoft YaHei", "Noto Sans SC", "SimSun", sans-serif;
+  font-size: 12pt; line-height: 1.75; color: var(--ink);
+  max-width: 860px; margin: auto; padding: 24px 20px 60px;
+  background: var(--paper);
+}
+
+@media print {
+  body { font-size: 10.5pt; background: #fff; }
+  .no-print { display: none !important; }
+  h1, h2, h3 { page-break-after: avoid; }
+}
+
+/* ── Header ── */
+#exampass-header {
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding: 6px 0; margin-bottom: 0;
+}
+.header-brand { font-size: 1.2em; font-weight: 700; color: #1a1a2e; letter-spacing: 0.3px; }
+.header-url  { font-size: 0.78em; color: #999; }
+.header-divider { border: none; border-top: 2px solid var(--divider); margin: 4px 0 20px 0; }
+
+/* ── Typography ── */
+h1 { font-size: 1.55em; text-align: center; border-bottom: 2px solid var(--divider); padding-bottom: 8px; margin-top: 0; }
+h2 { font-size: 1.25em; border-bottom: 1px solid var(--divider); padding-bottom: 4px; margin-top: 28px; }
+h3 { font-size: 1.08em; margin-top: 20px; color: var(--ink); }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ── Tables ── */
+table { border-collapse: collapse; width: 100%; margin: 10px 0; font-size: 0.95em; }
+td, th { border: 1px solid var(--card-border); padding: 5px 9px; text-align: left; }
+th { background: var(--paper-dark); font-weight: 700; }
+
+/* ── Knowledge point vs explanation ── */
+.kp { font-weight: 700; color: var(--ink); }           /* key point: bold dark */
+.exp { font-weight: 400; color: var(--ink-light); }    /* explanation: lighter */
+.exp em, .exp strong { color: var(--ink); }             /* emphasis inside explanation */
+
+/* ── Block elements ── */
+blockquote {
+  border-left: 3px solid #c0392b; background: #fef9ef;
+  padding: 6px 14px; margin: 10px 0; font-size: 0.95em;
+}
+code { background: #f0ede0; padding: 2px 5px; border-radius: 3px; font-size: 0.92em; }
+pre { background: #f0ede0; padding: 10px; border-radius: var(--radius); overflow-x: auto; }
+
+/* ── TOC ── */
+div.toc {
+  background: var(--card-bg); padding: 14px 18px;
+  border: 1px solid var(--card-border); border-radius: var(--radius); margin-bottom: 22px;
+}
+div.toc ul { padding-left: 18px; }
+div.toc li { margin: 3px 0; font-size: 0.95em; }
+
+/* ── Priority tags ── */
+.tag-must   { background: #fee2e2; color: #991b1b; padding: 1px 6px; border-radius: 3px; font-size: 0.82em; font-weight: 600; }
+.tag-key    { background: #fef3c7; color: #92400e; padding: 1px 6px; border-radius: 3px; font-size: 0.82em; font-weight: 600; }
+.tag-freq   { background: #dbeafe; color: #1e40af; padding: 1px 6px; border-radius: 3px; font-size: 0.82em; font-weight: 600; }
+.tag-info   { background: #f0fdf4; color: #166534; padding: 1px 6px; border-radius: 3px; font-size: 0.82em; font-weight: 600; }
+
+/* === Interactive Test Styles === */
+
+/* ── Score box ── */
+#score-box {
+  display: none; background: var(--paper-dark); color: var(--ink);
+  padding: 16px 20px; border-radius: var(--radius); margin: 14px 0;
+  text-align: center; border: 1px solid var(--card-border);
+}
+#score-box .score-num { font-size: 2.2em; font-weight: 700; }
+#score-box .score-label { font-size: 0.85em; color: var(--ink-light); }
+
+/* ── Question card ── */
+.q-card {
+  background: var(--card-bg); border: 1px solid var(--card-border);
+  border-radius: var(--radius); padding: 12px 14px; margin: 10px 0;
+  transition: all 0.15s;
+}
+.q-card.correct { border-left: 3px solid var(--correct); background: #f7fdf4; }
+.q-card.wrong   { border-left: 3px solid var(--wrong); background: #fef9f9; }
+
+.q-num  { font-weight: 700; font-size: 0.98em; margin-bottom: 4px; }
+.q-text { margin-bottom: 8px; font-size: 0.98em; }
+
+/* ── Options (compact) ── */
+.option {
+  display: block; padding: 4px 10px; margin: 3px 0;
+  border: 1px solid var(--card-border); border-radius: 4px;
+  cursor: pointer; transition: all 0.12s; font-size: 0.93em;
+  background: #fefcf5;
+}
+.option:hover            { background: #f0ede0; }
+.option input            { margin-right: 6px; }
+.option.selected         { border-color: var(--accent); background: #eff6ff; }
+.option.correct-answer   { border-color: var(--correct); background: var(--correct-bg); }
+.option.wrong-answer     { border-color: var(--wrong); background: var(--wrong-bg); }
+
+/* ── Textareas (compact) ── */
+.q-textarea {
+  width: 100%; min-height: 56px; border: 1px solid var(--card-border);
+  border-radius: 4px; padding: 6px 10px; font-family: inherit;
+  font-size: 0.93em; background: #fefcf5; resize: vertical;
+}
+.q-textarea:focus { outline: none; border-color: var(--accent); }
+.q-code {
+  font-family: "Consolas", "Monaco", "Courier New", monospace;
+  font-size: 0.88em; line-height: 1.5; background: #1e1e2e; color: #e0e0e0;
+  tab-size: 4; white-space: pre;
+}
+.q-code:focus { border-color: var(--accent); }
+
+/* ── Partial-credit badge ── */
+.badge-partial { background: #fef3c7; color: #92400e; }
+.q-card.partial { border-color: #f59e0b; }
+
+/* ── Result after grading ── */
+.result {
+  display: none; margin-top: 8px; padding: 8px 12px;
+  background: #fefcf5; border: 1px solid var(--card-border);
+  border-radius: 4px; font-size: 0.9em; line-height: 1.6;
+}
+.result .badge {
+  display: inline-block; padding: 1px 9px; border-radius: 3px;
+  font-weight: 700; font-size: 0.82em; margin-right: 6px;
+}
+.badge-ok  { background: var(--correct-bg); color: #166534; }
+.badge-no  { background: var(--wrong-bg); color: #991b1b; }
+.badge-ref { background: #dbeafe; color: #1e40af; }
+
+.result .explanation { margin-top: 4px; color: var(--ink); }
+.result .pitfall { color: #b45309; margin-top: 3px; font-size: 0.9em; }
+
+/* ── Grading button ── */
+.grading-bar { text-align: center; margin: 20px 0; }
+.grading-bar button {
+  font-size: 1em; padding: 8px 32px; background: var(--accent);
+  color: #fff; border: none; border-radius: var(--radius);
+  cursor: pointer; font-weight: 600; letter-spacing: 0.3px;
+}
+.grading-bar button:hover     { background: var(--accent-hover); }
+.grading-bar button:disabled  { background: #bbb; cursor: not-allowed; }
+
+/* === Sidebar Styles === */
+:root { --sidebar-width: 240px; }
+body { display: flex !important; flex-direction: row !important; max-width: none !important; margin: 0 !important; padding: 0 !important; background: #f7f8fb !important; }
+.sidebar { width: var(--sidebar-width); height: 100vh; background: #ffffff; border-right: 1px solid #e2e5ea; display: flex; flex-direction: column; flex-shrink: 0; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04); z-index: 10; overflow-y: auto; position: fixed; left: 0; top: 0; }
+.sidebar-header { padding: 18px 20px 14px; border-bottom: 1px solid #e2e5ea; position: sticky; top: 0; background: #ffffff; z-index: 2; }
+.sidebar-header h2 { font-size: 1rem; font-weight: 700; color: #1a1d23; letter-spacing: -0.01em; margin: 0; text-align: left; border: none; padding: 0; }
+.sidebar-header .subtitle { font-size: 0.76rem; color: #5a5f6b; margin-top: 2px; }
+.sidebar-nav { flex: 1; padding: 8px 0; }
+.nav-section { border-bottom: 1px solid #e2e5ea; }
+.nav-section-header { display: flex; align-items: center; gap: 8px; padding: 10px 20px; font-size: 0.85rem; font-weight: 600; color: #1a1d23; text-decoration: none; transition: 0.2s; cursor: pointer; }
+.nav-section-header:hover { background: #f1f3f6; }
+.nav-section-header .icon { width: 20px; text-align: center; flex-shrink: 0; }
+.main-content { margin-left: var(--sidebar-width); flex: 1; min-height: 100vh; background: #fdf6e3; }
+#exampass-header { position: sticky; top: 0; z-index: 5; background: #fdf6e3; }
+@media print { .sidebar { display: none !important; } .main-content { margin-left: 0 !important; } }
+@media (max-width: 700px) { :root { --sidebar-width: 200px; } }
+
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+    <div class="sidebar-header">
+        <h2>📡 第五章</h2>
+        <div class="subtitle">电磁波的辐射和散射</div>
+    </div>
+    <nav class="sidebar-nav">
+        <div class="nav-section">
+            <a class="nav-section-header" href="index.html">
+                <span class="icon">🏠</span>
+                <span style="flex:1;">返回电动力学首页</span>
+            </a>
+        </div>
+        <div class="nav-section">
+            <a class="nav-section-header" href="../index.html">
+                <span class="icon">📚</span>
+                <span style="flex:1;">返回总首页</span>
+            </a>
+        </div>
+        <div class="nav-section">
+            <a class="nav-section-header" href="ch4.html">
+                <span class="icon">📡</span>
+                <span style="flex:1;">第四章</span>
+            </a>
+        </div>
+        <div class="nav-section">
+            <a class="nav-section-header" href="ch6.html">
+                <span class="icon">📡</span>
+                <span style="flex:1;">第六章</span>
+            </a>
+        </div>
+    </nav>
+</aside>
+<div class="main-content">
+
+<header id="exampass-header">
+  <div class="header-left"><span class="header-brand">ExamPass Assistant</span></div>
+  <div class="header-right"><span class="header-url">github.com/WUBING2023/ExamPass-Assistant</span></div>
+</header>
+<hr class="header-divider">
+
+<h1>经典电动力学（刘川） 第五章 电磁波的辐射和散射</h1>
+<h2 style="text-align:center">章节测试</h2>
+<p style="text-align:center;color:var(--ink-light);font-size:0.95em">章节测试 · 满分 100 分 · 建议用时 90 分钟</p>
+
+<div id="score-box"><div class="score-num" id="score-num">0</div><div class="score-label">总分</div></div>
+<div id="questions-container"></div>
+<div class="grading-bar no-print"><button onclick="gradeAll()" id="grade-btn">提交批改</button></div>
+
+<script>
+var Q = [{"kc_id": "kc5.2", "cognitive_level": "understand", "difficulty": "basic", "type": "choice", "points": 3, "question": "在 SI 单位制中，谐振以外的一般含时电流分布产生的推迟矢势为 $A(x,t)=\\dfrac{\\mu_0}{4\\pi}\\int d^3x'\\,\\dfrac{J(x',t')}{|x-x'|}$。其中被积电流所取的时刻 $t'$ 应为下列哪一个？", "options": ["$t'=t+|x-x'|/c$，即超前时刻，对应超前格林函数", "$t'=t-|x-x'|/c$，即推迟时刻，对应推迟格林函数", "$t'=t$，即观测时刻，因为电磁作用瞬时传播", "$t'=t-r/c$，其中 $r=|x|$ 与源点位置无关"], "answer": 1, "explanation": "推迟解的含时格林函数为 $G^{(+)}(R,\\tau)=\\delta(t-(t'+|x-x'|/c))/|x-x'|$，挑选出源在 $t'=t-|x-x'|/c$ 的值，表示 $x$ 处的场来自源点 $x'$ 在更早 $|x-x'|/c$ 时刻发出的信号，符合因果律。三步法干扰项：A 对应错选超前格林函数（误以为两解物理等价）；C 对应忽略推迟效应、误认作用瞬时；D 对应把延迟用整体距离 $r$ 而非源-场距离 $|x-x'|$ 近似（混淆了远场展开的领头项与精确推迟）。", "pitfall": "推迟时间是 $|x-x'|/c$（源到场点的距离），不是 $r/c$；后者仅是远场展开的领头近似。"}, {"kc_id": "kc5.3", "cognitive_level": "remember", "difficulty": "basic", "type": "choice", "points": 3, "question": "对谐振源辐射问题，设源尺度为 $d$、观测距离为 $r$、波长为 $\\lambda$。下列对「远场区（辐射区）」的尺度条件描述，正确的是哪一项？", "options": ["$d\\ll\\lambda\\ll r$，电磁场为向外传播的球面波（辐射场）", "$d\\ll r\\ll\\lambda$，电磁场基本为静态电磁场", "$d\\ll r\\sim\\lambda$，电磁场处于感应过渡区", "$r\\ll d\\ll\\lambda$，观测点位于源内部"], "answer": 0, "explanation": "讲义给出三区域：近场（静态）区 $d\\ll r\\ll\\lambda$；中间（感应）区 $d\\ll r\\sim\\lambda$；远场（辐射）区 $d\\ll\\lambda\\ll r$，此区场表现为典型球面波辐射场。三步法干扰项：B 对应误把近场区当远场区；C 对应误把中间区当远场区；D 对应违背基本假设 $r\\gg d$（观测点不可能在源内部）。", "pitfall": "远场区的判据是 $\\lambda\\ll r$（距离远大于波长），而非仅 $r\\gg d$。"}, {"kc_id": "kc5.5", "cognitive_level": "apply", "difficulty": "medium", "type": "choice", "points": 3, "question": "某电偶极辐射源的角频率由 $\\omega$ 增大到 $2\\omega$，而电偶极矩振幅 $|p|$ 保持不变。其总辐射功率 $P$ 将变为原来的多少倍？", "options": ["$4$ 倍", "$16$ 倍", "$8$ 倍", "$2$ 倍"], "answer": 1, "explanation": "电偶极总功率 $P=\\dfrac{c^2Z_0k^4}{12\\pi}|p|^2$，而 $k=\\omega/c$，故 $P\\propto k^4\\propto\\omega^4$。频率加倍则 $P$ 变为 $2^4=16$ 倍。三步法干扰项：A 对应误用 $P\\propto\\omega^2$（如误记功率正比于场振幅一次方的频率依赖）；C 对应把 $\\omega^4$ 误算成 $2\\times4$；D 对应误以为 $P\\propto\\omega$。", "pitfall": "电偶极辐射功率正比于 $\\omega^4$，不是 $\\omega^2$；这是瑞利散射蓝天效应的同一来源。"}, {"kc_id": "kc5.5", "cognitive_level": "understand", "difficulty": "basic", "type": "choice", "points": 3, "question": "电偶极辐射的功率角分布 $\\dfrac{dP}{d\\Omega}\\propto\\sin^2\\theta$（$\\theta$ 为观测方向 $n$ 与电偶极矩 $p$ 的夹角）。关于辐射的角向特征，下列说法正确的是哪一项？", "options": ["在 $\\theta=0$（沿 $p$ 方向）辐射功率最大", "辐射在所有方向上均匀分布，与 $\\theta$ 无关", "在 $\\theta=\\pi/2$（垂直于 $p$）辐射功率最大，沿 $p$ 轴方向无辐射", "在 $\\theta=\\pi/2$ 方向辐射功率为零"], "answer": 2, "explanation": "$\\sin^2\\theta$ 在 $\\theta=\\pi/2$ 取最大值 1，在 $\\theta=0,\\pi$（偶极轴方向）为零。故偶极轴方向无辐射，赤道面最强。三步法干扰项：A 对应把 $\\sin^2\\theta$ 误当 $\\cos^2\\theta$（极大值位置弄反）；B 对应忽略角分布（误当各向同性）；D 对应把极大误当极小（正弦平方零点位置弄反）。", "pitfall": "$\\sin^2\\theta$ 极大在赤道面 $\\theta=\\pi/2$，极小（零）在偶极轴上，切勿与 $\\cos^2\\theta$ 混淆。"}, {"kc_id": "kc5.6", "cognitive_level": "understand", "difficulty": "medium", "type": "choice", "points": 3, "question": "讲义指出磁偶极辐射的场可由电偶极辐射场经形式替换得到。下列替换组合中，正确的一组是哪一项？", "options": ["$p\\to mc,\\quad E\\to -Z_0H,\\quad Z_0H\\to E$", "$m\\to p/c,\\quad H\\to Z_0E,\\quad E\\to -Z_0H$", "$p\\to m/c,\\quad E\\to Z_0H,\\quad Z_0H\\to -E$", "$p\\to m,\\quad E\\to H,\\quad H\\to -E$"], "answer": 2, "explanation": "讲义明确给出对偶替换 $p\\to m/c$、$E\\to Z_0H$、$Z_0H\\to -E$，由此电偶极公式转为磁偶极公式。三步法干扰项：A 对应把 $m/c$ 误记为 $mc$ 且符号错乱；B 对应替换方向反置（把磁换成电）；D 对应漏掉因子 $1/c$ 与 $Z_0$（量纲不符）。", "pitfall": "替换含因子 $1/c$（$p\\to m/c$）与波阻抗 $Z_0$，缺一则量纲错误。"}, {"kc_id": "kc5.7", "cognitive_level": "apply", "difficulty": "medium", "type": "choice", "points": 3, "question": "电四极辐射的总功率正比于频率的某次幂。与电偶极辐射 $P\\propto\\omega^4$ 相比，电四极辐射的总功率随频率的标度行为是哪一项？", "options": ["$P\\propto\\omega^4$，与电偶极相同", "$P\\propto\\omega^2$，比电偶极弱", "$P\\propto\\omega^8$", "$P\\propto\\omega^6$"], "answer": 3, "explanation": "电四极总功率 $P=\\dfrac{c^2Z_0k^6}{1440\\pi}D^*_{ij}D_{ij}$，$k\\propto\\omega$，故 $P\\propto k^6\\propto\\omega^6$。每升高一阶多极，功率多出两个 $k$ 幂（$\\sim(d/\\lambda)^2$ 压低因子）。三步法干扰项：A 对应误以为各阶多极频率依赖相同；B 对应方向弄反（以为高阶更弱于 $\\omega^2$）；C 对应把 $k^6$ 误算为 $k^8$。", "pitfall": "电四极 $P\\propto\\omega^6$，比电偶极的 $\\omega^4$ 高两个幂次，对应 $(d/\\lambda)^2$ 的压低。"}, {"kc_id": "kc5.9", "cognitive_level": "understand", "difficulty": "hard", "type": "choice", "points": 3, "question": "在无源自由空间的多极场展开中，矢量球谐函数定义为 $X_{lm}(n)=\\dfrac{1}{\\sqrt{l(l+1)}}\\hat{L}Y_{lm}(n)$，其中轨道角动量算符 $\\hat{L}=-i(x\\times\\nabla)$。关于磁多极场 $(E^{(M)}_{lm},H^{(M)}_{lm})$ 的横向性，下列说法正确的是哪一项？", "options": ["其磁场满足 $x\\cdot H^{(M)}_{lm}=0$，即磁场纯横向", "其电场满足 $x\\cdot E^{(M)}_{lm}=0$，即电场纯横向、无径向分量", "其电场与磁场均有非零径向分量", "其电场满足 $x\\cdot E^{(M)}_{lm}\\propto Y_{lm}$，有径向分量"], "answer": 1, "explanation": "磁多极场定义为 $x\\cdot E^{(M)}_{lm}=0$（电场纯横向）而 $x\\cdot H^{(M)}_{lm}=\\dfrac{l(l+1)}{k}g_l(kr)Y_{lm}\\ne 0$（磁场有径向分量）。因 $E^{(M)}=Z_0g_l(kr)\\hat{L}Y_{lm}$ 而 $\\hat{L}$ 仅作用角度且 $x\\cdot\\hat{L}=0$。三步法干扰项：A 对应把电、磁多极场张冠李戴（横向的是电场）；C 对应误以为两者都有径向分量（违背横向定义）；D 对应把磁多极的电场误赋径向分量。", "pitfall": "磁多极场中纯横向的是电场（$x\\cdot E^{(M)}=0$），径向分量在磁场上；电多极场则相反。"}, {"kc_id": "kc5.13", "cognitive_level": "apply", "difficulty": "medium", "type": "choice", "points": 3, "question": "半径为 $a$ 的非磁性介质小球（$ka\\ll1$）对非偏振平面波的总散射截面为 $\\sigma=\\dfrac{8\\pi}{3}k^4a^6\\left|\\dfrac{\\varepsilon_r-1}{\\varepsilon_r+2}\\right|^2$。若把入射光波长减半（频率加倍），其它不变，则 $\\sigma$ 变为原来的多少倍？", "options": ["$2$ 倍", "$8$ 倍", "$16$ 倍", "$4$ 倍"], "answer": 2, "explanation": "$\\sigma\\propto k^4\\propto\\omega^4\\propto\\lambda^{-4}$。波长减半即频率加倍，$\\sigma\\to2^4=16$ 倍。这正是瑞利散射蓝光被散射远强于红光、天空呈蓝的原因。三步法干扰项：A 对应误用 $\\sigma\\propto\\lambda^{-1}$；B 对应误算 $2^3$（把指数当 3，混淆 $a^6$）；D 对应误用 $\\sigma\\propto\\omega^2$。", "pitfall": "瑞利散射截面 $\\sigma\\propto\\omega^4\\propto\\lambda^{-4}$，对频率极其敏感，是蓝天与红日落的根源。"}, {"kc_id": "kc5.14", "cognitive_level": "analyze", "difficulty": "medium", "type": "choice", "points": 3, "question": "非磁性介质球偶极散射的偏振度为 $\\Pi(\\theta)=\\dfrac{\\sin^2\\theta}{1+\\cos^2\\theta}$，$\\theta$ 为散射角。关于散射光偏振，下列判断正确的是哪一项？", "options": ["$\\theta=0$ 与 $\\theta=\\pi$ 方向散射光完全偏振", "偏振度与 $\\theta$ 无关，恒为常数", "$\\theta=\\pi/4$ 方向散射光完全偏振", "$\\theta=\\pi/2$ 方向散射光完全偏振（$\\Pi=1$）"], "answer": 3, "explanation": "$\\theta=\\pi/2$ 时 $\\cos\\theta=0$，$\\Pi=\\dfrac{1}{1+0}=1$，完全偏振（电场垂直于散射面）；$\\theta=0,\\pi$ 时 $\\sin\\theta=0$，$\\Pi=0$，完全非偏振。故垂直于太阳光方向观察天空漫散射光偏振度最大。三步法干扰项：A 对应把极大极小位置弄反（前向/后向其实非偏振）；B 对应忽略角依赖；C 对应误算 $\\theta=\\pi/4$ 处 $\\Pi=\\frac{1/2}{1+1/2}=1/3\\ne1$。", "pitfall": "完全偏振发生在 $\\theta=\\pi/2$（侧向散射），前向/后向 $\\theta=0,\\pi$ 则完全非偏振。"}, {"kc_id": "kc5.15", "cognitive_level": "understand", "difficulty": "hard", "type": "choice", "points": 3, "question": "对半径 $a$ 的球作矢量平面波多极场（分波）展开求散射，长波极限 $ka\\ll1$ 下，$l$ 每增加 1，相应分波贡献被压低一个因子 $(ka)^2$。据此，长波极限下主导散射的最低分波及其物理对应是哪一项？", "options": ["$l=1$ 分波主导，其贡献等同于第 36.2 节的偶极散射截面", "$l=0$ 分波主导，对应各向同性单极散射", "$l=2$ 分波主导，对应电四极散射", "所有 $l$ 贡献相等，必须全部求和"], "answer": 0, "explanation": "讲义指出长波极限下 $l=1$ 项最重要，每增 1 阶压低 $(ka)^2$；且 $l=1$ 的 $X_{1,\\pm1}$ 代入微分散射截面给出与 §36.2 偶极散射完全相同的结果，即米氏散射的长波极限回到偶极散射。三步法干扰项：B 对应误以为最低阶是 $l=0$（矢量横向场无 $l=0$ 单极辐射）；C 对应把次主导 $l=2$ 当主导；D 对应忽视 $(ka)^2$ 的逐阶压低。", "pitfall": "矢量辐射场无 $l=0$ 单极项；长波散射主导分波是 $l=1$，对应偶极散射，这是米氏散射的长波极限。"}, {"kc_id": "kc5.2", "cognitive_level": "understand", "difficulty": "basic", "type": "tf", "points": 2, "question": "亥姆霍兹方程 $(\\nabla^2+k^2)G=-4\\pi\\delta^{(3)}(x-x')$ 的超前格林函数 $G^{(-)}=e^{-ikR}/R$ 与推迟格林函数 $G^{(+)}=e^{ikR}/R$ 在数学上都是方程的解，但只有推迟格林函数符合物理因果律。", "options": [], "answer": 1, "explanation": "两者均为亥姆霍兹方程的合法数学解（最一般解为 $AG^{(+)}+BG^{(-)}+g$，$A+B=1$），但只有推迟解表示场源于过去时刻的信号传播，符合因果律。误判来源：误以为超前解非数学解，或误以为两解物理上等价。", "pitfall": "超前解是合法的数学解，被排除是基于物理因果律而非数学。"}, {"kc_id": "kc5.5", "cognitive_level": "understand", "difficulty": "basic", "type": "tf", "points": 2, "question": "电偶极矩定义为 $p=\\int x'\\rho(x')\\,d^3x'$，且对谐振源由连续方程可证 $\\int J\\,d^3x'=-i\\omega p$。", "options": [], "answer": 1, "explanation": "讲义式 (5.19)(5.20)：$\\int J\\,d^3x'=-\\int x'(\\nabla'\\cdot J)\\,d^3x'=-i\\omega\\int x'\\rho\\,d^3x'=-i\\omega p$，其中用了连续方程 $\\nabla\\cdot J=i\\omega\\rho$。两式均正确。误判来源：误记 $p=\\int J\\,d^3x'$ 或漏掉 $-i\\omega$ 因子。", "pitfall": "$p$ 由电荷密度 $\\rho$ 定义，$\\int J\\,d^3x'$ 等于 $-i\\omega p$ 而非 $p$ 本身。"}, {"kc_id": "kc5.8", "cognitive_level": "analyze", "difficulty": "hard", "type": "tf", "points": 2, "question": "对原子等微观体系，由于其多极矩起源于量子效应，磁偶极（M1）或电四极（E2）辐射不一定比电偶极（E1）辐射弱，需具体分析；这与宏观体系中 E1 总是领头、M1/E2 被 $(d/\\lambda)$ 压低的规律不同。", "options": [], "answer": 1, "explanation": "讲义明确：宏观远场 E1 领头，M1、E2 被因子 $(d/r)$ 或 $(d/\\lambda)$ 压低；但微观体系多极矩起源于量子，M1/E2 不一定比 E1 小（如中子电偶极矩近零而磁矩显著）。陈述正确。误判来源：误以为「E1 总领头」是普适规律，忽略量子体系的特殊性。", "pitfall": "「E1 领头」仅对经典宏观辐射成立；量子体系（如中子、原子禁戒跃迁）中 M1/E2 可主导。"}, {"kc_id": "kc5.12", "cognitive_level": "understand", "difficulty": "medium", "type": "tf", "points": 2, "question": "微分散射截面 $\\dfrac{d\\sigma}{d\\Omega}=r^2\\dfrac{(1/2Z_0)|e^*\\cdot E_{sc}|^2}{(1/2Z_0)|e_0^*\\cdot E_{inc}|^2}$ 的量纲是功率（瓦特）。", "options": [], "answer": 0, "explanation": "错误。散射截面定义为单位入射能流所产生的、指定方向与偏振的散射功率，分子分母均为能流密度之比再乘 $r^2$，结果量纲为面积（故称「截面」），不是功率。误判来源：误把「散射功率」当成截面本身，忽略了除以入射能流的归一化。", "pitfall": "截面量纲是面积，由散射功率除以入射能流密度得到；这是「截面」一词的由来。"}, {"kc_id": "kc5.13", "cognitive_level": "remember", "difficulty": "medium", "type": "tf", "points": 2, "question": "对 $ka\\ll1$ 的介质小球，其感生电偶极矩为 $p=4\\pi\\varepsilon_0a^3\\dfrac{\\varepsilon_r-1}{\\varepsilon_r+2}E_{inc}$，该结果直接借用了静电学中介质球在均匀外场中的极化结论。", "options": [], "answer": 1, "explanation": "正确。长波极限下小球感受到近似均匀的谐振场，故可直接套用静电学例题 (3.41) 的均匀外场介质球极化结果 $p=4\\pi\\varepsilon_0a^3\\frac{\\varepsilon-\\varepsilon_0}{\\varepsilon+2\\varepsilon_0}E$，写成相对介电常数即上式。误判来源：误以为散射必须重新求解含时麦氏方程，忽略了长波准静态近似。", "pitfall": "长波极限 $ka\\ll1$ 使散射体感受准静态均匀场，故可直接借用静电极化率结果。"}, {"kc_id": "kc5.1", "cognitive_level": "remember", "difficulty": "basic", "type": "fill", "points": 2, "question": "电磁势分量满足的波动方程 $\\nabla^2\\Psi-\\dfrac{1}{c^2}\\dfrac{\\partial^2\\Psi}{\\partial t^2}=-4\\pi f$ 经对时间傅里叶变换后，化为非齐次的 ＿＿＿＿＿ 方程，其形式为 $(\\nabla^2+k^2)\\tilde\\Psi=-4\\pi\\tilde f$，其中 $k^2=$ ＿＿＿＿＿。", "options": [], "answer": [["亥姆霍兹", "Helmholtz"], ["$\\omega^2/c^2$", "$\\omega^2$"]], "explanation": "傅里叶变换将 $\\partial_t\\to-i\\omega$，时间二阶导给出 $-\\omega^2/c^2=-k^2$，故得非齐次亥姆霍兹方程 (5.2)，$k^2=\\omega^2/c^2$（自然单位 $c=1$ 时 $k^2=\\omega^2$）。常见误填：波动方程（未变换）、拉普拉斯方程（漏掉 $k^2$ 项）。", "pitfall": "傅里叶变换后是亥姆霍兹方程（含 $+k^2$），不是拉普拉斯方程。"}, {"kc_id": "kc5.4", "cognitive_level": "apply", "difficulty": "medium", "type": "fill", "points": 2, "question": "远场区由矢势 $A$ 求电磁场的两步关系为：$H=\\dfrac{1}{\\mu_0}$＿＿＿＿＿（对 $A$ 的运算），以及 $E=\\dfrac{iZ_0}{k}\\nabla\\times H$。远场中 $E$、$H$ 与径向单位矢量 $n$ 的几何关系是相互 ＿＿＿＿＿。", "options": [], "answer": [["$\\nabla\\times A$", "旋度"], ["垂直（横向）", "正交"]], "explanation": "讲义式 (5.16)：$H=\\frac{1}{\\mu_0}\\nabla\\times A$，$E=\\frac{iZ_0}{k}\\nabla\\times H$。远场为横电磁球面波，$E\\perp H\\perp n$ 两两垂直。常见误填：$\\nabla\\cdot A$（散度，给出标量错误）、平行（误认纵向）。", "pitfall": "$H$ 由 $A$ 的旋度（非散度）得到；远场 $E,H,n$ 两两正交，是横波。"}, {"kc_id": "kc5.7", "cognitive_level": "remember", "difficulty": "medium", "type": "fill", "points": 2, "question": "电四极矩张量定义为 $D_{ij}=\\int\\left(3x'_ix'_j-\\right.$＿＿＿＿＿$\\left.\\right)\\rho(x')\\,d^3x'$。电四极辐射远场磁场为 $H=-\\dfrac{ick^3}{24\\pi}\\dfrac{e^{ikr}}{r}\\,n\\times($＿＿＿＿＿$)$。", "options": [], "answer": [["$(x'\\cdot x')\\delta_{ij}$", "$|x'|^2\\delta_{ij}$"], ["$D\\cdot n$", "$D\\!\\cdot\\!n$"]], "explanation": "讲义式 (5.39)：$D_{ij}=\\int[3x'_ix'_j-(x'\\cdot x')\\delta_{ij}]\\rho\\,d^3x'$（无迹张量）；式 (5.38)：$H=-\\frac{ick^3}{24\\pi}\\frac{e^{ikr}}{r}n\\times(D\\cdot n)$。常见误填：漏掉减去迹项 $(x'\\cdot x')\\delta_{ij}$（则张量不无迹）。", "pitfall": "电四极张量须减去迹项 $(x'\\cdot x')\\delta_{ij}$ 以保持无迹；$D\\cdot n$ 是矢量。"}, {"kc_id": "kc5.11", "cognitive_level": "remember", "difficulty": "hard", "type": "fill", "points": 2, "question": "多极辐射的总功率可由电、磁多极系数表为 $P=\\dfrac{Z_0}{2k^2}\\sum_{l,m}\\left(|a_E(l,m)|^2+\\right.$＿＿＿＿＿$\\left.\\right)$。各阶多极场的辐射功率角分布相同，相互区别在于其 ＿＿＿＿＿ 行为。", "options": [], "answer": [["$|a_M(l,m)|^2$", "$|a_M|^2$"], ["偏振", "极化"]], "explanation": "讲义式 (5.70)：$P=\\frac{Z_0}{2k^2}\\sum_{lm}[|a_E(l,m)|^2+|a_M(l,m)|^2]$，总功率是电、磁多极辐射功率之和（交叉项经角积分消失）。式 (5.67) 下方指出各阶角分布相同、偏振不同。常见误填：写成交叉项 $a_Ea_M^*$（实际正交消失）、误填「频率」行为。", "pitfall": "总功率是各模平方之和、无交叉项；各阶多极角分布相同，区别在偏振。"}, {"kc_id": "kc5.13", "cognitive_level": "apply", "difficulty": "medium", "type": "fill", "points": 2, "question": "非磁性介质球长波偶极散射的非偏振微分散射截面为 $\\dfrac{d\\sigma}{d\\Omega}=k^4a^6\\left|\\dfrac{\\varepsilon_r-1}{\\varepsilon_r+2}\\right|^2\\cdot$＿＿＿＿＿（角因子）。该截面在散射角 $\\theta=$＿＿＿＿＿ 方向取极小值。", "options": [], "answer": [["$\\dfrac{1+\\cos^2\\theta}{2}$", "$(1+\\cos^2\\theta)/2$"], ["$\\pi/2$", "$90^\\circ$"]], "explanation": "讲义式 (5.81)：$\\frac{d\\sigma}{d\\Omega}=k^4a^6|\\frac{\\varepsilon_r-1}{\\varepsilon_r+2}|^2\\frac{1+\\cos^2\\theta}{2}$。$1+\\cos^2\\theta$ 在 $\\theta=\\pi/2$（$\\cos\\theta=0$）最小、在 $\\theta=0,\\pi$ 最大。常见误填：角因子写成 $\\sin^2\\theta$（混淆偶极角分布与散射角因子）、极小位置写成 $\\theta=0$。", "pitfall": "非偏振偶极散射角因子是 $(1+\\cos^2\\theta)/2$，极小在 $\\theta=\\pi/2$、极大在前向/后向。"}, {"kc_id": "kc5.5", "cognitive_level": "apply", "difficulty": "medium", "type": "calc", "points": 7, "question": "一沿 $z$ 轴取向的谐振电偶极子，复振幅为 $p=p_0\\hat z$（$p_0$ 实），角频率 $\\omega$，$k=\\omega/c$。（1）写出其远场区磁场 $H$ 与电场 $E$ 的表达式（用 $n,p,k,r,Z_0,c$）。（2）导出功率角分布 $\\dfrac{dP}{d\\Omega}$ 并对全立体角积分得总功率 $P$，验证 $P=\\dfrac{c^2Z_0k^4}{12\\pi}|p|^2$。", "options": [], "answer": -1, "explanation": "评分要点：(1) 远场场（式 5.24）：$H=\\dfrac{ck^2}{4\\pi}(n\\times p)\\dfrac{e^{ikr}}{r}$，$E=Z_0\\,H\\times n$，两者 $\\perp n$ 为球面波（2 分）。(2) 坡印廷平均 $\\dfrac{dP}{d\\Omega}=\\dfrac12\\mathrm{Re}[r^2\\,n\\cdot(E\\times H^*)]$；代入得 $\\dfrac{dP}{d\\Omega}=\\dfrac{c^2Z_0k^4}{32\\pi^2}|(n\\times p)\\times n|^2=\\dfrac{c^2Z_0k^4}{32\\pi^2}|p|^2\\sin^2\\theta$（式 5.26），其中 $\\theta$ 为 $n$ 与 $p$ 夹角（3 分）。积分 $\\int\\sin^2\\theta\\,d\\Omega=\\int_0^{2\\pi}d\\phi\\int_0^\\pi\\sin^2\\theta\\sin\\theta\\,d\\theta=2\\pi\\cdot\\dfrac43=\\dfrac{8\\pi}{3}$；故 $P=\\dfrac{c^2Z_0k^4}{32\\pi^2}|p|^2\\cdot\\dfrac{8\\pi}{3}=\\dfrac{c^2Z_0k^4}{12\\pi}|p|^2$，得证（2 分）。关键积分 $\\int_0^\\pi\\sin^3\\theta\\,d\\theta=4/3$。", "pitfall": "角积分用的是 $\\int\\sin^3\\theta\\,d\\theta=4/3$（含 $d\\Omega$ 的 $\\sin\\theta$），不要漏掉立体角元的 $\\sin\\theta$。"}, {"kc_id": "kc5.13", "cognitive_level": "apply", "difficulty": "medium", "type": "calc", "points": 8, "question": "半径 $a=10^{-8}\\,\\mathrm{m}$ 的非磁性介质小球（相对介电常数 $\\varepsilon_r=2$），处于可见光中。已知红光波长 $\\lambda_R=700\\,\\mathrm{nm}$、蓝光波长 $\\lambda_B=400\\,\\mathrm{nm}$，均满足 $ka\\ll1$。（1）写出总散射截面 $\\sigma$ 关于 $k,a,\\varepsilon_r$ 的公式并计算因子 $\\left|\\dfrac{\\varepsilon_r-1}{\\varepsilon_r+2}\\right|^2$。（2）求蓝光与红光散射截面之比 $\\sigma_B/\\sigma_R$，并据此解释天空为何呈蓝色。", "options": [], "answer": -1, "explanation": "评分要点：(1) $\\sigma=\\dfrac{8\\pi}{3}k^4a^6\\left|\\dfrac{\\varepsilon_r-1}{\\varepsilon_r+2}\\right|^2$（瑞利散射，式 5.82）（2 分）。代 $\\varepsilon_r=2$：$\\dfrac{\\varepsilon_r-1}{\\varepsilon_r+2}=\\dfrac{1}{4}$，故 $\\left|\\cdot\\right|^2=\\dfrac{1}{16}=0.0625$（2 分）。(2) $\\sigma\\propto k^4\\propto\\lambda^{-4}$，故 $\\dfrac{\\sigma_B}{\\sigma_R}=\\left(\\dfrac{\\lambda_R}{\\lambda_B}\\right)^4=\\left(\\dfrac{700}{400}\\right)^4=(1.75)^4\\approx9.38$（3 分）。结论：蓝光被散射约为红光的 9.4 倍，故晴天天空中弥散的散射光以蓝光为主，呈蓝色；日出日落阳光穿越大气路径长、蓝光被散射殆尽，故余红光使太阳显红（1 分）。", "pitfall": "比值只依赖 $\\lambda^{-4}$，$a$、$\\varepsilon_r$ 因子在比值中相消；$(7/4)^4\\approx9.4$ 而非约 3 或 16。"}, {"kc_id": "kc5.7", "cognitive_level": "analyze", "difficulty": "hard", "type": "calc", "points": 8, "question": "比较同一辐射体系在频率 $\\omega$ 下的电偶极辐射与电四极辐射强度。设源尺度为 $d$，电偶极矩量级 $|p|\\sim qd$，电四极矩量级 $|D|\\sim qd^2$（$q$ 为典型电荷量）。利用 $P_{E1}=\\dfrac{c^2Z_0k^4}{12\\pi}|p|^2$、$P_{E2}=\\dfrac{c^2Z_0k^6}{1440\\pi}D^*_{ij}D_{ij}$，估算比值 $P_{E2}/P_{E1}$ 的量级，并说明它与 $(d/\\lambda)$ 的关系。", "options": [], "answer": -1, "explanation": "评分要点：写出 $\\dfrac{P_{E2}}{P_{E1}}=\\dfrac{k^6|D|^2/1440}{k^4|p|^2/12}=\\dfrac{12}{1440}k^2\\dfrac{|D|^2}{|p|^2}=\\dfrac{1}{120}k^2\\dfrac{|D|^2}{|p|^2}$（3 分）。代入量级 $|p|\\sim qd$、$|D|\\sim qd^2$：$\\dfrac{|D|^2}{|p|^2}\\sim\\dfrac{q^2d^4}{q^2d^2}=d^2$，故 $\\dfrac{P_{E2}}{P_{E1}}\\sim k^2d^2=(kd)^2$（3 分）。又 $k=2\\pi/\\lambda$，故 $\\dfrac{P_{E2}}{P_{E1}}\\sim(kd)^2\\sim(d/\\lambda)^2$，即电四极辐射比电偶极辐射被压低一个 $(d/\\lambda)^2$ 因子（数值前因子量级 1）（2 分）。这与长波展开 (5.17) 中每高一阶多出 $(n\\cdot x')\\sim d$、相位 $kx'\\sim kd$ 的图像一致：$d\\ll\\lambda$ 时高阶多极可忽略。", "pitfall": "压低因子是 $(d/\\lambda)^2$（功率比，场比为 $d/\\lambda$）；勿把功率比写成一次方 $d/\\lambda$。"}, {"kc_id": "kc5.2", "cognitive_level": "apply", "difficulty": "hard", "type": "calc", "points": 8, "question": "从远场矢势 $A(x)=\\dfrac{\\mu_0}{4\\pi r}e^{ikr}\\displaystyle\\int J(x')e^{-ikn\\cdot x'}\\,d^3x'$ 出发（它由推迟矢势在远场区展开得到）。（1）对长波情形 $\\lambda\\gg d$，把相因子 $e^{-ikn\\cdot x'}\\approx1-ik(n\\cdot x')+\\cdots$ 展开，指出领头项 $\\int J\\,d^3x'$ 给出何种辐射，并用连续方程将其化为电偶极矩相关量。（2）说明下一项 $-ik\\int(n\\cdot x')J\\,d^3x'$ 经对称/反对称分解后分别对应哪两类辐射。", "options": [], "answer": -1, "explanation": "评分要点：(1) 领头项 $\\int J\\,d^3x'$ 对应电偶极（E1）辐射；由连续方程 $\\nabla'\\cdot J=i\\omega\\rho$ 及分部积分，$\\int J\\,d^3x'=-\\int x'(\\nabla'\\cdot J)\\,d^3x'=-i\\omega\\int x'\\rho\\,d^3x'=-i\\omega p$，其中 $p=\\int x'\\rho\\,d^3x'$（式 5.19-5.20）（4 分）。(2) 次项被积函数 $(n\\cdot x')J$ 分解为关于 $x'$ 与 $J$ 的反对称部分与对称部分（式 5.29）：反对称部分 $\\tfrac12 n_j(x'_jJ_i-J_jx'_i)$ 积分给出磁矩 $m=\\tfrac12\\int x'\\times J\\,d^3x'$，对应磁偶极（M1）辐射；对称部分 $\\tfrac12 n_j(x'_jJ_i+J_jx'_i)$ 经分部积分化为 $-\\tfrac{i\\omega}{2}\\int x'(n\\cdot x')\\rho\\,d^3x'$，对应电四极（E2）辐射（4 分）。", "pitfall": "长波展开次项要做对称/反对称分解：反对称→磁偶极，对称→电四极；二者源自同一项，不可只取其一。"}, {"kc_id": "kc5.10", "cognitive_level": "analyze", "difficulty": "hard", "type": "short", "points": 8, "question": "在辐射场的多极场展开中引入轨道角动量算符 $\\hat L=-i(x\\times\\nabla)$ 与矢量球谐 $X_{lm}=\\dfrac{1}{\\sqrt{l(l+1)}}\\hat L Y_{lm}$。（1）说明为何相比直接对 $e^{ik|x-x'|}/|x-x'|$ 作泰勒展开，多极场展开更适合处理高阶多极与矢量场的偏振信息。（2）简述电多极场与磁多极场在横向性（$x\\cdot E$、$x\\cdot H$）上的区别，以及任意无源辐射场如何用 $a_E(l,m)$、$a_M(l,m)$ 展开。", "options": [], "answer": -1, "explanation": "评分要点：(1) 泰勒展开（§34 做法）对低阶 E1/M1/E2 可行，但高阶修正繁琐且不能系统分离角动量本征态；球面波展开 (5.44) 利用 $\\hat L^2Y_{lm}=l(l+1)Y_{lm}$ 把场按角动量 $(l,m)$ 严格分类，$X_{lm}$ 满足正交归一 (5.62)，可系统给出任意阶、且天然携带矢量场偏振（电型/磁型）信息（4 分）。(2) 磁多极场：$x\\cdot E^{(M)}_{lm}=0$（电场纯横向），$x\\cdot H^{(M)}_{lm}\\propto g_l(kr)Y_{lm}\\ne0$；电多极场对偶（$x\\cdot H^{(E)}=0$，磁场纯横向）。任意无源场按式 (5.63) 展开为 $\\{f_l(kr)X_{lm},\\nabla\\times g_l(kr)X_{lm}\\}$ 的线性组合，系数 $a_E(l,m)$、$a_M(l,m)$ 分别标志电、磁多极成分多少，由式 (5.64)(5.65) 对场的角向投影确定（4 分）。", "pitfall": "电、磁多极场横向性恰好对偶：电多极磁场横向，磁多极电场横向，勿混。"}, {"kc_id": "kc5.12", "cognitive_level": "analyze", "difficulty": "medium", "type": "comprehensive", "points": 11, "question": "综合分析晴朗白天天空的颜色与偏振现象。已知阳光为连续谱非偏振光，大气分子可视为 $ka\\ll1$ 的非磁性介质微粒。（1）用偶极（瑞利）散射截面的频率依赖解释天空为何呈蓝色、日落太阳为何偏红。（2）写出非磁性介质球散射光偏振度 $\\Pi(\\theta)$，分析在哪个散射角观察到的天空漫散射光偏振度最大、哪些方向非偏振，并指出对应的观测方向（相对太阳光）。（3）若改用尺度与波长相当（$ka\\sim1$）的大颗粒（如云中水滴），上述瑞利图像为何失效？应改用何种理论描述？", "options": [], "answer": -1, "explanation": "评分要点：(1) $\\sigma=\\frac{8\\pi}{3}k^4a^6|\\frac{\\varepsilon_r-1}{\\varepsilon_r+2}|^2\\propto\\omega^4\\propto\\lambda^{-4}$；可见光中蓝光频率高、散射强（蓝:红 $\\approx(700/400)^4\\approx9$ 倍），天空弥散光以蓝为主故呈蓝；日出日落阳光斜穿大气路径长，蓝光被散射殆尽，透射余红光使日轮显红（4 分）。(2) $\\Pi(\\theta)=\\dfrac{d\\sigma_\\perp-d\\sigma_\\parallel}{d\\sigma_\\perp+d\\sigma_\\parallel}=\\dfrac{\\sin^2\\theta}{1+\\cos^2\\theta}$；$\\theta=\\pi/2$ 时 $\\Pi=1$ 完全偏振（电场垂直散射面），$\\theta=0,\\pi$ 时 $\\Pi=0$ 非偏振。即沿垂直于太阳入射光线方向（与太阳成 $90^\\circ$）观察天空漫散射光偏振度最大；正对或背对太阳方向非偏振（4 分）。(3) $ka\\sim1$ 时散射体不再感受均匀准静态场，高阶多极（$l\\ge2$）不再被 $(ka)^2$ 强烈压低，单一偶极近似失效，且截面不再简单 $\\propto\\lambda^{-4}$（趋于弱波长依赖，故云呈白色）；须用整球的米氏（Mie）散射理论——平面波分波展开 (5.90) 配合边界条件确定各阶系数 $\\alpha_\\pm(l),\\beta_\\pm(l)$（3 分）。", "pitfall": "瑞利 $\\lambda^{-4}$ 只在 $ka\\ll1$ 成立；云滴 $ka\\sim1$ 进入米氏区，散射近乎波长无关，故云为白色而非蓝色。"}];
+var LABELS = {"page_title": "章节测试", "section": {"choice": "一、选择题", "multi": "二、多选题", "tf": "三、判断题", "fill": "四、填空题", "short": "五、简答题", "calc": "六、计算题", "code": "七、代码题", "essay": "八、问答题", "comprehensive": "九、综合题"}, "section_order": ["choice", "multi", "tf", "fill", "short", "calc", "code", "essay", "comprehensive"], "points_suffix": "分", "true_label": "正确", "false_label": "错误", "placeholder": "在此作答...", "code_placeholder": "在此编写代码...", "pitfall_prefix": "易错提醒：", "correct_label": "正确", "wrong_label": "错误", "partial_label": "部分正确", "answer_prefix": "正确答案：", "reference_label": "参考答案", "graded_label": "已批改", "grade_button": "提交批改", "score_label": "总分", "duration_prefix": "满分 100 分 | 建议 ", "duration_suffix": " 分钟 | 选择答案后点击提交批改"};
+
+// ─── Answer normalization (robust to how the JSON was authored) ──────
+// tf / choice answers may arrive as int index, boolean, letter ("A"),
+// or label string ("正确"/"错误"/"对"/"错"). All are coerced to an
+// option index so grading never silently fails on a type mismatch.
+
+function tfAnswerIndex(ans) {
+  // option 0 = true_label (正确), option 1 = false_label (错误)
+  if (typeof ans === 'boolean') return ans ? 0 : 1;
+  if (typeof ans === 'number') return ans === 0 ? 0 : 1;
+  var s = ('' + ans).trim().toLowerCase();
+  var truthy = ['0', 't', 'true', '正确', '对', '是', 'yes', 'y', '√', '✓'];
+  var falsy  = ['1', 'f', 'false', '错误', '错', '否', 'no', 'n', '×', 'x'];
+  if (truthy.indexOf(s) !== -1) return 0;
+  if (falsy.indexOf(s) !== -1) return 1;
+  return ans ? 0 : 1;
+}
+
+function choiceAnswerIndex(ans, options) {
+  if (typeof ans === 'number') return ans;
+  var s = ('' + ans).trim();
+  if (/^[A-Za-z]$/.test(s)) return s.toUpperCase().charCodeAt(0) - 65;
+  if (/^\d+$/.test(s)) return parseInt(s, 10);
+  if (options) {
+    for (var i = 0; i < options.length; i++) {
+      if (('' + options[i]).trim() === s) return i;
+    }
+  }
+  return parseInt(s, 10);
+}
+
+function multiAnswerSet(ans, options) {
+  var arr = Array.isArray(ans) ? ans : [ans];
+  var set = {};
+  for (var i = 0; i < arr.length; i++) {
+    set[choiceAnswerIndex(arr[i], options)] = true;
+  }
+  return set;
+}
+
+// Normalize free text for fill-in-the-blank comparison: trim, lowercase,
+// drop surrounding whitespace and common punctuation, unify full/half width.
+function normText(s) {
+  s = ('' + s).trim().toLowerCase();
+  s = s.replace(/[\s　]+/g, '');
+  s = s.replace(/[.,;:!?。，、；：！？“”"'（）()【】\[\]<>《》]/g, '');
+  // full-width ASCII -> half-width
+  s = s.replace(/[！-～]/g, function (c) {
+    return String.fromCharCode(c.charCodeAt(0) - 0xfee0);
+  });
+  return s;
+}
+
+// How many blanks does a fill question have? Count underscore / ＿ runs.
+function fillBlankCount(question) {
+  var m = ('' + question).match(/(_{2,}|＿+)/g);
+  return m ? m.length : 0;
+}
+
+// Coerce a fill `answer` into an array (one entry per blank) of accepted
+// answer lists. Handles: string, [synonyms], [[blank1 syns],[blank2 syns]].
+function fillBlankAnswers(ans, nBlanks) {
+  if (nBlanks < 1) nBlanks = 1;
+  if (!Array.isArray(ans)) return padBlanks([[ans]], nBlanks);
+  if (ans.length && Array.isArray(ans[0])) return padBlanks(ans, nBlanks);
+  // flat array of strings
+  if (nBlanks === 1) return [ans];                 // synonyms for one blank
+  if (ans.length === nBlanks) {                    // one answer per blank
+    return ans.map(function (a) { return [a]; });
+  }
+  return padBlanks([ans], nBlanks);                // ambiguous -> all on blank 1
+}
+
+function padBlanks(arr, n) {
+  var out = arr.slice(0, n);
+  while (out.length < n) out.push(['']);
+  return out;
+}
+
+// ─── Build ───────────────────────────────────────────────────────────
+
+function build() {
+  var container = document.getElementById('questions-container');
+  if (!container) { console.error('ExamPass: questions-container not found'); return; }
+
+  // Stable-sort questions by section order so headings group correctly
+  // regardless of input order.
+  var order = LABELS.section_order || [];
+  Q.forEach(function (q, i) { q._i = i; });
+  Q.sort(function (a, b) {
+    var oa = order.indexOf(a.type); if (oa === -1) oa = 99;
+    var ob = order.indexOf(b.type); if (ob === -1) ob = 99;
+    return oa - ob || a._i - b._i;
+  });
+
+  var h = '';
+  var sec = '';
+  var titles = LABELS.section;
+
+  for (var i = 0; i < Q.length; i++) {
+    var q = Q[i];
+    if (q.type !== sec) {
+      sec = q.type;
+      if (titles[q.type]) h += '<h3>' + titles[q.type] + '</h3>';
+    }
+
+    var qid = 'q' + i;
+    h += '<div class="q-card" id="card-' + qid + '">';
+    h += '<div class="q-num">' + (i + 1) + '. (' + q.points + ' ' + LABELS.points_suffix + ')</div>';
+
+    if (q.type === 'fill') {
+      h += '<div class="q-text">' + renderFill(q, qid) + '</div>';
+    } else {
+      h += '<div class="q-text">' + q.question + '</div>';
+    }
+
+    if (q.type === 'choice') {
+      var opts = q.options || [];
+      for (var j = 0; j < opts.length; j++) {
+        h += '<label class="option" id="opt-' + qid + '-' + j + '" onclick="sel(\'' + qid + '\',' + j + ')">';
+        h += '<input type="radio" name="' + qid + '" value="' + j + '">' + String.fromCharCode(65 + j) + '. ' + opts[j] + '</label>';
+      }
+    } else if (q.type === 'multi') {
+      var mopts = q.options || [];
+      for (var k = 0; k < mopts.length; k++) {
+        h += '<label class="option" id="opt-' + qid + '-' + k + '" onclick="toggle(\'' + qid + '\',' + k + ')">';
+        h += '<input type="checkbox" name="' + qid + '" value="' + k + '">' + String.fromCharCode(65 + k) + '. ' + mopts[k] + '</label>';
+      }
+    } else if (q.type === 'tf') {
+      h += '<label class="option" id="opt-' + qid + '-0" onclick="sel(\'' + qid + '\',0)">';
+      h += '<input type="radio" name="' + qid + '" value="0">' + LABELS.true_label + '</label>';
+      h += '<label class="option" id="opt-' + qid + '-1" onclick="sel(\'' + qid + '\',1)">';
+      h += '<input type="radio" name="' + qid + '" value="1">' + LABELS.false_label + '</label>';
+    } else if (q.type === 'fill') {
+      // inputs already rendered inline inside q-text
+    } else if (q.type === 'code') {
+      h += '<textarea class="q-textarea q-code" id="text-' + qid + '" placeholder="' + (LABELS.code_placeholder || LABELS.placeholder) + '" rows="8" spellcheck="false"></textarea>';
+    } else {
+      h += '<textarea class="q-textarea" id="text-' + qid + '" placeholder="' + LABELS.placeholder + '" rows="3"></textarea>';
+    }
+
+    h += '<div class="result" id="result-' + qid + '">';
+    h += '<span class="badge" id="badge-' + qid + '"></span><span id="correct-' + qid + '"></span>';
+    h += '<div class="explanation">' + (q.explanation || '') + '</div>';
+    if (q.pitfall) {
+      h += '<div class="pitfall">' + LABELS.pitfall_prefix + q.pitfall + '</div>';
+    }
+    h += '</div></div>';
+  }
+
+  container.innerHTML = h;
+
+  if (window.MathJax && MathJax.typesetPromise) {
+    MathJax.typesetPromise([container]).catch(function (err) {
+      console.error('MathJax typeset error:', err);
+    });
+  }
+}
+
+// Render fill question text with inline <input> boxes replacing blanks.
+function renderFill(q, qid) {
+  var nBlanks = fillBlankCount(q.question);
+  var k = 0;
+  var html = ('' + q.question).replace(/(_{2,}|＿+)/g, function () {
+    var inp = '<input type="text" class="fill-input" id="fill-' + qid + '-' + k + '" autocomplete="off" spellcheck="false">';
+    k++;
+    return inp;
+  });
+  if (k === 0) {
+    // No markers in text -> append boxes based on answer shape
+    var n = fillBlankAnswers(q.answer, 1).length;
+    var ans = q.answer;
+    if (Array.isArray(ans)) n = Array.isArray(ans[0]) ? ans.length : (ans.length || 1);
+    if (n < 1) n = 1;
+    html += '<div class="fill-row">';
+    for (var b = 0; b < n; b++) {
+      if (n > 1) html += '<span class="fill-tag">' + (b + 1) + '.</span>';
+      html += '<input type="text" class="fill-input" id="fill-' + qid + '-' + b + '" autocomplete="off" spellcheck="false">';
+    }
+    html += '</div>';
+  }
+  return html;
+}
+
+document.addEventListener('DOMContentLoaded', build);
+if (document.readyState === 'interactive' || document.readyState === 'complete') {
+  build();
+}
+
+// ─── Selection handlers ──────────────────────────────────────────────
+
+function sel(qid, idx) {
+  var prefix = 'opt-' + qid + '-';
+  var all = document.querySelectorAll('[id^="' + prefix + '"]');
+  for (var i = 0; i < all.length; i++) all[i].classList.remove('selected');
+  var target = document.getElementById('opt-' + qid + '-' + idx);
+  if (target) target.classList.add('selected');
+  var radio = document.querySelector('input[name="' + qid + '"][value="' + idx + '"]');
+  if (radio) radio.checked = true;
+}
+
+function toggle(qid, idx) {
+  var box = document.querySelector('input[name="' + qid + '"][value="' + idx + '"]');
+  var label = document.getElementById('opt-' + qid + '-' + idx);
+  if (!box) return;
+  box.checked = !box.checked;
+  if (label) label.classList.toggle('selected', box.checked);
+}
+
+// ─── Grading ─────────────────────────────────────────────────────────
+
+function gradeAll() {
+  var score = 0;
+  for (var i = 0; i < Q.length; i++) {
+    var q = Q[i];
+    var qid = 'q' + i;
+    var card = document.getElementById('card-' + qid);
+    var result = document.getElementById('result-' + qid);
+    var badge = document.getElementById('badge-' + qid);
+    var correctEl = document.getElementById('correct-' + qid);
+    if (!card || !result) continue;
+
+    result.style.display = 'block';
+
+    if (q.type === 'choice' || q.type === 'tf') {
+      score += gradeSingle(q, qid, card, badge, correctEl);
+    } else if (q.type === 'multi') {
+      score += gradeMulti(q, qid, card, badge, correctEl);
+    } else if (q.type === 'fill') {
+      score += gradeFill(q, qid, card, badge, correctEl);
+    } else {
+      card.classList.add('correct');
+      badge.className = 'badge badge-ref';
+      badge.textContent = LABELS.reference_label;
+    }
+  }
+
+  var sb = document.getElementById('score-box');
+  if (sb) {
+    sb.style.display = 'block';
+    document.getElementById('score-num').textContent = roundScore(score);
+    sb.scrollIntoView({ behavior: 'smooth' });
+  }
+
+  var opts = document.querySelectorAll('.option');
+  for (var a = 0; a < opts.length; a++) opts[a].style.pointerEvents = 'none';
+  var tas = document.querySelectorAll('.q-textarea');
+  for (var b = 0; b < tas.length; b++) tas[b].disabled = true;
+  var fis = document.querySelectorAll('.fill-input');
+  for (var c = 0; c < fis.length; c++) fis[c].disabled = true;
+
+  var btn = document.getElementById('grade-btn');
+  if (btn) { btn.disabled = true; btn.textContent = LABELS.graded_label; }
+
+  if (window.MathJax && MathJax.typesetPromise) {
+    MathJax.typesetPromise().catch(function (err) {
+      console.error('MathJax typeset error:', err);
+    });
+  }
+}
+
+function roundScore(s) {
+  return Math.round(s * 10) / 10;
+}
+
+function gradeSingle(q, qid, card, badge, correctEl) {
+  var ansIdx = q.type === 'tf' ? tfAnswerIndex(q.answer) : choiceAnswerIndex(q.answer, q.options);
+  var radio = document.querySelector('input[name="' + qid + '"]:checked');
+  if (radio && parseInt(radio.value, 10) === ansIdx) {
+    card.classList.add('correct');
+    badge.className = 'badge badge-ok';
+    badge.textContent = LABELS.correct_label;
+    correctEl.innerHTML = '';
+    var ok = document.getElementById('opt-' + qid + '-' + ansIdx);
+    if (ok) ok.classList.add('correct-answer');
+    return q.points;
+  }
+  card.classList.add('wrong');
+  badge.className = 'badge badge-no';
+  badge.textContent = LABELS.wrong_label;
+  var ansText = q.type === 'choice'
+    ? String.fromCharCode(65 + ansIdx) + '. ' + (q.options ? q.options[ansIdx] : '')
+    : (ansIdx === 0 ? LABELS.true_label : LABELS.false_label);
+  correctEl.innerHTML = LABELS.answer_prefix + ansText;
+  if (radio) {
+    var wrongOpt = document.getElementById('opt-' + qid + '-' + radio.value);
+    if (wrongOpt) wrongOpt.classList.add('wrong-answer');
+  }
+  var corr = document.getElementById('opt-' + qid + '-' + ansIdx);
+  if (corr) corr.classList.add('correct-answer');
+  return 0;
+}
+
+function gradeMulti(q, qid, card, badge, correctEl) {
+  var want = multiAnswerSet(q.answer, q.options);
+  var wantKeys = Object.keys(want).map(Number);
+  var checked = document.querySelectorAll('input[name="' + qid + '"]:checked');
+  var picked = [];
+  for (var i = 0; i < checked.length; i++) picked.push(parseInt(checked[i].value, 10));
+
+  var anyWrong = false, hitCorrect = 0;
+  for (var p = 0; p < picked.length; p++) {
+    if (want[picked[p]]) hitCorrect++;
+    else anyWrong = true;
+  }
+
+  // reveal correct / wrong option markers
+  var mopts = q.options || [];
+  for (var j = 0; j < mopts.length; j++) {
+    var el = document.getElementById('opt-' + qid + '-' + j);
+    if (!el) continue;
+    if (want[j]) el.classList.add('correct-answer');
+    else if (picked.indexOf(j) !== -1) el.classList.add('wrong-answer');
+  }
+
+  var earned;
+  if (!anyWrong && hitCorrect === wantKeys.length && picked.length === wantKeys.length) {
+    earned = q.points;
+    card.classList.add('correct');
+    badge.className = 'badge badge-ok';
+    badge.textContent = LABELS.correct_label;
+    correctEl.innerHTML = '';
+  } else if (!anyWrong && hitCorrect > 0) {
+    // 少选不错选 -> partial credit
+    earned = roundScore(q.points * hitCorrect / wantKeys.length);
+    card.classList.add('partial');
+    badge.className = 'badge badge-partial';
+    badge.textContent = LABELS.partial_label;
+    correctEl.innerHTML = LABELS.answer_prefix + multiAnswerText(wantKeys, mopts);
+  } else {
+    earned = 0;
+    card.classList.add('wrong');
+    badge.className = 'badge badge-no';
+    badge.textContent = LABELS.wrong_label;
+    correctEl.innerHTML = LABELS.answer_prefix + multiAnswerText(wantKeys, mopts);
+  }
+  return earned;
+}
+
+function multiAnswerText(keys, options) {
+  return keys.sort(function (a, b) { return a - b; }).map(function (k) {
+    return String.fromCharCode(65 + k) + '. ' + (options ? options[k] : '');
+  }).join('  ');
+}
+
+function gradeFill(q, qid, card, badge, correctEl) {
+  var nBlanks = fillBlankCount(q.question);
+  var blanks = fillBlankAnswers(q.answer, nBlanks);
+  var n = blanks.length;
+  var hit = 0;
+  var displays = [];
+
+  for (var b = 0; b < n; b++) {
+    var inp = document.getElementById('fill-' + qid + '-' + b);
+    var accepted = blanks[b] || [''];
+    var user = inp ? normText(inp.value) : '';
+    var ok = false;
+    for (var a = 0; a < accepted.length; a++) {
+      if (accepted[a] !== '' && normText(accepted[a]) === user && user !== '') { ok = true; break; }
+    }
+    if (inp) inp.classList.add(ok ? 'fill-ok' : 'fill-no');
+    if (ok) hit++;
+    displays.push((n > 1 ? (b + 1) + '. ' : '') + accepted.filter(function (x) { return x !== ''; }).join(' / '));
+  }
+
+  var earned = roundScore(q.points * hit / n);
+  correctEl.innerHTML = LABELS.answer_prefix + displays.join('   ');
+
+  if (hit === n) {
+    card.classList.add('correct');
+    badge.className = 'badge badge-ok';
+    badge.textContent = LABELS.correct_label;
+  } else if (hit > 0) {
+    card.classList.add('partial');
+    badge.className = 'badge badge-partial';
+    badge.textContent = LABELS.partial_label;
+  } else {
+    card.classList.add('wrong');
+    badge.className = 'badge badge-no';
+    badge.textContent = LABELS.wrong_label;
+  }
+  return earned;
+}
+
+</script>
+</div>
+</body>
+</html>

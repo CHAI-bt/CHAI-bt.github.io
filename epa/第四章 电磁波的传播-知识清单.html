@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>经典电动力学（刘川） 第四章 电磁波的传播</title>
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\(', '\)']],
+    displayMath: [['$$', '$$'], ['\[', '\]']]
+  }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"></script>
+<style>
+/* === ExamPass Shared Styles === */
+/* Paper-like warm background, clean typography, responsive */
+
+:root {
+  --paper: #fdf6e3;
+  --paper-dark: #f5ecd7;
+  --ink: #2c2c2c;
+  --ink-light: #555;
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
+  --divider: #d6c8a8;
+  --card-bg: #fef9ef;
+  --card-border: #e8dcc8;
+  --correct: #22c55e;
+  --correct-bg: #f0fdf4;
+  --wrong: #ef4444;
+  --wrong-bg: #fef2f2;
+  --tag-bg: #fef3c7;
+  --tag-text: #92400e;
+  --radius: 6px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: "Microsoft YaHei", "Noto Sans SC", "SimSun", sans-serif;
+  font-size: 12pt; line-height: 1.75; color: var(--ink);
+  max-width: 860px; margin: auto; padding: 24px 20px 60px;
+  background: var(--paper);
+}
+
+@media print {
+  body { font-size: 10.5pt; background: #fff; }
+  .no-print { display: none !important; }
+  h1, h2, h3 { page-break-after: avoid; }
+}
+
+/* ── Header ── */
+#exampass-header {
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding: 6px 0; margin-bottom: 0;
+}
+.header-brand { font-size: 1.2em; font-weight: 700; color: #1a1a2e; letter-spacing: 0.3px; }
+.header-url  { font-size: 0.78em; color: #999; }
+.header-divider { border: none; border-top: 2px solid var(--divider); margin: 4px 0 20px 0; }
+
+/* ── Typography ── */
+h1 { font-size: 1.55em; text-align: center; border-bottom: 2px solid var(--divider); padding-bottom: 8px; margin-top: 0; }
+h2 { font-size: 1.25em; border-bottom: 1px solid var(--divider); padding-bottom: 4px; margin-top: 28px; }
+h3 { font-size: 1.08em; margin-top: 20px; color: var(--ink); }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ── Tables ── */
+table { border-collapse: collapse; width: 100%; margin: 10px 0; font-size: 0.95em; }
+td, th { border: 1px solid var(--card-border); padding: 5px 9px; text-align: left; }
+th { background: var(--paper-dark); font-weight: 700; }
+
+/* ── Knowledge point vs explanation ── */
+.kp { font-weight: 700; color: var(--ink); }           /* key point: bold dark */
+.exp { font-weight: 400; color: var(--ink-light); }    /* explanation: lighter */
+.exp em, .exp strong { color: var(--ink); }             /* emphasis inside explanation */
+
+/* ── Block elements ── */
+blockquote {
+  border-left: 3px solid #c0392b; background: #fef9ef;
+  padding: 6px 14px; margin: 10px 0; font-size: 0.95em;
+}
+code { background: #f0ede0; padding: 2px 5px; border-radius: 3px; font-size: 0.92em; }
+pre { background: #f0ede0; padding: 10px; border-radius: var(--radius); overflow-x: auto; }
+
+/* ── TOC ── */
+div.toc {
+  background: var(--card-bg); padding: 14px 18px;
+  border: 1px solid var(--card-border); border-radius: var(--radius); margin-bottom: 22px;
+}
+div.toc ul { padding-left: 18px; }
+div.toc li { margin: 3px 0; font-size: 0.95em; }
+
+/* ── Priority tags ── */
+.tag-must   { background: #fee2e2; color: #991b1b; padding: 1px 6px; border-radius: 3px; font-size: 0.82em; font-weight: 600; }
+.tag-key    { background: #fef3c7; color: #92400e; padding: 1px 6px; border-radius: 3px; font-size: 0.82em; font-weight: 600; }
+.tag-freq   { background: #dbeafe; color: #1e40af; padding: 1px 6px; border-radius: 3px; font-size: 0.82em; font-weight: 600; }
+.tag-info   { background: #f0fdf4; color: #166534; padding: 1px 6px; border-radius: 3px; font-size: 0.82em; font-weight: 600; }
+
+/* === Sidebar Styles === */
+:root { --sidebar-width: 240px; }
+body { display: flex !important; flex-direction: row !important; max-width: none !important; margin: 0 !important; padding: 0 !important; background: #f7f8fb !important; }
+.sidebar { width: var(--sidebar-width); height: 100vh; background: #ffffff; border-right: 1px solid #e2e5ea; display: flex; flex-direction: column; flex-shrink: 0; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04); z-index: 10; overflow-y: auto; position: fixed; left: 0; top: 0; }
+.sidebar-header { padding: 18px 20px 14px; border-bottom: 1px solid #e2e5ea; position: sticky; top: 0; background: #ffffff; z-index: 2; }
+.sidebar-header h2 { font-size: 1rem; font-weight: 700; color: #1a1d23; letter-spacing: -0.01em; margin: 0; text-align: left; border: none; padding: 0; }
+.sidebar-header .subtitle { font-size: 0.76rem; color: #5a5f6b; margin-top: 2px; }
+.sidebar-nav { flex: 1; padding: 8px 0; }
+.nav-section { border-bottom: 1px solid #e2e5ea; }
+.nav-section-header { display: flex; align-items: center; gap: 8px; padding: 10px 20px; font-size: 0.85rem; font-weight: 600; color: #1a1d23; text-decoration: none; transition: 0.2s; cursor: pointer; }
+.nav-section-header:hover { background: #f1f3f6; }
+.nav-section-header .icon { width: 20px; text-align: center; flex-shrink: 0; }
+.main-content { margin-left: var(--sidebar-width); flex: 1; min-height: 100vh; background: #fdf6e3; }
+#exampass-header { position: sticky; top: 0; z-index: 5; background: #fdf6e3; }
+@media print { .sidebar { display: none !important; } .main-content { margin-left: 0 !important; } }
+@media (max-width: 700px) { :root { --sidebar-width: 200px; } }
+
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+    <div class="sidebar-header">
+        <h2>📡 第四章</h2>
+        <div class="subtitle">电磁波的传播</div>
+    </div>
+    <nav class="sidebar-nav">
+        <div class="nav-section">
+            <a class="nav-section-header" href="index.html">
+                <span class="icon">🏠</span>
+                <span style="flex:1;">返回电动力学首页</span>
+            </a>
+        </div>
+        <div class="nav-section">
+            <a class="nav-section-header" href="../index.html">
+                <span class="icon">📚</span>
+                <span style="flex:1;">返回总首页</span>
+            </a>
+        </div>
+        <div class="nav-section">
+            <a class="nav-section-header" href="ch5.html">
+                <span class="icon">📡</span>
+                <span style="flex:1;">第五章</span>
+            </a>
+        </div>
+        <div class="nav-section">
+            <a class="nav-section-header" href="ch6.html">
+                <span class="icon">📡</span>
+                <span style="flex:1;">第六章</span>
+            </a>
+        </div>
+    </nav>
+</aside>
+<div class="main-content">
+
+<header id="exampass-header">
+  <div class="header-left"><span class="header-brand">ExamPass Assistant</span></div>
+  <div class="header-right"><span class="header-url">github.com/WUBING2023/ExamPass-Assistant</span></div>
+</header>
+<hr class="header-divider">
+
+<h1>经典电动力学（刘川） 第四章 电磁波的传播</h1>
+<div class="toc">
+<h2>目录</h2>
+<ul>
+<li><a href="#s23948553">§25 均匀平面电磁波的基本性质</a></li>
+  <li><a href="#s74708987">波动方程与平面波解、色散关系</a></li>
+  <li><a href="#s23629096">横波性与场的正交关系</a></li>
+  <li><a href="#s74488296">偏振：线 / 圆 / 椭圆与斯托克斯参数</a></li>
+  <li><a href="#s53950914">能流与能量密度</a></li>
+<li><a href="#s53514950">§26 电磁波在介质表面的折射与反射</a></li>
+  <li><a href="#s89481877">相位匹配与斯涅尔定律</a></li>
+  <li><a href="#s21088865">菲涅耳公式（由边界条件推振幅比）</a></li>
+  <li><a href="#s85242620">布儒斯特角</a></li>
+  <li><a href="#s10280936">全反射与倏逝波</a></li>
+<li><a href="#s57550422">§27 电磁波在导电介质中的传播</a></li>
+  <li><a href="#s48566489">复介电常数与复波矢</a></li>
+  <li><a href="#s69547101">良导体趋肤深度与趋肤效应</a></li>
+  <li><a href="#s29285913">准静态近似与涡流损耗（例题 4.1）</a></li>
+<li><a href="#s22442863">§28 介质色散的经典模型</a></li>
+  <li><a href="#s33074442">洛伦兹振子模型与介电常数</a></li>
+  <li><a href="#s51206230">德鲁德模型与电导率</a></li>
+  <li><a href="#s85254760">等离子体频率与金属紫外透明</a></li>
+  <li><a href="#s25666004">共振吸收与反常色散</a></li>
+<li><a href="#s22595836">§29 电磁信号在色散介质中的传播</a></li>
+  <li><a href="#s78130152">波包与不确定性关系</a></li>
+  <li><a href="#s35519696">群速度与相速度</a></li>
+  <li><a href="#s40411056">克拉莫斯-克罗尼格（KK）关系</a></li>
+  <li><a href="#s66264893">因果性与最大信号速度</a></li>
+<li><a href="#s87490375">§30 各向异性晶体中的电磁波传播</a></li>
+  <li><a href="#s41797428">本征方程与双折射</a></li>
+  <li><a href="#s39808984">菲涅尔方程与折射率椭球</a></li>
+  <li><a href="#s75996525">单轴晶体：o 光与 e 光</a></li>
+  <li><a href="#s66123307">双轴晶体与锥形折射</a></li>
+<li><a href="#s40063659">§31 波导与谐振腔</a></li>
+  <li><a href="#s55484562">横纵分离与 TE / TM / TEM 模式</a></li>
+  <li><a href="#s23752661">金属波导边条件与截止频率</a></li>
+  <li><a href="#s89056431">矩形波导本征模式（例题 4.2）</a></li>
+  <li><a href="#s20798347">波导能量传输（群速度）与欧姆损耗</a></li>
+  <li><a href="#s36545426">谐振腔与本征频率</a></li>
+  <li><a href="#s32621229">介质波导 / 光纤与单模传播</a></li>
+</ul>
+</div>
+<h2 id="s23948553">§25 均匀平面电磁波的基本性质</h2>
+<p><span class="exp">本节回答：在没有电荷电流的均匀介质里，电磁场能以什么形式自我支撑地传播？答案是「均匀平面电磁波」——它是后面一切折射、反射、色散、波导问题的「砖块」，必须先吃透它的色散关系、横波性、偏振与能流。</span></p>
+
+<h3 id="s74708987">波动方程与平面波解、色散关系</h3>
+<p><span class="exp">是什么：麦克斯韦方程组在无源均匀线性介质（电容率 $\epsilon$、磁导率 $\mu$）中，可解耦成 $\mathbf E$、$\mathbf B$ 各自满足的波动方程。这说明电磁场不需要依附任何「以太」，能在介质（乃至真空）里自由传播。</span></p>
+$$\nabla^2\mathbf E-\mu\epsilon\frac{\partial^2\mathbf E}{\partial t^2}=0,\qquad \nabla^2\mathbf B-\mu\epsilon\frac{\partial^2\mathbf B}{\partial t^2}=0$$
+<p><span class="exp">为什么需要它：波动方程的最基本解就是平面波。我们用复指数写出试探解（约定：任何可测量物理量取复表示的实部），把任意常数相因子吸收进矢量振幅，于是 $\mathbf E_0,\mathbf B_0$ 原则上是复矢量。</span></p>
+$$\mathbf E=\mathbf E_0\,e^{i\mathbf k\cdot\mathbf x-i\omega t},\qquad \mathbf B=\mathbf B_0\,e^{i\mathbf k\cdot\mathbf x-i\omega t}$$
+<p><span class="exp">怎么用：把这个解代回波动方程，$\nabla\to i\mathbf k$、$\partial_t\to-i\omega$，立即得到 $-k^2+\mu\epsilon\omega^2=0$，即<span class="kp">色散关系</span></span></p>
+$$\boxed{k^2\equiv\mathbf k\cdot\mathbf k=\mu\epsilon\,\omega^2}$$
+<p><span class="exp">这就是 $\mathbf k$ 与 $\omega$ 必须满足的约束。由它定义<span class="kp">相速度</span>（等相位面在空间移动的速度）与<span class="kp">折射率</span></span></p>
+$$v_p=\frac{\omega}{k}=\frac{1}{\sqrt{\mu\epsilon}}=\frac{c}{n},\qquad n=\sqrt{\frac{\mu\epsilon}{\mu_0\epsilon_0}}$$
+<p><span class="exp">物理意义：真实介质中 $\mu\epsilon$ 依赖频率 $\omega$，因此 $n=n(\omega)$，这就是「色散」（17 世纪牛顿棱镜实验所见）。若在很窄频段忽略色散，把平面波线性叠加即得波动方程通解，一维情形为保形行波 $g(x-vt)+f(x+vt)$；考虑色散则波形会变（见 §29）。</span></p>
+<p><span class="tag-must">必考</span></p>
+
+<h3 id="s23629096">横波性与场的正交关系</h3>
+<p><span class="exp">是什么：色散关系只管 $\mathbf k$ 的大小，没说方向关系。麦克斯韦方程里的两条散度方程 $\nabla\cdot\mathbf D=0,\nabla\cdot\mathbf B=0$ 对平面波给出 $\mathbf k\cdot\mathbf E_0=0,\ \mathbf k\cdot\mathbf B_0=0$，即电磁波是横波——场振动方向垂直于传播方向。</span></p>
+$$\mathbf k\cdot\mathbf E_0=0,\qquad \mathbf k\cdot\mathbf B_0=0$$
+<p><span class="exp">怎么用：再用旋度方程 $\nabla\times\mathbf E=-\partial_t\mathbf B$（即 $i\mathbf k\times\mathbf E_0=i\omega\mathbf B_0$），把 $\mathbf B_0$ 用 $\mathbf E_0$ 表示出来。记 $\mathbf n$ 为 $\mathbf k$ 方向单位矢量（注意此 $\mathbf n$ 是波矢方向，不是折射率），得</span></p>
+$$\mathbf B_0=\sqrt{\mu\epsilon}\,\mathbf n\times\mathbf E_0$$
+<p><span class="kp">于是 $\mathbf k,\mathbf E,\mathbf B$ 两两正交，构成右手坐标架；$|\mathbf B_0|=\sqrt{\mu\epsilon}\,|\mathbf E_0|$。</span></p>
+<blockquote>易错：所有可测量都取复表示的实部。复振幅 $\mathbf E_0$ 含的相位信息（线/圆/椭圆偏振）正藏在它的复数性里，不能一上来就丢掉虚部。</blockquote>
+<p><span class="tag-must">必考</span></p>
+
+<h3 id="s74488296">偏振：线 / 圆 / 椭圆与斯托克斯参数</h3>
+<p><span class="exp">是什么：横波在垂直于 $\mathbf n$ 的平面内还有两个自由度。取该平面内两实单位矢量 $\mathbf e_1,\mathbf e_2$（$\mathbf e_1\times\mathbf e_2=\mathbf n$），把电场复振幅展开：</span></p>
+$$\mathbf E(\mathbf x,t)=(E_1\mathbf e_1+E_2\mathbf e_2)\,e^{i\mathbf k\cdot\mathbf x-i\omega t},\quad E_1,E_2\in\mathbb C$$
+<p><span class="exp">为什么需要它：$E_1,E_2$ 的相对相位决定了电场矢量端点随时间在固定点画出的轨迹（迎着波看）。这就是偏振态。</span></p>
+<table>
+<tr><th>偏振态</th><th>条件 $E_2/E_1$</th><th>电场端点轨迹</th></tr>
+<tr><td>线偏振</td><td>实数（同相位角）</td><td>一条直线</td></tr>
+<tr><td>左旋圆偏振</td><td>$+i$</td><td>逆时针圆（光子螺旋度 $+1$）</td></tr>
+<tr><td>右旋圆偏振</td><td>$-i$</td><td>顺时针圆（光子螺旋度 $-1$）</td></tr>
+<tr><td>椭圆偏振</td><td>一般复数</td><td>椭圆</td></tr>
+</table>
+<p><span class="exp">怎么用：圆偏振用复单位矢量描述更方便</span></p>
+$$\mathbf e_\pm=\tfrac{1}{\sqrt2}(\mathbf e_1\pm i\mathbf e_2),\qquad \mathbf e_\pm^*\cdot\mathbf n=\mathbf e_\pm^*\cdot\mathbf e_\mp=0,\quad \mathbf e_\pm^*\cdot\mathbf e_\pm=1$$
+<p><span class="exp">实验上无法直接测复振幅相位，但可测<span class="kp">斯托克斯参数</span>。令 $\mathbf e_1\cdot\mathbf E=a_1e^{i\delta_1},\ \mathbf e_2\cdot\mathbf E=a_2e^{i\delta_2}$，定义</span></p>
+$$s_0=a_1^2+a_2^2,\ \ s_1=a_1^2-a_2^2,\ \ s_2=2a_1a_2\cos(\delta_2-\delta_1),\ \ s_3=2a_1a_2\sin(\delta_2-\delta_1)$$
+<p><span class="kp">四者非独立，满足 $s_0^2=s_1^2+s_2^2+s_3^2$。</span><span class="exp">$s_0$ 是总强度，$s_3$ 表征圆偏振分量。它们都是可直接测量的实物理量，由此确定偏振态。</span></p>
+<p><span class="tag-key">重点</span></p>
+
+<h3 id="s53950914">能流与能量密度</h3>
+<p><span class="exp">是什么：波传播伴随能量传输，由玻印廷矢量描述。对单色平面波，真实玻印廷矢量随时间振荡，物理上关心一个周期的时间平均（用复场算时平均要取 $\tfrac12\mathrm{Re}(\mathbf E\times\mathbf H^*)$）。</span></p>
+$$\langle\mathbf S\rangle=\tfrac12\,\mathrm{Re}(\mathbf E\times\mathbf H^*)=\tfrac12\sqrt{\tfrac{\epsilon}{\mu}}\,|\mathbf E_0|^2\,\mathbf n,\qquad \langle u\rangle=\tfrac{\epsilon}{2}|\mathbf E_0|^2$$
+<p><span class="exp">怎么用：能流沿 $\mathbf n$ 方向有非零时间平均（所以阳光带来温暖）。写 $\langle\mathbf S\rangle=\langle u\rangle\,v\,\mathbf n$，比较两式得能量流动速度</span></p>
+$$v=\frac{1}{\sqrt{\mu\epsilon}}=\frac{c}{n}$$
+<p><span class="exp">代数细节：$\langle\mathbf S\rangle/\langle u\rangle=\bigl[\tfrac12\sqrt{\epsilon/\mu}\bigr]/[\tfrac{\epsilon}{2}]=\sqrt{1/(\mu\epsilon)}=v_p$，所以能量流速=相速度是单色波的特殊性质。对波包含多频率成分，不同频率相速度不同，能量整体不再随单一相位走——此时要用群速度 $v_g=d\omega/dk$ 描写（§29），一般 $v_g\neq v_p$。</span></p>
+<blockquote>易错：对单色平面波，能量流速恰等于相速度——但这只是巧合。一般波包的能量流速 ≠ 相速度（见 §29 群速度）。</blockquote>
+<p><span class="tag-freq">高频</span></p>
+
+<h2 id="s53514950">§26 电磁波在介质表面的折射与反射</h2>
+<p><span class="exp">本节回答：平面波打到两种非导电介质的分界面（$z=0$，法向 $+z$，介质参数 $\epsilon,\mu$ 与 $\epsilon',\mu'$）上，会怎样反射和折射？答案分两层——「相位匹配」定方向（斯涅尔定律），「边界条件」定振幅（菲涅耳公式），并由此引出布儒斯特角与全反射两个重要现象。</span></p>
+
+<h3 id="s89481877">相位匹配与斯涅尔定律</h3>
+<p><span class="exp">是什么：入射波 $\mathbf k$、折射波 $\mathbf k'$、反射波 $\mathbf k''$ 的振幅由边界条件联系，而边界条件必须在 $z=0$ 平面上「时时处处」成立。这就要求三个波的相因子在界面上处处相等：</span></p>
+$$(\mathbf k\cdot\mathbf x)_{z=0}=(\mathbf k'\cdot\mathbf x)_{z=0}=(\mathbf k''\cdot\mathbf x)_{z=0}$$
+<p><span class="exp">这一步在干嘛：相因子在界面上同步，意味着三个波矢的切向分量相等。立即推出两个结论——三波共面（入射面 $xz$），且对反射波给出入射角=反射角 $i=r''$。三个波矢的大小由各自介质决定：$k=k''=(\omega/c)n,\ k'=(\omega/c)n'$。</span></p>
+<p><span class="exp">怎么用：切向分量相等 $k\sin i=k'\sin r$ 即<span class="kp">斯涅尔定律</span></span></p>
+$$\boxed{\frac{\sin i}{\sin r}=\frac{k'}{k}=\frac{n'}{n}}$$
+<p><span class="exp">为什么是「比值=折射率比」而非别的：因为同一频率 $\omega$ 下波矢大小正比于折射率，切向分量守恒就把角度比锁定为折射率比。频率不变是关键（边界两侧时间振荡同步）。</span></p>
+<p><span class="tag-must">必考</span></p>
+
+<h3 id="s21088865">菲涅耳公式（由边界条件推振幅比）</h3>
+<p><span class="exp">是什么：方向定了，振幅还要靠四个边界条件——$D$ 法向连续、$B$ 法向连续、$E$ 切向连续、$H$ 切向连续：</span></p>
+$$[\epsilon(\mathbf E_0+\mathbf E_0'')-\epsilon'\mathbf E_0']\cdot\mathbf n=0,\quad (\mathbf k\times\mathbf E_0+\mathbf k''\times\mathbf E_0''-\mathbf k'\times\mathbf E_0')\cdot\mathbf n=0$$
+$$(\mathbf E_0+\mathbf E_0''-\mathbf E_0')\times\mathbf n=0,\quad \Big[\tfrac1\mu(\mathbf k\times\mathbf E_0+\mathbf k''\times\mathbf E_0'')-\tfrac1{\mu'}\mathbf k'\times\mathbf E_0'\Big]\times\mathbf n=0$$
+<p><span class="exp">为什么要分 s/p：电场垂直入射面（s 偏振，$\perp$）和平行入射面（p 偏振，$\parallel$）满足的边界条件组合不同，必须分开解。这是减负荷的关键——一次只处理一种偏振。</span></p>
+<p><span class="exp">怎么用：垂直分量（s 偏振）。式(D 法向)只涉及平行分量故不参与；用斯涅尔定律后 $B$ 法向与 $E$ 切向等价；它们与 $H$ 切向联立，解出</span></p>
+<p><span class="exp">s 偏振下 4 条如何简化为 2 条：因 $\mathbf E_0$ 沿 $\hat{\mathbf y}$（垂直入射面），$D$ 的法向（$z$）分量 $\epsilon E_{0z}=0$ 自动满足；$B$ 法向与 $E$ 切向通过斯涅尔定律等价——只有 $E$ 切向连续 $(E_0)_\perp+(E_0'')_\perp=(E_0')_\perp$ 与 $H$ 切向连续（含 $\cos i,\cos r$）是独立方程，两式联立即得。</span></p>
+$$\frac{(E_0')_\perp}{(E_0)_\perp}=\frac{2n\cos i}{n\cos i+\frac{\mu}{\mu'}n'\cos r},\qquad \frac{(E_0'')_\perp}{(E_0)_\perp}=\frac{n\cos i-\frac{\mu}{\mu'}n'\cos r}{n\cos i+\frac{\mu}{\mu'}n'\cos r}$$
+<p><span class="exp">平行分量（p 偏振）同理（$B$ 法向不涉及，$D$ 法向与 $H$ 切向等价，配 $E$ 切向）：</span></p>
+$$\frac{(E_0')_\parallel}{(E_0)_\parallel}=\frac{2n\cos i}{\frac{\mu}{\mu'}n'\cos i+n\cos r},\qquad \frac{(E_0'')_\parallel}{(E_0)_\parallel}=\frac{\frac{\mu}{\mu'}n'\cos i-n\cos r}{\frac{\mu}{\mu'}n'\cos i+n\cos r}$$
+<p><span class="kp">这两组就是菲涅耳公式（Fresnel, 1821）。</span><span class="exp">注意公式里 $\epsilon,\mu$ 是分别出现的，不只是以折射率组合出现；可见光下多数介质 $\mu/\mu'\approx1$，才化简为只含折射率。</span></p>
+<p><span class="exp">特例（正入射 $i=0$）：两组公式等价，化为</span></p>
+$$E_0'=\frac{2}{\sqrt{\mu\epsilon'/\mu'\epsilon}+1}E_0,\qquad E_0''=\frac{\sqrt{\mu\epsilon'/\mu'\epsilon}-1}{\sqrt{\mu\epsilon'/\mu'\epsilon}+1}E_0$$
+<p><span class="tag-key">重点</span></p>
+
+<h3 id="s85242620">布儒斯特角</h3>
+<p><span class="exp">是什么：看 p 偏振反射振幅分子 $\frac{\mu}{\mu'}n'\cos i-n\cos r$。在某个特定入射角下它恰为零——反射波的电场平行分量完全消失。这个角叫布儒斯特角 $i_B$。非磁性材料（$\mu=\mu'$）下：</span></p>
+$$\boxed{i_B=\tan^{-1}\!\frac{n'}{n}}$$
+<p><span class="exp">为什么：分子为零 $\Rightarrow$ 非磁性下 $n'\cos i_B=n\cos r$。与斯涅尔定律 $n\sin i_B=n'\sin r$ 联立：两式相除得 $\tan i_B=n'/n$；两式平方相加再利用 $\sin^2+\cos^2=1$ 可推出 $\sin(i_B+r)=0$ 且 $\cos(i_B+r)<0$，故 $i_B+r=\pi/2$（反射线与折射线垂直）。此时无论入射波偏振如何，反射波的平行分量都为零，故反射光完全垂直于入射面偏振。</span></p>
+<p><span class="exp">怎么用（应用）：自然光经反射后偏振度升高；即使不正好在 $i_B$，平行分量也被大幅压低。驾驶员墨镜正是利用这一点滤掉路面/挡风玻璃反射的强偏振眩光。</span></p>
+<blockquote>易错：布儒斯特角只消去反射光的「平行（p）分量」，垂直（s）分量照样反射。所以反射光是被「起偏」成纯 s 偏振，不是反射消失。</blockquote>
+<p><span class="tag-must">必考</span></p>
+
+<h3 id="s10280936">全反射与倏逝波</h3>
+<p><span class="exp">是什么：光从光密介质 $n$ 入射到光疏介质 $n'$（$n>n'$）。斯涅尔定律 $\sin r=(n/n')\sin i$ 中，当 $r=\pi/2$ 时对应的入射角叫全反射临界角 $i_0$：</span></p>
+$$i_0=\sin^{-1}\!\frac{n'}{n}$$
+<p><span class="exp">怎么用：$i>i_0$ 时形式上 $\sin r>1$，于是 $\cos r$ 成为纯虚数：</span></p>
+$$\cos r=i\sqrt{\Big(\frac{\sin i}{\sin i_0}\Big)^2-1}$$
+<p><span class="exp">这一步在干嘛：把它代入折射波相因子 $e^{i\mathbf k'\cdot\mathbf x}$，$z$ 方向出现实指数衰减因子，得到<span class="kp">倏逝波</span></span></p>
+$$e^{i\mathbf k'\cdot\mathbf x}=e^{-k'|\cos r|\,z}\,e^{ik'(\sin i/\sin i_0)x}$$
+<p><span class="kp">倏逝波沿界面（$x$ 方向）传播、垂直界面（$z$ 方向）指数衰减；无净能量进入光疏介质，反射波与入射波振幅模方相等（仅有相移）。</span></p>
+<table>
+<tr><th>对比</th><th>布儒斯特角 $i_B$</th><th>全反射临界角 $i_0$</th></tr>
+<tr><td>发生条件</td><td>任意 $n,n'$（p 偏振）</td><td>仅 $n>n'$（光密→光疏）</td></tr>
+<tr><td>角度公式</td><td>$\tan^{-1}(n'/n)$</td><td>$\sin^{-1}(n'/n)$</td></tr>
+<tr><td>效果</td><td>反射光 p 分量=0，起偏</td><td>能量全反射回光密介质</td></tr>
+<tr><td>透射波</td><td>正常折射波</td><td>倏逝波，不传能</td></tr>
+</table>
+<blockquote>易错：全反射下「倏逝波不传能」——它沿界面传播但 $z$ 方向无净能流。能量全部回到光密介质（模方守恒），仅相位改变。光纤多模传播正是靠它。</blockquote>
+<p><span class="tag-must">必考</span></p>
+
+<h2 id="s57550422">§27 电磁波在导电介质中的传播</h2>
+<p><span class="exp">本节回答：导体里有自由电流（欧姆定律 $\mathbf J=\sigma\mathbf E$），电磁波会驱动它而产生焦耳热耗散。如何把这种耗散纳入波动描述？关键技巧是引入「复介电常数」，再分良导体/不良导体两个极限讨论，并得到趋肤深度这一核心标度。</span></p>
+
+<h3 id="s48566489">复介电常数与复波矢</h3>
+<p><span class="exp">是什么：导体与非导体的根本区别在安培-麦克斯韦定律。设场简谐依赖时间 $e^{-i\omega t}$，把欧姆电流 $\mathbf J=\sigma\mathbf E$ 并入位移电流项：</span></p>
+$$\nabla\times\mathbf B=-i\omega\mu\Big(\epsilon_b+i\frac{\sigma}{\omega}\Big)\mathbf E$$
+<p><span class="exp">这一步在干嘛：圆括号里的量形式上就是一个「等效介电常数」，把传导电流伪装成位移电流，于是导体里的波动方程形式与非导体一模一样，只要把 $\epsilon$ 换成<span class="kp">复介电常数</span></span></p>
+$$\boxed{\epsilon(\omega)=\epsilon_b(\omega)+i\frac{\sigma(\omega)}{\omega}}$$
+<p><span class="exp">怎么用：色散关系照搬 $k^2=\mu\epsilon(\omega)\omega^2=\mu\epsilon_b\omega^2\big(1+i\frac{\sigma}{\omega\epsilon_b}\big)$。只要 $\sigma\neq0$，$k$ 与 $\omega$ 不能同时取实数——这是耗散的数学标志。两种情形：</span></p>
+<ul>
+<li><span class="exp">已有场自由衰减（$\mathbf k$ 实）：$\omega$ 取复，虚部代表场随时间指数衰减（能量转焦耳热）。</span></li>
+<li><span class="exp">外界持续入射（$\omega$ 实）：$\mathbf k$ 取复 $k=k_1+ik_2=k_1+iA/2$，外界不断供能维持稳定振荡，$A$ 为吸收系数。</span></li>
+</ul>
+<p><span class="exp">不良导体极限（$\sigma/(\omega\epsilon_b)\ll1$）：对 $k$ 展开得 $k\approx\sqrt{\mu\epsilon_b}\,\omega+\tfrac{i}{2}\sigma\sqrt{\mu/\epsilon_b}$，吸收系数 $A=\sigma\sqrt{\mu/\epsilon_b}$ 几乎不依赖频率。</span></p>
+<p><span class="tag-key">重点</span></p>
+
+<h3 id="s69547101">良导体趋肤深度与趋肤效应</h3>
+<p><span class="exp">是什么：良导体极限 $\sigma/(\omega\epsilon_b)\gg1$，复介电常数虚部主导，$k^2\approx i\mu\sigma\omega$。开方（$\sqrt{i}=(1+i)/\sqrt2$）：</span></p>
+$$k\approx(1+i)\sqrt{\frac{\omega\mu\sigma}{2}}=\frac{1+i}{\delta}$$
+<p><span class="exp">这一步在干嘛：虚部直接给出场进入导体的衰减长度——<span class="kp">趋肤深度</span></span></p>
+$$\boxed{\delta=\sqrt{\frac{2}{\omega\mu\sigma}}}$$
+<p><span class="exp">良导体内的平面波（$\mathbf n$ 指向导体内部）：</span></p>
+$$\mathbf E=\mathbf E_0\,e^{-\mathbf n\cdot\mathbf x/\delta}\,e^{i\mathbf n\cdot\mathbf x/\delta-i\omega t}$$
+<p><span class="kp">场在一个趋肤深度内衰减为 $1/e$。$\delta\propto1/\sqrt{\omega\sigma}$：频率越高、电导率越大，波越难穿透——这就是趋肤效应。</span></p>
+<p><span class="exp">为什么 $E$ 与 $H$ 有相位差：由 $\mathbf H_0=\frac{1}{\mu\omega}k\,\mathbf n\times\mathbf E_0$，而良导体里 $k=(1+i)/\delta$ 是复数，故 $\mathbf H$ 落后 $\mathbf E$ 约 $\pi/4$（因为 $k^2\approx2i/\delta^2$ 近乎纯虚，$k$ 的辐角为 $\pi/4$）。</span></p>
+<table>
+<tr><th>对比</th><th>良导体 $\sigma/(\omega\epsilon_b)\gg1$</th><th>不良导体 $\sigma/(\omega\epsilon_b)\ll1$</th></tr>
+<tr><td>$k$ 的实虚部</td><td>$k_1\approx k_2=1/\delta$（同量级）</td><td>实部主导，虚部小</td></tr>
+<tr><td>吸收系数</td><td>$A=2/\delta\propto\sqrt{\omega\sigma}$</td><td>$A=\sigma\sqrt{\mu/\epsilon_b}$，几乎不依赖 $\omega$</td></tr>
+<tr><td>$E,H$ 相位差</td><td>约 $\pi/4$</td><td>近乎同相</td></tr>
+<tr><td>穿透</td><td>很浅（趋肤）</td><td>较深</td></tr>
+</table>
+<blockquote>易错：趋肤深度 $\delta=\sqrt{2/(\omega\mu\sigma)}\propto1/\sqrt{\omega\sigma}$，对频率和电导率都是 $-1/2$ 次幂；记成 $1/\sqrt{\omega\sigma}$ 即可，别漏开方。高频微波在金属表面只穿透极薄一层。</blockquote>
+<p><span class="tag-must">必考</span></p>
+
+<h3 id="s29285913">准静态近似与涡流损耗（例题 4.1）</h3>
+<p><span class="exp">是什么：一大类问题里传导电流远大于位移电流，可直接扔掉位移电流，这叫准静态近似（对应良导体情形）。此时 $\nabla\cdot\mathbf H=0$ 配合麦克斯韦方程，$\mathbf H$ 满足扩散方程：</span></p>
+$$\mu\sigma\frac{\partial\mathbf H}{\partial t}=\nabla^2\mathbf H$$
+<p><span class="exp">为什么重要：扩散方程时间一阶、空间二阶，所以空间特征尺度平方 $\propto$ 时间尺度——这正好「量纲分析式」地给出趋肤深度 $\delta\sim\sqrt{1/(\mu\sigma\omega)}$。$\mathbf E,\mathbf B,\mathbf A,\mathbf J$ 满足同样的扩散方程。</span></p>
+<p><span class="exp">涡流损耗：准静态下交变场在导体内感生涡流，焦耳耗散功率（时间平均，场量取实部）有两种等价算法：</span></p>
+$$W=\int d^3x\,\langle\mathbf J\cdot\mathbf E\rangle=-\oint\langle\mathbf E\times\mathbf H\rangle\cdot d\mathbf A$$
+<p><span class="exp">为什么相等：用 $\nabla\times\mathbf H=\mathbf J$ 与 $-\nabla\times\mathbf E=\partial_t\mathbf B$，面积分经高斯公式化为体积分。其中 $\mathbf H\cdot\partial_t\mathbf B=\mu\mathbf H\cdot\partial_t\mathbf H=\tfrac\mu2\partial_t|\mathbf H|^2$——由于 $\mu$ 是实数（非磁性介质），$|\mathbf H|^2$ 的时间导数在一个完整周期积分为零，故该项消失。只剩 $\langle\mathbf E\cdot(\nabla\times\mathbf H)\rangle=\langle\mathbf J\cdot\mathbf E\rangle$。这就是 §5 能量守恒推导在准静态下的版本（已略去电场能，因良导体内磁场能远大于电场能）。</span></p>
+<p><span class="exp"><b>例题 4.1（金属薄膜涡流损耗）</b>：铁磁薄膜占 $|z|\le d$，外加谐变磁场 $\mathbf H=H_0\mathbf e_1e^{-i\omega t}$。思路：(1) 对称性 ⇒ 膜内磁场只含 $x$ 分量、满足扩散方程，空间依赖 $e^{ikz}$，代入得 $k^2=i\mu\sigma\omega,\ k=\pm(1+i)/\delta$。(2) 关于 $z$ 的偶对称解 ⇒ 取双曲余弦。(3) 在 $z=\pm d$ 用 $H$ 切向连续定常数：</span></p>
+$$H_x(z,t)=H_0\,\frac{\cosh[(1+i)z/\delta]}{\cosh[(1+i)d/\delta]}\,e^{-i\omega t}$$
+<p><span class="exp">(4) 由 $\mathbf E=(1/\sigma)\nabla\times\mathbf H$ 求出电场（仅 $y$ 分量）$E_y=\frac{1}{\sigma}\partial_z H_x=\frac{(1+i)}{\sigma\delta}H_0\frac{\sinh[(1+i)z/\delta]}{\cosh[(1+i)d/\delta]}e^{-i\omega t}$。(5) 取实部、$\langle\mathbf E\times\mathbf H\rangle$ 在膜表面积分即得平均焦耳损耗。物理：膜越厚于 $\delta$ 损耗越饱和，越薄于 $\delta$ 损耗越小。</span></p>
+<p><span class="tag-freq">高频</span></p>
+
+<h2 id="s22442863">§28 介质色散的经典模型</h2>
+<p><span class="exp">本节回答：折射率为什么依赖频率？前面把 $\epsilon(\omega)$ 当成已知，本节用「经典振子模型」从微观给出 $\epsilon(\omega)$ 的具体形状，半定量地解释色散、吸收、金属反射、紫外透明等一系列现象。</span></p>
+
+<h3 id="s33074442">洛伦兹振子模型与介电常数</h3>
+<p><span class="exp">是什么：把束缚电子看成带阻尼的受迫谐振子——本征频率 $\omega_i$、阻尼 $\gamma_i$。在谐变电场 $\mathbf E_0e^{-i\omega t}$ 下，单个电子的运动方程 $m(\ddot{\mathbf r}+\gamma\dot{\mathbf r}+\omega_0^2\mathbf r)=e\mathbf E$ 解出位移，乘以 $e$ 得平均电偶极矩：</span></p>
+$$\mathbf p=\frac{e^2\mathbf E_0}{m(\omega_0^2-\omega^2-i\omega\gamma)}$$
+<p><span class="exp">怎么用：设单位体积 $N$ 个原子，每原子中本征频率 $\omega_i$、阻尼 $\gamma_i$ 的电子数为 $f_i$（振子强度，$\sum_i f_i=Z$ 即原子总电子数）。极化强度 $\mathbf P=N\sum_i\mathbf p_i$ 给出<span class="kp">介电常数</span></span></p>
+$$\boxed{\frac{\epsilon(\omega)}{\epsilon_0}=1+\frac{Ne^2}{\epsilon_0 m}\sum_i\frac{f_i}{\omega_i^2-\omega^2-i\omega\gamma_i}}$$
+<p><span class="exp">物理意义：分母里的 $-i\omega\gamma_i$ 使 $\epsilon$ 成复数，虚部对应吸收（耗散）。这个看似纯经典的公式对量子情形也很好用——只要把 $f_i,\omega_i$ 赋予量子力学解释。$\gamma_i$ 小时，远离 $\omega_i$ 处 $\epsilon$ 近实数（透明）。</span></p>
+<p><span class="tag-must">必考</span></p>
+
+<h3 id="s51206230">德鲁德模型与电导率</h3>
+<p><span class="exp">是什么：导体中有自由电子，即本征频率 $\omega_0=0$。把它从求和中单列出来（其余束缚电子并入 $\epsilon_b$）：</span></p>
+$$\epsilon(\omega)=\epsilon_b(\omega)+i\frac{Ne^2 f_0}{m\,\omega(\gamma_0-i\omega)}$$
+<p><span class="exp">怎么用：与上节复介电常数 $\epsilon=\epsilon_b+i\sigma/\omega$ 比对，立刻读出<span class="kp">德鲁德电导率</span></span></p>
+$$\boxed{\sigma(\omega)=\frac{f_0 Ne^2}{m(\gamma_0-i\omega)}}$$
+<p><span class="exp">物理意义：低频 $\omega\ll\gamma_0$ 时忽略分母虚部，$\sigma$ 近实数（普通直流电导 $\sigma_0=f_0Ne^2/(m\gamma_0)$）。固体物理记 $\gamma_0=1/\tau$，$\tau$ 是弛豫时间（两次碰撞间的平均自由时间）。</span></p>
+<p><span class="tag-key">重点</span></p>
+
+<h3 id="s85254760">等离子体频率与金属紫外透明</h3>
+<p><span class="exp">是什么：高频极限 $\omega\gg$ 所有 $\omega_i$，洛伦兹公式分母 $\approx-\omega^2$，求和简化为</span></p>
+$$\frac{\epsilon(\omega)}{\epsilon_0}\approx1-\frac{\omega_p^2}{\omega^2},\qquad \boxed{\omega_p^2=\frac{NZe^2}{\epsilon_0 m}}$$
+<p><span class="kp">$\omega_p$ 为等离子体频率。这个高频极限对所有介质成立；对纯等离子体（如电离层，全部电子自由、忽略阻尼）则对所有频率成立。</span></p>
+<p><span class="exp">怎么用：分两种情形看 $k^2=\mu_0\epsilon(\omega)\omega^2=\frac{\omega^2-\omega_p^2}{c^2}$</span></p>
+<table>
+<tr><th>频率</th><th>$\epsilon$ 符号</th><th>$k$</th><th>行为</th></tr>
+<tr><td>$\omega<\omega_p$</td><td>$\epsilon<0$</td><td>纯虚</td><td>波一进介质就指数衰减 ⇒ 全反射</td></tr>
+<tr><td>$\omega>\omega_p$</td><td>$\epsilon>0$</td><td>实</td><td>透射，介质变透明</td></tr>
+</table>
+<p><span class="exp">应用：(1) 电离层 $\omega_p$ 对应约 10 MHz——低频无线电（&lt;10 MHz）被电离层反射可传很远，微波则穿透电离层（卫星通信）。(2) 金属 $\omega_p$ 在紫外到 X 射线波段，故金属对可见光不透明（反射），对紫外逐渐变透明——<span class="kp">金属紫外透明</span>。</span></p>
+<blockquote>易错：「$\omega_p$ 以下反射、以上透射」是等离子体/金属的招牌行为，根源是 $\epsilon$ 变负导致 $k$ 纯虚。注意这是「截止」而非「吸收」——衰减来自波矢虚部（倏逝），并不一定耗散能量。</blockquote>
+<p><span class="tag-must">必考</span></p>
+
+<h3 id="s25666004">共振吸收与反常色散</h3>
+<p><span class="exp">是什么：当 $\omega\approx\omega_i$（某振子本征频率），洛伦兹公式分母 $\omega_i^2-\omega^2-i\omega\gamma_i$ 的实部趋零、虚部主导，$\epsilon$ 虚部（吸收）剧烈增强——这一频段叫<span class="kp">共振吸收区</span>。</span></p>
+<p><span class="exp">为什么伴随反常色散：由 KK 关系（见 §29），虚部的峰必然伴随实部（即 $n$）的剧烈起伏。在共振区内 $n$ 随 $\omega$ 增加而下降，即 $dn/d\omega<0$，这就是<span class="kp">反常色散</span>（区别于通常透明区的正常色散 $dn/d\omega>0$）。</span></p>
+<p><span class="exp">怎么用（例）：水的吸收系数在绝大部分频段都很大，仅在约 $300\sim700$ nm 的狭窄窗口陡降——恰是「可见光」波段。这解释了为什么源于海洋的动物（含人类祖先）演化出的肉眼只看得见可见光：能透过水的电磁波才有进化意义。空气是混合介质，吸收谱更复杂。</span></p>
+<p><span class="tag-freq">高频</span></p>
+
+<h2 id="s22595836">§29 电磁信号在色散介质中的传播</h2>
+<p><span class="exp">本节回答：真实信号是有限延展的波包，不是无限单色波。在色散介质中波包如何传播、能量以什么速度走、因果性又给 $\epsilon(\omega)$ 加了什么普适约束？由此澄清「相速度可超光速」并不违反相对论。</span></p>
+
+<h3 id="s78130152">波包与不确定性关系</h3>
+<p><span class="exp">是什么：一维波包是一系列不同波数单色波的线性叠加（傅里叶积分）：</span></p>
+$$u(x,t)=\frac{1}{\sqrt{2\pi}}\int_{-\infty}^{\infty}A(k)\,e^{ikx-i\omega(k)t}\,dk,\qquad A(k)=\frac{1}{\sqrt{2\pi}}\int_{-\infty}^{\infty}u(x,0)\,e^{-ikx}\,dx$$
+<p><span class="exp">$\omega(k)$ 由介质色散决定。若 $t=0$ 时 $u=e^{ik_0x}$，则 $A(k)=\sqrt{2\pi}\delta(k-k_0)$ 始终单色；若初始是有限延展波包，$A(k)$ 也在 $k$ 空间有限延展。</span></p>
+<p><span class="exp">为什么重要：傅里叶变换的对偶性给出实空间延展 $\Delta x$ 与 $k$ 空间延展 $\Delta k$ 的<span class="kp">不确定性关系</span></span></p>
+$$\boxed{\Delta k\cdot\Delta x\ge\tfrac12}$$
+<p><span class="kp">实空间波包越窄，$k$ 空间所需频谱越宽，反之亦然。</span><span class="exp">两边乘 $\hbar$ 就是量子力学（波动力学）的不确定性关系——它本质上是傅里叶分析的普适性质，与量子无关。</span></p>
+<p><span class="tag-key">重点</span></p>
+
+<h3 id="s35519696">群速度与相速度</h3>
+<p><span class="exp">是什么：色散下不同频率成分相速度 $v_p=c/n(k)$ 不同，相位差随时间累积，波包会变形。但若频谱很窄（只在 $k_0$ 附近 $\Delta k$ 内非零）且 $\omega(k)$ 缓变，可在 $k_0$ 处线性展开 $\omega(k)\approx\omega_0+\frac{d\omega}{dk}\big|_{k_0}(k-k_0)$，代入积分得</span></p>
+$$u(x,t)\approx u(x-v_g t,0)\,e^{i(k_0 v_g-\omega_0)t}$$
+<p><span class="exp">这一步在干嘛：把线性展开代入 $u(x,t)$ 积分，被积函数含 $e^{i(k-k_0)(x-v_g t)}$ 因子，对 $k$ 积分即得 $u(x-v_g t,0)$ 乘一个相因子——波包整体形状不变，只是以<span class="kp">群速度</span> $v_g$ 平移；强度 $|u(x-v_g t,0)|^2$ 随群速度移动。所以描写信号（能量）传播的恰当物理量是 $v_g$ 而非 $v_p$。</span></p>
+$$v_g=\frac{d\omega}{dk}\Big|_{k_0}$$
+<p><span class="exp">怎么化成折射率形式：用 $\omega=ck/n(\omega)$，$k=n\omega/c$，对 $\omega$ 求导链式法则：$\frac{dk}{d\omega}=\frac{n+\omega\,dn/d\omega}{c}$，取倒数：</span></p>
+$$\boxed{v_g=\frac{d\omega}{dk}=\frac{c}{n+\omega\,dn/d\omega}=\frac{v_p}{1+(\omega/n)\,dn/d\omega}}$$
+<p><span class="exp">只要有色散 $dn/d\omega\neq0$，$v_g\neq v_p$。</span></p>
+<table>
+<tr><th>对比</th><th>相速度 $v_p$</th><th>群速度 $v_g$</th></tr>
+<tr><td>定义</td><td>$\omega/k$，等相面速度</td><td>$d\omega/dk$，波包包络速度</td></tr>
+<tr><td>携带信息?</td><td>否（单色波无信息）</td><td>窄谱近似下=信号/能量速度</td></tr>
+<tr><td>可否 $>c$</td><td>可以（不违反相对论）</td><td>反常色散下可 $>c$ 甚至 $<0$</td></tr>
+<tr><td>正常色散 $dn/d\omega>0$</td><td>$v_p=c/n$</td><td>$v_g<v_p<c$</td></tr>
+</table>
+<blockquote>易错：相速度 $v_p=c/n$ 在 $n<1$ 时可超光速，但它只是等相面移动速度，不传任何信息，<b>不违反相对论</b>。而反常色散区 $|dn/d\omega|$ 极大时 $v_g$ 可超光速甚至为负——此时线性近似 (4.61) 失效，<b>群速度已失去信号速度的意义</b>，故同样不违反相对论。真正的上限由下面的因果性论证保证。</blockquote>
+<p><span class="tag-must">必考</span></p>
+
+<h3 id="s40411056">克拉莫斯-克罗尼格（KK）关系</h3>
+<p><span class="exp">是什么：仅凭因果性就能约束 $\epsilon(\omega)$，并把实部虚部锁在一起。从 $\mathbf D$ 与 $\mathbf E$ 的最一般线性关系出发（恢复实表示），引入广义极化率 $\chi(\tau)$：</span></p>
+$$\mathbf D(\mathbf x,t)=\epsilon_0\Big[\mathbf E(\mathbf x,t)+\int_{-\infty}^{\infty}\chi(\tau)\mathbf E(\mathbf x,t-\tau)\,d\tau\Big]$$
+<p><span class="exp">怎么用因果性：$t$ 时刻的 $\mathbf D$ 只能依赖此前的 $\mathbf E$，故</span></p>
+$$\chi(\tau)=0\quad\text{当}\quad\tau<0$$
+<p><span class="exp">这一步在干嘛：积分下限从 $-\infty$ 提到 $0$，傅里叶变换 $\epsilon(\omega)/\epsilon_0=1+\int_0^\infty\chi(\tau)e^{i\omega\tau}d\tau$ 中 $e^{i\omega\tau}$ 在上半平面（$\mathrm{Im}\,\omega>0$）对 $\tau>0$ 收敛——所以 $\epsilon(\omega)$ 在上半平面解析。对解析函数用柯西公式（围道=实轴+上半无穷大半圆，半圆贡献因 $\epsilon\to1+O(1/\omega^2)$ 而为零），并取 $z=\omega+i0^+$ 配合 Sokhotski 公式 $\frac{1}{\omega'-\omega-i\delta}=P\frac{1}{\omega'-\omega}+i\pi\delta(\omega'-\omega)$，分离实虚部得<span class="kp">KK 关系</span></span></p>
+$$\mathrm{Re}\frac{\epsilon(\omega)}{\epsilon_0}=1+\frac1\pi P\!\int_{-\infty}^{\infty}\frac{\mathrm{Im}[\epsilon(\omega')/\epsilon_0]}{\omega'-\omega}d\omega',\quad \mathrm{Im}\frac{\epsilon(\omega)}{\epsilon_0}=-\frac1\pi P\!\int_{-\infty}^{\infty}\frac{\mathrm{Re}[\epsilon(\omega')/\epsilon_0]-1}{\omega'-\omega}d\omega'$$
+<p><span class="kp">实部与虚部互为希尔伯特变换。仅靠因果性即得，对所有介质普适。</span><span class="exp">推论：知道全频段吸收谱（虚部）就能算出折射率（实部）。导体在 $\omega=0$ 处 $\chi(\tau\to\infty)\to\sigma/\epsilon_0$ 不衰减，使 $\epsilon(\omega)$ 在原点有一个极点（须单独处理）。</span></p>
+<p><span class="tag-key">重点</span></p>
+
+<h3 id="s66264893">因果性与最大信号速度</h3>
+<p><span class="exp">是什么：用因果性严格证明「任何色散介质中信号速度 $\le c$」。设 $x>0$ 充满折射率 $n(\omega)$ 介质，$x<0$ 真空，频谱 $A(\omega)$ 的波包从真空正入射，介质内波为</span></p>
+$$u(x,t)=\int_{-\infty}^{\infty}\frac{2}{1+n(\omega)}A(\omega)\,e^{ik(\omega)x-i\omega t}\,d\omega$$
+<p><span class="exp">怎么用：假设波前在 $t<0$ 未到达 $x=0$，即 $u_I(x=0^-,t)=0\ (t<0)$，则 $A(\omega)$ 在上半平面解析（同 KK 的论证）。大 $|\omega|$ 时 $n(\omega)\to1$，相因子 $i[k(\omega)x-\omega t]\to i\omega(x-ct)/c$。</span></p>
+<p><span class="exp">这一步在干嘛：若 $x-ct>0$，可把积分围道在上半平面用无穷大半圆闭合（$e^{i\omega(x-ct)/c}$ 在上半平面衰减）。$A(\omega),n(\omega)$ 在上半平面解析无极点，柯西定理给</span></p>
+$$u(x,t)=0\qquad\text{当}\quad x-ct>0$$
+<p><span class="kp">即无论 $n(\omega)$ 形式如何，信号波前传播速度都不超过 $c$，与狭义相对论一致。</span><span class="exp">在 $x-ct<0$ 区域一般非零，且分为依次到达的索末菲前驱波（Sommerfeld precursor）和布里渊前驱波（Brillouin precursor）。这才是真正的「信号速度」，它救回了反常色散区 $v_g>c$ 的尴尬。</span></p>
+<p><span class="tag-key">重点</span></p>
+
+<h2 id="s87490375">§30 各向异性晶体中的电磁波传播</h2>
+<p><span class="exp">本节回答：晶体的介电响应是张量 $D_i=\epsilon_{ij}E_j$（磁性平庸 $\mathbf B=\mu_0\mathbf H$），这会怎样改变平面波？核心结果是：给定传播方向一般有两个相速度（双折射），且各场量不再两两正交。</span></p>
+
+<h3 id="s41797428">本征方程与双折射</h3>
+<p><span class="exp">是什么：把 $\epsilon_{ij}=\epsilon_0\bar\epsilon_{ij}$（$\bar\epsilon$ 对称正定）代入麦克斯韦方程，平面波 $\mathbf E\propto e^{i\mathbf k\cdot\mathbf x-i\omega t}$ 给出</span></p>
+$$\mathbf k\times(\mathbf k\times\mathbf E)+\omega^2(\bar\epsilon\cdot\mathbf E)=0$$
+<p><span class="exp">怎么用：记 $\mathbf k=k\mathbf n$，$v^2=\omega^2/k^2$（相速度平方），投影算子 $P_T=\mathbf 1-\mathbf n\mathbf n$，化为</span></p>
+$$A\cdot\mathbf E=0,\qquad A\equiv[-P_T(\mathbf n)+v^2\bar\epsilon]$$
+<p><span class="exp">这一步在干嘛：从矢量恒等式 $\mathbf k\times(\mathbf k\times\mathbf E)=\mathbf k(\mathbf k\cdot\mathbf E)-k^2\mathbf E$ 以及横波条件 $\mathbf k\cdot\mathbf E=0$，原方程化为 $-k^2\mathbf E+\omega^2\bar\epsilon\cdot\mathbf E=0$。再用 $\mathbf k=k\mathbf n$、$v^2=\omega^2/k^2$、投影算子 $P_T=\mathbf 1-\mathbf n\mathbf n$（把矢量投影到垂直 $\mathbf n$ 的平面），就得到 $[-P_T(\mathbf n)+v^2\bar\epsilon]\cdot\mathbf E=0$。要有非零 $\mathbf E$ 必须 $\det A=0$。这是关于 $v^2$ 的方程，<span class="kp">给定传播方向 $\mathbf n$ 一般有两个相速度解 $v_1^2,v_2^2$——这就是双折射</span>。仅当 $\bar\epsilon\propto\mathbf 1$（各向同性）才简并为单一 $v^2$。</span></p>
+<p><span class="tag-key">重点</span></p>
+
+<h3 id="s39808984">菲涅尔方程与折射率椭球</h3>
+<p><span class="exp">是什么：在 $\bar\epsilon$ 的主轴坐标（对角化，本征值 $\bar\epsilon_i$）中，定义主轴光速 $c_i=1/\sqrt{\mu_0\epsilon_0\bar\epsilon_i}$、主折射率 $N_i=\sqrt{\bar\epsilon_i}$。$\det A=0$ 展开（利用 $\sum n_i^2=1$）化为<span class="kp">菲涅尔方程</span></span></p>
+$$\boxed{\frac{n_1^2}{v^2-c_1^2}+\frac{n_2^2}{v^2-c_2^2}+\frac{n_3^2}{v^2-c_3^2}=0}$$
+<p><span class="exp">当 $c_1\neq c_2\neq c_3$ 时左边是 $v^2$ 的单调减函数、在 $v^2=c_i^2$ 处发散，故对任意 $\mathbf n$ 恰有两个实根 $v^2$（分别落在两段区间内）——再次确认双折射。</span></p>
+<p><span class="exp">几何图像（<span class="kp">折射率椭球</span>/光率体）：$\frac{x^2}{N_1^2}+\frac{y^2}{N_2^2}+\frac{z^2}{N_3^2}=1$，三半轴长 $=N_i$。过心作以 $\mathbf n$ 为法向的平面，截出一个椭圆——其两个半轴方向给出两个 $\mathbf D$ 的偏振方向，半轴长的倒数给出对应的相速度 $v_{1,2}$。</span></p>
+<p><span class="exp">为什么用 $\mathbf D$ 而非 $\mathbf E$ 定偏振：各向异性下 $\mathbf E\nparallel\mathbf D$，故 $\mathbf E$ 一般不垂直 $\mathbf k$。但 $\mathbf k,\mathbf D,\mathbf B$ 仍两两正交（横波性对 $\mathbf D$ 保持）；$\mathbf E$ 位于 $\mathbf k$-$\mathbf D$ 平面内。能流 $\hat{\mathbf s}=\mathbf E\times\mathbf H$ 方向一般 $\neq\mathbf n$（相位方向）——这就是「走离效应」。两个本征模的 $\mathbf D^{(1)}\perp\mathbf D^{(2)}$。</span></p>
+<p><span class="tag-freq">高频</span></p>
+
+<h3 id="s75996525">单轴晶体：o 光与 e 光</h3>
+<p><span class="exp">是什么：单轴晶体 $\bar\epsilon_1=\bar\epsilon_2\neq\bar\epsilon_3$（光轴取 $z$）。令 $n_3=\cos\theta$（$\theta$ 为 $\mathbf k$ 与光轴夹角），菲涅尔方程分解出两个解：</span></p>
+<table>
+<tr><th>对比</th><th>o 光（寻常光）</th><th>e 光（非常光）</th></tr>
+<tr><td>相速度</td><td>$v^2=c_1^2$，与方向无关</td><td>$v^2(\theta)=c_1^2\cos^2\theta+c_3^2\sin^2\theta$，依赖方向</td></tr>
+<tr><td>色散关系</td><td>$k^2=\omega^2/c_1^2$（如各向同性）</td><td>$\omega^2=\dfrac{k_1^2+k_2^2}{n_3^2}+\dfrac{k_3^2}{n_1^2}$（旋转椭球）</td></tr>
+<tr><td>偏振 $\mathbf D$</td><td>$\perp$（光轴-$\mathbf k$）平面，沿 $y$</td><td>在（光轴-$\mathbf k$）平面内</td></tr>
+<tr><td>能流方向</td><td>$\parallel\mathbf k$，行为如各向同性</td><td>$\neq\mathbf k$（走离），不满足通常折射定律</td></tr>
+</table>
+<p><span class="exp">为什么 o 光有 $\mathbf E\parallel\mathbf D$ 而各向异性一般 $\mathbf E\nparallel\mathbf D$：单轴晶体中 $\bar\epsilon_1=\bar\epsilon_2$，o 光的 $\mathbf D$ 垂直于光轴-$\mathbf k$ 平面（沿 $\hat{\mathbf y}$），此方向恰好是 $\bar\epsilon$ 的简并方向，故 $\mathbf D=\epsilon_1\mathbf E$，二者平行。因此 o 光的行为等价于各向同性 TEM 模式，遵循标准折射定律（与费马原理等价），只一条光线。e 光相速度随方向变，能流由 $\mathbf v_g=\partial\omega/\partial\mathbf k$ 给出、偏离 $\mathbf k$。一束光入射分裂成 o、e 两束即双折射。</span></p>
+<p><span class="tag-key">重点</span></p>
+
+<h3 id="s66123307">双轴晶体与锥形折射</h3>
+<p><span class="exp">是什么：双轴晶体 $\bar\epsilon_1<\bar\epsilon_2<\bar\epsilon_3$，三个折射率全不同。问：是否存在某方向 $\mathbf n$，使截面椭圆退化为正圆（两相速度简并）？</span></p>
+<p><span class="exp">怎么求：对菲涅尔方程（视为 $v^2$ 的二次式）求重根，须某个 $v^2=c_i^2$。设 $v^2=c_2^2$（要求 $n_2=0$），代回得另一根条件 $n_1^2(v^2-c_3^2)+n_3^2(v^2-c_1^2)=0$，重根要求 $v^2=c_2^2$，令 $n_1=\cos\theta,n_3=\sin\theta$：</span></p>
+$$\tan^2\theta=\frac{c_2^2-c_3^2}{c_1^2-c_2^2}\quad\Rightarrow\quad \theta=\pm\tan^{-1}\sqrt{\frac{c_2^2-c_3^2}{c_1^2-c_2^2}}$$
+<p><span class="kp">实解要求 $c_2$ 介于 $c_1,c_3$ 之间，给出两个光轴，均在 $xz$ 平面（最小、最大折射率轴确定的平面）内。</span></p>
+<p><span class="exp">为什么叫锥形折射：在简并方向上本征矩阵 $A$ 的秩降为 1，$\mathbf E$ 方向不确定（$E_2$ 任意），于是 $\mathbf S=\mathbf E\times\mathbf H$ 的方向也不确定——能流分布在一个锥面上，叫<span class="kp">锥形折射</span>。哈密顿 1832 理论预言，Lloyd 1833 实验证实，是光波动说的有力证据。单轴晶体不出现此现象。</span></p>
+<p><span class="tag-info">了解</span></p>
+
+<h2 id="s40063659">§31 波导与谐振腔</h2>
+<p><span class="exp">本节回答：把电磁波约束在沿 $z$ 平移不变的管道（波导）里传播，边界条件会带来哪些新特性？核心是横纵场分离、模式分类（TE/TM/TEM）、截止频率，以及谐振腔与光纤的应用。</span></p>
+
+<h3 id="s55484562">横纵分离与 TE / TM / TEM 模式</h3>
+<p><span class="exp">是什么：波导沿 $z$ 平移不变，设场 $\propto e^{\pm ikz-i\omega t}$（$k$ 是 $z$ 向波数）。把场分成横向（$xy$ 内）与纵向（$z$）分量。麦克斯韦方程给出：只要知道纵向分量 $E_z,B_z$，横向分量就完全确定：</span></p>
+$$\mathbf E_\perp=\frac{i}{k_\perp^2}[k\nabla_\perp E_z-\omega\,\mathbf e_3\times\nabla_\perp B_z],\qquad \mathbf B_\perp=\frac{i}{k_\perp^2}[k\nabla_\perp B_z+\mu\epsilon\omega\,\mathbf e_3\times\nabla_\perp E_z]$$
+<p><span class="exp">其中横向波数 $k_\perp$ 满足 $\mu\epsilon\omega^2=k^2+k_\perp^2$。纵向场满足二维亥姆霍兹方程</span></p>
+$$(\nabla_\perp^2+k_\perp^2)\psi=0,\qquad \psi\equiv E_z\ \text{或}\ B_z$$
+<p><span class="exp">为什么重要：求解波导问题的核心就归结为「解纵向分量的二维本征值问题」。注意——无界空间不可能有纵向场分量，但波导边界打破了这一点。</span></p>
+<table>
+<tr><th>模式</th><th>条件</th><th>特征</th></tr>
+<tr><td>TE（横电）</td><td>$E_z=0,\ B_z\neq0$</td><td>电场纯横向</td></tr>
+<tr><td>TM（横磁）</td><td>$B_z=0,\ E_z\neq0$</td><td>磁场纯横向</td></tr>
+<tr><td>TEM（横电磁）</td><td>$E_z=B_z=0$</td><td>类二维静电场，需复连通截面</td></tr>
+</table>
+<p><span class="tag-must">必考</span></p>
+
+<h3 id="s23752661">金属波导边条件与截止频率</h3>
+<p><span class="exp">是什么：理想导体壁内场为零（$\sigma\to\infty$，$\delta\to0$），表面边条件 $\mathbf n\times\mathbf E=0,\ \mathbf n\cdot\mathbf B=0$，翻译到纵向场为</span></p>
+$$E_z|_S=0\ (\text{TM}),\qquad \frac{\partial B_z}{\partial n}\Big|_S=0\ (\text{TE})$$
+<p><span class="exp">这一步在干嘛：由 $\mathbf n\times\mathbf E=0$ 知 $E_z|_S=0$（TM），由 $\mathbf n\cdot\mathbf B=\mu_0\mathbf n\cdot\mathbf H=0$ 及二维散度 $\nabla_\perp\cdot\mathbf H_\perp=-\partial_z H_z$ 得 $\partial H_z/\partial n|_S=0$（TE）。两类模式服从不同边条件（Dirichlet vs Neumann），故 <span class="kp">TE 与 TM 在金属波导中完全分离、互不耦合</span>。二维本征值问题 $k_\perp^2=\gamma_\lambda^2$ 是分立正实数，于是 $z$ 向波数</span></p>
+$$k_\lambda^2=\mu\epsilon\omega^2-\gamma_\lambda^2$$
+<p><span class="exp">怎么用：$k_\lambda$ 不是对所有 $\omega$ 都实。定义<span class="kp">截止频率</span></span></p>
+$$\boxed{\omega_\lambda=\frac{\gamma_\lambda}{\sqrt{\mu\epsilon}}}$$
+<p><span class="kp">$\omega<\omega_\lambda$ 时 $k_\lambda$ 纯虚，该模式无法传播。因 $\gamma_\lambda$ 有最小值，故存在最小截止频率——低于它的波无法在此波导传播。</span></p>
+<p><span class="exp">TEM 特例：TEM 模式 $E_z=B_z=0$，横向场像二维静电场。<span class="kp">单连通截面中二维拉普拉斯方程在边界为零的解恒为零，故 TEM 无法存在于单连通波导</span>；必须用复连通截面（同轴电缆、平行双线）。TEM 的 $k_\perp=0$，$k=\sqrt{\mu\epsilon}\,\omega$ 与无界平面波相同（无截止频率，相速度=介质光速）。一般 TE/TM 因截止频率存在，相速度 $>$ 光速（截止频率附近 $\to\infty$），但能量用群速度描写故不违反相对论。</span></p>
+<blockquote>易错：TEM 模式需要复连通截面（如同轴电缆的内外两导体），单连通空心管（如矩形/圆波导）里没有 TEM，只有 TE/TM。这是同轴电缆能传直流到高频、空心波导有截止频率的根本区别。</blockquote>
+<p><span class="tag-must">必考</span></p>
+
+<h3 id="s89056431">矩形波导本征模式（例题 4.2）</h3>
+<p><span class="exp">是什么：理想导体矩形波导，截面边长 $a>b$。求可传播的最低频率模式。</span></p>
+<p><span class="exp">TE 模（$B_z$ 满足 Neumann，$\partial B_z/\partial n|_S=0$）：</span></p>
+$$B_z=H_0\cos\frac{m\pi x}{a}\cos\frac{n\pi y}{b},\quad \gamma_{m,n}^2=\pi^2\Big(\frac{m^2}{a^2}+\frac{n^2}{b^2}\Big),\quad \omega_{m,n}=\frac{\pi}{\sqrt{\mu\epsilon}}\Big(\frac{m^2}{a^2}+\frac{n^2}{b^2}\Big)^{1/2}$$
+<p><span class="exp">$m,n$ 不同时为零（否则场恒零）。因 $a>b$，最低截止是 $\mathrm{TE}_{10}$（$m=1,n=0$）：$\omega_{1,0}=\pi/(\sqrt{\mu\epsilon}\,a)$。</span></p>
+<p><span class="exp">TM 模（$E_z$ 满足 Dirichlet，$E_z|_S=0$）用正弦乘积 $E_z=E_0\sin\frac{m\pi x}{a}\sin\frac{n\pi y}{b}$，要求 $m,n$ 均 $\neq0$，最低是 $\mathrm{TM}_{11}$。本征值公式与 TE 相同。<span class="kp">整个波导的最低工作模式是 $\mathrm{TE}_{10}$。</span></span></p>
+<p><span class="tag-key">重点</span></p>
+
+<h3 id="s20798347">波导能量传输（群速度）与欧姆损耗</h3>
+<p><span class="exp">是什么：理想导体波导无损耗。计算传输功率 $P$（玻印廷矢量对截面积分）与单位长度能量 $U$，二者之比恰是群速度：</span></p>
+$$\frac{P}{U}=\frac{k}{\omega\mu\epsilon}=\frac{1}{\sqrt{\mu\epsilon}}\sqrt{1-\frac{\omega_\lambda^2}{\omega^2}}=v_g<c$$
+<p><span class="exp">为什么：能量平均传输速度=群速度，永远小于介质光速——这就解释了为什么相速度可超光速却不违反相对论（信息/能量走 $v_g$）。</span></p>
+<p><span class="exp">有限电导率欧姆损耗：实际导体壁电导率有限，场集中在趋肤层（厚约 $\delta$）内，功率沿 $z$ 指数衰减 $P(z)=P_0e^{-2b_\lambda z}$，单位长度损耗</span></p>
+$$-\frac{dP}{dz}=\frac{1}{2\sigma\delta}\oint_C|\mathbf n\times\mathbf H|^2\,dl$$
+<p><span class="exp">沿壁的线积分。$b_\lambda=-\frac{1}{2P}\frac{dP}{dz}$ 即衰减常数。</span></p>
+<p><span class="tag-freq">高频</span></p>
+
+<h3 id="s36545426">谐振腔与本征频率</h3>
+<p><span class="exp">是什么：把波导两端用导体封闭，行波变驻波，$z$ 向波数量子化 $k=p\pi/d$（$p$ 整数，$d$ 腔长）。本征频率</span></p>
+$$\mu\epsilon\,\omega_{p,\lambda}^2=\gamma_\lambda^2+\Big(\frac{p\pi}{d}\Big)^2$$
+<p><span class="kp">本征频率分立、完全由几何与电磁性质决定；最低频 $\propto1/$ 尺寸。</span><span class="exp">应用：谐振腔可筛选固定频率（激光腔）。任何导体封闭空间都可作谐振腔。</span></p>
+<p><span class="exp">有趣例子：地球（导体）与电离层（另一导体）构成的巨型谐振腔，最低频约 8 Hz，称<span class="kp">舒曼谐振</span>（实测约 7.83 Hz）。它给出光子质量上限的估计：若光子有质量则 $\hbar\omega>m_\gamma c^2$，代入最低频得 $m_\gamma\lesssim10^{-46}$ g。</span></p>
+<p><span class="tag-key">重点</span></p>
+
+<h3 id="s32621229">介质波导 / 光纤与单模传播</h3>
+<p><span class="exp">是什么：光纤=高折射率纤芯 $n_1$ + 略低折射率包层 $n_2$（$n_1>n_2$）。芯内场振荡、包层指数衰减（靠全内反射约束）。横向波数：</span></p>
+$$\gamma^2=n_1^2k_0^2-k^2\ (\text{芯内振荡}),\qquad \beta^2=k^2-n_2^2k_0^2\ (\text{包层衰减}),\qquad k_0=\omega/c$$
+<p><span class="exp">正常传播要求 $\gamma^2>0,\beta^2>0$，即 $n_2^2k_0^2\le k^2<n_1^2k_0^2$。定义<span class="kp">光纤参数</span> $V=k_0a\sqrt{n_1^2-n_2^2}$（$a$ 纤芯半径）。</span></p>
+<p><span class="exp">平面介质波导（简化模型，厚 $2a$）：纵向场 $\psi$ 满足分段常微分方程，按 $x$ 奇偶分偶/奇模。<b>关键区别</b>：金属波导壁上场为零，介质波导边界上场（及导数）须两侧连续、不为零。匹配 $x=a$ 处边条件，定义 $U=\gamma a,\ W=\beta a$，约束 $U^2+W^2=V^2$，得本征方程，例如偶 TE：</span></p>
+$$W=U\tan U\ (\text{偶 TE}),\quad W=-U\cot U\ (\text{奇 TE});\qquad U^2+W^2=V^2$$
+<p><span class="exp">这与量子力学有限深方势阱的本征方程形式完全相同（纵向场 $\leftrightarrow$ 波函数）。截止条件 $W=\beta a\to0$（包层场不再束缚），给出 $V_c=j\pi/2$（$\mathrm{TE}_j/\mathrm{TM}_j$）。偶 TE 基模过原点的分支总有解 ⇒ 无截止频率。</span></p>
+<p><span class="exp">圆形光纤（更真实）：纤芯用贝塞尔函数 $J_m(\gamma\rho)$、包层用虚宗量贝塞尔函数 $K_m(\beta\rho)$（保证芯内有界、包层衰减）。匹配 $E_z,H_z,E_\phi,H_\phi$ 四个边条件得本征方程。<span class="kp">$m=0$ 时退耦为纯 TE/TM 模</span>，截止由 $J_0(V_c)=0$ 给出，最小零点 $V_c\approx2.405$（$\mathrm{TE}_{01},\mathrm{TM}_{01}$）。<span class="kp">$m\neq0$ 时 TE/TM 必耦合成混合 HE/EH 模</span>（$E_z,H_z$ 都不为零）。</span></p>
+<p><span class="exp">单模传播：$m=1$ 的最低模 $\mathrm{HE}_{11}$ 截止由 $J_1(V_c)=0$ 给出，而 $J_1(0)=0$，故 <span class="kp">$\mathrm{HE}_{11}$ 截止频率为零——任何频率都能传</span>。因此在 $0<V<2.405$ 区间只有 $\mathrm{HE}_{11}$ 一个模式能传播，实现<span class="kp">单模传输</span>。由此定纤芯半径上限：</span></p>
+$$a<\frac{2.405\,\lambda}{2\pi\sqrt{n_1^2-n_2^2}}$$
+<blockquote>易错：$\mathrm{HE}_{11}$ 模无截止频率（$J_1(0)=0$），是单模光纤的工作模式。要单模就让 $V<2.405$，否则高阶模（$\mathrm{TE}_{01}/\mathrm{TM}_{01}$）也能传，变多模。弱导近似（$n_1\approx n_2$，$\Delta\approx0.01$）可放宽 $a$ 到 $\sim10\lambda$，降低制造难度。</blockquote>
+<p><span class="tag-key">重点</span></p>
+
+
+
+</div>
+</body>
+</html>

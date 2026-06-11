@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>拉格朗日力学 · 理论力学</title>
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [
+                    ['$', '$'],
+                    ['\\(', '\\)']
+                ],
+                displayMath: [
+                    ['$$', '$$'],
+                    ['\\[', '\\]']
+                ],
+                processEscapes: true
+            },
+            options: {
+                ignoreHtmlClass: 'no-mathjax'
+            }
+        };
+    </script>
+    <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    </script>
+    <style>
+        :root {
+            --bg: #f7f8fb;
+            --surface: #ffffff;
+            --surface-hover: #f1f3f6;
+            --border: #e2e5ea;
+            --text: #1a1d23;
+            --text-secondary: #5a5f6b;
+            --primary: #2563eb;
+            --primary-light: #eef3ff;
+            --accent: #7c3aed;
+            --accent-light: #f5f0ff;
+            --warn: #d97706;
+            --warn-light: #fffbeb;
+            --success: #059669;
+            --success-light: #ecfdf5;
+            --danger: #dc2626;
+            --danger-light: #fef2f2;
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+            --shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.08);
+            --radius: 12px;
+            --radius-sm: 8px;
+            --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            --sidebar-width: 280px;
+            --header-height: 56px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            height: 100vh;
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            box-shadow: var(--shadow-sm);
+            z-index: 10;
+            overflow-y: auto;
+            position: relative;
+        }
+        .sidebar-header {
+            padding: 18px 20px 14px;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            background: var(--surface);
+            z-index: 2;
+        }
+        .sidebar-header h2 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--text);
+            letter-spacing: -0.01em;
+        }
+        .sidebar-header .subtitle {
+            font-size: 0.76rem;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+        .sidebar-nav {
+            flex: 1;
+            padding: 8px 0;
+        }
+        .nav-section {
+            border-bottom: 1px solid var(--border);
+        }
+        .nav-section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text);
+            transition: var(--transition);
+            user-select: none;
+            gap: 8px;
+            text-decoration: none;
+        }
+        .nav-section-header:hover {
+            background: var(--surface-hover);
+        }
+        .nav-section-header .icon {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 0.85rem;
+        }
+        .nav-section-header .arrow {
+            width: 16px;
+            height: 16px;
+            transition: transform 0.25s ease;
+            flex-shrink: 0;
+            opacity: 0.5;
+            font-size: 0.65rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .nav-section.open .nav-section-header .arrow {
+            transform: rotate(90deg);
+            opacity: 0.8;
+        }
+        .nav-subitems {
+            display: none;
+            padding: 2px 0 8px 36px;
+            font-size: 0.78rem;
+        }
+        .nav-section.open .nav-subitems {
+            display: block;
+        }
+        .nav-subitem {
+            padding: 4px 10px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            border-radius: var(--radius-sm);
+            transition: var(--transition);
+            margin: 1px 0;
+            font-size: 0.76rem;
+            display: block;
+            text-decoration: none;
+        }
+        .nav-subitem:hover,
+        .nav-subitem.active {
+            color: var(--primary);
+            background: var(--primary-light);
+            font-weight: 500;
+        }
+
+        /* Main */
+        .main {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+        .main-header {
+            height: var(--header-height);
+            padding: 0 28px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            background: var(--surface);
+            position: sticky;
+            top: 0;
+            z-index: 5;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+        .main-header h1 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+        }
+        .main-header .badge {
+            font-size: 0.7rem;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-weight: 500;
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+        .breadcrumb {
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+        }
+        .breadcrumb a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+        .content-area {
+            flex: 1;
+            padding: 20px 28px;
+            overflow-y: auto;
+            max-width: 960px;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px 22px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+        }
+        .card:hover {
+            box-shadow: var(--shadow);
+        }
+        .card h3 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .card h4 {
+            font-size: 0.84rem;
+            font-weight: 600;
+            margin: 12px 0 6px;
+            color: var(--text);
+        }
+        .card p,
+        .card li {
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+        .card ul {
+            padding-left: 20px;
+        }
+        .formula-display {
+            background: #fafbfc;
+            border-radius: var(--radius-sm);
+            padding: 14px 16px;
+            margin: 10px 0;
+            overflow-x: auto;
+            font-size: 0.9rem;
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+        .tag {
+            display: inline-block;
+            font-size: 0.66rem;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-weight: 500;
+            margin-right: 4px;
+            margin-bottom: 4px;
+        }
+        .tag-primary {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+        .tag-accent {
+            background: var(--accent-light);
+            color: var(--accent);
+        }
+        .tag-warn {
+            background: var(--warn-light);
+            color: var(--warn);
+        }
+        .tag-success {
+            background: var(--success-light);
+            color: var(--success);
+        }
+        .highlight-box {
+            background: var(--primary-light);
+            border: 1px solid #c7d6f7;
+            border-radius: var(--radius-sm);
+            padding: 12px 16px;
+            margin: 10px 0;
+            font-size: 0.82rem;
+        }
+        .highlight-box.accent {
+            background: var(--accent-light);
+            border-color: #dccff7;
+        }
+        .highlight-box.warn {
+            background: var(--warn-light);
+            border-color: #fce4b8;
+        }
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        @media (max-width: 700px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+            .sidebar {
+                width: 240px;
+            }
+            :root {
+                --sidebar-width: 240px;
+            }
+        }
+        ::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #d0d4db;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h2>🔵 拉格朗日力学</h2>
+            <div class="subtitle">理论力学 · 赵鹏巍</div>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="nav-section">
+                <a class="nav-section-header" href="index.html">
+                    <span class="icon">🏠</span>
+                    <span style="flex:1;">返回理论力学首页</span>
+                </a>
+            </div>
+            <div class="nav-section open">
+                <div class="nav-section-header" onclick="toggleSection(this)">
+                    <span class="icon">📖</span>
+                    <span style="flex:1;">快速导航</span>
+                    <span class="arrow">▶</span>
+                </div>
+                <div class="nav-subitems">
+                    <span class="nav-subitem active" onclick="scrollToSection('constraints')">约束与广义坐标</span>
+                    <span class="nav-subitem" onclick="scrollToSection('dAlembert')">达朗伯原理</span>
+                    <span class="nav-subitem" onclick="scrollToSection('hamilton-principle')">哈密顿原理</span>
+                    <span class="nav-subitem" onclick="scrollToSection('lagrange-eq')">拉格朗日方程</span>
+                    <span class="nav-subitem" onclick="scrollToSection('multiplier')">非完整约束与乘子法</span>
+                    <span class="nav-subitem" onclick="scrollToSection('noether')">诺特定理与守恒律</span>
+                    <span class="nav-subitem" onclick="scrollToSection('central-force')">有心力问题</span>
+                    <span class="nav-subitem" onclick="scrollToSection('three-body')">受限三体问题</span>
+                </div>
+            </div>
+            <div class="nav-section">
+                <a class="nav-section-header" href="hamilton.html">
+                    <span class="icon">🟣</span>
+                    <span style="flex:1;">哈密顿力学</span>
+                    <span style="font-size:0.65rem;opacity:0.5;">→</span>
+                </a>
+            </div>
+            <div class="nav-section">
+                <a class="nav-section-header" href="compare.html">
+                    <span class="icon">⚖️</span>
+                    <span style="flex:1;">力学对比</span>
+                    <span style="font-size:0.65rem;opacity:0.5;">→</span>
+                </a>
+            </div>
+            <div class="nav-section">
+                <a class="nav-section-header" href="flashcards.html">
+                    <span class="icon">🃏</span>
+                    <span style="flex:1;">闪卡复习</span>
+                    <span style="font-size:0.65rem;opacity:0.5;">→</span>
+                </a>
+            </div>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="main">
+        <div class="main-header">
+            <span class="breadcrumb"><a href="index.html">理论力学首页</a> › 拉格朗日力学</span>
+            <span class="badge">核心专题</span>
+        </div>
+        <div class="content-area">
+
+            <!-- 约束与广义坐标 -->
+            <div class="card" id="constraints">
+                <h3>🔗 约束与广义坐标</h3>
+                <p><strong>完整约束：</strong>可表示为 $f(r_1, r_2, \dots, t)=0$，减少独立变量数。</p>
+                <p><strong>非完整约束：</strong>不能写成上述形式，可能涉及不等式或不可积微分约束。</p>
+                <p style="margin-top:6px;">$N$ 个质点有 $3N$ 个坐标，$k$ 个完整约束后，<strong>自由度</strong>为 $3N-k$，引入 <strong>$n = 3N-k$ 个广义坐标</strong> $q_1, \dots, q_n$。</p>
+                <div class="highlight-box">
+                    <strong>💡 核心思想：</strong>广义坐标提供了一种自然的处理受力系统的方法。位形空间是 $n$ 维微分流形，体系演化对应其中的一条曲线。
+                </div>
+            </div>
+
+            <!-- 达朗伯原理 -->
+            <div class="card" id="dAlembert">
+                <h3>⚡ 达朗伯原理</h3>
+                <p>理想约束下（约束力虚功为零 $\sum_i f_i \cdot \delta r_i = 0$），外力和倒转有效力所做虚功之和为零：</p>
+                <div class="formula-display">$$\sum_i \left(F_i^{(a)} - \dot{p}_i\right) \cdot \delta r_i = 0$$</div>
+                <p>通过将虚位移 $\delta r_i$ 转为广义坐标变分 $\delta q_j$，引入<strong>广义力</strong> $Q_j \equiv \sum_i F_i \cdot \frac{\partial r_i}{\partial q_j}$。</p>
+                <p>$Q_j$ 的量纲不一定是力，但 $Q_j \cdot q_j$ 总是功的量纲。</p>
+            </div>
+
+            <!-- 哈密顿原理 -->
+            <div class="card" id="hamilton-principle">
+                <h3>🎯 哈密顿原理 <span class="tag tag-warn">考试重点</span></h3>
+                <p>单演系统在通过位形空间中两个固定点的所有可能运动中，真实路径使<strong>作用量取极值</strong>：</p>
+                <div class="formula-display">$$\delta I = \delta \int_{t_1}^{t_2} L(q, \dot{q}, t)\, dt = 0$$</div>
+                <p>由此导出拉格朗日方程。此即最小作用量原理的"δ变分"形式：<strong>等时不等能</strong>。</p>
+            </div>
+
+            <!-- 拉格朗日方程 -->
+            <div class="card" id="lagrange-eq">
+                <h3>📐 拉格朗日方程</h3>
+                <div class="formula-display">$$\frac{d}{dt}\left(\frac{\partial L}{\partial \dot{q}_j}\right) - \frac{\partial L}{\partial q_j} = 0$$</div>
+                <p>$L = T - V$ 为拉格朗日量（标量），适用于<strong>完整约束、单演系统</strong>。</p>
+                <div class="grid-2">
+                    <div class="highlight-box">
+                        <strong>🔹 规范不变性：</strong><br>
+                        $L' = L + \frac{dF(q,t)}{dt}$ 给出相同的运动方程。
+                    </div>
+                    <div class="highlight-box accent">
+                        <strong>🔹 广义势推广：</strong><br>
+                        若 $F_i = -\frac{\partial U}{\partial r_i} + \frac{d}{dt}\frac{\partial U}{\partial \dot{r}_i}$，拉格朗日方程仍成立，$L = T - U$。
+                    </div>
+                </div>
+                <p style="margin-top:8px;"><strong>示例：</strong>电磁场中带电粒子 $L = \frac{1}{2}mv^2 - q\phi + q\mathbf{A}\cdot\mathbf{v}$，其中 $U = q\phi - q\mathbf{A}\cdot\mathbf{v}$ 为速度依赖的广义势。</p>
+            </div>
+
+            <!-- 非完整约束与拉格朗日乘子法 -->
+            <div class="card" id="multiplier">
+                <h3>🔧 非完整约束与拉格朗日乘子法</h3>
+                <p>对于 Pfaflian 形式的约束 $\sum_k a_{\alpha k} dq_k + a_{\alpha t} dt = 0$，引入乘子 $\lambda_\alpha$：</p>
+                <div class="formula-display">$$\frac{d}{dt}\left(\frac{\partial L}{\partial \dot{q}_j}\right) - \frac{\partial L}{\partial q_j} = \sum_\alpha \lambda_\alpha a_{\alpha j} = Q_j$$</div>
+                <p>$Q_j$ 即为<strong>广义约束力</strong>。这同样适用于完整约束，可求出约束力。</p>
+                <div class="highlight-box warn">
+                    <strong>⚠️ 示例：</strong>无滑滚下斜面的铁环，约束 $R\dot{\theta} = \dot{x}$ 可写为 $f(\theta, x) = R\theta - x = 0$，乘子法解得静摩擦力 $F_c = \frac{mg\sin\phi}{2}$。
+                </div>
+            </div>
+
+            <!-- 诺特定理 -->
+            <div class="card" id="noether">
+                <h3>⭐ 对称性与诺特定理 <span class="tag tag-warn">考试重点</span></h3>
+                <p><strong>诺特定理：</strong>作用量的每个连续对称性对应一个守恒量。</p>
+                <div class="formula-display">$$C_m = \sum_j \frac{\partial L}{\partial \dot{q}_j} Q_j = \text{const}$$</div>
+                <div class="grid-2" style="margin-top:8px;">
+                    <div class="highlight-box">
+                        <strong>空间平移不变性</strong><br>
+                        → 总动量守恒 $\mathbf{P} = \sum_i \mathbf{p}_i$
+                    </div>
+                    <div class="highlight-box accent">
+                        <strong>空间旋转不变性</strong><br>
+                        → 总角动量守恒 $\mathbf{L} = \sum_i \mathbf{r}_i \times \mathbf{p}_i$
+                    </div>
+                </div>
+                <div class="highlight-box warn" style="margin-top:8px;">
+                    <strong>时间平移不变性</strong> → 能量函数 $h = \sum_j \dot{q}_j \frac{\partial L}{\partial \dot{q}_j} - L$ 守恒。若 $\frac{\partial L}{\partial t}=0$ 且约束与时间无关、势场与速度无关，则 $h = E = T+V$。
+                </div>
+                <p style="margin-top:6px;"><strong>广义动量：</strong>$p_j \equiv \partial L / \partial \dot{q}_j$，若 $q_j$ 为循环坐标，则 $p_j$ 守恒。</p>
+            </div>
+
+            <!-- 有心力问题 -->
+            <div class="card" id="central-force">
+                <h3>🪐 有心力问题</h3>
+                <p>两体问题通过约化质量 $\mu = m_1 m_2/(m_1+m_2)$ 转化为等效单体有心力问题。利用角动量守恒 $l = mr^2\dot{\theta} = \text{const}$，轨道方程（比奈方程）：</p>
+                <div class="formula-display">$$\frac{d^2u}{d\theta^2} + u + \frac{m}{l^2}\frac{dV(1/u)}{du} = 0, \quad u \equiv \frac{1}{r}$$</div>
+                <p><strong>平方反比力</strong> $V = -k/r$ 给出圆锥曲线 $1/r = C(1+e\cos\theta)$：$e<1$ 椭圆，$e=1$ 抛物线，$e>1$ 双曲线。</p>
+                <div class="highlight-box accent">
+                    <strong>📌 伯特兰定理：</strong>所有被束缚质点中，只有<strong>平方反比力</strong>和<strong>胡克定律</strong>（$f \propto r$）能给出闭合轨道。
+                </div>
+            </div>
+
+            <!-- 受限三体问题 -->
+            <div class="card" id="three-body">
+                <h3>🌍 受限三体问题与拉格朗日点</h3>
+                <p>$m \ll m_1, m_2$，两主天体做圆周运动。在同步旋转非惯性系中，有效势：</p>
+                <div class="formula-display">$$V_{\text{eff}} = -\frac{1}{2}\Omega^2(x^2+y^2) - \frac{Gm_1}{r_1} - \frac{Gm_2}{r_2}$$</div>
+                <p><strong>拉格朗日点</strong>满足 $\nabla V_{\text{eff}} = 0$，共 5 个：</p>
+                <ul>
+                    <li><strong>L1, L2, L3：</strong>位于两主天体连线上（共线点），不稳定（鞍点）。</li>
+                    <li><strong>L4, L5：</strong>与两主天体构成等边三角形，在 $m_2/m_1 \lesssim 0.04$ 时稳定。</li>
+                </ul>
+                <p>L1、L2 与较小天体的距离为<strong>希尔半径</strong> $r_H = R\left(\frac{m_2}{3m_1}\right)^{1/3}$。</p>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function toggleSection(header) {
+            const section = header.parentElement;
+            section.classList.toggle('open');
+        }
+
+        function scrollToSection(id) {
+            const el = document.getElementById(id);
+            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            document.querySelectorAll('.nav-subitem').forEach(item => item.classList.remove('active'));
+            const activeItem = document.querySelector(`.nav-subitem[onclick*="${id}"]`);
+            if (activeItem) activeItem.classList.add('active');
+        }
+
+        // Scroll-based sidebar highlight
+        const sections = ['constraints', 'dAlembert', 'hamilton-principle', 'lagrange-eq', 'multiplier',
+            'noether', 'central-force', 'three-body'
+        ];
+        const mainArea = document.querySelector('.content-area');
+        mainArea.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(id => {
+                const el = document.getElementById(id);
+                if (el && el.getBoundingClientRect().top <= 150) {
+                    current = id;
+                }
+            });
+            document.querySelectorAll('.nav-subitem').forEach(item => item.classList.remove(
+                'active'));
+            const activeItem = document.querySelector(`.nav-subitem[onclick*="${current}"]`);
+            if (activeItem) activeItem.classList.add('active');
+        });
+    </script>
+</body>
+</html>

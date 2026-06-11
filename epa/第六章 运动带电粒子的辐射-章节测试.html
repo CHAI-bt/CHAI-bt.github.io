@@ -180,9 +180,60 @@ div.toc li { margin: 3px 0; font-size: 0.95em; }
 .grading-bar button:hover     { background: var(--accent-hover); }
 .grading-bar button:disabled  { background: #bbb; cursor: not-allowed; }
 
+/* === Sidebar Styles === */
+:root { --sidebar-width: 240px; }
+body { display: flex !important; flex-direction: row !important; max-width: none !important; margin: 0 !important; padding: 0 !important; background: #f7f8fb !important; }
+.sidebar { width: var(--sidebar-width); height: 100vh; background: #ffffff; border-right: 1px solid #e2e5ea; display: flex; flex-direction: column; flex-shrink: 0; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04); z-index: 10; overflow-y: auto; position: fixed; left: 0; top: 0; }
+.sidebar-header { padding: 18px 20px 14px; border-bottom: 1px solid #e2e5ea; position: sticky; top: 0; background: #ffffff; z-index: 2; }
+.sidebar-header h2 { font-size: 1rem; font-weight: 700; color: #1a1d23; letter-spacing: -0.01em; margin: 0; text-align: left; border: none; padding: 0; }
+.sidebar-header .subtitle { font-size: 0.76rem; color: #5a5f6b; margin-top: 2px; }
+.sidebar-nav { flex: 1; padding: 8px 0; }
+.nav-section { border-bottom: 1px solid #e2e5ea; }
+.nav-section-header { display: flex; align-items: center; gap: 8px; padding: 10px 20px; font-size: 0.85rem; font-weight: 600; color: #1a1d23; text-decoration: none; transition: 0.2s; cursor: pointer; }
+.nav-section-header:hover { background: #f1f3f6; }
+.nav-section-header .icon { width: 20px; text-align: center; flex-shrink: 0; }
+.main-content { margin-left: var(--sidebar-width); flex: 1; min-height: 100vh; background: #fdf6e3; }
+#exampass-header { position: sticky; top: 0; z-index: 5; background: #fdf6e3; }
+@media print { .sidebar { display: none !important; } .main-content { margin-left: 0 !important; } }
+@media (max-width: 700px) { :root { --sidebar-width: 200px; } }
+
 </style>
 </head>
 <body>
+
+<aside class="sidebar">
+    <div class="sidebar-header">
+        <h2>📡 第六章</h2>
+        <div class="subtitle">运动带电粒子的辐射</div>
+    </div>
+    <nav class="sidebar-nav">
+        <div class="nav-section">
+            <a class="nav-section-header" href="index.html">
+                <span class="icon">🏠</span>
+                <span style="flex:1;">返回电动力学首页</span>
+            </a>
+        </div>
+        <div class="nav-section">
+            <a class="nav-section-header" href="../index.html">
+                <span class="icon">📚</span>
+                <span style="flex:1;">返回总首页</span>
+            </a>
+        </div>
+        <div class="nav-section">
+            <a class="nav-section-header" href="ch4.html">
+                <span class="icon">📡</span>
+                <span style="flex:1;">第四章</span>
+            </a>
+        </div>
+        <div class="nav-section">
+            <a class="nav-section-header" href="ch5.html">
+                <span class="icon">📡</span>
+                <span style="flex:1;">第五章</span>
+            </a>
+        </div>
+    </nav>
+</aside>
+<div class="main-content">
 
 <header id="exampass-header">
   <div class="header-left"><span class="header-brand">ExamPass Assistant</span></div>
@@ -588,5 +639,6 @@ function gradeFill(q, qid, card, badge, correctEl) {
 }
 
 </script>
+</div>
 </body>
 </html>

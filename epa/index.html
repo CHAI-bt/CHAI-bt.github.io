@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>物理学习导航 · 北京大学</title>
+    <title>经典电动力学 · 学习导航</title>
     <script>
         MathJax = {
             tex: {
@@ -23,16 +23,14 @@
             --border: #e2e5ea;
             --text: #1a1d23;
             --text-secondary: #5a5f6b;
-            --primary: #2563eb;
-            --primary-light: #eef3ff;
-            --accent: #7c3aed;
-            --accent-light: #f5f0ff;
+            --primary: #dc2626;
+            --primary-light: #fef2f2;
+            --accent: #2563eb;
+            --accent-light: #eef3ff;
             --warn: #d97706;
             --warn-light: #fffbeb;
             --success: #059669;
             --success-light: #ecfdf5;
-            --danger: #dc2626;
-            --danger-light: #fef2f2;
             --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
             --shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
             --shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.08);
@@ -271,8 +269,6 @@
         }
         .tag-primary { background: var(--primary-light); color: var(--primary); }
         .tag-accent { background: var(--accent-light); color: var(--accent); }
-        .tag-warn { background: var(--warn-light); color: var(--warn); }
-        .tag-success { background: var(--success-light); color: var(--success); }
 
         /* Highlight box */
         .highlight-box {
@@ -300,33 +296,46 @@
     <!-- Sidebar -->
     <aside class="sidebar">
         <div class="sidebar-header">
-            <h2>📚 物理学习导航</h2>
-            <div class="subtitle">北京大学 · 赵鹏巍</div>
+            <h2>⚡ 经典电动力学</h2>
+            <div class="subtitle">刘川 · 北京大学</div>
         </div>
         <nav class="sidebar-nav">
+            <div class="nav-section">
+                <a class="nav-section-header" href="../index.html">
+                    <span class="icon">🏠</span>
+                    <span style="flex:1;">返回总首页</span>
+                </a>
+            </div>
             <div class="nav-section open">
                 <div class="nav-section-header" onclick="toggleSection(this)">
-                    <span class="icon">🏠</span>
-                    <span style="flex:1;">首页</span>
+                    <span class="icon">📖</span>
+                    <span style="flex:1;">本章导航</span>
                     <span class="arrow">▶</span>
                 </div>
                 <div class="nav-subitems">
-                    <span class="nav-subitem active" onclick="scrollToSection('overview')">概览</span>
-                    <span class="nav-subitem" onclick="scrollToSection('theory')">理论力学</span>
-                    <span class="nav-subitem" onclick="scrollToSection('electrodynamics')">经典电动力学</span>
+                    <span class="nav-subitem active" onclick="scrollToSection('ch4')">第四章</span>
+                    <span class="nav-subitem" onclick="scrollToSection('ch5')">第五章</span>
+                    <span class="nav-subitem" onclick="scrollToSection('ch6')">第六章</span>
                 </div>
             </div>
             <div class="nav-section">
-                <a class="nav-section-header" href="mechanics/index.html">
-                    <span class="icon">📐</span>
-                    <span style="flex:1;">理论力学</span>
+                <a class="nav-section-header" href="ch4.html">
+                    <span class="icon">📡</span>
+                    <span style="flex:1;">第四章：电磁波的传播</span>
                     <span style="font-size:0.7rem;opacity:0.6;">→</span>
                 </a>
             </div>
             <div class="nav-section">
-                <a class="nav-section-header" href="epa/index.html">
-                    <span class="icon">⚡</span>
-                    <span style="flex:1;">经典电动力学</span>
+                <a class="nav-section-header" href="ch5.html">
+                    <span class="icon">📡</span>
+                    <span style="flex:1;">第五章：辐射和散射</span>
+                    <span style="font-size:0.7rem;opacity:0.6;">→</span>
+                </a>
+            </div>
+            <div class="nav-section">
+                <a class="nav-section-header" href="ch6.html">
+                    <span class="icon">📡</span>
+                    <span style="flex:1;">第六章：运动电荷辐射</span>
                     <span style="font-size:0.7rem;opacity:0.6;">→</span>
                 </a>
             </div>
@@ -336,84 +345,64 @@
     <!-- Main Content -->
     <div class="main">
         <div class="main-header">
-            <h1>物理学习导航</h1>
-            <span class="badge">2026春</span>
+            <h1>经典电动力学 · 学习导航</h1>
+            <span class="badge">刘川</span>
         </div>
         <div class="content-area">
 
-            <!-- 概览 -->
-            <div class="card" id="overview">
+            <div class="card">
                 <h3>👋 欢迎</h3>
-                <p>本课程网站包含<strong>理论力学</strong>和<strong>经典电动力学</strong>两门基础物理课程的学习资料，包括知识清单、章节测试和闪卡复习等功能。</p>
-                <p style="margin-top:8px;">请使用左侧导航栏或下方卡片进入各课程模块。</p>
+                <p>本课程网站包含<strong>经典电动力学</strong>（刘川）的学习资料，包括知识清单和章节测试。</p>
+                <p style="margin-top:8px;">请使用左侧导航栏或下方卡片进入各章节。</p>
             </div>
 
-            <!-- 理论力学 -->
-            <div class="card" id="theory">
-                <h3>📐 理论力学</h3>
-                <p style="margin-bottom:12px;">从牛顿力学出发，建立拉格朗日力学和哈密顿力学体系，为量子力学等现代物理奠定基础。</p>
-                <div class="module-grid">
-                    <a href="mechanics/index.html" class="module-card">
-                        <div class="module-icon">📐</div>
-                        <div class="module-title">理论力学首页</div>
-                        <div class="module-desc">课程信息、教材参考书、学习模块导航</div>
-                        <div class="module-meta">赵鹏巍 · 2026春</div>
+            <div class="card" id="ch4">
+                <h3>📡 第四章：电磁波的传播</h3>
+                <p>均匀平面电磁波的基本性质、电磁波在介质表面的折射与反射、导电介质中的传播、介质色散、各向异性晶体中的传播、波导与谐振腔。</p>
+                <div class="module-grid" style="margin-top:16px;">
+                    <a href="第四章 电磁波的传播-知识清单.html" class="module-card">
+                        <div class="module-icon">📝</div>
+                        <div class="module-title">知识清单</div>
+                        <div class="module-desc">核心知识点梳理</div>
                     </a>
-                    <a href="mechanics/lagrange.html" class="module-card">
-                        <div class="module-icon">🔵</div>
-                        <div class="module-title">拉格朗日力学</div>
-                        <div class="module-desc">约束与广义坐标、达朗伯原理、哈密顿原理、诺特定理、有心力问题</div>
-                        <div class="module-meta">核心专题</div>
-                    </a>
-                    <a href="mechanics/hamilton.html" class="module-card">
-                        <div class="module-icon">🟣</div>
-                        <div class="module-title">哈密顿力学</div>
-                        <div class="module-desc">勒让德变换、相空间、正则方程、潘宁阱、3D转动、重陀螺</div>
-                        <div class="module-meta">核心专题</div>
-                    </a>
-                    <a href="mechanics/compare.html" class="module-card">
-                        <div class="module-icon">⚖️</div>
-                        <div class="module-title">力学体系对比</div>
-                        <div class="module-desc">牛顿·拉格朗日·哈密顿三大框架对比</div>
-                        <div class="module-meta">框架总览</div>
-                    </a>
-                    <a href="mechanics/flashcards.html" class="module-card">
-                        <div class="module-icon">🃏</div>
-                        <div class="module-title">闪卡复习</div>
-                        <div class="module-desc">翻转卡片、核心概念自测</div>
-                        <div class="module-meta">约86张卡片</div>
+                    <a href="第四章 电磁波的传播-章节测试.html" class="module-card">
+                        <div class="module-icon">✏️</div>
+                        <div class="module-title">章节测试</div>
+                        <div class="module-desc">交互式测试练习</div>
                     </a>
                 </div>
             </div>
 
-            <!-- 经典电动力学 -->
-            <div class="card" id="electrodynamics">
-                <h3>⚡ 经典电动力学</h3>
-                <p style="margin-bottom:12px;">经典电动力学（刘川）课程资料，包含知识清单和章节测试。</p>
-                <div class="module-grid">
-                    <a href="epa/index.html" class="module-card">
-                        <div class="module-icon">⚡</div>
-                        <div class="module-title">电动力学首页</div>
-                        <div class="module-desc">各章节导航入口</div>
-                        <div class="module-meta">刘川 · 经典电动力学</div>
+            <div class="card" id="ch5">
+                <h3>📡 第五章：电磁波的辐射和散射</h3>
+                <p>电磁波的辐射场、散射截面、多极辐射等内容。</p>
+                <div class="module-grid" style="margin-top:16px;">
+                    <a href="第五章 电磁波的辐射和散射-知识清单.html" class="module-card">
+                        <div class="module-icon">📝</div>
+                        <div class="module-title">知识清单</div>
+                        <div class="module-desc">核心知识点梳理</div>
                     </a>
-                    <a href="epa/ch4.html" class="module-card">
-                        <div class="module-icon">📡</div>
-                        <div class="module-title">第四章：电磁波的传播</div>
-                        <div class="module-desc">均匀平面波、折射反射、色散、波导</div>
-                        <div class="module-meta">知识清单 + 章节测试</div>
+                    <a href="第五章 电磁波的辐射和散射-章节测试.html" class="module-card">
+                        <div class="module-icon">✏️</div>
+                        <div class="module-title">章节测试</div>
+                        <div class="module-desc">交互式测试练习</div>
                     </a>
-                    <a href="epa/ch5.html" class="module-card">
-                        <div class="module-icon">📡</div>
-                        <div class="module-title">第五章：电磁波的辐射和散射</div>
-                        <div class="module-desc">辐射场、散射截面、多极辐射</div>
-                        <div class="module-meta">知识清单 + 章节测试</div>
+                </div>
+            </div>
+
+            <div class="card" id="ch6">
+                <h3>📡 第六章：运动带电粒子的辐射</h3>
+                <p>李纳-维谢尔势、拉摩公式、相对论性加速电荷的辐射、同步辐射、切伦可夫辐射、辐射阻尼。</p>
+                <div class="module-grid" style="margin-top:16px;">
+                    <a href="第六章 运动带电粒子的辐射-知识清单.html" class="module-card">
+                        <div class="module-icon">📝</div>
+                        <div class="module-title">知识清单</div>
+                        <div class="module-desc">核心知识点梳理</div>
                     </a>
-                    <a href="epa/ch6.html" class="module-card">
-                        <div class="module-icon">📡</div>
-                        <div class="module-title">第六章：运动带电粒子的辐射</div>
-                        <div class="module-desc">李纳-维谢尔势、拉摩公式、同步辐射、切伦可夫辐射</div>
-                        <div class="module-meta">知识清单 + 章节测试</div>
+                    <a href="第六章 运动带电粒子的辐射-章节测试.html" class="module-card">
+                        <div class="module-icon">✏️</div>
+                        <div class="module-title">章节测试</div>
+                        <div class="module-desc">交互式测试练习</div>
                     </a>
                 </div>
             </div>
@@ -434,7 +423,7 @@
             if (activeItem) activeItem.classList.add('active');
         }
 
-        const sections = ['overview', 'theory', 'electrodynamics'];
+        const sections = ['ch4', 'ch5', 'ch6'];
         const mainArea = document.querySelector('.content-area');
         mainArea.addEventListener('scroll', () => {
             let current = '';

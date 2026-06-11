@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>经典电动力学（刘川） 第四章 电磁波的传播</title>
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\(', '\)']],
+    displayMath: [['$$', '$$'], ['\[', '\]']]
+  }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"></script>
+<style>
+/* === ExamPass Shared Styles === */
+/* Paper-like warm background, clean typography, responsive */
+
+:root {
+  --paper: #fdf6e3;
+  --paper-dark: #f5ecd7;
+  --ink: #2c2c2c;
+  --ink-light: #555;
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
+  --divider: #d6c8a8;
+  --card-bg: #fef9ef;
+  --card-border: #e8dcc8;
+  --correct: #22c55e;
+  --correct-bg: #f0fdf4;
+  --wrong: #ef4444;
+  --wrong-bg: #fef2f2;
+  --tag-bg: #fef3c7;
+  --tag-text: #92400e;
+  --radius: 6px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: "Microsoft YaHei", "Noto Sans SC", "SimSun", sans-serif;
+  font-size: 12pt; line-height: 1.75; color: var(--ink);
+  max-width: 860px; margin: auto; padding: 24px 20px 60px;
+  background: var(--paper);
+}
+
+@media print {
+  body { font-size: 10.5pt; background: #fff; }
+  .no-print { display: none !important; }
+  h1, h2, h3 { page-break-after: avoid; }
+}
+
+/* ── Header ── */
+#exampass-header {
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding: 6px 0; margin-bottom: 0;
+}
+.header-brand { font-size: 1.2em; font-weight: 700; color: #1a1a2e; letter-spacing: 0.3px; }
+.header-url  { font-size: 0.78em; color: #999; }
+.header-divider { border: none; border-top: 2px solid var(--divider); margin: 4px 0 20px 0; }
+
+/* ── Typography ── */
+h1 { font-size: 1.55em; text-align: center; border-bottom: 2px solid var(--divider); padding-bottom: 8px; margin-top: 0; }
+h2 { font-size: 1.25em; border-bottom: 1px solid var(--divider); padding-bottom: 4px; margin-top: 28px; }
+h3 { font-size: 1.08em; margin-top: 20px; color: var(--ink); }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ── Tables ── */
+table { border-collapse: collapse; width: 100%; margin: 10px 0; font-size: 0.95em; }
+td, th { border: 1px solid var(--card-border); padding: 5px 9px; text-align: left; }
+th { background: var(--paper-dark); font-weight: 700; }
+
+/* ── Knowledge point vs explanation ── */
+.kp { font-weight: 700; color: var(--ink); }           /* key point: bold dark */
+.exp { font-weight: 400; color: var(--ink-light); }    /* explanation: lighter */
+.exp em, .exp strong { color: var(--ink); }             /* emphasis inside explanation */
+
+/* ── Block elements ── */
+blockquote {
+  border-left: 3px solid #c0392b; background: #fef9ef;
+  padding: 6px 14px; margin: 10px 0; font-size: 0.95em;
+}
+code { background: #f0ede0; padding: 2px 5px; border-radius: 3px; font-size: 0.92em; }
+pre { background: #f0ede0; padding: 10px; border-radius: var(--radius); overflow-x: auto; }
+
+/* ── TOC ── */
+div.toc {
+  background: var(--card-bg); padding: 14px 18px;
+  border: 1px solid var(--card-border); border-radius: var(--radius); margin-bottom: 22px;
+}
+div.toc ul { padding-left: 18px; }
+div.toc li { margin: 3px 0; font-size: 0.95em; }
+
+/* ── Priority tags ── */
+.tag-must   { background: #fee2e2; color: #991b1b; padding: 1px 6px; border-radius: 3px; font-size: 0.82em; font-weight: 600; }
+.tag-key    { background: #fef3c7; color: #92400e; padding: 1px 6px; border-radius: 3px; font-size: 0.82em; font-weight: 600; }
+.tag-freq   { background: #dbeafe; color: #1e40af; padding: 1px 6px; border-radius: 3px; font-size: 0.82em; font-weight: 600; }
+.tag-info   { background: #f0fdf4; color: #166534; padding: 1px 6px; border-radius: 3px; font-size: 0.82em; font-weight: 600; }
+
+/* === Interactive Test Styles === */
+
+/* ── Score box ── */
+#score-box {
+  display: none; background: var(--paper-dark); color: var(--ink);
+  padding: 16px 20px; border-radius: var(--radius); margin: 14px 0;
+  text-align: center; border: 1px solid var(--card-border);
+}
+#score-box .score-num { font-size: 2.2em; font-weight: 700; }
+#score-box .score-label { font-size: 0.85em; color: var(--ink-light); }
+
+/* ── Question card ── */
+.q-card {
+  background: var(--card-bg); border: 1px solid var(--card-border);
+  border-radius: var(--radius); padding: 12px 14px; margin: 10px 0;
+  transition: all 0.15s;
+}
+.q-card.correct { border-left: 3px solid var(--correct); background: #f7fdf4; }
+.q-card.wrong   { border-left: 3px solid var(--wrong); background: #fef9f9; }
+
+.q-num  { font-weight: 700; font-size: 0.98em; margin-bottom: 4px; }
+.q-text { margin-bottom: 8px; font-size: 0.98em; }
+
+/* ── Options (compact) ── */
+.option {
+  display: block; padding: 4px 10px; margin: 3px 0;
+  border: 1px solid var(--card-border); border-radius: 4px;
+  cursor: pointer; transition: all 0.12s; font-size: 0.93em;
+  background: #fefcf5;
+}
+.option:hover            { background: #f0ede0; }
+.option input            { margin-right: 6px; }
+.option.selected         { border-color: var(--accent); background: #eff6ff; }
+.option.correct-answer   { border-color: var(--correct); background: var(--correct-bg); }
+.option.wrong-answer     { border-color: var(--wrong); background: var(--wrong-bg); }
+
+/* ── Textareas (compact) ── */
+.q-textarea {
+  width: 100%; min-height: 56px; border: 1px solid var(--card-border);
+  border-radius: 4px; padding: 6px 10px; font-family: inherit;
+  font-size: 0.93em; background: #fefcf5; resize: vertical;
+}
+.q-textarea:focus { outline: none; border-color: var(--accent); }
+.q-code {
+  font-family: "Consolas", "Monaco", "Courier New", monospace;
+  font-size: 0.88em; line-height: 1.5; background: #1e1e2e; color: #e0e0e0;
+  tab-size: 4; white-space: pre;
+}
+.q-code:focus { border-color: var(--accent); }
+
+/* ── Partial-credit badge ── */
+.badge-partial { background: #fef3c7; color: #92400e; }
+.q-card.partial { border-color: #f59e0b; }
+
+/* ── Result after grading ── */
+.result {
+  display: none; margin-top: 8px; padding: 8px 12px;
+  background: #fefcf5; border: 1px solid var(--card-border);
+  border-radius: 4px; font-size: 0.9em; line-height: 1.6;
+}
+.result .badge {
+  display: inline-block; padding: 1px 9px; border-radius: 3px;
+  font-weight: 700; font-size: 0.82em; margin-right: 6px;
+}
+.badge-ok  { background: var(--correct-bg); color: #166534; }
+.badge-no  { background: var(--wrong-bg); color: #991b1b; }
+.badge-ref { background: #dbeafe; color: #1e40af; }
+
+.result .explanation { margin-top: 4px; color: var(--ink); }
+.result .pitfall { color: #b45309; margin-top: 3px; font-size: 0.9em; }
+
+/* ── Grading button ── */
+.grading-bar { text-align: center; margin: 20px 0; }
+.grading-bar button {
+  font-size: 1em; padding: 8px 32px; background: var(--accent);
+  color: #fff; border: none; border-radius: var(--radius);
+  cursor: pointer; font-weight: 600; letter-spacing: 0.3px;
+}
+.grading-bar button:hover     { background: var(--accent-hover); }
+.grading-bar button:disabled  { background: #bbb; cursor: not-allowed; }
+
+/* === Sidebar Styles === */
+:root { --sidebar-width: 240px; }
+body { display: flex !important; flex-direction: row !important; max-width: none !important; margin: 0 !important; padding: 0 !important; background: #f7f8fb !important; }
+.sidebar { width: var(--sidebar-width); height: 100vh; background: #ffffff; border-right: 1px solid #e2e5ea; display: flex; flex-direction: column; flex-shrink: 0; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04); z-index: 10; overflow-y: auto; position: fixed; left: 0; top: 0; }
+.sidebar-header { padding: 18px 20px 14px; border-bottom: 1px solid #e2e5ea; position: sticky; top: 0; background: #ffffff; z-index: 2; }
+.sidebar-header h2 { font-size: 1rem; font-weight: 700; color: #1a1d23; letter-spacing: -0.01em; margin: 0; text-align: left; border: none; padding: 0; }
+.sidebar-header .subtitle { font-size: 0.76rem; color: #5a5f6b; margin-top: 2px; }
+.sidebar-nav { flex: 1; padding: 8px 0; }
+.nav-section { border-bottom: 1px solid #e2e5ea; }
+.nav-section-header { display: flex; align-items: center; gap: 8px; padding: 10px 20px; font-size: 0.85rem; font-weight: 600; color: #1a1d23; text-decoration: none; transition: 0.2s; cursor: pointer; }
+.nav-section-header:hover { background: #f1f3f6; }
+.nav-section-header .icon { width: 20px; text-align: center; flex-shrink: 0; }
+.main-content { margin-left: var(--sidebar-width); flex: 1; min-height: 100vh; background: #fdf6e3; }
+#exampass-header { position: sticky; top: 0; z-index: 5; background: #fdf6e3; }
+@media print { .sidebar { display: none !important; } .main-content { margin-left: 0 !important; } }
+@media (max-width: 700px) { :root { --sidebar-width: 200px; } }
+
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+    <div class="sidebar-header">
+        <h2>📡 第四章</h2>
+        <div class="subtitle">电磁波的传播</div>
+    </div>
+    <nav class="sidebar-nav">
+        <div class="nav-section">
+            <a class="nav-section-header" href="index.html">
+                <span class="icon">🏠</span>
+                <span style="flex:1;">返回电动力学首页</span>
+            </a>
+        </div>
+        <div class="nav-section">
+            <a class="nav-section-header" href="../index.html">
+                <span class="icon">📚</span>
+                <span style="flex:1;">返回总首页</span>
+            </a>
+        </div>
+        <div class="nav-section">
+            <a class="nav-section-header" href="ch5.html">
+                <span class="icon">📡</span>
+                <span style="flex:1;">第五章</span>
+            </a>
+        </div>
+        <div class="nav-section">
+            <a class="nav-section-header" href="ch6.html">
+                <span class="icon">📡</span>
+                <span style="flex:1;">第六章</span>
+            </a>
+        </div>
+    </nav>
+</aside>
+<div class="main-content">
+
+<header id="exampass-header">
+  <div class="header-left"><span class="header-brand">ExamPass Assistant</span></div>
+  <div class="header-right"><span class="header-url">github.com/WUBING2023/ExamPass-Assistant</span></div>
+</header>
+<hr class="header-divider">
+
+<h1>经典电动力学（刘川） 第四章 电磁波的传播</h1>
+<h2 style="text-align:center">章节测试</h2>
+<p style="text-align:center;color:var(--ink-light);font-size:0.95em">章节测试 · 满分 100 分 · 建议用时 90 分钟</p>
+
+<div id="score-box"><div class="score-num" id="score-num">0</div><div class="score-label">总分</div></div>
+<div id="questions-container"></div>
+<div class="grading-bar no-print"><button onclick="gradeAll()" id="grade-btn">提交批改</button></div>
+
+<script>
+var Q = [{"kc_id": "kc4.1", "cognitive_level": "apply", "difficulty": "basic", "type": "choice", "points": 3, "question": "在电容率为 $\\epsilon$、磁导率为 $\\mu$ 的均匀线性无源介质中，均匀平面电磁波 $E=E_0 e^{i k\\cdot x-i\\omega t}$ 满足波动方程。该波的色散关系与相速度分别为", "options": ["$k^2=\\mu\\epsilon\\omega^2$，$v_p=1/\\sqrt{\\mu\\epsilon}$", "$k^2=\\omega^2/(\\mu\\epsilon)$，$v_p=\\sqrt{\\mu\\epsilon}$", "$k=\\mu\\epsilon\\omega$，$v_p=1/(\\mu\\epsilon)$", "$k^2=\\mu\\epsilon\\omega$，$v_p=1/\\sqrt{\\mu\\epsilon\\omega}$"], "answer": 0, "explanation": "将平面波代入 $\nabla^2E-\\mu\\epsilon\\,\\partial_t^2 E=0$，得 $-k^2+\\mu\\epsilon\\omega^2=0$，即色散关系 $k^2=\\mu\\epsilon\\omega^2$。相速度 $v_p=\\omega/k=1/\\sqrt{\\mu\\epsilon}=c/n$。选 A。选 B 把 $\\mu\\epsilon$ 放错位置（$1/\\sqrt{\\mu\\epsilon}$ 才是速度，量纲反了）；选 C 漏掉平方、把 $k$ 与 $k^2$ 混淆；选 D 在代入时把 $\\partial_t^2$ 误当 $\\partial_t$ 只产生一次 $\\omega$。", "pitfall": "色散关系 $k^2=\\mu\\epsilon\\omega^2$（含 $\\omega$ 平方），相速度 $v_p=1/\\sqrt{\\mu\\epsilon}$ 而非 $\\sqrt{\\mu\\epsilon}$。"}, {"kc_id": "kc4.2", "cognitive_level": "understand", "difficulty": "basic", "type": "choice", "points": 3, "question": "对于真空或非导电介质中的均匀平面电磁波，波矢 $k$、电场复振幅 $E_0$、磁感应强度复振幅 $B_0$ 之间的关系正确的是", "options": ["$k$ 与 $E_0$ 平行，$B_0=\\sqrt{\\mu\\epsilon}\\,E_0$", "$k\\cdot E_0=0$，$k\\cdot B_0=0$，$B_0=\\sqrt{\\mu\\epsilon}\\,n\times E_0$", "$E_0$ 与 $B_0$ 平行且都垂直于 $k$", "$k\\cdot E_0=0$，但 $B_0$ 与 $k$ 平行"], "answer": 1, "explanation": "由麦克斯韦方程，均匀平面波是横波：$k\\cdot E_0=0$、$k\\cdot B_0=0$，且 $B_0=\\sqrt{\\mu\\epsilon}\\,n\times E_0$，三者构成右手正交系。选 B。选 A 把横波误认为纵波（$k\\parallel E$ 概念混淆）；选 C 忘记 $E$ 与 $B$ 也相互垂直（误以为同向）；选 D 错把磁场当成纵向分量（几何关系错配）。", "pitfall": "$k,E,B$ 两两正交构成右手系，$E$ 与 $B$ 不平行；$B_0=\\sqrt{\\mu\\epsilon}\\,n\times E_0$。"}, {"kc_id": "kc4.3", "cognitive_level": "understand", "difficulty": "medium", "type": "choice", "points": 3, "question": "用垂直于传播方向的基矢 $e_1,e_2$ 展开平面波电场 $E=(E_1 e_1+E_2 e_2)e^{ik\\cdot x-i\\omega t}$。下列对偏振态的判定，正确的是", "options": ["$E_2/E_1$ 为实数 --> 圆偏振；$E_2/E_1=\\pm i$ --> 线偏振", "$E_2/E_1=\\pm i$ --> 椭圆偏振；为实数 --> 圆偏振", "$E_2/E_1$ 为实数 --> 线偏振；$E_2/E_1=\\pm i$ --> 左/右旋圆偏振", "$E_2/E_1$ 为任意复数 --> 必为线偏振"], "answer": 2, "explanation": "$E_1,E_2$ 同相位（比值为实数）时电场沿固定直线振动，为线偏振；$E_2/E_1=\\pm i$ 时两分量等幅、差 $\\pi/2$ 相位，端点画圆，为左/右旋圆偏振；一般复比值为椭圆偏振。选 C。选 A、B 把线偏振与圆偏振判据对调（条件错配）；选 D 忽略相位差导致的椭圆/圆偏振（条件遗漏）。", "pitfall": "实比值=线偏振，$\\pm i$=圆偏振，一般复比值=椭圆偏振；勿对调判据。"}, {"kc_id": "kc4.5", "cognitive_level": "apply", "difficulty": "medium", "type": "choice", "points": 3, "question": "在两种介质界面（n 和 n'）上，入射角 i 与折射角 r 满足斯涅尔定律。以下关于斯涅尔定律的表述，正确的是", "options": ["入射角与折射角正弦之比等于两介质折射率之比 sin i/sin r = n'/n", "入射角与折射角正弦之比等于两介质折射率反比 sin i/sin r = n/n'", "入射角与折射角正弦之比等于两介质光速之比 sin i/sin r = v'/v", "入射角与折射角正弦之比等于两介质光速反比 sin i/sin r = v/v'"], "answer": 0, "explanation": "<p>斯涅尔定律 sin i/sin r = n'/n = v/v'（因 n=c/v，n 大则 v 小）。</p><p>选 B 把折射率比颠倒（概念混淆）；选 C/D 混淆了光速比与折射率比的关系。</p>", "pitfall": "把 n 与 n' 的位置记反，或混淆光速比与折射率比。"}, {"kc_id": "kc4.7", "cognitive_level": "understand", "difficulty": "medium", "type": "choice", "points": 3, "question": "自然光以布儒斯特角入射到非磁性介质表面（折射率由 $n$ 到 $n'$）。关于反射光的偏振状态与布儒斯特角表达式，正确的是", "options": ["反射光部分偏振，$i_B=\\cos^{-1}(n'/n)$", "反射光平行于入射面偏振，$i_B=\tan^{-1}(n/n')$", "反射光垂直于入射面偏振，$i_B=\tan^{-1}(n'/n)$", "反射光垂直于入射面偏振，$i_B=\\sin^{-1}(n'/n)$"], "answer": 2, "explanation": "由菲涅耳公式，平行分量反射率在 $i_B=\tan^{-1}(n'/n)$ 时为零，反射光只剩垂直分量，故完全垂直于入射面偏振。选 C。选 A 把零反射误为部分偏振且角公式错用 $\\cos^{-1}$；选 B 偏振方向搞反（误为平行）且角公式倒置；选 D 偏振方向对但角公式错用全反射的 $\\sin^{-1}$（公式混淆）。", "pitfall": "布儒斯特角 $i_B=\tan^{-1}(n'/n)$，反射光完全垂直于入射面偏振。"}, {"kc_id": "kc4.10", "cognitive_level": "apply", "difficulty": "medium", "type": "choice", "points": 3, "question": "电磁波入射到良导体（$\\sigma/(\\omega\\epsilon_b)\\gg1$，电导率 $\\sigma$、磁导率 $\\mu$、角频率 $\\omega$）。其趋肤深度 $\\delta$ 以及频率依赖关系正确的是", "options": ["$\\delta=\\sqrt{2\\sigma/(\\omega\\mu)}$，频率越高越易穿透", "$\\delta=2/(\\omega\\mu\\sigma)$，与频率无关", "$\\delta=\\sqrt{\\omega\\mu\\sigma/2}$，频率越高穿透越深", "$\\delta=\\sqrt{2/(\\omega\\mu\\sigma)}$，频率越高越难穿透"], "answer": 3, "explanation": "良导体中 $k\\approx(1+i)\\sqrt{\\omega\\mu\\sigma/2}=(1+i)/\\delta$，故趋肤深度 $\\delta=\\sqrt{2/(\\omega\\mu\\sigma)}$。$\\delta\\propto\\omega^{-1/2}$，频率越高 $\\delta$ 越小，越难穿透（趋肤效应）。选 D。选 A 把分子分母倒置导致趋势相反；选 B 漏开方、错判为与频率无关；选 C 把 $\\delta$ 写成 $1/\\delta$ 的形式，趋势判断也反了。", "pitfall": "$\\delta=\\sqrt{2/(\\omega\\mu\\sigma)}\\propto\\omega^{-1/2}$，频率越高趋肤深度越小。"}, {"kc_id": "kc4.14", "cognitive_level": "analyze", "difficulty": "hard", "type": "choice", "points": 3, "question": "关于等离子体频率 omega_p 与介质高频行为，下列说法正确的是", "options": ["当 omega > omega_p 时，介质的介电常数为正，电磁波可以传播", "当 omega < omega_p 时，介质的介电常数为正，电磁波可以传播", "等离子体频率与电子密度的平方根成反比", "金属的等离子体频率通常在红外波段"], "answer": 0, "explanation": "<p>高频极限下 epsilon(omega)/epsilon_0 ≈ 1 - omega_p^2/omega^2。当 omega > omega_p 时 epsilon > 0，波数 k 为实，电磁波可传播；当 omega < omega_p 时 epsilon < 0，k 为纯虚，波指数衰减。</p><p>选 B 把不等式方向弄反；选 C 说反了（omega_p 正比于 sqrt(N)）；选 D 金属 omega_p 在紫外而非红外。</p>", "pitfall": "把 omega > omega_p 与 omega < omega_p 的条件记反。"}, {"kc_id": "kc4.17", "cognitive_level": "analyze", "difficulty": "hard", "type": "choice", "points": 3, "question": "色散介质中群速度 $v_g=c/(n+\\omega\\,dn/d\\omega)$。在某振子本征频率附近出现反常色散（$dn/d\\omega<0$ 且绝对值很大），此时可能出现 $v_g>c$ 甚至 $v_g<0$。下列解释正确的是", "options": ["反常色散区 $v_g<v_p<c$，群速度仍代表信号速度", "该区线性近似失效，$v_g$ 已失去信号速度的意义，不违背相对论", "$v_g>c$ 说明信号速度超光速，违背狭义相对论", "$dn/d\\omega<0$ 时 $v_g$ 必小于 $c$，无异常"], "answer": 1, "explanation": "群速度仅在窄谱线性展开 $\\omega(k)\\approx\\omega_0+v_g(k-k_0)$ 成立时才描述波包整体平移。反常色散区折射率剧变，线性近似失效，$v_g$ 失去信号速度意义；真正的信号速度仍 $\\le c$（第29.3节因果性证明）。选 B。选 A 是正常色散结论、用错场景；选 C 误把表观 $v_g$ 当真实信号速度（因果倒置）；选 D 算错趋势、忽略反常色散（条件遗漏）。", "pitfall": "反常色散区 $v_g$ 可超光速但已失去物理意义；信号速度由因果性保证 $\\le c$。"}, {"kc_id": "kc4.24", "cognitive_level": "apply", "difficulty": "basic", "type": "choice", "points": 3, "question": "在沿 $z$ 方向平移不变的波导中，按纵向场分量对模式分类。下列分类正确的是", "options": ["$E_z\ne0,B_z=0$ 称为 TE 模；$E_z=0,B_z\ne0$ 称为 TM 模", "$E_z=0$ 称为 TM 模；$B_z=0$ 称为 TE 模", "$E_z=B_z=0$ 称为 TM 模；仅 $E_z=0$ 为 TEM 模", "$E_z=0$ 称为 TE 模；$B_z=0$ 称为 TM 模；二者皆零为 TEM 模"], "answer": 3, "explanation": "横电波 TE：$E_z=0$；横磁波 TM：$B_z=0$；横电磁波 TEM：$E_z=B_z=0$。选 D。选 A、B 把 TE 与 TM 定义对调（命名混淆）；选 C 把 TEM 与 TM 混为一谈（概念错配）。TEM 需复连通截面（如同轴电缆）才能存在。", "pitfall": "TE: $E_z=0$；TM: $B_z=0$；TEM: 二者皆零。勿把 TE/TM 对调。"}, {"kc_id": "kc4.25", "cognitive_level": "apply", "difficulty": "medium", "type": "choice", "points": 3, "question": "理想导体金属波导中某模式横向本征值为 $\\gamma_\\lambda$（即 $k_\\perp^2=\\gamma_\\lambda^2$），介质参数 $\\mu,\\epsilon$。其截止频率 $\\omega_\\lambda$ 以及频率低于截止频率时的传播行为是", "options": ["$\\omega_\\lambda=\\gamma_\\lambda\\sqrt{\\mu\\epsilon}$，$\\omega<\\omega_\\lambda$ 时波正常传播", "$\\omega_\\lambda=\\gamma_\\lambda/\\sqrt{\\mu\\epsilon}$，$\\omega<\\omega_\\lambda$ 时纵向波数 $k$ 为纯虚、不能传播", "$\\omega_\\lambda=\\sqrt{\\mu\\epsilon}/\\gamma_\\lambda$，$\\omega<\\omega_\\lambda$ 时波速为零", "$\\omega_\\lambda=\\gamma_\\lambda^2/\\sqrt{\\mu\\epsilon}$，任何频率均可传播"], "answer": 1, "explanation": "纵向波数 $k^2=\\mu\\epsilon\\omega^2-\\gamma_\\lambda^2$，令 $k=0$ 得截止频率 $\\omega_\\lambda=\\gamma_\\lambda/\\sqrt{\\mu\\epsilon}$。$\\omega<\\omega_\\lambda$ 时 $k^2<0$、$k$ 纯虚，波在波导中指数衰减不能传播。选 B。选 A 把 $\\sqrt{\\mu\\epsilon}$ 放分子（量纲反）且误判可传播；选 C 形式与量纲均错；选 D 错把 $\\gamma_\\lambda$ 平方且否认截止频率存在（条件遗漏）。", "pitfall": "截止频率 $\\omega_\\lambda=\\gamma_\\lambda/\\sqrt{\\mu\\epsilon}$；$\\omega<\\omega_\\lambda$ 时 $k$ 纯虚、波不能传播，存在最小截止频率。"}, {"kc_id": "kc4.4", "cognitive_level": "understand", "difficulty": "basic", "type": "tf", "points": 2, "question": "对单色均匀平面电磁波，时间平均能流密度 $S=u v n$ 中能量流动速度 $v=1/\\sqrt{\\mu\\epsilon}=c/n$ 恰好等于相速度；但对一般波包，能量流动速度未必等于相速度。", "options": [], "answer": 0, "explanation": "正确。由 $S=\tfrac12\\sqrt{\\epsilon/\\mu}|E_0|^2 n$ 与 $u=\tfrac{\\epsilon}{2}|E_0|^2$，比较 $S=uvn$ 得 $v=1/\\sqrt{\\mu\\epsilon}=c/n$，与相速度吻合。课本强调此结论仅对单色平面波成立，波包情形能量速度（群速度）一般不同于相速度。", "pitfall": "单色平面波能量速度=相速度；波包则一般用群速度描述能量流动，二者不同。"}, {"kc_id": "kc4.8", "cognitive_level": "understand", "difficulty": "medium", "type": "tf", "points": 2, "question": "当光从光密介质入射到光疏介质且入射角大于全反射角时，光疏介质一侧出现沿界面传播、垂直界面方向指数衰减的倏逝波，且有净能量持续流入光疏介质内部。", "options": [], "answer": 1, "explanation": "错误。倏逝波确实沿界面传播并在垂直方向 $e^{-k'|\\cos r|z}$ 指数衰减，但其时间平均不向光疏介质内部输送净能量，反射波振幅模方等于入射波（全反射，仅有相移）。「净能量持续流入」是错误的，违反全反射的能量守恒。", "pitfall": "倏逝波不向光疏介质输运净能量；全反射时反射波能流模方=入射波，仅相位改变。"}, {"kc_id": "kc4.9", "cognitive_level": "understand", "difficulty": "medium", "type": "tf", "points": 2, "question": "导电介质中由欧姆定律 $J=\\sigma E$ 与安培-麦克斯韦定律可定义复介电常数 $\\epsilon(\\omega)=\\epsilon_b+i\\sigma/\\omega$；当 $\\sigma\ne0$ 时，波矢 $k$ 与频率 $\\omega$ 不可能同时都取实数。", "options": [], "answer": 0, "explanation": "正确。安培-麦克斯韦定律给出 $\nabla\times B=-i\\omega\\mu(\\epsilon_b+i\\sigma/\\omega)E$，故等效复介电常数 $\\epsilon(\\omega)=\\epsilon_b+i\\sigma/\\omega$。色散关系 $k^2=\\mu\\epsilon(\\omega)\\omega^2$ 中 $\\epsilon$ 为复数，$\\sigma\ne0$ 时 $k$、$\\omega$ 不能都为实（入射波情形 $\\omega$ 实、$k$ 复；初值问题 $k$ 实、$\\omega$ 复）。", "pitfall": "复介电常数 $\\epsilon_b+i\\sigma/\\omega$；$\\sigma\ne0$ 使 $k,\\omega$ 不能同时为实，二者必有其一为复。"}, {"kc_id": "kc4.18", "cognitive_level": "understand", "difficulty": "hard", "type": "tf", "points": 2, "question": "克拉莫斯-克罗尼格关系把介电常数 $\\epsilon(\\omega)$ 的实部与虚部通过希尔伯特变换（主值积分）联系起来，其推导仅依赖因果性等少数普适假定，因此对所有介质普遍成立。", "options": [], "answer": 0, "explanation": "正确。因果性 $\\chi(\tau<0)=0$ 使 $\\epsilon(\\omega)$ 在上半平面解析，由柯西公式加主值（$1/(\\omega'-\\omega-i\\delta)=P(1/(\\omega'-\\omega))+\\pi i\\delta(\\omega'-\\omega)$）得 KK 关系，$\\mathrm{Re}[\\epsilon/\\epsilon_0]-1$ 与 $\\mathrm{Im}[\\epsilon/\\epsilon_0]$ 互为希尔伯特变换。仅靠因果性即得，故普适（导体在 $\\omega=0$ 有极点需特殊处理）。", "pitfall": "KK 关系源自因果性，普适；实部虚部互为希尔伯特变换。"}, {"kc_id": "kc4.29", "cognitive_level": "understand", "difficulty": "medium", "type": "tf", "points": 2, "question": "圆形光纤中 $HE_{11}$ 混合模式没有截止频率，可在 $0<V<2.405$ 区间内作为唯一可传播模式，从而实现单模传播。", "options": [], "answer": 0, "explanation": "正确。$m=0$ 的 $TE_{01}/TM_{01}$ 模截止于 $J_0(V_c)=0$ 的最小零点 $V_c\\approx2.405$；$m=1$ 的 $HE_{11}$ 模截止由 $J_1(V_c)=0$ 给出，而 $J_1(0)=0$，故 $HE_{11}$ 截止频率为零、无截止。因此 $0<V<2.405$ 内仅 $HE_{11}$ 可传播，实现单模传播。", "pitfall": "$HE_{11}$ 无截止；单模条件 $V<2.405$（由 $J_0$ 首个零点确定）。"}, {"kc_id": "kc4.12", "cognitive_level": "remember", "difficulty": "basic", "type": "fill", "points": 2, "question": "洛伦兹振子模型把束缚电子视为阻尼受迫振子。其单电子电偶极矩 $p=e^2E_0/[m(\\omega_i^2-\\omega^2-i\\omega\\gamma_i)]$，相应介电常数 $\\epsilon(\\omega)/\\epsilon_0=1+(Ne^2/\\epsilon_0 m)\\sum_i f_i/(\\omega_i^2-\\omega^2-i\\omega\\gamma_i)$，其中 $f_i$ 称为________，满足求和规则 $\\sum_i f_i=$________（$Z$ 为原子总电子数）。", "options": [], "answer": [["振子强度"], ["$Z$"]], "explanation": "$f_i$ 是具有本征频率 $\\omega_i$ 的电子的振子强度（oscillator strength）；它表示该频率电子的数目权重，对单原子求和 $\\sum_i f_i=Z$（原子内总电子数）。复介电常数的虚部对应吸收。", "pitfall": "$f_i$=振子强度；求和规则 $\\sum_i f_i=Z$（总电子数），不是 1 也不是 $N$。"}, {"kc_id": "kc4.13", "cognitive_level": "remember", "difficulty": "basic", "type": "fill", "points": 2, "question": "德鲁德模型把自由电子取本征频率 $\\omega_0=0$，得到电导率 $\\sigma(\\omega)=f_0 Ne^2/[m(\\gamma_0-i\\omega)]$。在固体物理中常记 $\\gamma_0=1/\tau$，其中 $\tau$ 称为________；当频率很低时可忽略分母虚部，此时 $\\sigma(\\omega)$ 近似为________（实数/虚数）。", "options": [], "answer": [["弛豫时间", "驰豫时间", "relaxation time"], ["实数"]], "explanation": "$\tau=1/\\gamma_0$ 是自由电子的弛豫时间（碰撞间平均时间）。低频时 $\\omega\\ll\\gamma_0$，分母 $\\gamma_0-i\\omega\\approx\\gamma_0$ 为实，故 $\\sigma\\approx f_0Ne^2/(m\\gamma_0)$ 近似为实数（直流电导）。", "pitfall": "$\tau$=弛豫时间；低频德鲁德电导近似为实数。"}, {"kc_id": "kc4.16", "cognitive_level": "understand", "difficulty": "medium", "type": "fill", "points": 2, "question": "一维波包 $u(x,t)=\frac{1}{\\sqrt{2\\pi}}\\int A(k)e^{ikx-i\\omega(k)t}dk$。傅里叶变换的基本性质保证实空间延展 $\\Delta x$ 与 $k$ 空间延展 $\\Delta k$ 满足不等式 $\\Delta k\\cdot\\Delta x\\ge$________；两边乘以常数________后即为量子力学的不确定性关系。", "options": [], "answer": [["$1/2$", "1/2"], ["$\\hbar$"]], "explanation": "傅里叶对偶给出 $\\Delta k\\cdot\\Delta x\\ge 1/2$（在给定 $\\Delta k,\\Delta x$ 明确定义后普遍成立）。乘以 $\\hbar$ 并用 $p=\\hbar k$ 即得海森堡不确定性关系 $\\Delta p\\cdot\\Delta x\\ge\\hbar/2$。", "pitfall": "$\\Delta k\\Delta x\\ge 1/2$；乘 $\\hbar$ 得量子不确定性关系；实空间越窄 $k$ 空间越宽。"}, {"kc_id": "kc4.28", "cognitive_level": "apply", "difficulty": "medium", "type": "fill", "points": 2, "question": "把金属波导两端用导体封闭构成谐振腔，纵向变为驻波，纵向波数量子化为 $k=$________（$p$ 为整数，$d$ 为腔纵向长度）。结合横向本征值 $\\gamma_\\lambda$，本征频率满足 $\\mu\\epsilon\\,\\omega_{p,\\lambda}^2=$________。", "options": [], "answer": [["$p\\pi/d$"], ["$\\gamma_\\lambda^2+(p\\pi/d)^2$"]], "explanation": "两端导体封闭要求纵向驻波，$k=p\\pi/d$（$p$ 整数）。代入 $k^2=\\mu\\epsilon\\omega^2-\\gamma_\\lambda^2$ 即 $\\mu\\epsilon\\omega_{p,\\lambda}^2=\\gamma_\\lambda^2+(p\\pi/d)^2$，本征频率分立、由几何决定。", "pitfall": "驻波 $k=p\\pi/d$；本征频率 $\\mu\\epsilon\\omega^2=\\gamma_\\lambda^2+(p\\pi/d)^2$。"}, {"kc_id": "kc4.22", "cognitive_level": "understand", "difficulty": "medium", "type": "fill", "points": 2, "question": "单轴晶体满足 $\bar\\epsilon_1=\bar\\epsilon_2\ne\bar\\epsilon_3$。其中相速度与传播方向无关、行为如各向同性介质的光称为________光；相速度 $v^2(\theta)=c_1^2\\cos^2\theta+c_3^2\\sin^2\theta$ 依赖于波矢与对称轴夹角 $\theta$ 的光称为________光。", "options": [], "answer": [["寻常", "o", "ordinary"], ["非常", "e", "extraordinary"]], "explanation": "$v^2=c_1^2$ 与方向无关的解对应寻常光（o 光，ordinary），偏振垂直于主轴-$k$ 平面；$v^2(\theta)=c_1^2\\cos^2\theta+c_3^2\\sin^2\theta$ 依赖方向的解对应非常光（e 光，extraordinary），能流方向一般不等于 $k$。", "pitfall": "o 光各向同性、与方向无关；e 光相速度依赖 $\theta$，能流方向偏离 $k$。"}, {"kc_id": "kc4.6", "cognitive_level": "apply", "difficulty": "medium", "type": "calc", "points": 7, "question": "在两种介质界面上，利用菲涅耳公式证明：当入射角为布儒斯特角 i_B 时，反射光的 p 分量为零。这个证明的核心步骤是", "options": ["令 p 偏振反射振幅的分子为零，结合斯涅尔定律推导出 tan i_B = n'/n", "令 p 偏振反射振幅的分母为无穷大，从而反射为零", "令 s 偏振反射振幅为零，再令 p 与 s 相等", "令反射角 r = 90°，代入斯涅尔定律"], "answer": 0, "explanation": "<p>布儒斯特角的核心：p 偏振反射振幅的分子 (μ/μ')n'cos i - n cos r 为零。非磁性下 n'cos i = n cos r，与斯涅尔定律 n sin i = n' sin r 联立，相除得 tan i_B = n'/n。</p><p>选 B 错误理解分母的作用；选 C 混淆了 s 与 p 偏振；选 D 把全反射条件与布儒斯特角混淆。</p>", "pitfall": "把布儒斯特角（p 反射为零）与全反射（能量全回）混淆。"}, {"kc_id": "kc4.10", "cognitive_level": "apply", "difficulty": "medium", "type": "calc", "points": 7, "question": "关于良导体中的趋肤深度 delta，下列说法正确的是", "options": ["delta 与频率的平方根成反比，与电导率的平方根成反比", "delta 与频率成正比，与电导率成正比", "delta 与频率的平方根成正比，与电导率的平方根成反比", "delta 与频率无关，只取决于电导率"], "answer": 0, "explanation": "<p>delta = sqrt(2/(omega mu sigma))，故 delta ∝ 1/sqrt(omega) 且 ∝ 1/sqrt(sigma)。频率越高、电导率越大，波越难穿透。</p><p>选 B 把比例关系全弄反；选 C 把频率关系弄反；选 D 忽略了频率依赖。</p>", "pitfall": "把 delta ∝ 1/sqrt(omega) 记成 delta ∝ sqrt(omega)。"}, {"kc_id": "kc4.20", "cognitive_level": "analyze", "difficulty": "hard", "type": "calc", "points": 8, "question": "各向异性介质中平面波本征方程为 $k\times(k\times E)+\\omega^2(\bar\\epsilon\\cdot E)=0$（已取 $\\mu_0\\epsilon_0=1$）。令 $k=kn$、$v^2=\\omega^2/k^2$，可化为 $[-P_T(n)+v^2\bar\\epsilon]\\cdot E=0$，$P_T=1-nn$。（1）说明为何 $\\det[-P_T(n)+v^2\bar\\epsilon]=0$ 一般给出两个相速度解 $v_1^2,v_2^2$；（2）以单轴晶体 $\bar\\epsilon_1=\bar\\epsilon_2\ne\bar\\epsilon_3$、波矢与 $z$ 轴夹角 $\theta$（$n_3=\\cos\theta$）为例，导出 e 光相速度 $v^2(\theta)=c_1^2\\cos^2\theta+c_3^2\\sin^2\theta$，其中 $c_i^2=1/\bar\\epsilon_i$。", "options": [], "answer": -1, "explanation": "（1）$\bar\\epsilon$ 为对称正定张量，在主轴坐标对角化为 $\\mathrm{diag}(\bar\\epsilon_1,\bar\\epsilon_2,\bar\\epsilon_3)$。$\\det=0$ 展开（课本式4.92-4.94）化为菲涅耳方程 $\\sum_i n_i^2/(v^2-c_i^2)=0$，它是关于 $v^2$ 的二次方程（去掉公因子后），故对给定方向 $n$ 一般有两个实根 $v_1^2,v_2^2$——即双折射。（2）单轴时 $\\alpha_1=\\alpha_2$（$\\alpha_i=1-v^2/c_i^2$ 等价记号），课本式4.107 由 $n_3=\\cos\theta$ 得 $\\alpha_1[\\alpha_1\\alpha_3-\\alpha_3\\sin^2\theta-\\alpha_1\\cos^2\theta]=0$。一个解 $\\alpha_1=0$ 给 $v^2=c_1^2$（o 光）；另一解由 $\\alpha_1\\alpha_3=\\alpha_3\\sin^2\theta+\\alpha_1\\cos^2\theta$ 整理（代入 $\\alpha_i=1-v^2/c_i^2$）得 $v^2=c_1^2\\cos^2\theta+c_3^2\\sin^2\theta$（e 光）。验证：$\theta=0$ 时 $v^2=c_1^2$（沿光轴退化为 o），$\theta=\\pi/2$ 时 $v^2=c_3^2$。评分要点：$\bar\\epsilon$ 对称正定→主轴对角化（1分）；导出菲涅耳方程为 $v^2$ 二次→两根（2分）；单轴 $\\alpha_1=0$ 给 o 光 $v^2=c_1^2$（2分）；导出 e 光 $v^2(\theta)=c_1^2\\cos^2\theta+c_3^2\\sin^2\theta$（2分）；极限验证（1分）。常见错误：把 $c_i^2$ 与 $\bar\\epsilon_i$ 关系写反（$c_i^2=1/\bar\\epsilon_i$）；把 $\\cos^2\theta$ 与 $\\sin^2\theta$ 系数对调。", "pitfall": "$\\det=0$ 是 $v^2$ 的二次方程→双折射两根；单轴 o 光 $v^2=c_1^2$、e 光 $v^2=c_1^2\\cos^2\theta+c_3^2\\sin^2\theta$，$c_i^2=1/\bar\\epsilon_i$。"}, {"kc_id": "kc4.26", "cognitive_level": "apply", "difficulty": "medium", "type": "calc", "points": 8, "question": "考虑理想导体矩形波导，截面边长 $a>b$，内部填充 $\\mu,\\epsilon$ 的介质。TE 模式纵向磁场 $H_z=H_0\\cos(m\\pi x/a)\\cos(n\\pi y/b)$，本征值 $\\gamma_{m,n}^2=\\pi^2(m^2/a^2+n^2/b^2)$，截止频率 $\\omega_{m,n}=\frac{\\pi}{\\sqrt{\\mu\\epsilon}}(m^2/a^2+n^2/b^2)^{1/2}$。（1）说明 TE 模 $m,n$ 不能同时为零，求最低截止频率对应的模式及其 $\\omega$；（2）说明 TM 模为何要求 $m,n$ 均不为零，写出其最低模式；（3）若 $a=2b$，比较 $TE_{10}$ 与 $TE_{01}$ 的截止频率。", "options": [], "answer": -1, "explanation": "（1）TE 模若 $m=n=0$ 则 $H_z=$ 常数、横向场 $\\propto\nabla_\\perp\\psi=0$，管内场恒为零，无意义，故 $m,n$ 不同时为零。因 $a>b$，$\\gamma^2$ 最小取 $m=1,n=0$，即 $TE_{10}$，$\\omega_{1,0}=\frac{\\pi}{\\sqrt{\\mu\\epsilon}\\,a}$。（2）TM 模 $E_z=E_0\\sin(m\\pi x/a)\\sin(n\\pi y/b)$，任一指标为零都使 $E_z\\equiv0$，故要求 $m,n$ 均 $\\ge1$，最低为 $TM_{11}$。（3）$a=2b$ 时，$TE_{10}$：$\\omega\\propto 1/a=1/(2b)$；$TE_{01}$：$\\omega\\propto 1/b$。故 $\\omega_{01}/\\omega_{10}=a/b=2$，即 $TE_{01}$ 截止频率是 $TE_{10}$ 的 2 倍，$TE_{10}$ 为主模。评分要点：$m,n$ 不同时为零理由（2分）；$TE_{10}$ 及 $\\omega=\\pi/(\\sqrt{\\mu\\epsilon}a)$（2分）；TM 要求 $m,n\\ge1$、最低 $TM_{11}$（2分）；$a=2b$ 时比值 2、$TE_{10}$ 主模（2分）。常见错误：把最低 TE 当成 $TE_{11}$（漏掉一个指标可为零）；把 TM 最低当 $TM_{10}$（$E_z$ 会消失）；$a>b$ 故 $TE_{10}$ 截止最低，勿与 $TE_{01}$ 混淆。", "pitfall": "TE 主模 $TE_{10}$（$a>b$），$\\omega=\\pi/(\\sqrt{\\mu\\epsilon}a)$；TM 需 $m,n\\ge1$，最低 $TM_{11}$。"}, {"kc_id": "kc4.12", "cognitive_level": "analyze", "difficulty": "hard", "type": "short", "points": 6, "question": "利用洛伦兹振子模型 $\\epsilon(\\omega)/\\epsilon_0=1+\frac{Ne^2}{\\epsilon_0 m}\\sum_i\frac{f_i}{\\omega_i^2-\\omega^2-i\\omega\\gamma_i}$，分析：（1）介电常数虚部对应什么物理过程？（2）在某本征频率 $\\omega\\approx\\omega_i$ 附近会出现什么现象（对实部、虚部各有何影响）？（3）由该模型如何过渡到高频等离子体行为 $\\epsilon/\\epsilon_0\\approx1-\\omega_p^2/\\omega^2$？", "options": [], "answer": -1, "explanation": "（1）$\\epsilon$ 的虚部来自分母 $-i\\omega\\gamma_i$ 项，代表介质对电磁波的吸收（耗散）——能量转入电子阻尼运动。虚部大→吸收强。（2）$\\omega\\approx\\omega_i$ 时分母实部 $\\omega_i^2-\\omega^2\to0$，虚部 $-i\\omega\\gamma_i$ 主导，虚部显著增强=共振吸收区；同时实部 $\\mathrm{Re}\\,\\epsilon$ 在该区剧烈变化，出现 $dn/d\\omega<0$ 的反常色散。（3）高频 $\\omega\\gg$ 所有 $\\omega_i,\\gamma_i$ 时分母 $\\approx-\\omega^2$，$\\sum_i f_i=Z$，故 $\\epsilon/\\epsilon_0\\approx1-\frac{Ne^2}{\\epsilon_0 m}\frac{Z}{\\omega^2}=1-\\omega_p^2/\\omega^2$，$\\omega_p^2=NZe^2/(\\epsilon_0 m)$。评分要点：虚部=吸收（2分）；共振吸收+反常色散（2分）；高频极限推导含 $\\sum f_i=Z$、$\\omega_p^2=NZe^2/\\epsilon_0 m$（2分）。", "pitfall": "虚部=吸收；共振区伴随反常色散；高频用 $\\sum f_i=Z$ 得 $\\omega_p^2=NZe^2/(\\epsilon_0 m)$。"}, {"kc_id": "kc4.11", "cognitive_level": "understand", "difficulty": "medium", "type": "short", "points": 6, "question": "在导体的准静态近似下：（1）写出磁场 $H$ 满足的方程并说明其类型与物理含义；（2）说明该近似忽略了什么；（3）涡流焦耳损耗可由两个等价的时间平均表达式给出，写出它们并简述为何等价。", "options": [], "answer": -1, "explanation": "（1）准静态近似下 $\\mu\\sigma\\,\\partial H/\\partial t=\nabla^2 H$，是扩散（热传导）方程：时间一阶、空间二阶，故空间特征尺度平方 $\\propto$ 时间尺度，给出趋肤深度 $\\delta=\\sqrt{2/(\\omega\\mu\\sigma)}$ 的标度。（2）忽略了位移电流 $\\partial D/\\partial t$（传导电流 $\\sigma E\\gg$ 位移电流，对应良导体 $\\sigma/\\omega\\epsilon_b\\gg1$）。（3）$W=\\int\\langle J\\cdot E\rangle d^3x$（体内焦耳热）与 $W=-\\oint\\langle E\times H\rangle\\cdot dA$（流入导体的玻印廷能流）。由 $\nabla\times H=J$、$-\nabla\times E=\\partial B/\\partial t$，高斯公式将面积分化为体积分，其中 $H\\cdot\\partial B/\\partial t\\propto\\partial H^2/\\partial t$ 在一周期内时间平均为零，故仅剩 $\\int\\langle E\\cdot(\nabla\times H)\rangle=\\int\\langle J\\cdot E\rangle$，二者相等。评分要点：扩散方程及类型（2分）；忽略位移电流（1分）；两表达式（2分）；等价性论证（1分）。", "pitfall": "准静态：扩散方程 $\\mu\\sigma\\partial_t H=\nabla^2H$，忽略位移电流；两损耗表达式经玻印廷定理等价。"}, {"kc_id": "kc4.29", "cognitive_level": "analyze", "difficulty": "hard", "type": "comprehensive", "points": 8, "question": "结合波导理论与因果性分析光纤单模传播：（1）对平面介质波导（芯厚 $2a$、$n_1>n_2$），定义光纤参数 $V=k_0 a\\sqrt{n_1^2-n_2^2}$（$k_0=\\omega/c$）。说明偶 TE 模本征方程 $W=U\tan U$（$U=\\gamma a,W=\beta a,U^2+W^2=V^2$）为何最低支无截止，而第二支截止于 $V_c=\\pi$。（2）对圆形光纤，说明为何 $0<V<2.405$ 时只有 $HE_{11}$ 可传播（用 $J_0,J_1$ 零点论证），并写出单模纤芯半径条件。（3）简述这与因果性给出的最大信号速度 $\\le c$ 在物理图像上如何共同保证光纤通信的可靠性。", "options": [], "answer": -1, "explanation": "（1）本征方程解为曲线 $W=U\tan U$ 与 $1/4$ 圆 $U^2+W^2=V^2$ 的交点。$U\tan U$ 是单调递增偶函数，过原点的一支无论 $V$ 多小都与圆相交→最低偶 TE 模无截止频率；要在第二支（$U\tan U$ 在 $U=\\pi/2$ 发散后于 $U=\\pi$ 处再起）获得交点须 $V\\ge\\pi$，故第二支截止 $V_c=\\pi$。（2）圆形光纤 $m=0$ 的 $TE_{01}/TM_{01}$ 截止由 $J_0(V_c)=0$ 给出最小零点 $V_c\\approx2.405$；$m=1$ 的 $HE_{11}$ 截止由 $J_1(V_c)=0$，而 $J_1(0)=0$ 故 $V_c=0$、无截止。于是 $0<V<2.405$ 内唯一可传播模式是 $HE_{11}$=单模。纤芯半径条件 $a<\frac{2.405\\lambda}{2\\pi\\sqrt{n_1^2-n_2^2}}$。（3）单模消除了多模间群速度差导致的模式色散展宽；因果性保证任何色散介质中信号（波前）速度 $\\le c$（上半平面解析+柯西定理，索末菲/布里渊前驱波），即信息不会超光速、也不会无限畸变。二者共同保证：信号既不弥散失真（单模）又满足相对论因果（最大信号速度 $c$），使长距离光纤通信可靠。评分要点：$U\tan U$ 过原点支无截止+第二支 $V_c=\\pi$（3分）；$J_0/J_1$ 零点论证 $HE_{11}$ 无截止、$V<2.405$ 单模、半径条件（3分）；因果性最大信号速度 $\\le c$ 与单模可靠性结合（2分）。", "pitfall": "$HE_{11}$ 由 $J_1(0)=0$ 无截止→$V<2.405$ 单模；半径 $a<2.405\\lambda/(2\\pi\\sqrt{n_1^2-n_2^2})$；信号速度由因果性 $\\le c$。"}];
+var LABELS = {"page_title": "章节测试", "section": {"choice": "一、选择题", "multi": "二、多选题", "tf": "三、判断题", "fill": "四、填空题", "short": "五、简答题", "calc": "六、计算题", "code": "七、代码题", "essay": "八、问答题", "comprehensive": "九、综合题"}, "section_order": ["choice", "multi", "tf", "fill", "short", "calc", "code", "essay", "comprehensive"], "points_suffix": "分", "true_label": "正确", "false_label": "错误", "placeholder": "在此作答...", "code_placeholder": "在此编写代码...", "pitfall_prefix": "易错提醒：", "correct_label": "正确", "wrong_label": "错误", "partial_label": "部分正确", "answer_prefix": "正确答案：", "reference_label": "参考答案", "graded_label": "已批改", "grade_button": "提交批改", "score_label": "总分", "duration_prefix": "满分 100 分 | 建议 ", "duration_suffix": " 分钟 | 选择答案后点击提交批改"};
+
+// ─── Answer normalization (robust to how the JSON was authored) ──────
+// tf / choice answers may arrive as int index, boolean, letter ("A"),
+// or label string ("正确"/"错误"/"对"/"错"). All are coerced to an
+// option index so grading never silently fails on a type mismatch.
+
+function tfAnswerIndex(ans) {
+  // option 0 = true_label (正确), option 1 = false_label (错误)
+  if (typeof ans === 'boolean') return ans ? 0 : 1;
+  if (typeof ans === 'number') return ans === 0 ? 0 : 1;
+  var s = ('' + ans).trim().toLowerCase();
+  var truthy = ['0', 't', 'true', '正确', '对', '是', 'yes', 'y', '√', '✓'];
+  var falsy  = ['1', 'f', 'false', '错误', '错', '否', 'no', 'n', '×', 'x'];
+  if (truthy.indexOf(s) !== -1) return 0;
+  if (falsy.indexOf(s) !== -1) return 1;
+  return ans ? 0 : 1;
+}
+
+function choiceAnswerIndex(ans, options) {
+  if (typeof ans === 'number') return ans;
+  var s = ('' + ans).trim();
+  if (/^[A-Za-z]$/.test(s)) return s.toUpperCase().charCodeAt(0) - 65;
+  if (/^\d+$/.test(s)) return parseInt(s, 10);
+  if (options) {
+    for (var i = 0; i < options.length; i++) {
+      if (('' + options[i]).trim() === s) return i;
+    }
+  }
+  return parseInt(s, 10);
+}
+
+function multiAnswerSet(ans, options) {
+  var arr = Array.isArray(ans) ? ans : [ans];
+  var set = {};
+  for (var i = 0; i < arr.length; i++) {
+    set[choiceAnswerIndex(arr[i], options)] = true;
+  }
+  return set;
+}
+
+// Normalize free text for fill-in-the-blank comparison: trim, lowercase,
+// drop surrounding whitespace and common punctuation, unify full/half width.
+function normText(s) {
+  s = ('' + s).trim().toLowerCase();
+  s = s.replace(/[\s　]+/g, '');
+  s = s.replace(/[.,;:!?。，、；：！？“”"'（）()【】\[\]<>《》]/g, '');
+  // full-width ASCII -> half-width
+  s = s.replace(/[！-～]/g, function (c) {
+    return String.fromCharCode(c.charCodeAt(0) - 0xfee0);
+  });
+  return s;
+}
+
+// How many blanks does a fill question have? Count underscore / ＿ runs.
+function fillBlankCount(question) {
+  var m = ('' + question).match(/(_{2,}|＿+)/g);
+  return m ? m.length : 0;
+}
+
+// Coerce a fill `answer` into an array (one entry per blank) of accepted
+// answer lists. Handles: string, [synonyms], [[blank1 syns],[blank2 syns]].
+function fillBlankAnswers(ans, nBlanks) {
+  if (nBlanks < 1) nBlanks = 1;
+  if (!Array.isArray(ans)) return padBlanks([[ans]], nBlanks);
+  if (ans.length && Array.isArray(ans[0])) return padBlanks(ans, nBlanks);
+  // flat array of strings
+  if (nBlanks === 1) return [ans];                 // synonyms for one blank
+  if (ans.length === nBlanks) {                    // one answer per blank
+    return ans.map(function (a) { return [a]; });
+  }
+  return padBlanks([ans], nBlanks);                // ambiguous -> all on blank 1
+}
+
+function padBlanks(arr, n) {
+  var out = arr.slice(0, n);
+  while (out.length < n) out.push(['']);
+  return out;
+}
+
+// ─── Build ───────────────────────────────────────────────────────────
+
+function build() {
+  var container = document.getElementById('questions-container');
+  if (!container) { console.error('ExamPass: questions-container not found'); return; }
+
+  // Stable-sort questions by section order so headings group correctly
+  // regardless of input order.
+  var order = LABELS.section_order || [];
+  Q.forEach(function (q, i) { q._i = i; });
+  Q.sort(function (a, b) {
+    var oa = order.indexOf(a.type); if (oa === -1) oa = 99;
+    var ob = order.indexOf(b.type); if (ob === -1) ob = 99;
+    return oa - ob || a._i - b._i;
+  });
+
+  var h = '';
+  var sec = '';
+  var titles = LABELS.section;
+
+  for (var i = 0; i < Q.length; i++) {
+    var q = Q[i];
+    if (q.type !== sec) {
+      sec = q.type;
+      if (titles[q.type]) h += '<h3>' + titles[q.type] + '</h3>';
+    }
+
+    var qid = 'q' + i;
+    h += '<div class="q-card" id="card-' + qid + '">';
+    h += '<div class="q-num">' + (i + 1) + '. (' + q.points + ' ' + LABELS.points_suffix + ')</div>';
+
+    if (q.type === 'fill') {
+      h += '<div class="q-text">' + renderFill(q, qid) + '</div>';
+    } else {
+      h += '<div class="q-text">' + q.question + '</div>';
+    }
+
+    if (q.type === 'choice') {
+      var opts = q.options || [];
+      for (var j = 0; j < opts.length; j++) {
+        h += '<label class="option" id="opt-' + qid + '-' + j + '" onclick="sel(\'' + qid + '\',' + j + ')">';
+        h += '<input type="radio" name="' + qid + '" value="' + j + '">' + String.fromCharCode(65 + j) + '. ' + opts[j] + '</label>';
+      }
+    } else if (q.type === 'multi') {
+      var mopts = q.options || [];
+      for (var k = 0; k < mopts.length; k++) {
+        h += '<label class="option" id="opt-' + qid + '-' + k + '" onclick="toggle(\'' + qid + '\',' + k + ')">';
+        h += '<input type="checkbox" name="' + qid + '" value="' + k + '">' + String.fromCharCode(65 + k) + '. ' + mopts[k] + '</label>';
+      }
+    } else if (q.type === 'tf') {
+      h += '<label class="option" id="opt-' + qid + '-0" onclick="sel(\'' + qid + '\',0)">';
+      h += '<input type="radio" name="' + qid + '" value="0">' + LABELS.true_label + '</label>';
+      h += '<label class="option" id="opt-' + qid + '-1" onclick="sel(\'' + qid + '\',1)">';
+      h += '<input type="radio" name="' + qid + '" value="1">' + LABELS.false_label + '</label>';
+    } else if (q.type === 'fill') {
+      // inputs already rendered inline inside q-text
+    } else if (q.type === 'code') {
+      h += '<textarea class="q-textarea q-code" id="text-' + qid + '" placeholder="' + (LABELS.code_placeholder || LABELS.placeholder) + '" rows="8" spellcheck="false"></textarea>';
+    } else {
+      h += '<textarea class="q-textarea" id="text-' + qid + '" placeholder="' + LABELS.placeholder + '" rows="3"></textarea>';
+    }
+
+    h += '<div class="result" id="result-' + qid + '">';
+    h += '<span class="badge" id="badge-' + qid + '"></span><span id="correct-' + qid + '"></span>';
+    h += '<div class="explanation">' + (q.explanation || '') + '</div>';
+    if (q.pitfall) {
+      h += '<div class="pitfall">' + LABELS.pitfall_prefix + q.pitfall + '</div>';
+    }
+    h += '</div></div>';
+  }
+
+  container.innerHTML = h;
+
+  if (window.MathJax && MathJax.typesetPromise) {
+    MathJax.typesetPromise([container]).catch(function (err) {
+      console.error('MathJax typeset error:', err);
+    });
+  }
+}
+
+// Render fill question text with inline <input> boxes replacing blanks.
+function renderFill(q, qid) {
+  var nBlanks = fillBlankCount(q.question);
+  var k = 0;
+  var html = ('' + q.question).replace(/(_{2,}|＿+)/g, function () {
+    var inp = '<input type="text" class="fill-input" id="fill-' + qid + '-' + k + '" autocomplete="off" spellcheck="false">';
+    k++;
+    return inp;
+  });
+  if (k === 0) {
+    // No markers in text -> append boxes based on answer shape
+    var n = fillBlankAnswers(q.answer, 1).length;
+    var ans = q.answer;
+    if (Array.isArray(ans)) n = Array.isArray(ans[0]) ? ans.length : (ans.length || 1);
+    if (n < 1) n = 1;
+    html += '<div class="fill-row">';
+    for (var b = 0; b < n; b++) {
+      if (n > 1) html += '<span class="fill-tag">' + (b + 1) + '.</span>';
+      html += '<input type="text" class="fill-input" id="fill-' + qid + '-' + b + '" autocomplete="off" spellcheck="false">';
+    }
+    html += '</div>';
+  }
+  return html;
+}
+
+document.addEventListener('DOMContentLoaded', build);
+if (document.readyState === 'interactive' || document.readyState === 'complete') {
+  build();
+}
+
+// ─── Selection handlers ──────────────────────────────────────────────
+
+function sel(qid, idx) {
+  var prefix = 'opt-' + qid + '-';
+  var all = document.querySelectorAll('[id^="' + prefix + '"]');
+  for (var i = 0; i < all.length; i++) all[i].classList.remove('selected');
+  var target = document.getElementById('opt-' + qid + '-' + idx);
+  if (target) target.classList.add('selected');
+  var radio = document.querySelector('input[name="' + qid + '"][value="' + idx + '"]');
+  if (radio) radio.checked = true;
+}
+
+function toggle(qid, idx) {
+  var box = document.querySelector('input[name="' + qid + '"][value="' + idx + '"]');
+  var label = document.getElementById('opt-' + qid + '-' + idx);
+  if (!box) return;
+  box.checked = !box.checked;
+  if (label) label.classList.toggle('selected', box.checked);
+}
+
+// ─── Grading ─────────────────────────────────────────────────────────
+
+function gradeAll() {
+  var score = 0;
+  for (var i = 0; i < Q.length; i++) {
+    var q = Q[i];
+    var qid = 'q' + i;
+    var card = document.getElementById('card-' + qid);
+    var result = document.getElementById('result-' + qid);
+    var badge = document.getElementById('badge-' + qid);
+    var correctEl = document.getElementById('correct-' + qid);
+    if (!card || !result) continue;
+
+    result.style.display = 'block';
+
+    if (q.type === 'choice' || q.type === 'tf') {
+      score += gradeSingle(q, qid, card, badge, correctEl);
+    } else if (q.type === 'multi') {
+      score += gradeMulti(q, qid, card, badge, correctEl);
+    } else if (q.type === 'fill') {
+      score += gradeFill(q, qid, card, badge, correctEl);
+    } else {
+      card.classList.add('correct');
+      badge.className = 'badge badge-ref';
+      badge.textContent = LABELS.reference_label;
+    }
+  }
+
+  var sb = document.getElementById('score-box');
+  if (sb) {
+    sb.style.display = 'block';
+    document.getElementById('score-num').textContent = roundScore(score);
+    sb.scrollIntoView({ behavior: 'smooth' });
+  }
+
+  var opts = document.querySelectorAll('.option');
+  for (var a = 0; a < opts.length; a++) opts[a].style.pointerEvents = 'none';
+  var tas = document.querySelectorAll('.q-textarea');
+  for (var b = 0; b < tas.length; b++) tas[b].disabled = true;
+  var fis = document.querySelectorAll('.fill-input');
+  for (var c = 0; c < fis.length; c++) fis[c].disabled = true;
+
+  var btn = document.getElementById('grade-btn');
+  if (btn) { btn.disabled = true; btn.textContent = LABELS.graded_label; }
+
+  if (window.MathJax && MathJax.typesetPromise) {
+    MathJax.typesetPromise().catch(function (err) {
+      console.error('MathJax typeset error:', err);
+    });
+  }
+}
+
+function roundScore(s) {
+  return Math.round(s * 10) / 10;
+}
+
+function gradeSingle(q, qid, card, badge, correctEl) {
+  var ansIdx = q.type === 'tf' ? tfAnswerIndex(q.answer) : choiceAnswerIndex(q.answer, q.options);
+  var radio = document.querySelector('input[name="' + qid + '"]:checked');
+  if (radio && parseInt(radio.value, 10) === ansIdx) {
+    card.classList.add('correct');
+    badge.className = 'badge badge-ok';
+    badge.textContent = LABELS.correct_label;
+    correctEl.innerHTML = '';
+    var ok = document.getElementById('opt-' + qid + '-' + ansIdx);
+    if (ok) ok.classList.add('correct-answer');
+    return q.points;
+  }
+  card.classList.add('wrong');
+  badge.className = 'badge badge-no';
+  badge.textContent = LABELS.wrong_label;
+  var ansText = q.type === 'choice'
+    ? String.fromCharCode(65 + ansIdx) + '. ' + (q.options ? q.options[ansIdx] : '')
+    : (ansIdx === 0 ? LABELS.true_label : LABELS.false_label);
+  correctEl.innerHTML = LABELS.answer_prefix + ansText;
+  if (radio) {
+    var wrongOpt = document.getElementById('opt-' + qid + '-' + radio.value);
+    if (wrongOpt) wrongOpt.classList.add('wrong-answer');
+  }
+  var corr = document.getElementById('opt-' + qid + '-' + ansIdx);
+  if (corr) corr.classList.add('correct-answer');
+  return 0;
+}
+
+function gradeMulti(q, qid, card, badge, correctEl) {
+  var want = multiAnswerSet(q.answer, q.options);
+  var wantKeys = Object.keys(want).map(Number);
+  var checked = document.querySelectorAll('input[name="' + qid + '"]:checked');
+  var picked = [];
+  for (var i = 0; i < checked.length; i++) picked.push(parseInt(checked[i].value, 10));
+
+  var anyWrong = false, hitCorrect = 0;
+  for (var p = 0; p < picked.length; p++) {
+    if (want[picked[p]]) hitCorrect++;
+    else anyWrong = true;
+  }
+
+  // reveal correct / wrong option markers
+  var mopts = q.options || [];
+  for (var j = 0; j < mopts.length; j++) {
+    var el = document.getElementById('opt-' + qid + '-' + j);
+    if (!el) continue;
+    if (want[j]) el.classList.add('correct-answer');
+    else if (picked.indexOf(j) !== -1) el.classList.add('wrong-answer');
+  }
+
+  var earned;
+  if (!anyWrong && hitCorrect === wantKeys.length && picked.length === wantKeys.length) {
+    earned = q.points;
+    card.classList.add('correct');
+    badge.className = 'badge badge-ok';
+    badge.textContent = LABELS.correct_label;
+    correctEl.innerHTML = '';
+  } else if (!anyWrong && hitCorrect > 0) {
+    // 少选不错选 -> partial credit
+    earned = roundScore(q.points * hitCorrect / wantKeys.length);
+    card.classList.add('partial');
+    badge.className = 'badge badge-partial';
+    badge.textContent = LABELS.partial_label;
+    correctEl.innerHTML = LABELS.answer_prefix + multiAnswerText(wantKeys, mopts);
+  } else {
+    earned = 0;
+    card.classList.add('wrong');
+    badge.className = 'badge badge-no';
+    badge.textContent = LABELS.wrong_label;
+    correctEl.innerHTML = LABELS.answer_prefix + multiAnswerText(wantKeys, mopts);
+  }
+  return earned;
+}
+
+function multiAnswerText(keys, options) {
+  return keys.sort(function (a, b) { return a - b; }).map(function (k) {
+    return String.fromCharCode(65 + k) + '. ' + (options ? options[k] : '');
+  }).join('  ');
+}
+
+function gradeFill(q, qid, card, badge, correctEl) {
+  var nBlanks = fillBlankCount(q.question);
+  var blanks = fillBlankAnswers(q.answer, nBlanks);
+  var n = blanks.length;
+  var hit = 0;
+  var displays = [];
+
+  for (var b = 0; b < n; b++) {
+    var inp = document.getElementById('fill-' + qid + '-' + b);
+    var accepted = blanks[b] || [''];
+    var user = inp ? normText(inp.value) : '';
+    var ok = false;
+    for (var a = 0; a < accepted.length; a++) {
+      if (accepted[a] !== '' && normText(accepted[a]) === user && user !== '') { ok = true; break; }
+    }
+    if (inp) inp.classList.add(ok ? 'fill-ok' : 'fill-no');
+    if (ok) hit++;
+    displays.push((n > 1 ? (b + 1) + '. ' : '') + accepted.filter(function (x) { return x !== ''; }).join(' / '));
+  }
+
+  var earned = roundScore(q.points * hit / n);
+  correctEl.innerHTML = LABELS.answer_prefix + displays.join('   ');
+
+  if (hit === n) {
+    card.classList.add('correct');
+    badge.className = 'badge badge-ok';
+    badge.textContent = LABELS.correct_label;
+  } else if (hit > 0) {
+    card.classList.add('partial');
+    badge.className = 'badge badge-partial';
+    badge.textContent = LABELS.partial_label;
+  } else {
+    card.classList.add('wrong');
+    badge.className = 'badge badge-no';
+    badge.textContent = LABELS.wrong_label;
+  }
+  return earned;
+}
+
+</script>
+</div>
+</body>
+</html>

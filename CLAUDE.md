@@ -22,15 +22,29 @@ The site is deployed to GitHub Pages automatically from the default branch.
 
 ### Page Structure
 
-Five standalone HTML pages sharing a common visual design:
+The site is organized into three main sections:
 
-| Page | Purpose |
-|------|---------|
-| `index.html` | Course home — info, syllabus, module navigation |
-| `lagrange.html` | Lagrangian mechanics notes (constraints → Noether's theorem → three-body problem) |
-| `hamilton.html` | Hamiltonian mechanics notes (Legendre transform → Penning trap → rigid body → Maupertuis principle) |
-| `compare.html` | Side-by-side comparison of Newton/Lagrangian/Hamiltonian frameworks |
-| `flashcards.html` | Interactive Q&A flashcard review (~80 cards covering all topics) |
+```
+根目录/
+├── index.html              # 统一首页 - 两个课程的入口
+├── mechanics/              # 理论力学文件夹
+│   ├── index.html          # 理论力学主页
+│   ├── lagrange.html       # 拉格朗日力学
+│   ├── hamilton.html       # 哈密顿力学
+│   ├── compare.html        # 力学对比
+│   └── flashcards.html     # 闪卡复习
+└── epa/                    # 经典电动力学文件夹
+    ├── index.html          # 电动力学主页
+    ├── ch4.html            # 第四章入口页
+    ├── ch5.html            # 第五章入口页
+    ├── ch6.html            # 第六章入口页
+    ├── 第四章 电磁波的传播-知识清单.html
+    ├── 第四章 电磁波的传播-章节测试.html
+    ├── 第五章 电磁波的辐射和散射-知识清单.html
+    ├── 第五章 电磁波的辐射和散射-章节测试.html
+    ├── 第六章 运动带电粒子的辐射-知识清单.html
+    └── 第六章 运动带电粒子的辐射-章节测试.html
+```
 
 ### Shared Patterns
 
@@ -75,13 +89,18 @@ Each page defines its own color scheme via CSS custom properties. The primary co
 
 ## Key Files
 
-- `flashcards.html` — the largest file (~470 lines) containing all flashcard data and logic
-- `compare.html` — the only page using `<table>` for structured comparison
-- `index.html` — entry point with course metadata and overview cards
+- `index.html` — 统一首页，两个课程的入口
+- `mechanics/index.html` — 理论力学主页
+- `mechanics/flashcards.html` — 闪卡复习（~470行）
+- `mechanics/compare.html` — 力学对比（唯一使用 `<table>` 的页面）
+- `epa/index.html` — 电动力学主页
+- `epa/ch4.html`, `epa/ch5.html`, `epa/ch6.html` — 电动力学各章入口页
 
 ## Notes
 
 - No external JavaScript libraries are used (only MathJax CDN)
 - No CSS framework — all styles are hand-written in each file's `<style>` block
 - The `.gitignore` excludes the `.claude/` directory
-- Sidebar width is controlled by `--sidebar-width: 280px` and collapses to 240px on narrow viewports
+- Sidebar width is controlled by `--sidebar-width: 280px` (240px on narrow viewports)
+- 电动力学页面（epa/）使用纸质风格背景（`#fdf6e3`），理论力学页面使用现代白色风格
+- 所有页面都有统一的侧边栏导航，支持响应式布局
