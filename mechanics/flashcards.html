@@ -266,13 +266,63 @@
             background: #d0d4db;
             border-radius: 10px;
         }
-        @media (max-width: 700px) {
+        /* ===== Mobile: Hamburger + Drawer ===== */
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            gap: 5px;
+            width: 44px;
+            height: 44px;
+            padding: 8px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+            flex-shrink: 0;
+        }
+        .menu-toggle span {
+            display: block;
+            width: 100%;
+            height: 2px;
+            background: var(--text);
+            border-radius: 2px;
+            transition: transform 0.3s, opacity 0.3s;
+        }
+        .menu-toggle.active span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+        .menu-toggle.active span:nth-child(2) { opacity: 0; }
+        .menu-toggle.active span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+        .sidebar-backdrop {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .sidebar-backdrop.active { opacity: 1; }
+
+        @media (max-width: 768px) {
+            .menu-toggle { display: flex; }
             .sidebar {
-                width: 240px;
+                position: fixed;
+                top: 0;
+                left: 0;
+                height: 100vh;
+                height: 100dvh;
+                z-index: 1000;
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
             }
-            :root {
-                --sidebar-width: 240px;
-            }
+            .sidebar.open { transform: translateX(0); }
+            .sidebar-backdrop { display: block; }
+            .main-header { gap: 12px; }
+        }
+
+        @media (min-width: 769px) {
+            .menu-toggle { display: none !important; }
         }
     </style>
 </head>
@@ -306,8 +356,14 @@
         </nav>
     </aside>
 
+    <!-- Sidebar Backdrop -->
+    <div class="sidebar-backdrop" onclick="toggleSidebar()"></div>
+
     <div class="main">
         <div class="main-header">
+            <button class="menu-toggle" onclick="toggleSidebar()" aria-label="菜单">
+                <span></span><span></span><span></span>
+            </button>
             <span class="breadcrumb"><a href="index.html">理论力学首页</a> › 闪卡复习</span>
             <span class="badge">概念自查</span>
         </div>
@@ -419,3 +475,86 @@
             { q: '有心力场中角动量守恒的根源是什么？', a: '系统的拉格朗日量具有<strong>旋转对称性</strong>（各向同性），角坐标 $\\theta$ 为循环坐标，其共轭动量（角动量）守恒。亦可由诺特定理导出。' },
             { q: '为什么说"哈密顿力学与量子力学具有相似性"？', a: '哈密顿力学中的正则变量对 $(q,p)$ 满足的泊松括号结构与量子力学中对易关系 $[\\hat{q},\\hat{p}]=i\\hbar$ 形式一致；此外，哈密顿-雅可比方程与薛定谔方程有密切联系。' },
             { q: '什么是作用量？', a: '作用量 $I = \\int_{t_1}^{t_2} L\\,dt$。在哈密顿原理中，真实运动使 $I$ 取极值；在路径积分量子化中，所有路径的贡献由 $e^{iI/\\hbar}$ 决定。' },
+        ];
+
+        let currentIndex = 0;
+        let isFlipped = false;
+
+        function updateCard() {
+            const card = document.getElementById('flashcard');
+            const q = flashcardsData[currentIndex].q;
+            const a = flashcardsData[currentIndex].a;
+            document.getElementById('fcQuestion').innerHTML = q;
+            document.getElementById('fcAnswer').innerHTML = a;
+            document.getElementById('fcTotal').textContent = flashcardsData.length;
+            document.getElementById('fcNum').textContent = currentIndex + 1;
+            isFlipped = false;
+            card.classList.remove('flipped');
+            if (window.MathJax) MathJax.typesetPromise();
+        }
+
+        function flipCard() {
+            const card = document.getElementById('flashcard');
+            card.classList.toggle('flipped');
+            isFlipped = !isFlipped;
+        }
+
+        function nextCard(e) {
+            if (e) e.stopPropagation();
+            currentIndex = (currentIndex + 1) % flashcardsData.length;
+            updateCard();
+        }
+
+        function prevCard(e) {
+            if (e) e.stopPropagation();
+            currentIndex = (currentIndex - 1 + flashcardsData.length) % flashcardsData.length;
+            updateCard();
+        }
+
+        function shuffleCards(e) {
+            if (e) e.stopPropagation();
+            for (let i = flashcardsData.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [flashcardsData[i], flashcardsData[j]] = [flashcardsData[j], flashcardsData[i]];
+            }
+            currentIndex = 0;
+            updateCard();
+        }
+
+        // Sidebar drawer
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            const backdrop = document.querySelector('.sidebar-backdrop');
+            const btn = document.querySelector('.menu-toggle');
+            const isOpen = sidebar.classList.contains('open');
+            if (isOpen) {
+                sidebar.classList.remove('open');
+                backdrop.classList.remove('active');
+                btn.classList.remove('active');
+                document.body.style.overflow = '';
+            } else {
+                sidebar.classList.add('open');
+                backdrop.classList.add('active');
+                btn.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') toggleSidebar(); });
+        document.querySelectorAll('.sidebar a').forEach(link => {
+            link.addEventListener('click', () => { if (window.innerWidth <= 768) toggleSidebar(); });
+        });
+
+        // Touch swipe for flashcards
+        let touchStartX = 0;
+        document.getElementById('flashcardContainer').addEventListener('touchstart', e => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+        document.getElementById('flashcardContainer').addEventListener('touchend', e => {
+            const diff = e.changedTouches[0].screenX - touchStartX;
+            if (Math.abs(diff) > 50) { diff > 0 ? prevCard() : nextCard(); }
+        });
+
+        updateCard();
+    </script>
+</body>
+</html>

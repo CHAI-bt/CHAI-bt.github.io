@@ -119,6 +119,68 @@ body { display: flex !important; flex-direction: row !important; max-width: none
 @media print { .sidebar { display: none !important; } .main-content { margin-left: 0 !important; } }
 @media (max-width: 700px) { :root { --sidebar-width: 200px; } }
 
+/* ===== Mobile: Hamburger + Drawer ===== */
+.menu-toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 44px;
+    height: 44px;
+    padding: 8px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    flex-shrink: 0;
+}
+.menu-toggle span {
+    display: block;
+    width: 100%;
+    height: 2px;
+    background: var(--ink);
+    border-radius: 2px;
+    transition: transform 0.3s, opacity 0.3s;
+}
+.menu-toggle.active span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.menu-toggle.active span:nth-child(2) { opacity: 0; }
+.menu-toggle.active span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+.sidebar-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+.sidebar-backdrop.active { opacity: 1; }
+
+.table-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 12px 0; }
+.table-wrapper table { min-width: 600px; width: 100%; }
+
+@media (max-width: 768px) {
+    .menu-toggle { display: flex; }
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        height: 100dvh;
+        z-index: 1000;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+    }
+    .sidebar.open { transform: translateX(0); }
+    .sidebar-backdrop { display: block; }
+    .main-content { margin-left: 0 !important; }
+}
+
+@media (min-width: 769px) {
+    .menu-toggle { display: none !important; }
+}
+
 </style>
 </head>
 <body>
@@ -161,8 +223,13 @@ body { display: flex !important; flex-direction: row !important; max-width: none
         </div>
     </nav>
 </aside>
+<!-- Sidebar Backdrop -->
+<div class="sidebar-backdrop" onclick="toggleSidebar()"></div>
 <div class="main-content">
 
+<button class="menu-toggle" onclick="toggleSidebar()" aria-label="菜单">
+    <span></span><span></span><span></span>
+</button>
 
 <p style="font-size:0.9em;color:var(--ink-light);margin-bottom:12px;">⚡ <a href="ch4-test.html">章节测试</a></p>
 
@@ -236,13 +303,13 @@ $$\mathbf B_0=\sqrt{\mu\epsilon}\,\mathbf n\times\mathbf E_0$$
 <p><span class="exp">是什么：横波在垂直于 $\mathbf n$ 的平面内还有两个自由度。取该平面内两实单位矢量 $\mathbf e_1,\mathbf e_2$（$\mathbf e_1\times\mathbf e_2=\mathbf n$），把电场复振幅展开：</span></p>
 $$\mathbf E(\mathbf x,t)=(E_1\mathbf e_1+E_2\mathbf e_2)\,e^{i\mathbf k\cdot\mathbf x-i\omega t},\quad E_1,E_2\in\mathbb C$$
 <p><span class="exp">为什么需要它：$E_1,E_2$ 的相对相位决定了电场矢量端点随时间在固定点画出的轨迹（迎着波看）。这就是偏振态。</span></p>
-<table>
+<div class="table-wrapper"><table>
 <tr><th>偏振态</th><th>条件 $E_2/E_1$</th><th>电场端点轨迹</th></tr>
 <tr><td>线偏振</td><td>实数（同相位角）</td><td>一条直线</td></tr>
 <tr><td>左旋圆偏振</td><td>$+i$</td><td>逆时针圆（光子螺旋度 $+1$）</td></tr>
 <tr><td>右旋圆偏振</td><td>$-i$</td><td>顺时针圆（光子螺旋度 $-1$）</td></tr>
 <tr><td>椭圆偏振</td><td>一般复数</td><td>椭圆</td></tr>
-</table>
+</table></div>
 <p><span class="exp">怎么用：圆偏振用复单位矢量描述更方便</span></p>
 $$\mathbf e_\pm=\tfrac{1}{\sqrt2}(\mathbf e_1\pm i\mathbf e_2),\qquad \mathbf e_\pm^*\cdot\mathbf n=\mathbf e_\pm^*\cdot\mathbf e_\mp=0,\quad \mathbf e_\pm^*\cdot\mathbf e_\pm=1$$
 <p><span class="exp">实验上无法直接测复振幅相位，但可测<span class="kp">斯托克斯参数</span>。令 $\mathbf e_1\cdot\mathbf E=a_1e^{i\delta_1},\ \mathbf e_2\cdot\mathbf E=a_2e^{i\delta_2}$，定义</span></p>
@@ -302,13 +369,13 @@ $$\cos r=i\sqrt{\Big(\frac{\sin i}{\sin i_0}\Big)^2-1}$$
 <p><span class="exp">这一步在干嘛：把它代入折射波相因子 $e^{i\mathbf k'\cdot\mathbf x}$，$z$ 方向出现实指数衰减因子，得到<span class="kp">倏逝波</span></span></p>
 $$e^{i\mathbf k'\cdot\mathbf x}=e^{-k'|\cos r|\,z}\,e^{ik'(\sin i/\sin i_0)x}$$
 <p><span class="kp">倏逝波沿界面（$x$ 方向）传播、垂直界面（$z$ 方向）指数衰减；无净能量进入光疏介质，反射波与入射波振幅模方相等（仅有相移）。</span></p>
-<table>
+<div class="table-wrapper"><table>
 <tr><th>对比</th><th>布儒斯特角 $i_B$</th><th>全反射临界角 $i_0$</th></tr>
 <tr><td>发生条件</td><td>任意 $n,n'$（p 偏振）</td><td>仅 $n>n'$（光密→光疏）</td></tr>
 <tr><td>角度公式</td><td>$\tan^{-1}(n'/n)$</td><td>$\sin^{-1}(n'/n)$</td></tr>
 <tr><td>效果</td><td>反射光 p 分量=0，起偏</td><td>能量全反射回光密介质</td></tr>
 <tr><td>透射波</td><td>正常折射波</td><td>倏逝波，不传能</td></tr>
-</table>
+</table></div>
 <blockquote>易错：全反射下「倏逝波不传能」——它沿界面传播但 $z$ 方向无净能流。能量全部回到光密介质（模方守恒），仅相位改变。光纤多模传播正是靠它。</blockquote>
 <p><span class="tag-must">必考</span></p>
 
@@ -337,13 +404,13 @@ $$\boxed{\delta=\sqrt{\frac{2}{\omega\mu\sigma}}}$$
 $$\mathbf E=\mathbf E_0\,e^{-\mathbf n\cdot\mathbf x/\delta}\,e^{i\mathbf n\cdot\mathbf x/\delta-i\omega t}$$
 <p><span class="kp">场在一个趋肤深度内衰减为 $1/e$。$\delta\propto1/\sqrt{\omega\sigma}$：频率越高、电导率越大，波越难穿透——这就是趋肤效应。</span></p>
 <p><span class="exp">为什么 $E$ 与 $H$ 有相位差：由 $\mathbf H_0=\frac{1}{\mu\omega}k\,\mathbf n\times\mathbf E_0$，而良导体里 $k=(1+i)/\delta$ 是复数，故 $\mathbf H$ 落后 $\mathbf E$ 约 $\pi/4$（因为 $k^2\approx2i/\delta^2$ 近乎纯虚，$k$ 的辐角为 $\pi/4$）。</span></p>
-<table>
+<div class="table-wrapper"><table>
 <tr><th>对比</th><th>良导体 $\sigma/(\omega\epsilon_b)\gg1$</th><th>不良导体 $\sigma/(\omega\epsilon_b)\ll1$</th></tr>
 <tr><td>$k$ 的实虚部</td><td>$k_1\approx k_2=1/\delta$（同量级）</td><td>实部主导，虚部小</td></tr>
 <tr><td>吸收系数</td><td>$A=2/\delta\propto\sqrt{\omega\sigma}$</td><td>$A=\sigma\sqrt{\mu/\epsilon_b}$，几乎不依赖 $\omega$</td></tr>
 <tr><td>$E,H$ 相位差</td><td>约 $\pi/4$</td><td>近乎同相</td></tr>
 <tr><td>穿透</td><td>很浅（趋肤）</td><td>较深</td></tr>
-</table>
+</table></div>
 <blockquote>易错：趋肤深度 $\delta=\sqrt{2/(\omega\mu\sigma)}\propto1/\sqrt{\omega\sigma}$，对频率和电导率都是 $-1/2$ 次幂；记成 $1/\sqrt{\omega\sigma}$ 即可，别漏开方。高频微波在金属表面只穿透极薄一层。</blockquote>
 <p><span class="tag-must">必考</span></p>
 
@@ -383,11 +450,11 @@ $$\boxed{\sigma(\omega)=\frac{f_0 Ne^2}{m(\gamma_0-i\omega)}}$$
 $$\frac{\epsilon(\omega)}{\epsilon_0}\approx1-\frac{\omega_p^2}{\omega^2},\qquad \boxed{\omega_p^2=\frac{NZe^2}{\epsilon_0 m}}$$
 <p><span class="kp">$\omega_p$ 为等离子体频率。这个高频极限对所有介质成立；对纯等离子体（如电离层，全部电子自由、忽略阻尼）则对所有频率成立。</span></p>
 <p><span class="exp">怎么用：分两种情形看 $k^2=\mu_0\epsilon(\omega)\omega^2=\frac{\omega^2-\omega_p^2}{c^2}$</span></p>
-<table>
+<div class="table-wrapper"><table>
 <tr><th>频率</th><th>$\epsilon$ 符号</th><th>$k$</th><th>行为</th></tr>
 <tr><td>$\omega<\omega_p$</td><td>$\epsilon<0$</td><td>纯虚</td><td>波一进介质就指数衰减 ⇒ 全反射</td></tr>
 <tr><td>$\omega>\omega_p$</td><td>$\epsilon>0$</td><td>实</td><td>透射，介质变透明</td></tr>
-</table>
+</table></div>
 <p><span class="exp">应用：(1) 电离层 $\omega_p$ 对应约 10 MHz——低频无线电（&lt;10 MHz）被电离层反射可传很远，微波则穿透电离层（卫星通信）。(2) 金属 $\omega_p$ 在紫外到 X 射线波段，故金属对可见光不透明（反射），对紫外逐渐变透明——<span class="kp">金属紫外透明</span>。</span></p>
 <blockquote>易错：「$\omega_p$ 以下反射、以上透射」是等离子体/金属的招牌行为，根源是 $\epsilon$ 变负导致 $k$ 纯虚。注意这是「截止」而非「吸收」——衰减来自波矢虚部（倏逝），并不一定耗散能量。</blockquote>
 <p><span class="tag-must">必考</span></p>
@@ -418,13 +485,13 @@ $$v_g=\frac{d\omega}{dk}\Big|_{k_0}$$
 <p><span class="exp">怎么化成折射率形式：用 $\omega=ck/n(\omega)$，$k=n\omega/c$，对 $\omega$ 求导链式法则：$\frac{dk}{d\omega}=\frac{n+\omega\,dn/d\omega}{c}$，取倒数：</span></p>
 $$\boxed{v_g=\frac{d\omega}{dk}=\frac{c}{n+\omega\,dn/d\omega}=\frac{v_p}{1+(\omega/n)\,dn/d\omega}}$$
 <p><span class="exp">只要有色散 $dn/d\omega\neq0$，$v_g\neq v_p$。</span></p>
-<table>
+<div class="table-wrapper"><table>
 <tr><th>对比</th><th>相速度 $v_p$</th><th>群速度 $v_g$</th></tr>
 <tr><td>定义</td><td>$\omega/k$，等相面速度</td><td>$d\omega/dk$，波包包络速度</td></tr>
 <tr><td>携带信息?</td><td>否（单色波无信息）</td><td>窄谱近似下=信号/能量速度</td></tr>
 <tr><td>可否 $>c$</td><td>可以（不违反相对论）</td><td>反常色散下可 $>c$ 甚至 $<0$</td></tr>
 <tr><td>正常色散 $dn/d\omega>0$</td><td>$v_p=c/n$</td><td>$v_g<v_p<c$</td></tr>
-</table>
+</table></div>
 <blockquote>易错：相速度 $v_p=c/n$ 在 $n<1$ 时可超光速，但它只是等相面移动速度，不传任何信息，<b>不违反相对论</b>。而反常色散区 $|dn/d\omega|$ 极大时 $v_g$ 可超光速甚至为负——此时线性近似 (4.61) 失效，<b>群速度已失去信号速度的意义</b>，故同样不违反相对论。真正的上限由下面的因果性论证保证。</blockquote>
 <p><span class="tag-must">必考</span></p>
 
@@ -468,13 +535,13 @@ $$\boxed{\frac{n_1^2}{v^2-c_1^2}+\frac{n_2^2}{v^2-c_2^2}+\frac{n_3^2}{v^2-c_3^2}
 
 <h3 id="s75996525">单轴晶体：o 光与 e 光</h3>
 <p><span class="exp">是什么：单轴晶体 $\bar\epsilon_1=\bar\epsilon_2\neq\bar\epsilon_3$（光轴取 $z$）。令 $n_3=\cos\theta$（$\theta$ 为 $\mathbf k$ 与光轴夹角），菲涅尔方程分解出两个解：</span></p>
-<table>
+<div class="table-wrapper"><table>
 <tr><th>对比</th><th>o 光（寻常光）</th><th>e 光（非常光）</th></tr>
 <tr><td>相速度</td><td>$v^2=c_1^2$，与方向无关</td><td>$v^2(\theta)=c_1^2\cos^2\theta+c_3^2\sin^2\theta$，依赖方向</td></tr>
 <tr><td>色散关系</td><td>$k^2=\omega^2/c_1^2$（如各向同性）</td><td>$\omega^2=\dfrac{k_1^2+k_2^2}{n_3^2}+\dfrac{k_3^2}{n_1^2}$（旋转椭球）</td></tr>
 <tr><td>偏振 $\mathbf D$</td><td>$\perp$（光轴-$\mathbf k$）平面，沿 $y$</td><td>在（光轴-$\mathbf k$）平面内</td></tr>
 <tr><td>能流方向</td><td>$\parallel\mathbf k$，行为如各向同性</td><td>$\neq\mathbf k$（走离），不满足通常折射定律</td></tr>
-</table>
+</table></div>
 <p><span class="exp">为什么 o 光有 $\mathbf E\parallel\mathbf D$ 而各向异性一般 $\mathbf E\nparallel\mathbf D$：单轴晶体中 $\bar\epsilon_1=\bar\epsilon_2$，o 光的 $\mathbf D$ 垂直于光轴-$\mathbf k$ 平面（沿 $\hat{\mathbf y}$），此方向恰好是 $\bar\epsilon$ 的简并方向，故 $\mathbf D=\epsilon_1\mathbf E$，二者平行。因此 o 光的行为等价于各向同性 TEM 模式，遵循标准折射定律（与费马原理等价），只一条光线。e 光相速度随方向变，能流由 $\mathbf v_g=\partial\omega/\partial\mathbf k$ 给出、偏离 $\mathbf k$。一束光入射分裂成 o、e 两束即双折射。</span></p>
 <p><span class="tag-key">重点</span></p>
 
@@ -495,12 +562,12 @@ $$\mathbf E_\perp=\frac{i}{k_\perp^2}[k\nabla_\perp E_z-\omega\,\mathbf e_3\time
 <p><span class="exp">其中横向波数 $k_\perp$ 满足 $\mu\epsilon\omega^2=k^2+k_\perp^2$。纵向场满足二维亥姆霍兹方程</span></p>
 $$(\nabla_\perp^2+k_\perp^2)\psi=0,\qquad \psi\equiv E_z\ \text{或}\ B_z$$
 <p><span class="exp">为什么重要：求解波导问题的核心就归结为「解纵向分量的二维本征值问题」。注意——无界空间不可能有纵向场分量，但波导边界打破了这一点。</span></p>
-<table>
+<div class="table-wrapper"><table>
 <tr><th>模式</th><th>条件</th><th>特征</th></tr>
 <tr><td>TE（横电）</td><td>$E_z=0,\ B_z\neq0$</td><td>电场纯横向</td></tr>
 <tr><td>TM（横磁）</td><td>$B_z=0,\ E_z\neq0$</td><td>磁场纯横向</td></tr>
 <tr><td>TEM（横电磁）</td><td>$E_z=B_z=0$</td><td>类二维静电场，需复连通截面</td></tr>
-</table>
+</table></div>
 <p><span class="tag-must">必考</span></p>
 
 <h3 id="s23752661">金属波导边条件与截止频率</h3>
@@ -555,5 +622,30 @@ $$a<\frac{2.405\,\lambda}{2\pi\sqrt{n_1^2-n_2^2}}$$
 
 
 </div>
+
+<script>
+// Sidebar drawer
+function toggleSidebar() {
+    const sidebar = document.querySelector('.sidebar');
+    const backdrop = document.querySelector('.sidebar-backdrop');
+    const btn = document.querySelector('.menu-toggle');
+    const isOpen = sidebar.classList.contains('open');
+    if (isOpen) {
+        sidebar.classList.remove('open');
+        backdrop.classList.remove('active');
+        btn.classList.remove('active');
+        document.body.style.overflow = '';
+    } else {
+        sidebar.classList.add('open');
+        backdrop.classList.add('active');
+        btn.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') toggleSidebar(); });
+document.querySelectorAll('.sidebar a').forEach(link => {
+    link.addEventListener('click', () => { if (window.innerWidth <= 768) toggleSidebar(); });
+});
+</script>
 </body>
 </html>

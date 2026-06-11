@@ -267,13 +267,63 @@
             background: #d0d4db;
             border-radius: 10px;
         }
-        @media (max-width: 700px) {
+        /* ===== Mobile: Hamburger + Drawer ===== */
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            gap: 5px;
+            width: 44px;
+            height: 44px;
+            padding: 8px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+            flex-shrink: 0;
+        }
+        .menu-toggle span {
+            display: block;
+            width: 100%;
+            height: 2px;
+            background: var(--text);
+            border-radius: 2px;
+            transition: transform 0.3s, opacity 0.3s;
+        }
+        .menu-toggle.active span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+        .menu-toggle.active span:nth-child(2) { opacity: 0; }
+        .menu-toggle.active span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+        .sidebar-backdrop {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .sidebar-backdrop.active { opacity: 1; }
+
+        @media (max-width: 768px) {
+            .menu-toggle { display: flex; }
             .sidebar {
-                width: 240px;
+                position: fixed;
+                top: 0;
+                left: 0;
+                height: 100vh;
+                height: 100dvh;
+                z-index: 1000;
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
             }
-            :root {
-                --sidebar-width: 240px;
-            }
+            .sidebar.open { transform: translateX(0); }
+            .sidebar-backdrop { display: block; }
+            .main-header { gap: 12px; }
+        }
+
+        @media (min-width: 769px) {
+            .menu-toggle { display: none !important; }
         }
     </style>
 </head>
@@ -312,8 +362,14 @@
         </nav>
     </aside>
 
+    <!-- Sidebar Backdrop -->
+    <div class="sidebar-backdrop" onclick="toggleSidebar()"></div>
+
     <div class="main">
         <div class="main-header">
+            <button class="menu-toggle" onclick="toggleSidebar()" aria-label="菜单">
+                <span></span><span></span><span></span>
+            </button>
             <span class="breadcrumb"><a href="index.html">电动力学首页</a> › 闪卡复习</span>
             <span class="badge">概念自查</span>
         </div>
@@ -412,6 +468,39 @@
             fcCurrent = 0;
             updateFlashcard();
         }
+
+        // Sidebar drawer
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            const backdrop = document.querySelector('.sidebar-backdrop');
+            const btn = document.querySelector('.menu-toggle');
+            const isOpen = sidebar.classList.contains('open');
+            if (isOpen) {
+                sidebar.classList.remove('open');
+                backdrop.classList.remove('active');
+                btn.classList.remove('active');
+                document.body.style.overflow = '';
+            } else {
+                sidebar.classList.add('open');
+                backdrop.classList.add('active');
+                btn.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') toggleSidebar(); });
+        document.querySelectorAll('.sidebar a').forEach(link => {
+            link.addEventListener('click', () => { if (window.innerWidth <= 768) toggleSidebar(); });
+        });
+
+        // Touch swipe for flashcards
+        let touchStartX = 0;
+        document.getElementById('flashcardContainer').addEventListener('touchstart', e => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+        document.getElementById('flashcardContainer').addEventListener('touchend', e => {
+            const diff = e.changedTouches[0].screenX - touchStartX;
+            if (Math.abs(diff) > 50) { diff > 0 ? prevCard() : nextCard(); }
+        });
 
         updateFlashcard();
     </script>

@@ -117,7 +117,67 @@ body { display: flex !important; flex-direction: row !important; max-width: none
 .main-content { margin-left: var(--sidebar-width); flex: 1; min-height: 100vh; background: #fdf6e3; }
 #exampass-header { position: sticky; top: 0; z-index: 5; background: #fdf6e3; }
 @media print { .sidebar { display: none !important; } .main-content { margin-left: 0 !important; } }
-@media (max-width: 700px) { :root { --sidebar-width: 200px; } }
+/* ===== Mobile: Hamburger + Drawer ===== */
+.menu-toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 44px;
+    height: 44px;
+    padding: 8px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    flex-shrink: 0;
+}
+.menu-toggle span {
+    display: block;
+    width: 100%;
+    height: 2px;
+    background: var(--ink);
+    border-radius: 2px;
+    transition: transform 0.3s, opacity 0.3s;
+}
+.menu-toggle.active span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.menu-toggle.active span:nth-child(2) { opacity: 0; }
+.menu-toggle.active span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+.sidebar-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+.sidebar-backdrop.active { opacity: 1; }
+
+.table-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 12px 0; }
+.table-wrapper table { min-width: 600px; width: 100%; }
+
+@media (max-width: 768px) {
+    .menu-toggle { display: flex; }
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        height: 100dvh;
+        z-index: 1000;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+    }
+    .sidebar.open { transform: translateX(0); }
+    .sidebar-backdrop { display: block; }
+    .main-content { margin-left: 0 !important; }
+}
+
+@media (min-width: 769px) {
+    .menu-toggle { display: none !important; }
+}
 
 </style>
 </head>
@@ -161,8 +221,13 @@ body { display: flex !important; flex-direction: row !important; max-width: none
         </div>
     </nav>
 </aside>
+<!-- Sidebar Backdrop -->
+<div class="sidebar-backdrop" onclick="toggleSidebar()"></div>
 <div class="main-content">
 
+<button class="menu-toggle" onclick="toggleSidebar()" aria-label="菜单">
+    <span></span><span></span><span></span>
+</button>
 
 <p style="font-size:0.9em;color:var(--ink-light);margin-bottom:12px;">⚡ <a href="ch6-test.html">章节测试</a></p>
 
@@ -254,14 +319,14 @@ $$F^{\mu\nu}=\left.\frac{e}{u\cdot(x-r)}\frac{d}{d\tau}\!\left[\frac{(x-r)^\mu u
 $$\boxed{\mathbf{E}=e\left\{\frac{\mathbf{n}-\boldsymbol{\beta}}{\gamma^2(1-\boldsymbol{\beta}\cdot\mathbf{n})^3R^2}+\frac{\mathbf{n}\times[(\mathbf{n}-\boldsymbol{\beta})\times\dot{\boldsymbol{\beta}}]}{(1-\boldsymbol{\beta}\cdot\mathbf{n})^3R}\right\}_{\rm ret},\qquad \mathbf{B}=(\mathbf{n}\times\mathbf{E})_{\rm ret}}$$
 <p><span class="kp">第一项 $\propto 1/R^2$，与加速度无关，叫「速度场」（也叫静态/广义库仑场）；第二项 $\propto 1/R$ 且正比于加速度 $\dot{\boldsymbol{\beta}}$，叫「加速度场」或「辐射场」。</span></p>
 <p><span class="exp">为什么这样分：辐射要把能量送到无穷远，能流 $\propto E^2$，要让通过半径 $R$ 球面的功率 $\propto R^2\cdot E^2$ 不随 $R$ 衰减为零，必须 $E\propto 1/R$。所以只有第二项辐射；第一项 $\propto 1/R^2$，功率 $\propto 1/R^2\to0$，是束缚在粒子周围的近场。</span></p>
-<table>
+<div class="table-wrapper"><table>
 <tr><th>对比</th><th>速度场（第一项）</th><th>加速度场（辐射场，第二项）</th></tr>
 <tr><td>距离依赖</td><td>$1/R^2$</td><td>$1/R$</td></tr>
 <tr><td>依赖加速度?</td><td>否，只含 $\boldsymbol{\beta}$</td><td>是，$\propto\dot{\boldsymbol{\beta}}$</td></tr>
 <tr><td>能否辐射</td><td>不辐射（功率 $\to0$）</td><td>辐射（功率有限）</td></tr>
 <tr><td>匀速运动时</td><td>唯一存在的项</td><td>为零</td></tr>
 <tr><td>物理本质</td><td>随粒子走的库仑场（洛伦兹收缩）</td><td>脱离粒子飞向无穷的电磁波</td></tr>
-</table>
+</table></div>
 <blockquote>易错：「速度场不辐射」是核心结论。匀速运动的电荷虽然有场（甚至有磁场），但 $\dot{\boldsymbol{\beta}}=0$ 使辐射场为零，它不辐射能量。辐射的充要条件是加速度非零。</blockquote>
 <p><span class="tag-must">必考</span></p>
 
@@ -303,12 +368,12 @@ $$\boxed{P=-\frac{2}{3}\frac{e^2}{m^2c^3}\frac{dp^\mu}{d\tau}\frac{dp_\mu}{d\tau
 <p><span class="exp">$\gamma^6$ 是怎么冒出来的：$p^\mu=mc\,u^\mu$，$\dfrac{dp^\mu}{d\tau}=mc\dfrac{du^\mu}{d\tau}=mc\,\gamma\dfrac{du^\mu}{dt}$（用了 $\frac{d}{d\tau}=\gamma\frac{d}{dt}$，贡献一个 $\gamma$）；而 $\dfrac{du^\mu}{dt}=\dfrac{d}{dt}(\gamma,\gamma\boldsymbol\beta)$ 求导后含 $\gamma^2,\gamma^4$ 量级的项（$\dot\gamma=\gamma^3\boldsymbol\beta\cdot\dot{\boldsymbol\beta}$）。把这些 $\gamma$ 收集起来再取标量平方，净得 $\gamma^6$。所以 $\gamma^6$ 不是猜的，是 $\frac{d}{d\tau}$ 与 $u^\mu$ 求导各自带来的 $\gamma$ 幂次累加的结果。</span></p>
 <p><span class="kp">这就是李纳公式（式 6.22）。$\gamma^6$ 因子表明：高速粒子辐射被极大增强。</span></p>
 <p><span class="exp">历史钩子：李纳（Liénard）1898 年就得到了它——比狭义相对论（1905）还早 7 年，可见这个不变量结构有多稳健。</span></p>
-<table>
+<div class="table-wrapper"><table>
 <tr><th></th><th>拉摩公式</th><th>李纳公式</th></tr>
 <tr><td>适用</td><td>$\beta\ll1$</td><td>任意 $\beta$（协变）</td></tr>
 <tr><td>形式</td><td>$\frac{2e^2}{3c^3}|\dot{\mathbf v}|^2$</td><td>$\frac{2e^2}{3c}\gamma^6[(\dot{\boldsymbol\beta})^2-(\boldsymbol\beta\times\dot{\boldsymbol\beta})^2]$</td></tr>
 <tr><td>$\beta\to0$ 极限</td><td>——</td><td>退回拉摩公式</td></tr>
-</table>
+</table></div>
 <blockquote>易错：李纳公式里出现的是 $\gamma^6$（用 $\dot{\boldsymbol\beta}$ 表达时）。但后面比较「相同外力下」直线/环行加速器时，因子会变成 $\gamma^2$——因为那时固定的是 $d\mathbf p/dt$ 而不是 $\dot{\boldsymbol\beta}$。$\gamma^6$ 与 $\gamma^2$ 对应不同的「固定量」，别张冠李戴。</blockquote>
 <p><span class="tag-must">必考</span></p>
 
@@ -361,13 +426,13 @@ $$\frac{dP(t')}{d\Omega}=\frac{e^2\dot v^2}{4\pi c^3(1-\beta\cos\theta)^3}\left[
 <p><span class="exp">为什么工程上关心：粒子从外场获得能量被加速，同时因辐射损失能量。当二者相当，粒子能量就饱和、加速不动了。所以辐射功率直接决定加速器的设计上限。比较时固定的是<strong>外力</strong>，即 $d\mathbf p/dt$。</span></p>
 <p><span class="kp">直线加速器（力沿运动方向）：$P=\dfrac{2e^2}{3m^2c^3}\left(\dfrac{dp}{dt}\right)^2$。</span></p>
 <p><span class="kp">环行加速器（力横向、方向频繁变）：$P=\dfrac{2e^2}{3m^2c^3}\gamma^2\left(\dfrac{dp}{dt}\right)^2$。</span></p>
-<table>
+<div class="table-wrapper"><table>
 <tr><th></th><th>直线加速器</th><th>环行加速器</th></tr>
 <tr><td>力的方向</td><td>沿运动方向</td><td>横向（向心）</td></tr>
 <tr><td>相同 $dp/dt$ 下功率</td><td>$\propto(dp/dt)^2$</td><td>多一个 $\gamma^2$ 因子</td></tr>
 <tr><td>辐射损失</td><td>通常可忽略</td><td>极端相对论下巨大</td></tr>
 <tr><td>结论</td><td>省能，受限于尺度/选址</td><td>辐射主导（同步辐射损失）</td></tr>
-</table>
+</table></div>
 <p><span class="exp">为什么环行多 $\gamma^2$：直观上横向力让动量方向快速旋转，等效加速度被 $\gamma$ 放大，功率再平方。又因电子荷质比最大，电子环行加速器的同步辐射损失最严重——这是为何超高能电子对撞机倾向直线、而质子可用环行。</span></p>
 <blockquote>易错：这里的因子是 $\gamma^2$，对应「固定 $dp/dt$」；不要和李纳公式里「固定 $\dot{\boldsymbol\beta}$」时的 $\gamma^6$ 搞混。两个 $\gamma$ 的幂次源于不同的固定量。</blockquote>
 <p><span class="tag-key">重点</span></p>
@@ -459,12 +524,12 @@ $$\boxed{m(\dot{\mathbf v}-\tau\ddot{\mathbf v})=\mathbf F_{\rm ext}}$$
 <p><span class="exp">例题 6.2：一个固有频率 $\omega_0$、阻尼 $\Gamma'$ 的带电振子，在频率 $\omega$ 的电磁波下受迫振动，且计入辐射阻尼。运动方程含 $-\tau\dddot{x}$ 项。求散射截面，结果为</span></p>
 $$\frac{d\sigma}{d\Omega}=\left(\frac{e^2}{mc^2}\right)^2|\mathbf e^*\cdot\mathbf e_0|^2\,\frac{\omega^4}{(\omega_0^2-\omega^2)^2+\omega^2\Gamma_t^2}$$
 <p><span class="exp">其中 $\Gamma_t$ 是总宽度，含振子自身阻尼 $\Gamma'$ 与辐射阻尼宽度 $\Gamma_0=\omega_0^2\tau$。三种极限：</span></p>
-<table>
+<div class="table-wrapper"><table>
 <tr><th>频率区间</th><th>行为</th><th>名称</th></tr>
 <tr><td>$\omega\ll\omega_0$</td><td>$d\sigma/d\Omega\propto\omega^4$</td><td>瑞利散射（天空为何蓝）</td></tr>
 <tr><td>$\omega\approx\omega_0$</td><td>分母极小，截面剧增</td><td>共振散射</td></tr>
 <tr><td>$\omega\gg\omega_0$</td><td>$\to(e^2/mc^2)^2$</td><td>退回汤姆孙散射</td></tr>
-</table>
+</table></div>
 <p><span class="kp">即使振子本身无阻尼（$\Gamma'=0$），辐射阻尼 $\Gamma_0=\omega_0^2\tau$ 也会给谱线一个非零宽度——这就是谱线的「自然展宽」。</span></p>
 <p><span class="tag-freq">高频</span></p>
 
@@ -488,5 +553,29 @@ $$r_0=\frac{e^2}{mc^2}\approx2.8\times10^{-13}\,\text{cm}$$
 
 
 </div>
+
+<script>
+function toggleSidebar() {
+    const sidebar = document.querySelector('.sidebar');
+    const backdrop = document.querySelector('.sidebar-backdrop');
+    const btn = document.querySelector('.menu-toggle');
+    const isOpen = sidebar.classList.contains('open');
+    if (isOpen) {
+        sidebar.classList.remove('open');
+        backdrop.classList.remove('active');
+        btn.classList.remove('active');
+        document.body.style.overflow = '';
+    } else {
+        sidebar.classList.add('open');
+        backdrop.classList.add('active');
+        btn.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') toggleSidebar(); });
+document.querySelectorAll('.sidebar a').forEach(link => {
+    link.addEventListener('click', () => { if (window.innerWidth <= 768) toggleSidebar(); });
+});
+</script>
 </body>
 </html>

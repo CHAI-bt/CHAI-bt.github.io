@@ -117,7 +117,67 @@ body { display: flex !important; flex-direction: row !important; max-width: none
 .main-content { margin-left: var(--sidebar-width); flex: 1; min-height: 100vh; background: #fdf6e3; }
 #exampass-header { position: sticky; top: 0; z-index: 5; background: #fdf6e3; }
 @media print { .sidebar { display: none !important; } .main-content { margin-left: 0 !important; } }
-@media (max-width: 700px) { :root { --sidebar-width: 200px; } }
+/* ===== Mobile: Hamburger + Drawer ===== */
+.menu-toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 44px;
+    height: 44px;
+    padding: 8px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    flex-shrink: 0;
+}
+.menu-toggle span {
+    display: block;
+    width: 100%;
+    height: 2px;
+    background: var(--ink);
+    border-radius: 2px;
+    transition: transform 0.3s, opacity 0.3s;
+}
+.menu-toggle.active span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.menu-toggle.active span:nth-child(2) { opacity: 0; }
+.menu-toggle.active span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+.sidebar-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+.sidebar-backdrop.active { opacity: 1; }
+
+.table-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 12px 0; }
+.table-wrapper table { min-width: 600px; width: 100%; }
+
+@media (max-width: 768px) {
+    .menu-toggle { display: flex; }
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        height: 100dvh;
+        z-index: 1000;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+    }
+    .sidebar.open { transform: translateX(0); }
+    .sidebar-backdrop { display: block; }
+    .main-content { margin-left: 0 !important; }
+}
+
+@media (min-width: 769px) {
+    .menu-toggle { display: none !important; }
+}
 
 </style>
 </head>
@@ -161,8 +221,13 @@ body { display: flex !important; flex-direction: row !important; max-width: none
         </div>
     </nav>
 </aside>
+<!-- Sidebar Backdrop -->
+<div class="sidebar-backdrop" onclick="toggleSidebar()"></div>
 <div class="main-content">
 
+<button class="menu-toggle" onclick="toggleSidebar()" aria-label="菜单">
+    <span></span><span></span><span></span>
+</button>
 
 <p style="font-size:0.9em;color:var(--ink-light);margin-bottom:12px;">⚡ <a href="ch5-test.html">章节测试</a></p>
 
@@ -248,12 +313,12 @@ $$\mathbf{A}(\mathbf{x})=\frac{\mu_0}{4\pi}\int d^3x'\,\mathbf{J}(\mathbf{x}')\f
 
 <p><span class="exp"><strong>为什么分区：三个长度尺度。</strong>源尺度 $d$、观测距离 $r=|\mathbf{x}|$、波长 $\lambda=2\pi/k$。三者相对大小决定场的性状。约定观测点远离源：$r\gg d$。</span></p>
 
-<table>
+<div class="table-wrapper"><table>
 <tr><th>区域</th><th>条件</th><th>场的性状</th></tr>
 <tr><td>近场区（静态区）</td><td>$d\ll r\ll\lambda$</td><td>$kr\ll1$，相因子 $e^{ikR}\approx1$，场≈准静态电/磁偶极场</td></tr>
 <tr><td>中间区（感应区）</td><td>$d\ll r\sim\lambda$</td><td>过渡区，近场与辐射场可比</td></tr>
 <tr><td>远场区（辐射区）</td><td>$d\ll\lambda\ll r$</td><td>$kr\gg1$，纯横向球面波，能量真正辐射出去（本章重点）</td></tr>
-</table>
+</table></div>
 
 <p><span class="exp"><strong>怎么用·易错。</strong>判断处于哪个区域看 $kr$ 与 $r/d$、$d/\lambda$ 的关系。手机通信波长厘米级、发射塔尺度可比甚至更大，<strong>不满足 $d\ll\lambda$</strong>，长波近似失效；而无线广播（波长几十米）、原子光辐射满足。</span></p>
 
@@ -273,14 +338,14 @@ $$\mathbf{A}(\mathbf{x})=\frac{\mu_0\,e^{ikr}}{4\pi r}\int d^3x'\,\mathbf{J}(\ma
 
 <p><span class="exp"><strong>为何如此分解多极。</strong>把这个双重展开代回 $\mathbf{A}$，按 $\mathbf{x}'$ 的幂次（等价于 $kd$ 的幂次）逐阶分类：</span></p>
 
-<table>
+<div class="table-wrapper"><table>
 <tr><th>展开项</th><th>来源</th><th>对应辐射</th></tr>
 <tr><td>领头项（两括号都取 1）</td><td>$\int\mathbf{J}\,d^3x'$</td><td>电偶极 E1</td></tr>
 <tr><td>次级项 $\propto\mathbf{n}\cdot\mathbf{x}'$ 的反对称部分</td><td>$\frac12\int\mathbf{x}'\times\mathbf{J}$</td><td>磁偶极 M1</td></tr>
 <tr><td>次级项的对称部分</td><td>$\int\mathbf{x}'(\mathbf{n}\cdot\mathbf{x}')\rho$</td><td>电四极 E2</td></tr>
 <p><span class="exp">「对称/反对称」是对 $\mathbf{x}'$ 与 $\mathbf{J}$ 两个矢量指标的张量分解：反对称张量 $\frac12(x'_i J_j - x'_j J_i)$ 缩并出 $\mathbf{x}'\times\mathbf{J}$（即磁矩 $\mathbf{m}$）；对称张量 $\frac12(x'_i J_j + x'_j J_i)$ 经连续方程 $\nabla\cdot\mathbf{J}=i\omega\rho$ 化为 $\int\mathbf{x}'(\mathbf{n}\cdot\mathbf{x}')\rho$（即电四极）。</span></p>
 <p><span class="exp">「对称/反对称」是对 $\mathbf{x}'$ 与 $\mathbf{J}$ 两个矢量指标的张量分解：反对称张量 $\frac12(x'_i J_j - x'_j J_i)$ 缩并出 $\mathbf{x}'\times\mathbf{J}$（即磁矩 $\mathbf{m}$）；对称张量 $\frac12(x'_i J_j + x'_j J_i)$ 经连续方程 $\nabla\cdot\mathbf{J}=i\omega\rho$ 化为 $\int\mathbf{x}'(\mathbf{n}\cdot\mathbf{x}')\rho$（即电四极）。</span></p>
-</table>
+</table></div>
 
 <p><span class="exp">每升一阶，场被压低一个因子 $\sim kd\sim d/\lambda$。这是下一节三种辐射层级的根源。</span></p>
 
@@ -329,14 +394,14 @@ $$\mathbf{E}=-\frac{Z_0 k^2}{4\pi}(\mathbf{n}\times\mathbf{m})\frac{e^{ikr}}{r},
 功率
 $$\frac{dP}{d\Omega}=\frac{Z_0 k^4}{32\pi^2}|\mathbf{m}|^2\sin^2\theta,\qquad P=\frac{Z_0 k^4}{12\pi}|\mathbf{m}|^2.$$</span></p>
 
-<table>
+<div class="table-wrapper"><table>
 <tr><th>对比</th><th>电偶极 E1</th><th>磁偶极 M1</th></tr>
 <tr><td>矩</td><td>$\mathbf{p}=\int\mathbf{x}'\rho$</td><td>$\mathbf{m}=\frac12\int\mathbf{x}'\times\mathbf{J}$</td></tr>
 <tr><td>频率幂次</td><td>$P\propto\omega^4$</td><td>$P\propto\omega^4$（相同）</td></tr>
 <tr><td>角分布</td><td>$\sin^2\theta$</td><td>$\sin^2\theta$（相同）</td></tr>
 <tr><td>偏振</td><td>$\mathbf{E}$ 在 $\mathbf{n}$-$\mathbf{p}$ 面内</td><td>$\mathbf{E}\perp$ 该面（$\mathbf{E}\propto\mathbf{n}\times\mathbf{m}$）</td></tr>
 <tr><td>宏观强度</td><td>领头</td><td>被 $d/\lambda$ 压低</td></tr>
-</table>
+</table></div>
 
 <blockquote>易错：磁偶极辐射宏观上一般比电偶极小（被 $d/\lambda$ 因子压低），<strong>但量子体系中可显著</strong>——如中子磁矩明显不为零而电偶极矩几乎为零，此时磁偶极辐射主导。频率依赖与角分布同电偶极，唯<strong>偏振方向不同</strong>。</blockquote>
 
@@ -366,12 +431,12 @@ $$\frac{dP}{d\Omega}=\frac{c^2Z_0 k^6}{1152\pi^2}\big|[\mathbf{n}\times(\mathsf{
 
 <p><span class="exp"><strong>是什么·怎么用：</strong>把三种辐射并排，理解谁主导、随频率如何变化。</span></p>
 
-<table>
+<div class="table-wrapper"><table>
 <tr><th></th><th>电偶极 E1</th><th>磁偶极 M1</th><th>电四极 E2</th></tr>
 <tr><td>展开阶</td><td>领头</td><td>次级（反对称）</td><td>次级（对称）</td></tr>
 <tr><td>频率幂次</td><td>$\omega^4$</td><td>$\omega^4$</td><td>$\omega^6$</td></tr>
 <tr><td>宏观相对场强</td><td>$1$</td><td>$\sim d/\lambda$</td><td>$\sim d/\lambda$</td></tr>
-</table>
+</table></div>
 
 <p><span class="exp"><strong>为何如此。</strong>宏观远场：E1 领头；M1 与 E2 被同一因子 $(d/r)$ 或 $(d/\lambda)$ 压低，二者大致相当。这与长波展开 (kc5.4) 每阶差 $kd\sim d/\lambda$ 一致。微观（原子）情形：矩的起源是量子的，M1/E2 不一定比 E1 小，需具体分析（呼应 kc5.6 中子例子）。</span></p>
 
@@ -383,11 +448,11 @@ $$\frac{dP}{d\Omega}=\frac{c^2Z_0 k^6}{1152\pi^2}\big|[\mathbf{n}\times(\mathsf{
 
 <p><span class="exp"><strong>为什么需要它。</strong>kc5.4 的泰勒展开对低阶 OK，但高阶修正困难且不严格。系统办法是按球面波（角动量本征态）展开，得到「多极场展开」。先准备工具：格林函数的球面波展开 + 角动量算符。</span></p>
 
-<table>
+<div class="table-wrapper"><table>
 <tr><th>方法</th><th>展开基</th><th>适用</th></tr>
 <tr><td>泰勒展开 (kc5.4)</td><td>$\mathbf{x}'$ 的幂次</td><td>低阶 E1/M1/E2，直观</td></tr>
 <tr><td>多极场展开 (本节)</td><td>球面波 $j_l,h_l^{(1)}$、$Y_{lm}$</td><td>任意阶、严格、保留偏振信息</td></tr>
-</table>
+</table></div>
 
 <p><span class="exp"><strong>球面波加法定理。</strong></span><span class="kp">
 $$\frac{e^{ik|\mathbf{x}-\mathbf{x}'|}}{4\pi|\mathbf{x}-\mathbf{x}'|}=ik\sum_{l,m} j_l(kr_<)\,h_l^{(1)}(kr_>)\,Y_{lm}^*(\mathbf{n}')\,Y_{lm}(\mathbf{n}),$$
@@ -439,12 +504,12 @@ $$P=\frac{Z_0}{2k^2}\sum_{lm}\big[|a_E(l,m)|^2+|a_M(l,m)|^2\big].$$</span><span 
 
 <p><span class="exp"><strong>是什么。</strong>电磁波遇障碍物：障碍物受激后自身发射波叫<strong>散射</strong>；波绕过障碍物传播叫<strong>衍射</strong>（本章不涉及）。当散射者尺度 $\ll\lambda$，它感受到的入射场近似空间均匀、随时间谐振，于是感生 $\mathbf{p},\mathbf{m},\mathsf{D}$ 等，成为谐振辐射源（接回 §34）。</span></p>
 
-<table>
+<div class="table-wrapper"><table>
 <tr><th></th><th>散射</th><th>衍射</th></tr>
 <tr><td>机制</td><td>障碍物受激再辐射</td><td>波绕过障碍物传播</td></tr>
 <tr><td>典型尺度</td><td>散射者 $\ll\lambda$ 或相当</td><td>障碍/晶体与 $\lambda$ 可比</td></tr>
 <tr><td>本章</td><td>讨论</td><td>不涉及（见光学/固体物理）</td></tr>
-</table>
+</table></div>
 
 <p><span class="exp"><strong>怎么用：总场叠加 + 截面定义。</strong></span><span class="kp">入射平面波 $\mathbf{E}_{inc}=\mathbf{e}_0 E_0 e^{ik\mathbf{n}_0\cdot\mathbf{x}}$，总场 $\mathbf{E}=\mathbf{E}_{inc}+\mathbf{E}_{sc}$。入射能流 $S_0=|\mathbf{e}_0^*\cdot\mathbf{E}_{inc}|^2/(2Z_0)$。<strong>微分散射截面</strong>
 $$\frac{d\sigma}{d\Omega}(\mathbf{n},\mathbf{e};\mathbf{n}_0,\mathbf{e}_0)=\lim_{r\to\infty}r^2\,\frac{\frac{1}{2Z_0}|\mathbf{e}^*\cdot\mathbf{E}_{sc}|^2}{\frac{1}{2Z_0}|\mathbf{e}_0^*\cdot\mathbf{E}_{inc}|^2}.$$</span><span class="exp">即「单位入射能流被散射到方向 $\mathbf{n}$、偏振 $\mathbf{e}$ 的功率」，量纲为面积，故称截面；越大表示该方向/偏振散射越强。</span></p>
@@ -479,11 +544,11 @@ $$\frac{d\sigma_\parallel}{d\Omega}=k^4a^6\Big(\cos\theta-\frac12\Big)^2,\qquad 
 <p><span class="exp"><strong>是什么·怎么用：偏振度。</strong>非磁性介质球的两种偏振截面（例题 5.1）之差给出偏振度</span><span class="kp">
 $$\Pi(\theta)=\frac{\frac{d\sigma_\perp}{d\Omega}-\frac{d\sigma_\parallel}{d\Omega}}{\frac{d\sigma_\perp}{d\Omega}+\frac{d\sigma_\parallel}{d\Omega}}=\frac{1-\cos^2\theta}{1+\cos^2\theta}=\frac{\sin^2\theta}{1+\cos^2\theta}.$$</span></p>
 
-<table>
+<div class="table-wrapper"><table>
 <tr><th>$\theta$</th><th>$\Pi(\theta)$</th><th>含义</th></tr>
 <tr><td>$0,\pi$（前/后向）</td><td>$0$</td><td>完全非偏振</td></tr>
 <tr><td>$\pi/2$（垂直散射面）</td><td>$1$</td><td>完全偏振（沿垂直散射面方向）</td></tr>
-</table>
+</table></div>
 
 <p><span class="exp"><strong>为何如此。</strong>沿入射方向看，电场振动各向同性；散射到 $\theta=\pi/2$ 时只有垂直散射面的偏振分量能辐射到该方向（平行分量的偶极轴恰指向观测点，沿轴不辐射，$\cos^2\theta=0$）。这解释了天空漫散射光的偏振：用偏振片沿垂直太阳光方向观察天空，偏振度最大。</span></p>
 
@@ -504,11 +569,11 @@ $$\sigma_t=\sigma_{sc}+\sigma_{abs}=-\frac{\pi}{k^2}\sum_l(2l+1)\,\mathrm{Re}[\a
 
 <p><span class="exp"><strong>米氏散射。</strong>整个球（任意 $ka$）的严格散射即<strong>米氏散射</strong>（Mie, 1908）。长波极限 $ka\ll1$ 下 $l=1$ 项主导，每增 $l$ 压低 $(ka)^2$；$l=1$ 项与 §36.2 的偶极散射截面完全相同——偶极散射是米氏散射的长波极限。</span></p>
 
-<table>
+<div class="table-wrapper"><table>
 <tr><th></th><th>偶极/瑞利散射</th><th>米氏散射</th></tr>
 <tr><td>条件</td><td>$ka\ll1$，仅 $l=1$</td><td>任意 $ka$，全部 $l$</td></tr>
 <tr><td>$\sigma$ 频率依赖</td><td>$\propto\omega^4$</td><td>复杂，大球趋几何光学</td></tr>
-</table>
+</table></div>
 
 <blockquote>易错：经典电磁散射的分波公式 $\sigma_t=-\frac{\pi}{k^2}\sum(2l+1)\mathrm{Re}[\alpha+\beta]$ 与量子力学分波法形式完全相同（学过 QM 会觉得似曾相识），但这里 $\alpha,\beta$ 含电、磁两型多极，每个 $l$ 有两套相移 $\delta_l,\delta_l'$。</blockquote>
 
@@ -517,5 +582,29 @@ $$\sigma_t=\sigma_{sc}+\sigma_{abs}=-\frac{\pi}{k^2}\sum_l(2l+1)\,\mathrm{Re}[\a
 
 
 </div>
+
+<script>
+function toggleSidebar() {
+    const sidebar = document.querySelector('.sidebar');
+    const backdrop = document.querySelector('.sidebar-backdrop');
+    const btn = document.querySelector('.menu-toggle');
+    const isOpen = sidebar.classList.contains('open');
+    if (isOpen) {
+        sidebar.classList.remove('open');
+        backdrop.classList.remove('active');
+        btn.classList.remove('active');
+        document.body.style.overflow = '';
+    } else {
+        sidebar.classList.add('open');
+        backdrop.classList.add('active');
+        btn.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') toggleSidebar(); });
+document.querySelectorAll('.sidebar a').forEach(link => {
+    link.addEventListener('click', () => { if (window.innerWidth <= 768) toggleSidebar(); });
+});
+</script>
 </body>
 </html>

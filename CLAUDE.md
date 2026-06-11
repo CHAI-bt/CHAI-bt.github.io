@@ -73,9 +73,20 @@ Each page defines its own color scheme via CSS custom properties. The primary co
 - Comparison: `#059669` (green)
 - Flashcards: `#d97706` (amber)
 
+### Responsive Design (2026-06)
+
+- **Mobile breakpoint**: 768px — sidebar becomes off-canvas drawer, single-column layout
+- **Hamburger menu**: `.menu-toggle` button, animated three-line-to-X transformation
+- **Sidebar drawer**: `.sidebar` uses `position: fixed; transform: translateX(-100%)` on mobile, `.sidebar.open` slides in
+- **Backdrop**: `.sidebar-backdrop` overlay, click to close
+- **Tables**: wrapped in `.table-wrapper` for horizontal scrolling on mobile
+- **Touch**: flashcards support swipe gestures (touchstart/touchend)
+- **Close triggers**: Escape key, backdrop click, nav link click (mobile only)
+
 ### JavaScript Patterns
 
 - **Navigation**: `toggleSection()` for collapsible sidebar sections, `scrollToSection()` for smooth scrolling with active state tracking
+- **Sidebar drawer**: `toggleSidebar()` — toggles `.open`/`.active` classes, manages `body.overflow`
 - **Scroll spy**: Each page tracks scroll position to highlight the current section in the sidebar
 - **Flashcards**: `flashcardsData` array holds all Q&A pairs; cards are shuffled via Fisher-Yates; `MathJax.typesetPromise()` is called after each card update to re-render formulas
 
@@ -93,8 +104,12 @@ Each page defines its own color scheme via CSS custom properties. The primary co
 - `mechanics/index.html` — 理论力学主页
 - `mechanics/flashcards.html` — 闪卡复习（~470行）
 - `mechanics/compare.html` — 力学对比（唯一使用 `<table>` 的页面）
-- `epa/index.html` — 电动力学主页
-- `epa/ch4.html`, `epa/ch5.html`, `epa/ch6.html` — 电动力学各章入口页
+- `electrodynamics/index.html` — 电动力学主页
+- `electrodynamics/ch4.html`, `ch5.html`, `ch6.html` — 电动力学各章入口页
+- `electrodynamics/ch4-knowledge.html`, `ch4-test.html` — 第四章知识清单和测试
+- `electrodynamics/ch5-knowledge.html`, `ch5-test.html` — 第五章知识清单和测试
+- `electrodynamics/ch6-knowledge.html`, `ch6-test.html` — 第六章知识清单和测试
+- `electrodynamics/flashcards.html` — 电动力学闪卡复习
 
 ## Notes
 
@@ -102,5 +117,7 @@ Each page defines its own color scheme via CSS custom properties. The primary co
 - No CSS framework — all styles are hand-written in each file's `<style>` block
 - The `.gitignore` excludes the `.claude/` directory
 - Sidebar width is controlled by `--sidebar-width: 280px` (240px on narrow viewports)
-- 电动力学页面（epa/）使用纸质风格背景（`#fdf6e3`），理论力学页面使用现代白色风格
+- 电动力学页面（electrodynamics/）使用纸质风格背景（`#fdf6e3`），理论力学页面使用现代白色风格
+- 电动力学知识/测试页面使用 `position: fixed` 侧边栏 + `margin-left` 主内容区布局
+- 理论力学页面使用 `display: flex` 布局（侧边栏 + 主内容区）
 - 所有页面都有统一的侧边栏导航，支持响应式布局
