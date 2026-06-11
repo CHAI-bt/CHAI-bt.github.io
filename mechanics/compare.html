@@ -335,6 +335,7 @@
         .sidebar-backdrop.active { opacity: 1; }
 
         @media (max-width: 768px) {
+            body { overflow: auto; height: auto; min-height: 100vh; display: block; }
             .menu-toggle { display: flex; }
             .grid-2 { grid-template-columns: 1fr; }
             .sidebar {
@@ -348,7 +349,8 @@
                 transition: transform 0.3s ease;
             }
             .sidebar.open { transform: translateX(0); }
-            .sidebar-backdrop { display: block; }
+            .sidebar-backdrop.active { display: block; }
+            .main { min-height: 100vh; }
             .main-header { gap: 12px; flex-wrap: wrap; }
         }
 
