@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>经典电动力学（刘川） 第六章 运动带电粒子的辐射</title>
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\(', '\)']],
+    displayMath: [['$$', '$$'], ['\[', '\]']]
+  }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"></script>
+<style>
+/* === ExamPass Shared Styles === */
+/* Paper-like warm background, clean typography, responsive */
+
+:root {
+  --paper: #fdf6e3;
+  --paper-dark: #f5ecd7;
+  --ink: #2c2c2c;
+  --ink-light: #555;
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
+  --divider: #d6c8a8;
+  --card-bg: #fef9ef;
+  --card-border: #e8dcc8;
+  --correct: #22c55e;
+  --correct-bg: #f0fdf4;
+  --wrong: #ef4444;
+  --wrong-bg: #fef2f2;
+  --tag-bg: #fef3c7;
+  --tag-text: #92400e;
+  --radius: 6px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: "Microsoft YaHei", "Noto Sans SC", "SimSun", sans-serif;
+  font-size: 12pt; line-height: 1.75; color: var(--ink);
+  max-width: 860px; margin: auto; padding: 24px 20px 60px;
+  background: var(--paper);
+}
+
+@media print {
+  body { font-size: 10.5pt; background: #fff; }
+  .no-print { display: none !important; }
+  h1, h2, h3 { page-break-after: avoid; }
+}
+
+/* ── Header ── */
+#exampass-header {
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding: 6px 0; margin-bottom: 0;
+}
+.header-brand { font-size: 1.2em; font-weight: 700; color: #1a1a2e; letter-spacing: 0.3px; }
+.header-url  { font-size: 0.78em; color: #999; }
+.header-divider { border: none; border-top: 2px solid var(--divider); margin: 4px 0 20px 0; }
+
+/* ── Typography ── */
+h1 { font-size: 1.55em; text-align: center; border-bottom: 2px solid var(--divider); padding-bottom: 8px; margin-top: 0; }
+h2 { font-size: 1.25em; border-bottom: 1px solid var(--divider); padding-bottom: 4px; margin-top: 28px; }
+h3 { font-size: 1.08em; margin-top: 20px; color: var(--ink); }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ── Tables ── */
+table { border-collapse: collapse; width: 100%; margin: 10px 0; font-size: 0.95em; }
+td, th { border: 1px solid var(--card-border); padding: 5px 9px; text-align: left; }
+th { background: var(--paper-dark); font-weight: 700; }
+
+/* ── Knowledge point vs explanation ── */
+.kp { font-weight: 700; color: var(--ink); }           /* key point: bold dark */
+.exp { font-weight: 400; color: var(--ink-light); }    /* explanation: lighter */
+.exp em, .exp strong { color: var(--ink); }             /* emphasis inside explanation */
+
+/* ── Block elements ── */
+blockquote {
+  border-left: 3px solid #c0392b; background: #fef9ef;
+  padding: 6px 14px; margin: 10px 0; font-size: 0.95em;
+}
+code { background: #f0ede0; padding: 2px 5px; border-radius: 3px; font-size: 0.92em; }
+pre { background: #f0ede0; padding: 10px; border-radius: var(--radius); overflow-x: auto; }
+
+/* ── TOC ── */
+div.toc {
+  background: var(--card-bg); padding: 14px 18px;
+  border: 1px solid var(--card-border); border-radius: var(--radius); margin-bottom: 22px;
+}
+div.toc ul { padding-left: 18px; }
+div.toc li { margin: 3px 0; font-size: 0.95em; }
+
+/* ── Priority tags ── */
+.tag-must   { background: #fee2e2; color: #991b1b; padding: 1px 6px; border-radius: 3px; font-size: 0.82em; font-weight: 600; }
+.tag-key    { background: #fef3c7; color: #92400e; padding: 1px 6px; border-radius: 3px; font-size: 0.82em; font-weight: 600; }
+.tag-freq   { background: #dbeafe; color: #1e40af; padding: 1px 6px; border-radius: 3px; font-size: 0.82em; font-weight: 600; }
+.tag-info   { background: #f0fdf4; color: #166534; padding: 1px 6px; border-radius: 3px; font-size: 0.82em; font-weight: 600; }
+
+/* === Interactive Test Styles === */
+
+/* ── Score box ── */
+#score-box {
+  display: none; background: var(--paper-dark); color: var(--ink);
+  padding: 16px 20px; border-radius: var(--radius); margin: 14px 0;
+  text-align: center; border: 1px solid var(--card-border);
+}
+#score-box .score-num { font-size: 2.2em; font-weight: 700; }
+#score-box .score-label { font-size: 0.85em; color: var(--ink-light); }
+
+/* ── Question card ── */
+.q-card {
+  background: var(--card-bg); border: 1px solid var(--card-border);
+  border-radius: var(--radius); padding: 12px 14px; margin: 10px 0;
+  transition: all 0.15s;
+}
+.q-card.correct { border-left: 3px solid var(--correct); background: #f7fdf4; }
+.q-card.wrong   { border-left: 3px solid var(--wrong); background: #fef9f9; }
+
+.q-num  { font-weight: 700; font-size: 0.98em; margin-bottom: 4px; }
+.q-text { margin-bottom: 8px; font-size: 0.98em; }
+
+/* ── Options (compact) ── */
+.option {
+  display: block; padding: 4px 10px; margin: 3px 0;
+  border: 1px solid var(--card-border); border-radius: 4px;
+  cursor: pointer; transition: all 0.12s; font-size: 0.93em;
+  background: #fefcf5;
+}
+.option:hover            { background: #f0ede0; }
+.option input            { margin-right: 6px; }
+.option.selected         { border-color: var(--accent); background: #eff6ff; }
+.option.correct-answer   { border-color: var(--correct); background: var(--correct-bg); }
+.option.wrong-answer     { border-color: var(--wrong); background: var(--wrong-bg); }
+
+/* ── Textareas (compact) ── */
+.q-textarea {
+  width: 100%; min-height: 56px; border: 1px solid var(--card-border);
+  border-radius: 4px; padding: 6px 10px; font-family: inherit;
+  font-size: 0.93em; background: #fefcf5; resize: vertical;
+}
+.q-textarea:focus { outline: none; border-color: var(--accent); }
+.q-code {
+  font-family: "Consolas", "Monaco", "Courier New", monospace;
+  font-size: 0.88em; line-height: 1.5; background: #1e1e2e; color: #e0e0e0;
+  tab-size: 4; white-space: pre;
+}
+.q-code:focus { border-color: var(--accent); }
+
+/* ── Partial-credit badge ── */
+.badge-partial { background: #fef3c7; color: #92400e; }
+.q-card.partial { border-color: #f59e0b; }
+
+/* ── Result after grading ── */
+.result {
+  display: none; margin-top: 8px; padding: 8px 12px;
+  background: #fefcf5; border: 1px solid var(--card-border);
+  border-radius: 4px; font-size: 0.9em; line-height: 1.6;
+}
+.result .badge {
+  display: inline-block; padding: 1px 9px; border-radius: 3px;
+  font-weight: 700; font-size: 0.82em; margin-right: 6px;
+}
+.badge-ok  { background: var(--correct-bg); color: #166534; }
+.badge-no  { background: var(--wrong-bg); color: #991b1b; }
+.badge-ref { background: #dbeafe; color: #1e40af; }
+
+.result .explanation { margin-top: 4px; color: var(--ink); }
+.result .pitfall { color: #b45309; margin-top: 3px; font-size: 0.9em; }
+
+/* ── Grading button ── */
+.grading-bar { text-align: center; margin: 20px 0; }
+.grading-bar button {
+  font-size: 1em; padding: 8px 32px; background: var(--accent);
+  color: #fff; border: none; border-radius: var(--radius);
+  cursor: pointer; font-weight: 600; letter-spacing: 0.3px;
+}
+.grading-bar button:hover     { background: var(--accent-hover); }
+.grading-bar button:disabled  { background: #bbb; cursor: not-allowed; }
+
+</style>
+</head>
+<body>
+
+<header id="exampass-header">
+  <div class="header-left"><span class="header-brand">ExamPass Assistant</span></div>
+  <div class="header-right"><span class="header-url">github.com/WUBING2023/ExamPass-Assistant</span></div>
+</header>
+<hr class="header-divider">
+
+<p style="font-size:0.9em;color:var(--ink-light);margin-bottom:12px;">📚 <a href="../index.html">← 返回 CHAI 学习导航首页</a> &nbsp;|&nbsp; 📖 <a href="第六章 运动带电粒子的辐射-知识清单.html">知识清单</a></p>
+
+<h1>经典电动力学（刘川） 第六章 运动带电粒子的辐射</h1>
+<h2 style="text-align:center">章节测试</h2>
+<p style="text-align:center;color:var(--ink-light);font-size:0.95em">章节测试 · 满分 100 分 · 建议用时 90 分钟</p>
+
+<div id="score-box"><div class="score-num" id="score-num">0</div><div class="score-label">总分</div></div>
+<div id="questions-container"></div>
+<div class="grading-bar no-print"><button onclick="gradeAll()" id="grade-btn">提交批改</button></div>
+
+<script>
+var Q = [{"kc_id": "kc6.2", "cognitive_level": "understand", "difficulty": "basic", "type": "choice", "points": 3, "question": "运动带电粒子的李纳-维谢尔标势写为 $\\Phi=\\left[\\dfrac{e}{(1-\\boldsymbol\\beta\\cdot\\mathbf n)R}\\right]_{\\rm ret}$。关于分母因子 $(1-\\boldsymbol\\beta\\cdot\\mathbf n)$ 的来源，正确的是", "options": ["来自协变内积 $u\\cdot(x-r)=\\gamma R(1-\\boldsymbol\\beta\\cdot\\mathbf n)$，分子分母的 $\\gamma$ 约去后留下", "来自玻印廷矢量对立体角积分时的几何投影因子", "来自电荷在推迟时刻所受外场的多普勒频移修正", "来自加速度 $\\dot{\\boldsymbol\\beta}$ 沿观测方向的投影"], "answer": 0, "explanation": "<p>由 $A^\\mu=eu^\\mu/[u\\cdot(x-r)]$，用 $u^\\mu=(\\gamma,\\gamma\\boldsymbol\\beta)$、$(x-r)^\\mu=(R,R\\mathbf n)$ 得 $u\\cdot(x-r)=\\gamma R(1-\\boldsymbol\\beta\\cdot\\mathbf n)$，分子 $u^0=\\gamma$ 与之约去得 $\\Phi=e/[(1-\\boldsymbol\\beta\\cdot\\mathbf n)R]$。</p><p>选 B 把势的运动学因子与功率角分布里 $dt/dt'$ 的几何投影混淆（场景错配）；选 C 把发射端因子误当观测端多普勒（因果倒置）；选 D 把速度场因子误认成加速度投影（势不依赖 $\\dot{\\boldsymbol\\beta}$）。评分：协变内积来源+$\\gamma$ 约去。</p>", "pitfall": "把 $(1-\\boldsymbol\\beta\\cdot\\mathbf n)$ 误解为观测端多普勒因子。"}, {"kc_id": "kc6.4", "cognitive_level": "understand", "difficulty": "basic", "type": "choice", "points": 3, "question": "李纳-维谢尔场 $\\mathbf E$ 含 $\\dfrac{\\mathbf n-\\boldsymbol\\beta}{\\gamma^2(1-\\boldsymbol\\beta\\cdot\\mathbf n)^3R^2}$ 与 $\\dfrac{\\mathbf n\\times[(\\mathbf n-\\boldsymbol\\beta)\\times\\dot{\\boldsymbol\\beta}]}{(1-\\boldsymbol\\beta\\cdot\\mathbf n)^3R}$ 两项。对匀速直线运动的电荷，远处电场", "options": ["同时含 $1/R^2$ 与 $1/R$ 两项，且两项幅度相等", "只剩 $1/R$ 的辐射项", "只剩 $1/R^2$ 的速度场项", "场完全为零"], "answer": 2, "explanation": "<p>辐射项 $\\propto\\dot{\\boldsymbol\\beta}$。匀速 $\\dot{\\boldsymbol\\beta}=0$ 使辐射项严格为零，只剩 $1/R^2$ 速度场（即库仑场的相对论变换，例题6.1 验证）。</p><p>选 A 忽略 $\\dot{\\boldsymbol\\beta}=0$（条件遗漏）；选 B 把'有速度'当'有辐射'（概念混淆）；选 D 连静电场也删掉（步骤缺环）。评分：辐射项为零+速度场仍在。</p>", "pitfall": "误以为匀速电荷也辐射，或把速度场一并去掉。"}, {"kc_id": "kc6.6", "cognitive_level": "remember", "difficulty": "basic", "type": "choice", "points": 3, "question": "非相对论加速电荷（$\\beta\\ll1$）辐射的总功率（拉摩公式）为", "options": ["$P=\\dfrac{e^2|\\dot{\\mathbf v}|^2}{3c^3}$", "$P=\\dfrac{2e^2|\\dot{\\mathbf v}|^2}{3c^2}$", "$P=\\dfrac{2e^2|\\dot{\\mathbf v}|^4}{3c^3}$", "$P=\\dfrac{2e^2|\\dot{\\mathbf v}|^2}{3c^3}$"], "answer": 3, "explanation": "<p>$P=\\dfrac{2e^2}{3c^3}|\\dot{\\mathbf v}|^2$，由 $dP/d\\Omega=\\dfrac{e^2}{4\\pi c^3}|\\dot{\\mathbf v}|^2\\sin^2\\Theta$ 积分（$\\int\\sin^2\\Theta\\,d\\Omega=8\\pi/3$）得。</p><p>选 A 丢系数 2（角积分误为 $4\\pi/3$）；选 B 把 $c^3$ 写 $c^2$（量纲错）；选 C 加速度写四次方（与能量/截面混淆）。评分：系数 $2/3$、$c^3$、$|\\dot{\\mathbf v}|^2$。</p>", "pitfall": "丢失系数 2 或把 $c^3$ 写成 $c^2$。"}, {"kc_id": "kc6.8", "cognitive_level": "remember", "difficulty": "basic", "type": "choice", "points": 3, "question": "自由电子对低频电磁波散射的汤姆孙总截面为", "options": ["$\\sigma=\\dfrac{8\\pi}{3}\\dfrac{e^2}{mc^2}$", "$\\sigma=\\dfrac{8\\pi}{3}\\left(\\dfrac{e^2}{mc^2}\\right)^2$", "$\\sigma=\\dfrac{8\\pi}{3}\\left(\\dfrac{e^2}{mc^2}\\right)^4$", "$\\sigma=\\dfrac{4\\pi}{3}\\left(\\dfrac{e^2}{mc^2}\\right)^2$"], "answer": 1, "explanation": "<p>由 $\\dfrac{d\\sigma}{d\\Omega}=\\left(\\dfrac{e^2}{mc^2}\\right)^2\\dfrac{1+\\cos^2\\theta}{2}$ 积分（$\\int\\frac{1+\\cos^2\\theta}{2}d\\Omega=\\frac{8\\pi}{3}$）得 $\\sigma=\\frac{8\\pi}{3}r_0^2$。</p><p>选 A 漏掉平方（量纲错，截面应为面积）；选 C 误为四次方；选 D 角积分系数算错（漏 $\\cos^2\\theta$ 贡献的 $4\\pi/3$）。评分：$8\\pi/3$ 与 $(e^2/mc^2)^2$。</p>", "pitfall": "把 $r_0^2$ 写成 $r_0$ 或四次方，量纲不对。"}, {"kc_id": "kc6.13", "cognitive_level": "analyze", "difficulty": "medium", "type": "choice", "points": 3, "question": "在相同外加力（相同 $|d\\mathbf p/dt|$）下，环行加速器中粒子辐射功率相对直线加速器多出的因子是", "options": ["$\\gamma^4$", "$\\gamma$", "$\\gamma^2$", "$\\gamma^6$"], "answer": 2, "explanation": "<p>直线 $P=\\dfrac{2e^2}{3m^2c^3}(dp/dt)^2$；环行（$\\dot{\\boldsymbol\\beta}\\perp\\boldsymbol\\beta$）$P=\\dfrac{2e^2}{3m^2c^3}\\gamma^2(dp/dt)^2$。同样受力多 $\\gamma^2$。</p><p>选 D 把李纳公式总功率的 $\\gamma^6$（对应固定 $\\dot{\\boldsymbol\\beta}$）误用于固定 $dp/dt$ 的比较（场景错配）；选 A/B 幂次记错。评分：固定 $dp/dt$ 得 $\\gamma^2$。</p>", "pitfall": "把总功率的 $\\gamma^6$ 当成相同受力下的比值（应为 $\\gamma^2$）。"}, {"kc_id": "kc6.19", "cognitive_level": "apply", "difficulty": "medium", "type": "choice", "points": 3, "question": "一带电粒子以速度 $v$ 在折射率 $n=\\sqrt\\epsilon$ 的介质中匀速运动并产生切伦可夫辐射，辐射波前方向与运动方向夹角 $\\theta_C$ 满足", "options": ["$\\sin\\theta_C=\\dfrac{c}{v\\sqrt\\epsilon}$", "$\\cos\\theta_C=\\dfrac{v\\sqrt\\epsilon}{c}$", "$\\cos\\theta_C=\\dfrac{c}{v\\sqrt\\epsilon}$", "$\\tan\\theta_C=\\dfrac{c}{v\\sqrt\\epsilon}$"], "answer": 2, "explanation": "<p>$\\cos\\theta_C=\\dfrac{c}{v\\sqrt\\epsilon}=\\dfrac{1}{\\beta\\sqrt\\epsilon}$，要求 $\\beta\\sqrt\\epsilon\\ge1$ 才有实解。</p><p>选 A 把 cos 错成 sin（几何关系记反）；选 B 把分子分母颠倒（会给出 $>1$ 的非法余弦，因果倒置）；选 D 用 tan（混淆锥半顶角定义）。评分：$\\cos\\theta_C=c/(v\\sqrt\\epsilon)$ 且条件 $\\beta\\sqrt\\epsilon>1$。</p>", "pitfall": "颠倒分子分母得到大于 1 的余弦，或把 cos 写成 sin。"}, {"kc_id": "kc6.10", "cognitive_level": "analyze", "difficulty": "hard", "type": "choice", "points": 3, "question": "相对论性粒子辐射功率角分布 $\\dfrac{dP(t')}{d\\Omega}\\propto\\dfrac{|\\mathbf n\\times[(\\mathbf n-\\boldsymbol\\beta)\\times\\dot{\\boldsymbol\\beta}]|^2}{(1-\\boldsymbol\\beta\\cdot\\mathbf n)^5}$，分母为何是 5 次方而非 6 次方？", "options": ["场强平方给 $(1-\\boldsymbol\\beta\\cdot\\mathbf n)^{-6}$，再乘 $dt/dt'=(1-\\boldsymbol\\beta\\cdot\\mathbf n)$ 得 $-5$", "场强平方给 $(1-\\boldsymbol\\beta\\cdot\\mathbf n)^{-4}$，再乘 $dt/dt'$ 得 $-5$", "能流本身即 $(1-\\boldsymbol\\beta\\cdot\\mathbf n)^{-5}$，与 $dt/dt'$ 无关", "来自 $\\sin^2\\theta$ 积分，与 $(1-\\boldsymbol\\beta\\cdot\\mathbf n)$ 无关"], "answer": 0, "explanation": "<p>玻印廷矢量 $\\mathbf S\\propto E^2$，辐射场 $E\\propto(1-\\boldsymbol\\beta\\cdot\\mathbf n)^{-3}$ 给 $-6$；单位观测时间功率要乘雅可比 $dt/dt'=(1-\\boldsymbol\\beta\\cdot\\mathbf n)^{+1}$，净得 $-5$。</p><p>选 B 把场的幂次记成 $-2$（漏掉一次）；选 C 忽略 $dt/dt'$ 因子（最常见陷阱，会得 $-6$）；选 D 用非相对论结论。评分：场平方 $-6$ + 雅可比 $+1$。</p>", "pitfall": "忘记乘 $dt/dt'$ 雅可比，错写成 6 次方。"}, {"kc_id": "kc6.16", "cognitive_level": "understand", "difficulty": "medium", "type": "choice", "points": 3, "question": "极端相对论粒子做圆周运动（基频 $\\omega_0$），观测到的同步辐射临界频率 $\\omega_c$ 的标度关系为", "options": ["$\\omega_c\\sim\\omega_0\\gamma$", "$\\omega_c\\sim\\omega_0\\gamma^3$", "$\\omega_c\\sim\\omega_0\\gamma^{-3}$", "$\\omega_c\\sim\\omega_0\\gamma^6$"], "answer": 1, "explanation": "<p>辐射张角 $\\Delta\\theta\\sim1/\\gamma$，脉冲时间因「粒子追光」缩短为 $\\sim(a/c)\\gamma^{-3}$；由傅里叶对偶，频谱展宽到 $\\omega_c\\sim\\omega_0\\gamma^3$。</p><p>选 C 把脉冲时间缩短 $\\gamma^{-3}$ 误当频率标度（指数符号反，频宽是时间的倒数）；选 A 只记张角 $1/\\gamma$；选 D 把李纳 $\\gamma^6$ 张冠李戴。评分：脉冲短 $\\gamma^{-3}$ 推出频宽 $\\gamma^{+3}$。</p>", "pitfall": "把 $\\gamma^{-3}$（脉冲时间）误当频率标度，符号记反。"}, {"kc_id": "kc6.21", "cognitive_level": "understand", "difficulty": "medium", "type": "choice", "points": 3, "question": "关于亚伯拉罕-洛仑兹方程 $m(\\dot{\\mathbf v}-\\tau\\ddot{\\mathbf v})=\\mathbf F_{\\rm ext}$，下列说法**不正确**的是", "options": ["方程含加加速度 $\\ddot{\\mathbf v}$，超出通常牛顿力学二阶方程的框架", "即使 $\\mathbf F_{\\rm ext}=0$ 也存在随时间指数增长的发散解", "$\\tau=2e^2/(3mc^3)$ 是辐射阻尼的特征时间", "发散解是真实的物理解，描述粒子被辐射场持续加速", "处理上通常直接舍弃非物理的发散解"], "answer": 3, "explanation": "<p>发散解 $\\mathbf v\\propto e^{t/\\tau}$ 物理上荒谬（无外力却自我加速），是方程的病态产物，须舍弃，并非真实物理。</p><p>选项 A/B/C/E 均正确。选 D 把数学病态当物理（因果倒置）。注意本题为五选一的'不正确'题，否定词已标注。评分：识别发散解非物理。</p>", "pitfall": "误把 runaway 发散解当作真实物理过程。"}, {"kc_id": "kc6.24", "cognitive_level": "understand", "difficulty": "medium", "type": "choice", "points": 3, "question": "关于经典电子半径 $r_0=e^2/(mc^2)\\sim10^{-13}$ cm，正确的理解是", "options": ["它标志经典电动力学的适用下界；小于此尺度需用量子电动力学", "它是实验测得的电子真实几何半径", "它是电子的康普顿波长，决定电子的量子涨落", "它由不确定性原理 $\\Delta x\\Delta p\\ge\\hbar/2$ 直接给出"], "answer": 0, "explanation": "<p>点粒子极限下自能 $U\\sim e^2/a$ 线性发散；要求 $m_{\\rm em}=m$ 给出特征尺度 $r_0=e^2/(mc^2)$。经典电动力学只在 $\\gtrsim r_0$ 适用，以下需 QED。</p><p>选 B 把它当真实半径（电子是点粒子）；选 C 与康普顿波长 $\\hbar/mc$ 混淆（差一个精细结构常数）；选 D 误归因于不确定性原理。评分：适用极限+自能发散来源。</p>", "pitfall": "把 $r_0$ 当电子真实大小，或与康普顿波长混淆。"}, {"kc_id": "kc6.4", "cognitive_level": "understand", "difficulty": "basic", "type": "tf", "points": 2, "question": "做匀速直线运动的带电粒子不辐射电磁波。", "options": [], "answer": 0, "explanation": "<p>正确。辐射场 $\\propto\\dot{\\boldsymbol\\beta}$，匀速时 $\\dot{\\boldsymbol\\beta}=0$，辐射场为零，只剩不辐射的速度场（$1/R^2$）。</p>", "pitfall": "把'有速度'当成'有辐射'。"}, {"kc_id": "kc6.6", "cognitive_level": "understand", "difficulty": "basic", "type": "tf", "points": 2, "question": "拉摩公式表明，加速带电粒子的辐射功率正比于其速度的平方。", "options": [], "answer": 1, "explanation": "<p>错误。拉摩公式 $P=\\frac{2e^2}{3c^3}|\\dot{\\mathbf v}|^2$ 正比于<strong>加速度</strong>平方，与速度无关。</p>", "pitfall": "混淆速度与加速度。"}, {"kc_id": "kc6.18", "cognitive_level": "understand", "difficulty": "basic", "type": "tf", "points": 2, "question": "切伦可夫辐射可以在真空中发生，只要粒子速度足够大。", "options": [], "answer": 1, "explanation": "<p>错误。条件是 $\\beta\\sqrt\\epsilon>1$（速度超过介质中光速 $c/\\sqrt\\epsilon$）。真空 $\\epsilon=1$ 时需 $\\beta>1$，不可能，故只在介质中发生。</p>", "pitfall": "忽略条件中的 $\\sqrt\\epsilon$，误以为真空也行。"}, {"kc_id": "kc6.5", "cognitive_level": "understand", "difficulty": "medium", "type": "tf", "points": 2, "question": "非相对论加速电荷沿其加速度方向辐射最强。", "options": [], "answer": 1, "explanation": "<p>错误。角分布 $\\propto\\sin^2\\Theta$（$\\Theta$ 为与加速度夹角）：沿加速度方向（$\\Theta=0$）<strong>不辐射</strong>，垂直方向（$\\Theta=\\pi/2$）最强。</p>", "pitfall": "把甜甜圈方向图的强弱方向记反。"}, {"kc_id": "kc6.7", "cognitive_level": "understand", "difficulty": "medium", "type": "tf", "points": 2, "question": "带电粒子辐射的总功率是一个洛伦兹不变量。", "options": [], "answer": 0, "explanation": "<p>正确。能量与时间都是四矢量的零分量，二者之比 $P=dW/dt$ 在洛伦兹变换下不变——正是据此把拉摩公式协变推广为李纳公式。</p>", "pitfall": "误以为功率随参照系变化。"}, {"kc_id": "kc6.4", "cognitive_level": "remember", "difficulty": "basic", "type": "fill", "points": 2, "question": "李纳-维谢尔电场分为两项：速度场（广义库仑场）正比于 $1/R^{____}$，辐射场正比于 $1/R^{____}$。", "options": [], "answer": [["2", "2 次", "二"], ["1", "1 次", "一"]], "explanation": "<p>速度场 $\\propto\\dfrac{1}{\\gamma^2(1-\\boldsymbol\\beta\\cdot\\mathbf n)^3R^2}$ 即 $1/R^2$；辐射场 $\\propto\\dfrac{1}{(1-\\boldsymbol\\beta\\cdot\\mathbf n)^3R}$ 即 $1/R$。只有 $1/R$ 项辐射（$R^2E^2$ 不衰减）。</p>", "pitfall": "把两项的 $R$ 幂次记反；记住辐射场是慢衰减的 $1/R$。"}, {"kc_id": "kc6.10", "cognitive_level": "understand", "difficulty": "medium", "type": "fill", "points": 2, "question": "观测者时间与粒子辐射时间的关系为 $dt=$ ________ $\\cdot\\,dt'$（用 $\\boldsymbol\\beta,\\mathbf n$ 表示）。", "options": [], "answer": ["(1-β·n)", "1-\\boldsymbol\\beta\\cdot\\mathbf n", "(1-\\boldsymbol\\beta\\cdot\\mathbf n)", "1-β·n"], "explanation": "<p>$dt=(1-\\boldsymbol\\beta\\cdot\\mathbf n)dt'$：粒子在追自己发出的光，相邻信号到达被压缩。正是这个雅可比使相对论角分布分母从 $(1-\\boldsymbol\\beta\\cdot\\mathbf n)^6$ 变为 $^5$。</p>", "pitfall": "符号或方向记反；它是 $dt$ 比 $dt'$ 小（前向）。"}, {"kc_id": "kc6.16", "cognitive_level": "remember", "difficulty": "medium", "type": "fill", "points": 2, "question": "极端相对论粒子的同步辐射集中在瞬时切向附近的张角约 $\\Delta\\theta\\sim$ ________（用 $\\gamma$ 表示）。", "options": [], "answer": ["1/γ", "\\gamma^{-1}", "1/\\gamma", "γ^{-1}"], "explanation": "<p>$\\Delta\\theta\\sim1/\\gamma$。辐射被前向聚束到约 $1/\\gamma$ 的窄锥；观测者只在'光束扫过自己'时收到脉冲，这是同步辐射宽谱（$\\omega_c\\sim\\omega_0\\gamma^3$）的几何根源。</p>", "pitfall": "与脉冲时间缩短 $\\gamma^{-3}$ 混淆——张角是 $1/\\gamma$。"}, {"kc_id": "kc6.18", "cognitive_level": "remember", "difficulty": "basic", "type": "fill", "points": 2, "question": "带电粒子在介电常数为 $\\epsilon$ 的介质中产生切伦可夫辐射的条件是 $\\beta\\sqrt\\epsilon>$ ________。", "options": [], "answer": ["1"], "explanation": "<p>条件 $\\beta\\sqrt\\epsilon>1$，即粒子速度 $v>c/\\sqrt\\epsilon$（超过介质中光速）。真空 $\\epsilon=1$ 时需 $\\beta>1$，不可能，故只在介质中发生。</p>", "pitfall": "忽略 $\\sqrt\\epsilon$，误以为 $\\beta>1$（违反相对论）。"}, {"kc_id": "kc6.23", "cognitive_level": "remember", "difficulty": "medium", "type": "fill", "points": 2, "question": "亚伯拉罕-洛仑兹模型中，由电磁自能 $U_{\\rm self}$ 定义的电子电磁质量 $m_{\\rm em}=$ ________。", "options": [], "answer": ["U_self/c^2", "U_{\\rm self}/c^2", "U_self/c²", "U_{self}/c^2"], "explanation": "<p>$m_{\\rm em}=U_{\\rm self}/c^2$，与爱因斯坦质能关系相容。展开式 $n=0$ 项给出正比于加速度的自能贡献，由此定义电磁质量（系数 $4/3$ 为非协变处理的人为产物）。</p>", "pitfall": "忘记除以 $c^2$；或与 $4/3$ 因子混淆（$4/3$ 非物理）。"}, {"kc_id": "kc6.6", "cognitive_level": "apply", "difficulty": "medium", "type": "calc", "points": 8, "question": "已知非相对论加速电荷的辐射功率角分布 $\\dfrac{dP}{d\\Omega}=\\dfrac{e^2}{4\\pi c^3}|\\dot{\\mathbf v}|^2\\sin^2\\Theta$（$\\Theta$ 为观测方向与加速度的夹角）。请对立体角积分，导出拉摩公式，并说明结果与速度方向无关的原因。", "options": [], "answer": -1, "explanation": "<p><strong>解</strong>：取加速度为极轴，$d\\Omega=\\sin\\Theta\\,d\\Theta\\,d\\phi$。</p><p>$P=\\dfrac{e^2|\\dot{\\mathbf v}|^2}{4\\pi c^3}\\displaystyle\\int_0^{2\\pi}d\\phi\\int_0^\\pi\\sin^2\\Theta\\sin\\Theta\\,d\\Theta$。</p><p>其中 $\\int_0^\\pi\\sin^3\\Theta\\,d\\Theta=\\dfrac{4}{3}$，$\\int_0^{2\\pi}d\\phi=2\\pi$，故立体角积分 $=\\dfrac{8\\pi}{3}$。</p><p>$\\Rightarrow P=\\dfrac{e^2|\\dot{\\mathbf v}|^2}{4\\pi c^3}\\cdot\\dfrac{8\\pi}{3}=\\boxed{\\dfrac{2e^2}{3c^3}|\\dot{\\mathbf v}|^2}$。</p><p>角分布只依赖与加速度的夹角 $\\Theta$，积分后只剩 $|\\dot{\\mathbf v}|^2$，故与速度方向无关（非相对论近似下 $(1-\\boldsymbol\\beta\\cdot\\mathbf n)\\to1$ 已抹去速度依赖）。</p><p><strong>评分要点</strong>：写出 $d\\Omega$ 与积分（2分）；$\\int\\sin^3=4/3$（2分）；得 $8\\pi/3$ 与最终系数 $2/3$（3分）；解释与速度无关（1分）。</p>", "pitfall": "把 $\\int\\sin^3\\Theta\\,d\\Theta$ 误算为 $\\pi/2$ 或忘记 $\\sin\\Theta$ 雅可比。"}, {"kc_id": "kc6.7", "cognitive_level": "apply", "difficulty": "hard", "type": "calc", "points": 8, "question": "辐射总功率是洛伦兹不变量。已知非相对论拉摩公式可写为 $P=\\dfrac{2}{3}\\dfrac{e^2}{m^2c^3}\\dfrac{d\\mathbf p}{dt}\\cdot\\dfrac{d\\mathbf p}{dt}$。请给出其协变推广（用 $dp^\\mu/d\\tau$），并化简为用 $\\boldsymbol\\beta,\\dot{\\boldsymbol\\beta},\\gamma$ 表示的李纳公式。", "options": [], "answer": -1, "explanation": "<p><strong>解</strong>：把三维 $\\dfrac{d\\mathbf p}{dt}\\cdot\\dfrac{d\\mathbf p}{dt}$ 升级为洛伦兹标量 $-\\dfrac{dp^\\mu}{d\\tau}\\dfrac{dp_\\mu}{d\\tau}$（号差 $+---$，空间部分主导取负号保正）：</p><p>$P=-\\dfrac{2}{3}\\dfrac{e^2}{m^2c^3}\\dfrac{dp^\\mu}{d\\tau}\\dfrac{dp_\\mu}{d\\tau}$。</p><p>用 $p^\\mu=m c\\,u^\\mu$，$u^\\mu=(\\gamma,\\gamma\\boldsymbol\\beta)$，$\\dfrac{d}{d\\tau}=\\gamma\\dfrac{d}{dt}$，代入并整理得</p><p>$\\boxed{P=\\dfrac{2e^2}{3c}\\gamma^6\\left[(\\dot{\\boldsymbol\\beta})^2-(\\boldsymbol\\beta\\times\\dot{\\boldsymbol\\beta})^2\\right]}$。</p><p>验证：$\\beta\\to0$ 时 $\\gamma\\to1$、第二项消失，$P\\to\\frac{2e^2}{3c}\\dot{\\boldsymbol\\beta}^2=\\frac{2e^2}{3c^3}\\dot{\\mathbf v}^2$，回到拉摩公式。</p><p><strong>评分要点</strong>：写出协变标量形式 $dp^\\mu/d\\tau$（3分）；正确代入 $\\gamma$ 与 $d/d\\tau=\\gamma d/dt$（2分）；得 $\\gamma^6[(\\dot{\\boldsymbol\\beta})^2-(\\boldsymbol\\beta\\times\\dot{\\boldsymbol\\beta})^2]$（2分）；非相对论极限验证（1分）。</p>", "pitfall": "号差用错导致功率为负；或漏掉 $d/d\\tau=\\gamma\\,d/dt$ 的 $\\gamma$。"}, {"kc_id": "kc6.8", "cognitive_level": "apply", "difficulty": "medium", "type": "calc", "points": 7, "question": "已知自由电子对电磁波的非极化微分散射截面 $\\dfrac{d\\sigma}{d\\Omega}=\\left(\\dfrac{e^2}{mc^2}\\right)^2\\dfrac{1+\\cos^2\\theta}{2}$。求总散射截面 $\\sigma_T$，并用经典电子半径 $r_0$ 表示。", "options": [], "answer": -1, "explanation": "<p><strong>解</strong>：$\\sigma_T=\\left(\\dfrac{e^2}{mc^2}\\right)^2\\displaystyle\\int\\dfrac{1+\\cos^2\\theta}{2}d\\Omega$。</p><p>$\\int d\\Omega=4\\pi$；$\\int\\cos^2\\theta\\,d\\Omega=2\\pi\\int_{-1}^{1}\\cos^2\\theta\\,d(\\cos\\theta)=2\\pi\\cdot\\dfrac23=\\dfrac{4\\pi}{3}$。</p><p>故 $\\int\\dfrac{1+\\cos^2\\theta}{2}d\\Omega=\\dfrac12\\left(4\\pi+\\dfrac{4\\pi}{3}\\right)=\\dfrac{8\\pi}{3}$。</p><p>$\\Rightarrow\\sigma_T=\\dfrac{8\\pi}{3}\\left(\\dfrac{e^2}{mc^2}\\right)^2=\\boxed{\\dfrac{8\\pi}{3}r_0^2}$，其中 $r_0=e^2/(mc^2)$。</p><p><strong>评分要点</strong>：$\\int d\\Omega=4\\pi$ 与 $\\int\\cos^2\\theta\\,d\\Omega=4\\pi/3$（3分）；合得 $8\\pi/3$（2分）；用 $r_0^2$ 表示（2分）。</p>", "pitfall": "$\\int\\cos^2\\theta\\,d\\Omega$ 漏掉方位角 $2\\pi$ 或把 $\\int_{-1}^1\\cos^2=2/3$ 算错。"}, {"kc_id": "kc6.20", "cognitive_level": "apply", "difficulty": "medium", "type": "calc", "points": 7, "question": "(1) 由「特征时间 $\\tau$ 内获得的动能与辐射掉的能量相当」估出辐射阻尼特征时间 $\\tau$ 的表达式。(2) 代入电子数据估算 $\\tau$ 的数量级及对应空间尺度 $c\\tau$，并指出它与什么尺度相当。", "options": [], "answer": -1, "explanation": "<p><strong>(1)</strong> 时间 $\\tau$ 内动能 $\\Delta E_K\\sim m(a\\tau)^2$；辐射能 $\\sim P_{\\rm Larmor}\\cdot\\tau=\\dfrac{2e^2a^2}{3c^3}\\tau$。令二者相当：$m(a\\tau)^2\\sim\\dfrac{2e^2a^2}{3c^3}\\tau$，约去 $a^2\\tau$ 得 $\\boxed{\\tau=\\dfrac{2e^2}{3mc^3}}$。</p><p><strong>(2)</strong> 代入电子 $e,m$：$\\tau\\sim6.26\\times10^{-24}$ s；对应尺度 $c\\tau\\sim10^{-13}$ cm。这与<strong>经典电子半径</strong> $r_0=e^2/(mc^2)$ 同量级（也是原子核尺度）。</p><p><strong>评分要点</strong>：能量平衡式建立（2分）；解出 $\\tau=2e^2/3mc^3$（2分）；数值 $\\sim10^{-24}$ s（1分）；尺度 $c\\tau\\sim10^{-13}$ cm（1分）；指出与经典电子半径相当（1分）。</p>", "pitfall": "约去时漏掉 $a^2$；或把 $c\\tau$ 与康普顿波长混淆。"}, {"kc_id": "kc6.4", "cognitive_level": "understand", "difficulty": "medium", "type": "short", "points": 6, "question": "李纳-维谢尔电场分为「速度场」与「加速度场」两项。请分别写出它们对距离 $R$ 的依赖，并解释为什么只有加速度场对应真正的辐射（能量被送到无穷远）。", "options": [], "answer": -1, "explanation": "<p><strong>参考答案</strong>：</p><p>速度场 $\\propto\\dfrac{\\mathbf n-\\boldsymbol\\beta}{\\gamma^2(1-\\boldsymbol\\beta\\cdot\\mathbf n)^3R^2}$，即 $\\propto1/R^2$，只含 $\\boldsymbol\\beta$ 不含加速度；加速度场 $\\propto\\dfrac{\\mathbf n\\times[(\\mathbf n-\\boldsymbol\\beta)\\times\\dot{\\boldsymbol\\beta}]}{(1-\\boldsymbol\\beta\\cdot\\mathbf n)^3R}$，即 $\\propto1/R$ 且 $\\propto\\dot{\\boldsymbol\\beta}$。</p><p>辐射判据：通过半径 $R$ 球面的功率 $\\sim R^2\\cdot S\\sim R^2\\cdot E^2$。速度场 $E^2\\propto1/R^4$，功率 $\\propto1/R^2\\to0$（近场，能量束缚在粒子周围）；加速度场 $E^2\\propto1/R^2$，功率 $\\propto R^0$ 为有限常数，能量真正传到无穷远——这才是辐射。故只有正比于加速度的那一项辐射。</p><p><strong>评分要点</strong>：两项的 $1/R^2$ 与 $1/R$ 依赖（2分）；指出辐射场含 $\\dot{\\boldsymbol\\beta}$（1分）；用 $R^2E^2$ 的功率判据论证（3分）。</p>", "pitfall": "只说'加速度场辐射'而不给 $R^2E^2$ 不衰减的论证。"}, {"kc_id": "kc6.21, kc6.23, kc6.24", "cognitive_level": "analyze", "difficulty": "hard", "type": "comprehensive", "points": 14, "question": "辐射阻尼问题最终揭示了经典电动力学的适用极限。请完成以下分析：(1) 由能量守恒导出辐射阻尼力 $\\mathbf F_{\\rm rad}$ 的表达式，并写出亚伯拉罕-洛仑兹方程；(2) 说明该方程为何出现「发散解(runaway)」，物理上如何处理；(3) 在亚伯拉罕-洛仑兹模型中，电子自能 $U_{\\rm self}$ 在点粒子极限 $a\\to0$ 下如何发散？由此定义的经典电子半径 $r_0$ 是多少？(4) 综合说明经典电动力学的适用尺度极限，以及在更小尺度需要什么理论。", "options": [], "answer": -1, "explanation": "<p><strong>参考答案</strong>：</p><p><strong>(1)</strong> 要求阻尼力做功等于辐射能：$\\int\\mathbf F_{\\rm rad}\\cdot\\mathbf v\\,dt=-\\int\\frac{2e^2}{3c^3}\\dot{\\mathbf v}\\cdot\\dot{\\mathbf v}\\,dt$，分部积分取 $\\mathbf F_{\\rm rad}=\\dfrac{2e^2}{3c^3}\\ddot{\\mathbf v}=m\\tau\\ddot{\\mathbf v}$。代入牛顿方程得亚伯拉罕-洛仑兹方程 $\\boxed{m(\\dot{\\mathbf v}-\\tau\\ddot{\\mathbf v})=\\mathbf F_{\\rm ext}}$，$\\tau=2e^2/(3mc^3)$。</p><p><strong>(2)</strong> 方程含加加速度 $\\ddot{\\mathbf v}$（三阶）。即使 $\\mathbf F_{\\rm ext}=0$，存在解 $\\mathbf v\\propto e^{t/\\tau}$ 随时间指数暴涨（自我加速），非物理。原因：积分式与微分式经分部积分后不严格等价（边界项）。处理：直接舍弃发散解，因讨论仅在辐射阻尼为小修正时有效。</p><p><strong>(3)</strong> 自能 $U_{\\rm self}=\\frac12\\iint\\frac{\\rho\\rho'}{R}d^3xd^3x'\\sim e^2/a$，当 $a\\to0$ 按 $1/a$ 线性发散。若要求电磁质量 $m_{\\rm em}=U_{\\rm self}/c^2$ 等于实测电子质量 $m$，则需非零尺度 $r_0=\\dfrac{e^2}{mc^2}\\approx2.8\\times10^{-13}$ cm。</p><p><strong>(4)</strong> 经典电动力学只在 $\\gtrsim r_0$ 尺度适用；在 $r_0$ 以下自能发散无法克服，必须用量子电动力学(QED)。QED 中自能仍发散但缓和为对数发散，经重整化彻底解决。（补充：经典模型还有 $4/3$ 电磁质量问题，源于非协变处理，相对论正确处理给系数 1。）</p><p><strong>评分要点</strong>：(1) 能量守恒导出 $F_{\\rm rad}=m\\tau\\ddot{\\mathbf v}$ 与 A-L 方程（4分）；(2) 发散解成因与处理（3分）；(3) 自能 $1/a$ 线性发散与 $r_0=e^2/mc^2$（4分）；(4) 适用极限与 QED/重整化（3分）。</p>", "pitfall": "把 $r_0$ 当电子真实半径；或误以为发散解是物理过程；或漏掉'线性发散'与 QED 中'对数发散'的区别。"}];
+var LABELS = {"page_title": "章节测试", "section": {"choice": "一、选择题", "multi": "二、多选题", "tf": "三、判断题", "fill": "四、填空题", "short": "五、简答题", "calc": "六、计算题", "code": "七、代码题", "essay": "八、问答题", "comprehensive": "九、综合题"}, "section_order": ["choice", "multi", "tf", "fill", "short", "calc", "code", "essay", "comprehensive"], "points_suffix": "分", "true_label": "正确", "false_label": "错误", "placeholder": "在此作答...", "code_placeholder": "在此编写代码...", "pitfall_prefix": "易错提醒：", "correct_label": "正确", "wrong_label": "错误", "partial_label": "部分正确", "answer_prefix": "正确答案：", "reference_label": "参考答案", "graded_label": "已批改", "grade_button": "提交批改", "score_label": "总分", "duration_prefix": "满分 100 分 | 建议 ", "duration_suffix": " 分钟 | 选择答案后点击提交批改"};
+
+// ─── Answer normalization (robust to how the JSON was authored) ──────
+// tf / choice answers may arrive as int index, boolean, letter ("A"),
+// or label string ("正确"/"错误"/"对"/"错"). All are coerced to an
+// option index so grading never silently fails on a type mismatch.
+
+function tfAnswerIndex(ans) {
+  // option 0 = true_label (正确), option 1 = false_label (错误)
+  if (typeof ans === 'boolean') return ans ? 0 : 1;
+  if (typeof ans === 'number') return ans === 0 ? 0 : 1;
+  var s = ('' + ans).trim().toLowerCase();
+  var truthy = ['0', 't', 'true', '正确', '对', '是', 'yes', 'y', '√', '✓'];
+  var falsy  = ['1', 'f', 'false', '错误', '错', '否', 'no', 'n', '×', 'x'];
+  if (truthy.indexOf(s) !== -1) return 0;
+  if (falsy.indexOf(s) !== -1) return 1;
+  return ans ? 0 : 1;
+}
+
+function choiceAnswerIndex(ans, options) {
+  if (typeof ans === 'number') return ans;
+  var s = ('' + ans).trim();
+  if (/^[A-Za-z]$/.test(s)) return s.toUpperCase().charCodeAt(0) - 65;
+  if (/^\d+$/.test(s)) return parseInt(s, 10);
+  if (options) {
+    for (var i = 0; i < options.length; i++) {
+      if (('' + options[i]).trim() === s) return i;
+    }
+  }
+  return parseInt(s, 10);
+}
+
+function multiAnswerSet(ans, options) {
+  var arr = Array.isArray(ans) ? ans : [ans];
+  var set = {};
+  for (var i = 0; i < arr.length; i++) {
+    set[choiceAnswerIndex(arr[i], options)] = true;
+  }
+  return set;
+}
+
+// Normalize free text for fill-in-the-blank comparison: trim, lowercase,
+// drop surrounding whitespace and common punctuation, unify full/half width.
+function normText(s) {
+  s = ('' + s).trim().toLowerCase();
+  s = s.replace(/[\s　]+/g, '');
+  s = s.replace(/[.,;:!?。，、；：！？“”"'（）()【】\[\]<>《》]/g, '');
+  // full-width ASCII -> half-width
+  s = s.replace(/[！-～]/g, function (c) {
+    return String.fromCharCode(c.charCodeAt(0) - 0xfee0);
+  });
+  return s;
+}
+
+// How many blanks does a fill question have? Count underscore / ＿ runs.
+function fillBlankCount(question) {
+  var m = ('' + question).match(/(_{2,}|＿+)/g);
+  return m ? m.length : 0;
+}
+
+// Coerce a fill `answer` into an array (one entry per blank) of accepted
+// answer lists. Handles: string, [synonyms], [[blank1 syns],[blank2 syns]].
+function fillBlankAnswers(ans, nBlanks) {
+  if (nBlanks < 1) nBlanks = 1;
+  if (!Array.isArray(ans)) return padBlanks([[ans]], nBlanks);
+  if (ans.length && Array.isArray(ans[0])) return padBlanks(ans, nBlanks);
+  // flat array of strings
+  if (nBlanks === 1) return [ans];                 // synonyms for one blank
+  if (ans.length === nBlanks) {                    // one answer per blank
+    return ans.map(function (a) { return [a]; });
+  }
+  return padBlanks([ans], nBlanks);                // ambiguous -> all on blank 1
+}
+
+function padBlanks(arr, n) {
+  var out = arr.slice(0, n);
+  while (out.length < n) out.push(['']);
+  return out;
+}
+
+// ─── Build ───────────────────────────────────────────────────────────
+
+function build() {
+  var container = document.getElementById('questions-container');
+  if (!container) { console.error('ExamPass: questions-container not found'); return; }
+
+  // Stable-sort questions by section order so headings group correctly
+  // regardless of input order.
+  var order = LABELS.section_order || [];
+  Q.forEach(function (q, i) { q._i = i; });
+  Q.sort(function (a, b) {
+    var oa = order.indexOf(a.type); if (oa === -1) oa = 99;
+    var ob = order.indexOf(b.type); if (ob === -1) ob = 99;
+    return oa - ob || a._i - b._i;
+  });
+
+  var h = '';
+  var sec = '';
+  var titles = LABELS.section;
+
+  for (var i = 0; i < Q.length; i++) {
+    var q = Q[i];
+    if (q.type !== sec) {
+      sec = q.type;
+      if (titles[q.type]) h += '<h3>' + titles[q.type] + '</h3>';
+    }
+
+    var qid = 'q' + i;
+    h += '<div class="q-card" id="card-' + qid + '">';
+    h += '<div class="q-num">' + (i + 1) + '. (' + q.points + ' ' + LABELS.points_suffix + ')</div>';
+
+    if (q.type === 'fill') {
+      h += '<div class="q-text">' + renderFill(q, qid) + '</div>';
+    } else {
+      h += '<div class="q-text">' + q.question + '</div>';
+    }
+
+    if (q.type === 'choice') {
+      var opts = q.options || [];
+      for (var j = 0; j < opts.length; j++) {
+        h += '<label class="option" id="opt-' + qid + '-' + j + '" onclick="sel(\'' + qid + '\',' + j + ')">';
+        h += '<input type="radio" name="' + qid + '" value="' + j + '">' + String.fromCharCode(65 + j) + '. ' + opts[j] + '</label>';
+      }
+    } else if (q.type === 'multi') {
+      var mopts = q.options || [];
+      for (var k = 0; k < mopts.length; k++) {
+        h += '<label class="option" id="opt-' + qid + '-' + k + '" onclick="toggle(\'' + qid + '\',' + k + ')">';
+        h += '<input type="checkbox" name="' + qid + '" value="' + k + '">' + String.fromCharCode(65 + k) + '. ' + mopts[k] + '</label>';
+      }
+    } else if (q.type === 'tf') {
+      h += '<label class="option" id="opt-' + qid + '-0" onclick="sel(\'' + qid + '\',0)">';
+      h += '<input type="radio" name="' + qid + '" value="0">' + LABELS.true_label + '</label>';
+      h += '<label class="option" id="opt-' + qid + '-1" onclick="sel(\'' + qid + '\',1)">';
+      h += '<input type="radio" name="' + qid + '" value="1">' + LABELS.false_label + '</label>';
+    } else if (q.type === 'fill') {
+      // inputs already rendered inline inside q-text
+    } else if (q.type === 'code') {
+      h += '<textarea class="q-textarea q-code" id="text-' + qid + '" placeholder="' + (LABELS.code_placeholder || LABELS.placeholder) + '" rows="8" spellcheck="false"></textarea>';
+    } else {
+      h += '<textarea class="q-textarea" id="text-' + qid + '" placeholder="' + LABELS.placeholder + '" rows="3"></textarea>';
+    }
+
+    h += '<div class="result" id="result-' + qid + '">';
+    h += '<span class="badge" id="badge-' + qid + '"></span><span id="correct-' + qid + '"></span>';
+    h += '<div class="explanation">' + (q.explanation || '') + '</div>';
+    if (q.pitfall) {
+      h += '<div class="pitfall">' + LABELS.pitfall_prefix + q.pitfall + '</div>';
+    }
+    h += '</div></div>';
+  }
+
+  container.innerHTML = h;
+
+  if (window.MathJax && MathJax.typesetPromise) {
+    MathJax.typesetPromise([container]).catch(function (err) {
+      console.error('MathJax typeset error:', err);
+    });
+  }
+}
+
+// Render fill question text with inline <input> boxes replacing blanks.
+function renderFill(q, qid) {
+  var nBlanks = fillBlankCount(q.question);
+  var k = 0;
+  var html = ('' + q.question).replace(/(_{2,}|＿+)/g, function () {
+    var inp = '<input type="text" class="fill-input" id="fill-' + qid + '-' + k + '" autocomplete="off" spellcheck="false">';
+    k++;
+    return inp;
+  });
+  if (k === 0) {
+    // No markers in text -> append boxes based on answer shape
+    var n = fillBlankAnswers(q.answer, 1).length;
+    var ans = q.answer;
+    if (Array.isArray(ans)) n = Array.isArray(ans[0]) ? ans.length : (ans.length || 1);
+    if (n < 1) n = 1;
+    html += '<div class="fill-row">';
+    for (var b = 0; b < n; b++) {
+      if (n > 1) html += '<span class="fill-tag">' + (b + 1) + '.</span>';
+      html += '<input type="text" class="fill-input" id="fill-' + qid + '-' + b + '" autocomplete="off" spellcheck="false">';
+    }
+    html += '</div>';
+  }
+  return html;
+}
+
+document.addEventListener('DOMContentLoaded', build);
+if (document.readyState === 'interactive' || document.readyState === 'complete') {
+  build();
+}
+
+// ─── Selection handlers ──────────────────────────────────────────────
+
+function sel(qid, idx) {
+  var prefix = 'opt-' + qid + '-';
+  var all = document.querySelectorAll('[id^="' + prefix + '"]');
+  for (var i = 0; i < all.length; i++) all[i].classList.remove('selected');
+  var target = document.getElementById('opt-' + qid + '-' + idx);
+  if (target) target.classList.add('selected');
+  var radio = document.querySelector('input[name="' + qid + '"][value="' + idx + '"]');
+  if (radio) radio.checked = true;
+}
+
+function toggle(qid, idx) {
+  var box = document.querySelector('input[name="' + qid + '"][value="' + idx + '"]');
+  var label = document.getElementById('opt-' + qid + '-' + idx);
+  if (!box) return;
+  box.checked = !box.checked;
+  if (label) label.classList.toggle('selected', box.checked);
+}
+
+// ─── Grading ─────────────────────────────────────────────────────────
+
+function gradeAll() {
+  var score = 0;
+  for (var i = 0; i < Q.length; i++) {
+    var q = Q[i];
+    var qid = 'q' + i;
+    var card = document.getElementById('card-' + qid);
+    var result = document.getElementById('result-' + qid);
+    var badge = document.getElementById('badge-' + qid);
+    var correctEl = document.getElementById('correct-' + qid);
+    if (!card || !result) continue;
+
+    result.style.display = 'block';
+
+    if (q.type === 'choice' || q.type === 'tf') {
+      score += gradeSingle(q, qid, card, badge, correctEl);
+    } else if (q.type === 'multi') {
+      score += gradeMulti(q, qid, card, badge, correctEl);
+    } else if (q.type === 'fill') {
+      score += gradeFill(q, qid, card, badge, correctEl);
+    } else {
+      card.classList.add('correct');
+      badge.className = 'badge badge-ref';
+      badge.textContent = LABELS.reference_label;
+    }
+  }
+
+  var sb = document.getElementById('score-box');
+  if (sb) {
+    sb.style.display = 'block';
+    document.getElementById('score-num').textContent = roundScore(score);
+    sb.scrollIntoView({ behavior: 'smooth' });
+  }
+
+  var opts = document.querySelectorAll('.option');
+  for (var a = 0; a < opts.length; a++) opts[a].style.pointerEvents = 'none';
+  var tas = document.querySelectorAll('.q-textarea');
+  for (var b = 0; b < tas.length; b++) tas[b].disabled = true;
+  var fis = document.querySelectorAll('.fill-input');
+  for (var c = 0; c < fis.length; c++) fis[c].disabled = true;
+
+  var btn = document.getElementById('grade-btn');
+  if (btn) { btn.disabled = true; btn.textContent = LABELS.graded_label; }
+
+  if (window.MathJax && MathJax.typesetPromise) {
+    MathJax.typesetPromise().catch(function (err) {
+      console.error('MathJax typeset error:', err);
+    });
+  }
+}
+
+function roundScore(s) {
+  return Math.round(s * 10) / 10;
+}
+
+function gradeSingle(q, qid, card, badge, correctEl) {
+  var ansIdx = q.type === 'tf' ? tfAnswerIndex(q.answer) : choiceAnswerIndex(q.answer, q.options);
+  var radio = document.querySelector('input[name="' + qid + '"]:checked');
+  if (radio && parseInt(radio.value, 10) === ansIdx) {
+    card.classList.add('correct');
+    badge.className = 'badge badge-ok';
+    badge.textContent = LABELS.correct_label;
+    correctEl.innerHTML = '';
+    var ok = document.getElementById('opt-' + qid + '-' + ansIdx);
+    if (ok) ok.classList.add('correct-answer');
+    return q.points;
+  }
+  card.classList.add('wrong');
+  badge.className = 'badge badge-no';
+  badge.textContent = LABELS.wrong_label;
+  var ansText = q.type === 'choice'
+    ? String.fromCharCode(65 + ansIdx) + '. ' + (q.options ? q.options[ansIdx] : '')
+    : (ansIdx === 0 ? LABELS.true_label : LABELS.false_label);
+  correctEl.innerHTML = LABELS.answer_prefix + ansText;
+  if (radio) {
+    var wrongOpt = document.getElementById('opt-' + qid + '-' + radio.value);
+    if (wrongOpt) wrongOpt.classList.add('wrong-answer');
+  }
+  var corr = document.getElementById('opt-' + qid + '-' + ansIdx);
+  if (corr) corr.classList.add('correct-answer');
+  return 0;
+}
+
+function gradeMulti(q, qid, card, badge, correctEl) {
+  var want = multiAnswerSet(q.answer, q.options);
+  var wantKeys = Object.keys(want).map(Number);
+  var checked = document.querySelectorAll('input[name="' + qid + '"]:checked');
+  var picked = [];
+  for (var i = 0; i < checked.length; i++) picked.push(parseInt(checked[i].value, 10));
+
+  var anyWrong = false, hitCorrect = 0;
+  for (var p = 0; p < picked.length; p++) {
+    if (want[picked[p]]) hitCorrect++;
+    else anyWrong = true;
+  }
+
+  // reveal correct / wrong option markers
+  var mopts = q.options || [];
+  for (var j = 0; j < mopts.length; j++) {
+    var el = document.getElementById('opt-' + qid + '-' + j);
+    if (!el) continue;
+    if (want[j]) el.classList.add('correct-answer');
+    else if (picked.indexOf(j) !== -1) el.classList.add('wrong-answer');
+  }
+
+  var earned;
+  if (!anyWrong && hitCorrect === wantKeys.length && picked.length === wantKeys.length) {
+    earned = q.points;
+    card.classList.add('correct');
+    badge.className = 'badge badge-ok';
+    badge.textContent = LABELS.correct_label;
+    correctEl.innerHTML = '';
+  } else if (!anyWrong && hitCorrect > 0) {
+    // 少选不错选 -> partial credit
+    earned = roundScore(q.points * hitCorrect / wantKeys.length);
+    card.classList.add('partial');
+    badge.className = 'badge badge-partial';
+    badge.textContent = LABELS.partial_label;
+    correctEl.innerHTML = LABELS.answer_prefix + multiAnswerText(wantKeys, mopts);
+  } else {
+    earned = 0;
+    card.classList.add('wrong');
+    badge.className = 'badge badge-no';
+    badge.textContent = LABELS.wrong_label;
+    correctEl.innerHTML = LABELS.answer_prefix + multiAnswerText(wantKeys, mopts);
+  }
+  return earned;
+}
+
+function multiAnswerText(keys, options) {
+  return keys.sort(function (a, b) { return a - b; }).map(function (k) {
+    return String.fromCharCode(65 + k) + '. ' + (options ? options[k] : '');
+  }).join('  ');
+}
+
+function gradeFill(q, qid, card, badge, correctEl) {
+  var nBlanks = fillBlankCount(q.question);
+  var blanks = fillBlankAnswers(q.answer, nBlanks);
+  var n = blanks.length;
+  var hit = 0;
+  var displays = [];
+
+  for (var b = 0; b < n; b++) {
+    var inp = document.getElementById('fill-' + qid + '-' + b);
+    var accepted = blanks[b] || [''];
+    var user = inp ? normText(inp.value) : '';
+    var ok = false;
+    for (var a = 0; a < accepted.length; a++) {
+      if (accepted[a] !== '' && normText(accepted[a]) === user && user !== '') { ok = true; break; }
+    }
+    if (inp) inp.classList.add(ok ? 'fill-ok' : 'fill-no');
+    if (ok) hit++;
+    displays.push((n > 1 ? (b + 1) + '. ' : '') + accepted.filter(function (x) { return x !== ''; }).join(' / '));
+  }
+
+  var earned = roundScore(q.points * hit / n);
+  correctEl.innerHTML = LABELS.answer_prefix + displays.join('   ');
+
+  if (hit === n) {
+    card.classList.add('correct');
+    badge.className = 'badge badge-ok';
+    badge.textContent = LABELS.correct_label;
+  } else if (hit > 0) {
+    card.classList.add('partial');
+    badge.className = 'badge badge-partial';
+    badge.textContent = LABELS.partial_label;
+  } else {
+    card.classList.add('wrong');
+    badge.className = 'badge badge-no';
+    badge.textContent = LABELS.wrong_label;
+  }
+  return earned;
+}
+
+</script>
+</body>
+</html>
