@@ -471,6 +471,8 @@ function build() {
     h += '</div></div>';
   }
 
+  // Replace < and > with LaTeX equivalents to prevent HTML parsing issues
+  h = h.replace(/\$[^$]*[<][^$]*\$/g, function(m) { return m.replace(/</g, '\\lt ').replace(/>/g, '\\gt '); });
   container.innerHTML = h;
 
   if (window.MathJax && MathJax.typesetPromise) {
