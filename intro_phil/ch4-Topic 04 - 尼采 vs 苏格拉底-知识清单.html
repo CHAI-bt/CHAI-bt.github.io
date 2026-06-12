@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Topic 04 - 尼采 vs 苏格拉底</title>
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\(', '\)']],
+    displayMath: [['$$', '$$'], ['\[', '\]']]
+  }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"></script>
+<style>
+/* === ExamPass Shared Styles === */
+/* Paper-like warm background, clean typography, responsive */
+
+:root {
+  --paper: #fdf6e3;
+  --paper-dark: #f5ecd7;
+  --ink: #2c2c2c;
+  --ink-light: #555;
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
+  --divider: #d6c8a8;
+  --card-bg: #fef9ef;
+  --card-border: #e8dcc8;
+  --correct: #22c55e;
+  --correct-bg: #f0fdf4;
+  --wrong: #ef4444;
+  --wrong-bg: #fef2f2;
+  --tag-bg: #fef3c7;
+  --tag-text: #92400e;
+  --radius: 6px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: "Microsoft YaHei", "Noto Sans SC", "SimSun", sans-serif;
+  font-size: 12pt; line-height: 1.75; color: var(--ink);
+  max-width: 860px; margin: auto; padding: 24px 20px 60px;
+  background: var(--paper);
+}
+
+@media print {
+  body { font-size: 10.5pt; background: #fff; }
+  .no-print { display: none !important; }
+  h1, h2, h3 { page-break-after: avoid; }
+}
+
+/* ── Header ── */
+#exampass-header {
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding: 6px 0; margin-bottom: 0;
+}
+.header-brand { font-size: 1.2em; font-weight: 700; color: #1a1a2e; letter-spacing: 0.3px; }
+.header-url  { font-size: 0.78em; color: #999; }
+.header-divider { border: none; border-top: 2px solid var(--divider); margin: 4px 0 20px 0; }
+
+/* ── Typography ── */
+h1 { font-size: 1.55em; text-align: center; border-bottom: 2px solid var(--divider); padding-bottom: 8px; margin-top: 0; }
+h2 { font-size: 1.25em; border-bottom: 1px solid var(--divider); padding-bottom: 4px; margin-top: 28px; }
+h3 { font-size: 1.08em; margin-top: 20px; color: var(--ink); }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ── Tables ── */
+table { border-collapse: collapse; width: 100%; margin: 10px 0; font-size: 0.95em; }
+td, th { border: 1px solid var(--card-border); padding: 5px 9px; text-align: left; }
+th { background: var(--paper-dark); font-weight: 700; }
+
+/* ── Knowledge point vs explanation ── */
+.kp { font-weight: 700; color: var(--ink); }           /* key point: bold dark */
+.exp { font-weight: 400; color: var(--ink-light); }    /* explanation: lighter */
+.exp em, .exp strong { color: var(--ink); }             /* emphasis inside explanation */
+
+/* ── Block elements ── */
+blockquote {
+  border-left: 3px solid #c0392b; background: #fef9ef;
+  padding: 6px 14px; margin: 10px 0; font-size: 0.95em;
+}
+code { background: #f0ede0; padding: 2px 5px; border-radius: 3px; font-size: 0.92em; }
+pre { background: #f0ede0; padding: 10px; border-radius: var(--radius); overflow-x: auto; }
+
+/* ── TOC ── */
+div.toc {
+  background: var(--card-bg); padding: 14px 18px;
+  border: 1px solid var(--card-border); border-radius: var(--radius); margin-bottom: 22px;
+}
+div.toc ul { padding-left: 18px; }
+div.toc li { margin: 3px 0; font-size: 0.95em; }
+
+/* ── Priority tags ── */
+.tag-must   { background: #fee2e2; color: #991b1b; padding: 1px 6px; border-radius: 3px; font-size: 0.82em; font-weight: 600; }
+.tag-key    { background: #fef3c7; color: #92400e; padding: 1px 6px; border-radius: 3px; font-size: 0.82em; font-weight: 600; }
+.tag-freq   { background: #dbeafe; color: #1e40af; padding: 1px 6px; border-radius: 3px; font-size: 0.82em; font-weight: 600; }
+.tag-info   { background: #f0fdf4; color: #166534; padding: 1px 6px; border-radius: 3px; font-size: 0.82em; font-weight: 600; }
+
+
+</style>
+</head>
+<body>
+
+<header id="exampass-header">
+  <div class="header-left"><span class="header-brand">ExamPass Assistant</span></div>
+  <div class="header-right"><span class="header-url">github.com/WUBING2023/ExamPass-Assistant</span></div>
+</header>
+<hr class="header-divider">
+
+<h1>Topic 04 - 尼采 vs 苏格拉底</h1>
+<div class="toc">
+<h2>目录</h2>
+<ul>
+<li><a href="#s59776219">Topic 04: 尼采 vs 苏格拉底</a></li>
+  <li><a href="#s34741280">苏格拉底与哲学问题的起源</a></li>
+  <li><a href="#s62437269">欧绪弗洛对话：虔诚的定义问题</a></li>
+  <li><a href="#s29223482">苏格拉底方法（elenchus）：八个步骤的「思想手术」</a></li>
+  <li><a href="#s17322870">尼采对苏格拉底的批判：理性变成了暴君</a></li>
+  <li><a href="#s57821397">永恒回归：生命的终极测试</a></li>
+  <li><a href="#s34016404">对传统哲学问题（理性、真理、知识）的质疑</a></li>
+  <li><a href="#s85374251">苏格拉底 vs 尼采：核心对比表</a></li>
+</ul>
+</div>
+<h2 id="s59776219">Topic 04: 尼采 vs 苏格拉底</h2>
+<p><span class="exp">本章回答一个核心问题：<span class="kp">苏格拉底</span>——西方哲学的奠基人——到底做了什么、怎么做的，以及为什么<span class="kp">尼采</span>要对他发起猛烈攻击。整章沿两条线展开：先学会苏格拉底的对话方法（kc4.1 → kc4.2 → kc4.3），再进入尼采的批判与替代方案（kc4.4 → kc4.5 → kc4.6）。学完你会同时理解「哲学怎么问问题」和「哲学为什么要怀疑提问方式本身」。</span></p>
+
+<h3 id="s34741280">苏格拉底与哲学问题的起源</h3>
+<p><span class="exp">苏格拉底（Socrates，约公元前470–399年）没有写过任何著作——我们对他的一切了解都来自学生（主要是柏拉图）写的「对话录」。但正是这个人，把哲学从「讨论天上」拉回「讨论人间」：他追问的不是「世界由什么组成」，而是「我应该怎么生活」「什么叫正义」「什么叫虔诚」。</span></p>
+<p><span class="exp">为什么他是枢纽：在他之前，自然哲学家追问世界的本原（水、火、原子……）；在他之后，伦理和认识论成为哲学的核心线索。整个西方哲学的「问题意识」被他重新定向。</span></p>
+<p><span class="exp">怎么用：当你看到柏拉图的一篇对话录，先问「苏格拉底在追问什么概念」——那个概念就是全篇的靶子。</span></p>
+<p><span class="tag-must">必考</span></p>
+
+<h3 id="s62437269">欧绪弗洛对话：虔诚的定义问题</h3>
+<p><span class="exp">先看一个具体场景。在柏拉图的《欧绪弗洛篇》（Euthyphro）里，苏格拉底在法院门口遇到欧绪弗洛——他正以「不虔诚」的罪名起诉自己的父亲。苏格拉底问他：「你说虔诚（piety）到底是什么？」</span></p>
+<p><span class="exp">欧绪弗洛给了三个回答，苏格拉底逐一反驳：</span></p>
+<table>
+<tr><th>欧绪弗洛的回答</th><th>苏格拉底的反驳</th><th>反驳的要点</th></tr>
+<tr><td>1. 虔诚 = 被神所爱的事物</td><td>有些事物既被神爱、又被神恨（因为众神意见不一）</td><td>定义依赖「神的态度」，但神的态度会冲突</td></tr>
+<tr><td>2. 虔诚 = 被所有神都爱的事物</td><td>这给了虔诚的「特征」而非「本质」——只说了虔诚「是什么样」，没说「为什么是这样」</td><td>区分「属性」与「本质」</td></tr>
+<tr><td>3. 虔诚 = 正义中关于侍奉神的那部分</td><td>这又回到问题1或问题2的变体</td><td>循环：用「正义」解释「虔诚」，正义本身也需要解释</td></tr>
+</table>
+<p><span class="exp">为什么需要它：这个对话展示了苏格拉底方法（下一节）的实战——通过不断追问，暴露对方定义的漏洞。更重要的是，它提出了哲学定义的核心要求：定义必须揭示事物的<span class="kp">本质</span>（nature），而不是只描述它的<span class="kp">属性</span>（affect or quality）。</span></p>
+<blockquote>易错：不要把苏格拉底的反驳理解为「他在否定虔诚的存在」。他质疑的是「我们能否正确定义虔诚」，而不是「虔诚是否重要」。恰恰相反——正因为他认为虔诚极其重要，才要求更严格的定义。</blockquote>
+<p><span class="tag-key">重点</span></p>
+
+<h3 id="s29223482">苏格拉底方法（elenchus）：八个步骤的「思想手术」</h3>
+<p><span class="exp"><span class="kp">苏格拉底方法</span>（elenchus，常被译为「诘问法」或「产婆术」）不是「苏格拉底说出答案」，而是「苏格拉底帮对方发现自己答案里的矛盾」。</span></p>
+<p><span class="exp">具体怎么做——八个步骤：</span></p>
+<ol>
+<li><span class="exp">真诚地关心对话者的关切，不敷衍</span></li>
+<li><span class="exp">把对话者当作有理性能力的人认真对待</span></li>
+<li><span class="exp">只关注对方说了什么、相信什么，不跑题</span></li>
+<li><span class="exp">克制自己不直接说出「正确答案」</span></li>
+<li><span class="exp">不断问对方：「你能跟上这一步吗？」</span></li>
+<li><span class="exp">如果对方表述模糊，主动要求澄清</span></li>
+<li><span class="exp">不断追问：「你这么说是什么意思？」</span></li>
+<li><span class="exp">最终目标：揭示对方信念中<span class="kp">隐含的矛盾</span>（incoherent presumptions）</span></li>
+</ol>
+<p><span class="exp">为什么需要它：elenchus 不是「辩论术」——苏格拉底不是在赢，而是在「接生」（产婆术的比喻）。他相信真理已经藏在对话者心里，只是被混乱的信念遮蔽了。通过暴露矛盾，让对方自己看到需要修正的地方。</span></p>
+<p><span class="exp">怎么用：下次你和朋友争论一个概念（比如「什么是公平」），试着用 elenchus 的方式——不直接说「你错了」，而是问「你说的公平是指 A 还是 B？如果是 A，那遇到这种情况怎么办？」</span></p>
+<p><span class="tag-must">必考</span></p>
+
+<h3 id="s17322870">尼采对苏格拉底的批判：理性变成了暴君</h3>
+<p><span class="exp">尼采（Friedrich Nietzsche，1844–1900）在《悲剧的诞生》里把苏格拉底称为「希腊衰亡的化身」。为什么这么严重？</span></p>
+<p><span class="exp">尼采的诊断：苏格拉底把<span class="kp">理性</span>（reason）推到了至高无上的地位——一切都要经过理性的审查才能被接受。在尼采看来，这压扁了生命中那些「非理性但同样真实」的力量：激情、直觉、艺术冲动、对苦难的承受力。</span></p>
+<p><span class="exp">为什么是它而不是别的：在尼采眼里，苏格拉底之前的古希腊文化（前苏格拉底时代）是「酒神精神」（Dionysian）和「日神精神」（Apollonian）的平衡——既有秩序的美的形式，也有狂喜的生命力。苏格拉底打破了这个平衡，让理性独大，导致生命被「理论化」——人们开始相信「理解世界」比「活在世界里」更重要。</span></p>
+<p><span class="exp">怎么用：尼采的批判不只是「反理性」——他反对的是「理性成为唯一裁判」。这为下一节「永恒回归」铺路：如果理性不能给生命意义，那意义从哪里来？</span></p>
+<p><span class="tag-must">必考</span></p>
+
+<h3 id="s57821397">永恒回归：生命的终极测试</h3>
+<p><span class="exp">尼采在《快乐的科学》里讲了一个思想实验：</span></p>
+<blockquote style="border-left:4px solid #7b1fa2; padding:1rem; margin:1rem 0; background:#f3e5f5;">「假如有一天，一个恶魔潜入你最孤独的时刻，对你说：『你现在过的、曾经过的这一生，你将不得不再活一次、无数次……』——你会不会摔碎自己、咬牙切齿地诅咒这个恶魔？还是你曾经经历过一个如此伟大的时刻，让你回答：『你是神，我从未听过比这更神圣的话。』」</blockquote>
+<p><span class="exp">这就是<span class="kp">永恒回归</span>（eternal recurrence）：不是物理上真的会重复无数次，而是一个<span class="kp">态度测试</span>——如果你知道此生会无限重复，你还愿意这样活吗？</span></p>
+<p><span class="exp">为什么需要它：永恒回归是尼采对「生命意义」问题的回答。如果理性不能提供客观意义（上一节已论证），那意义只能来自「你对生命的态度」。如果你能在想象中拥抱无数次重复的生命，你就实现了尼采所说的<span class="kp">生命肯定</span>（life-affirmation）。</span></p>
+<p><span class="exp">怎么用：这不是一个需要「证明为真」的命题，而是一个「你愿意这样想吗」的邀请。它把意义问题从「外部世界」拉回「内在态度」。</span></p>
+<p><span class="tag-must">必考</span></p>
+
+<h3 id="s34016404">对传统哲学问题（理性、真理、知识）的质疑</h3>
+<p><span class="exp">尼采的批判不止针对苏格拉底个人——他质疑的是整个传统哲学的三个支柱：</span></p>
+<table>
+<tr><th>传统哲学的支柱</th><th>传统理解</th><th>尼采的质疑</th></tr>
+<tr><td><span class="kp">理性</span></td><td>理性是通向真理的最佳工具，高于激情和直觉</td><td>理性只是生命的一种工具，不是生命的全部；它压制了其他同样重要的力量</td></tr>
+<tr><td><span class="kp">真理</span></td><td>存在客观的、普遍的真理等待被发现</td><td>所谓「真理」只是特定视角下的解释；没有「上帝视角」，只有不同立场</td></tr>
+<tr><td><span class="kp">知识</span></td><td>知识是对世界的准确表征</td><td>知识服务于生命需要，不是服务于「客观准确」；不同生命形态需要不同知识</td></tr>
+</table>
+<p><span class="exp">为什么需要它：这一节把尼采的批判从「针对苏格拉底」升级为「针对整个传统哲学框架」。如果尼采是对的，那哲学的任务不是「发现真理」，而是「创造意义」。</span></p>
+<p><span class="exp">怎么用：遇到任何声称「客观真理」的论述时，可以问尼采式的问题：「这是从哪个视角说的？它服务于什么样的生命需要？」</span></p>
+<p><span class="tag-key">重点</span></p>
+
+<h3 id="s85374251">苏格拉底 vs 尼采：核心对比表</h3>
+<table>
+<tr><th>维度</th><th>苏格拉底</th><th>尼采</th></tr>
+<tr><td>核心方法</td><td>elenchus：通过对话揭示矛盾，逼近定义</td><td>谱系学：追溯概念的历史，揭露权力动机</td></tr>
+<tr><td>对理性的态度</td><td>理性是通向善的必经之路</td><td>理性是压制生命力的暴君</td></tr>
+<tr><td>对真理的态度</td><td>存在客观真理，通过理性可逼近</td><td>没有「上帝视角」，真理是特定视角的解释</td></tr>
+<tr><td>对生命的态度</td><td>未经审视的生活不值得过</td><td>未经活出的理论是空洞的</td></tr>
+<tr><td>终极目标</td><td>通过知识获得德性</td><td>通过生命肯定获得意义</td></tr>
+</table>
+<p><span class="exp">怎么用这张表：考试如果问「尼采如何批判苏格拉底」，就从「方法→理性→真理→生命→目标」五个维度展开；如果问「苏格拉底与尼采的根本分歧」，聚焦「理性」和「真理」两行即可。</span></p>
+<p><span class="tag-freq">高频</span></p>
+
+
+
+</body>
+</html>

@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Topic 12 - 道义论</title>
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\(', '\)']],
+    displayMath: [['$$', '$$'], ['\[', '\]']]
+  }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"></script>
+<style>
+/* === ExamPass Shared Styles === */
+/* Paper-like warm background, clean typography, responsive */
+
+:root {
+  --paper: #fdf6e3;
+  --paper-dark: #f5ecd7;
+  --ink: #2c2c2c;
+  --ink-light: #555;
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
+  --divider: #d6c8a8;
+  --card-bg: #fef9ef;
+  --card-border: #e8dcc8;
+  --correct: #22c55e;
+  --correct-bg: #f0fdf4;
+  --wrong: #ef4444;
+  --wrong-bg: #fef2f2;
+  --tag-bg: #fef3c7;
+  --tag-text: #92400e;
+  --radius: 6px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: "Microsoft YaHei", "Noto Sans SC", "SimSun", sans-serif;
+  font-size: 12pt; line-height: 1.75; color: var(--ink);
+  max-width: 860px; margin: auto; padding: 24px 20px 60px;
+  background: var(--paper);
+}
+
+@media print {
+  body { font-size: 10.5pt; background: #fff; }
+  .no-print { display: none !important; }
+  h1, h2, h3 { page-break-after: avoid; }
+}
+
+/* ── Header ── */
+#exampass-header {
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding: 6px 0; margin-bottom: 0;
+}
+.header-brand { font-size: 1.2em; font-weight: 700; color: #1a1a2e; letter-spacing: 0.3px; }
+.header-url  { font-size: 0.78em; color: #999; }
+.header-divider { border: none; border-top: 2px solid var(--divider); margin: 4px 0 20px 0; }
+
+/* ── Typography ── */
+h1 { font-size: 1.55em; text-align: center; border-bottom: 2px solid var(--divider); padding-bottom: 8px; margin-top: 0; }
+h2 { font-size: 1.25em; border-bottom: 1px solid var(--divider); padding-bottom: 4px; margin-top: 28px; }
+h3 { font-size: 1.08em; margin-top: 20px; color: var(--ink); }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ── Tables ── */
+table { border-collapse: collapse; width: 100%; margin: 10px 0; font-size: 0.95em; }
+td, th { border: 1px solid var(--card-border); padding: 5px 9px; text-align: left; }
+th { background: var(--paper-dark); font-weight: 700; }
+
+/* ── Knowledge point vs explanation ── */
+.kp { font-weight: 700; color: var(--ink); }           /* key point: bold dark */
+.exp { font-weight: 400; color: var(--ink-light); }    /* explanation: lighter */
+.exp em, .exp strong { color: var(--ink); }             /* emphasis inside explanation */
+
+/* ── Block elements ── */
+blockquote {
+  border-left: 3px solid #c0392b; background: #fef9ef;
+  padding: 6px 14px; margin: 10px 0; font-size: 0.95em;
+}
+code { background: #f0ede0; padding: 2px 5px; border-radius: 3px; font-size: 0.92em; }
+pre { background: #f0ede0; padding: 10px; border-radius: var(--radius); overflow-x: auto; }
+
+/* ── TOC ── */
+div.toc {
+  background: var(--card-bg); padding: 14px 18px;
+  border: 1px solid var(--card-border); border-radius: var(--radius); margin-bottom: 22px;
+}
+div.toc ul { padding-left: 18px; }
+div.toc li { margin: 3px 0; font-size: 0.95em; }
+
+/* ── Priority tags ── */
+.tag-must   { background: #fee2e2; color: #991b1b; padding: 1px 6px; border-radius: 3px; font-size: 0.82em; font-weight: 600; }
+.tag-key    { background: #fef3c7; color: #92400e; padding: 1px 6px; border-radius: 3px; font-size: 0.82em; font-weight: 600; }
+.tag-freq   { background: #dbeafe; color: #1e40af; padding: 1px 6px; border-radius: 3px; font-size: 0.82em; font-weight: 600; }
+.tag-info   { background: #f0fdf4; color: #166534; padding: 1px 6px; border-radius: 3px; font-size: 0.82em; font-weight: 600; }
+
+
+</style>
+</head>
+<body>
+
+<header id="exampass-header">
+  <div class="header-left"><span class="header-brand">ExamPass Assistant</span></div>
+  <div class="header-right"><span class="header-url">github.com/WUBING2023/ExamPass-Assistant</span></div>
+</header>
+<hr class="header-divider">
+
+<h1>Topic 12 - 道义论</h1>
+<div class="toc">
+<h2>目录</h2>
+<ul>
+<li><a href="#s91336646">一、三大伦理学体系：哲学家们的「道德指南针」</a></li>
+  <li><a href="#s14483345">1. 后果论与功利主义 必考</a></li>
+  <li><a href="#s74884899">2. 康德义务论与绝对命令 必考</a></li>
+  <li><a href="#s71659542">3. 美德伦理学与品格培养 必考</a></li>
+<li><a href="#s35087016">二、道德哲学的核心争议</a></li>
+  <li><a href="#s40786010">4. 道德相对主义 vs 道德客观主义 必考</a></li>
+  <li><a href="#s44743566">5. 电车难题与道德两难 必考</a></li>
+  <li><a href="#s61669666">6. 利己主义与利他主义 必考</a></li>
+  <li><a href="#s84538679">7. 社会契约论与道德协议 必考</a></li>
+  <li><a href="#s87702884">8. 道德责任与自由意志 必考</a></li>
+<li><a href="#s71367523">三大学派终极对比表</a></li>
+<li><a href="#s32973778">✅ 自检清单</a></li>
+  <li><a href="#s12089642">概念理解 关键</a></li>
+  <li><a href="#s42395543">思想实验 高频</a></li>
+  <li><a href="#s52596304">理论比较 拓展</a></li>
+</ul>
+</div>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Topic 11: 道德与伦理 — 核心笔记</title>
+<style>
+  body {
+    font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+    line-height: 1.8;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    color: #333;
+    background: #fafafa;
+  }
+  h2 {
+    color: #1a5276;
+    border-bottom: 3px solid #2980b9;
+    padding-bottom: 10px;
+    margin-top: 40px;
+  }
+  h3 {
+    color: #2c3e50;
+    margin-top: 30px;
+    padding: 10px 15px;
+    background: #eaf2f8;
+    border-left: 5px solid #2980b9;
+  }
+  .kp {
+    background: #fff3cd;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-weight: bold;
+    color: #856404;
+  }
+  .exp {
+    display: block;
+    margin: 8px 0 16px 20px;
+    color: #555;
+    font-style: normal;
+  }
+  .tag-must {
+    background: #e74c3c;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.85em;
+    margin-left: 8px;
+  }
+  .tag-key {
+    background: #f39c12;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.85em;
+    margin-left: 8px;
+  }
+  .tag-freq {
+    background: #27ae60;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.85em;
+    margin-left: 8px;
+  }
+  .tag-info {
+    background: #3498db;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.85em;
+    margin-left: 8px;
+  }
+  blockquote {
+    background: #fdedec;
+    border-left: 4px solid #e74c3c;
+    margin: 15px 0;
+    padding: 12px 20px;
+    color: #922b21;
+    font-size: 0.95em;
+    border-radius: 0 8px 8px 0;
+  }
+  blockquote strong {
+    color: #c0392b;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    background: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  th {
+    background: #2980b9;
+    color: white;
+    padding: 12px;
+    text-align: left;
+  }
+  td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #ddd;
+  }
+  tr:nth-child(even) {
+    background: #f8f9fa;
+  }
+  tr:hover {
+    background: #eaf2f8;
+  }
+  hr {
+    border: none;
+    border-top: 1px solid #ddd;
+    margin: 30px 0;
+  }
+  .formula-block {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+    margin: 15px 0;
+    font-family: "Cambria Math", serif;
+  }
+  .example-box {
+    background: #e8f8f5;
+    border: 1px solid #1abc9c;
+    border-radius: 8px;
+    padding: 15px;
+    margin: 15px 0;
+  }
+  .example-box::before {
+    content: "💡 例子：";
+    font-weight: bold;
+    color: #16a085;
+  }
+  .compare-highlight {
+    background: #fef9e7;
+    padding: 2px 6px;
+    border-radius: 3px;
+  }
+</style>
+</head>
+<body>
+
+<h1>📚 Topic 11: 道德与伦理 (Morality and Ethics)</h1>
+<p style="color:#666; font-size:0.9em;">🎯 本章速览：道德哲学三大流派 + 经典思想实验 + 核心争议</p>
+
+<hr>
+
+<!-- ==================== H2: 三大伦理学体系 ==================== -->
+<h2 id="s91336646">一、三大伦理学体系：哲学家们的「道德指南针」</h2>
+
+<p class="exp">道德哲学的核心问题是：<b>什么行为是对的？</b> 不同学派给出了完全不同的答案。理解这三种体系，就像拥有三副不同的眼镜看同一个道德问题。</p>
+
+<!-- ===== H3: 后果论与功利主义 ===== -->
+<h3 id="s14483345">1. <span class="kp">后果论</span>与<span class="kp">功利主义</span> <span class="tag-must">必考</span></h3>
+
+<p class="exp"><b>是什么？</b> 后果论（Consequentialism）认为：一个行为对不对，<b>只看结果</b>。功利主义是其最著名的版本 —— 正确的行为就是能让「最大多数人获得最大幸福」的行为。</p>
+
+<div class="example-box">
+  <b>场景：</b>你有一笔钱，可以捐给灾区建学校，也可以给自己买游戏机。<br>
+  <b>功利主义会说：</b>捐出去！因为建学校让更多人受益，总幸福更大。
+</div>
+
+<p class="exp"><b>关键人物：</b></p>
+<table>
+  <tr><th>人物</th><th>核心贡献</th><th>重要区分</th></tr>
+  <tr>
+    <td><span class="kp">边沁</span> (Bentham)</td>
+    <td>提出「<span class="kp">快乐计算</span>」——用强度、持续时间等维度量化快乐</td>
+    <td>只论快乐「量」的大小</td>
+  </tr>
+  <tr>
+    <td><span class="kp">密尔</span> (Mill)</td>
+    <td>区分「高级快乐」与「低级快乐」</td>
+    <td>精神快乐 > 身体快乐（质的不同）</td>
+  </tr>
+</table>
+
+<p class="exp"><b>为什么重要？</b> 功利主义提供了一个「计算器式」的道德推理：把所有后果加一加减一减，选数字最大的。这在政策制定（如成本-收益分析）中影响深远。</p>
+
+<blockquote>
+  <strong>⚠️ 易错提醒：</strong>功利主义 ≠ 自私！功利主义要求你<b>平等地考虑每个人的幸福</b>，包括陌生人。它可能要求你牺牲自己的利益来增加「总幸福」。
+</blockquote>
+
+<p class="exp"><b>三大挑战：</b></p>
+<table>
+  <tr><th>反驳</th><th>含义</th><th>例子</th></tr>
+  <tr>
+    <td><span class="kp">苛求性反驳</span></td>
+    <td>功利主义要求太多 —— 你必须「总是」最大化整体幸福，没有空间追求个人项目</td>
+    <td>你买咖啡的钱本可以救一条命，所以喝咖啡是错的？</td>
+  </tr>
+  <tr>
+    <td><span class="kp">正义反驳</span></td>
+    <td>为了「总幸福」，可能牺牲无辜者</td>
+    <td>诬陷一个无辜者以阻止暴乱 —— 总幸福增加，但这公平吗？</td>
+  </tr>
+  <tr>
+    <td><span class="kp">衡量反驳</span></td>
+    <td>幸福真的能量化吗？张三的快乐和李四的快乐怎么比较？</td>
+    <td>「你快乐所以我快乐」能加减吗？</td>
+  </tr>
+</table>
+
+<p class="exp"><b>规则功利主义</span>的修正：不问「这个行为」的结果，而问「如果人人都遵守这条规则，结果会怎样？」 —— 这避免了「诬陷无辜者」的结论。</p>
+
+<hr>
+
+<!-- ===== H3: 康德义务论 ===== -->
+<h3 id="s74884899">2. <span class="kp">康德义务论</span>与<span class="kp">绝对命令</span> <span class="tag-must">必考</span></h3>
+
+<p class="exp"><b>是什么？</b> 康德（Kant）认为：道德的基础是<span class="kp">义务</span>（duty）和<span class="kp">理性</span>，<b>不是结果</b>。一个行为对不对，取决于它是否符合普遍的道德法则。</p>
+
+<div class="example-box">
+  <b>场景：</b>你在考试中看到同桌作弊。<br>
+  <b>功利主义：</b>如果举报会导致同桌痛苦、班级扣分，也许不举报「总幸福」更大。<br>
+  <b>康德：</b>作弊是错的，因为如果「人人都作弊」这条规则能成立吗？不能 —— 考试制度会崩溃。所以你必须举报。
+</div>
+
+<p class="exp"><b>绝对命令</span>（Categorical Imperative）—— 康德道德哲学的「总纲」，有两个核心公式：</p>
+
+<table>
+  <tr><th>公式</th><th>表述</th><th>通俗理解</th></tr>
+  <tr>
+    <td><span class="kp">普遍法则公式</span></td>
+    <td>「你要只按照你同时愿意它成为普遍法则的那个准则去行动」</td>
+    <td>如果人人都这样做，世界还能运转吗？</td>
+  </tr>
+  <tr>
+    <td><span class="kp">人是目的公式</span></td>
+    <td>「永远把人性（无论是你自己还是他人）当作目的，绝不仅仅当作手段」</td>
+    <td>不能把别人当工具人！</td>
+  </tr>
+</table>
+
+<p class="exp"><b>关键区分：「出于义务」vs「合乎义务」</span></p>
+
+<div class="example-box">
+  <b>场景：</b>商店老板明码标价、不缺斤短两。<br>
+  <b>合乎义务（in accordance with duty）：</b>老板这样做是为了招揽顾客、赚更多钱 —— 动机是自私的。<br>
+  <b>出于义务（from duty）：</b>老板这样做是因为「诚实」本身就是对的 —— 动机是尊重道德法则。<br>
+  <br>
+  <b>康德说：</b>只有「出于义务」的行为才有真正的道德价值。
+</div>
+
+<p class="exp"><b>为什么重要？</b> 康德强调人的<span class="kp">自律</span>（autonomy）—— 道德主体是自己给自己立法，不是服从外部权威或欲望。这为「人权」概念奠定了哲学基础：人不能被当作工具。</p>
+
+<blockquote>
+  <strong>⚠️ 易错提醒：</strong>康德不是反对快乐！他只是说快乐不能作为道德的基础。一个善良的行为带来快乐是好事，但如果你的动机只是为了快乐，那这个行为就没有道德价值。
+</blockquote>
+
+<hr>
+
+<!-- ===== H3: 美德伦理学 ===== -->
+<h3 id="s71659542">3. <span class="kp">美德伦理学</span>与品格培养 <span class="tag-must">必考</span></h3>
+
+<p class="exp"><b>是什么？</b> 美德伦理学（Virtue Ethics）源自亚里士多德，关注的核心不是「我该做什么？」，而是「<span class="kp">我该成为什么样的人？</span>」</p>
+
+<div class="example-box">
+  <b>场景：</b>你在路上捡到一个钱包。<br>
+  <b>功利主义：</b>计算归还 vs 占有的「总幸福」。<br>
+  <b>康德：</b>「占有他人财物」能普遍化吗？不能，所以归还。<br>
+  <b>美德伦理学：</b>一个有<span class="kp">诚实</span>品格的人会归还，因为诚实的人就是那样做的。
+</div>
+
+<p class="exp"><b>美德</span>（Virtue）= 品格上的卓越 —— 稳定的思考、感受、行动的良好倾向。</p>
+
+<table>
+  <tr><th>核心美德</th><th>含义</th><th>两个极端（不足 ← 美德 → 过度）</th></tr>
+  <tr>
+    <td><span class="kp">勇气</span></td>
+    <td>面对恐惧仍做正确的事</td>
+    <td>怯懦 ← 勇气 → 鲁莽</td>
+  </tr>
+  <tr>
+    <td><span class="kp">节制</span></td>
+    <td>控制欲望和享乐</td>
+    <td>麻木 ← 节制 → 纵欲</td>
+  </tr>
+  <tr>
+    <td><span class="kp">正义</span></td>
+    <td>给予每个人应得的</td>
+    <td>不公 ← 正义 → 偏执</td>
+  </tr>
+  <tr>
+    <td><span class="kp">实践智慧</span> (phronesis)</td>
+    <td>判断具体情境中「中道」的能力</td>
+    <td>愚蠢 ← 智慧 → 狡猾</td>
+  </tr>
+</table>
+
+<p class="exp"><b>「中道」</span>（Mean）= 美德是两个极端之间的平衡点。勇气不是不害怕，而是「虽然害怕但依然行动」；不是鲁莽（不怕），也不是怯懦（怕得不敢动）。</p>
+
+<p class="exp"><b>美德如何获得？</b> 通过<span class="kp">习惯化</span>（habituation）—— 做公正的行为会让你变得公正，做勇敢的行为会让你变得勇敢。就像学骑车：不是看论文学会的，是骑了无数次学会的。</p>
+
+<blockquote>
+  <strong>⚠️ 易错提醒：</strong>美德伦理学 ≠ 没有规则！它只是说道德太复杂，不能简化为几条公式。但「要培养美德」本身就是一条重要的道德指导。
+</blockquote>
+
+<hr>
+
+<!-- ==================== H2: 核心争议 ==================== -->
+<h2 id="s35087016">二、道德哲学的核心争议</h2>
+
+<!-- ===== H3: 道德相对主义 vs 客观主义 ===== -->
+<h3 id="s40786010">4. <span class="kp">道德相对主义</span> vs <span class="kp">道德客观主义</span> <span class="tag-must">必考</span></h3>
+
+<p class="exp"><b>是什么？</b> 道德是「萝卜青菜各有所爱」，还是「有对错之分」？</p>
+
+<table>
+  <tr><th>立场</th><th>核心主张</th><th>通俗理解</th></tr>
+  <tr>
+    <td><span class="kp">描述性相对主义</span></td>
+    <td>不同文化确实有不同的道德信念</td>
+    <td>这是人类学事实（描述性 = 描述现状）</td>
+  </tr>
+  <tr>
+    <td><span class="kp">元伦理相对主义</span></td>
+    <td>道德真理本身是相对的 —— 没有客观的道德事实</td>
+    <td>「谋杀是错的」和「谋杀是对的」没有谁更「真」</td>
+  </tr>
+  <tr>
+    <td><span class="kp">道德客观主义</span></td>
+    <td>存在普遍有效的道德原则，不因文化而异</td>
+    <td>某些事情（如种族灭绝）无论文化如何都是错的</td>
+  </tr>
+</table>
+
+<p class="exp"><b>支持相对主义的理由：</b></p>
+<ul>
+  <li>文化差异巨大 —— 有些文化允许一夫多妻，有些禁止</li>
+  <li>道德没有「科学证据」 —— 你无法用望远镜看到「错」</li>
+  <li>促进宽容 —— 没有「唯一正确答案」，所以要尊重差异</li>
+</ul>
+
+<p class="exp"><b>反对相对主义的理由：</b></p>
+<ul>
+  <li>某些行为似乎被<b>所有文化</b>谴责（如无故杀害无辜）</li>
+  <li>如果道德是相对的，<b>道德进步</b>如何可能？（废奴运动是「进步」还是只是「改变」？）</li>
+  <li><b>自我反驳</b>：如果所有道德观点都同样正确，「应该宽容」这个观点本身也不比「应该不宽容」更正确</li>
+</ul>
+
+<blockquote>
+  <strong>⚠️ 易错提醒：</strong>「描述性相对主义」（观察到差异）≠「元伦理相对主义」（真理是相对的）。你可以承认文化差异，同时仍然相信某些道德原则是普遍的。
+</blockquote>
+
+<hr>
+
+<!-- ===== H3: 电车难题 ===== -->
+<h3 id="s44743566">5. <span class="kp">电车难题</span>与道德两难 <span class="tag-must">必考</span></h3>
+
+<p class="exp"><b>是什么？</b> 电车难题（Trolley Problem）是哲学史上最著名的思想实验，由福特（Foot）和汤姆森（Thomson）提出。</p>
+
+<table>
+  <tr><th>版本</th><th>情境</th><th>多数人的直觉</th></tr>
+  <tr>
+    <td><span class="kp">基础版</span></td>
+    <td>电车将撞死5人，你可以拉杆让它改道撞死1人</td>
+    <td>拉杆是允许的 ✓</td>
+  </tr>
+  <tr>
+    <td><span class="kp">天桥版</span></td>
+    <td>电车将撞死5人，你可以推下一个大块头挡住电车（他会死）</td>
+    <td>推人是不允许的 ✗</td>
+  </tr>
+</table>
+
+<p class="exp"><b>为什么重要？</b> 两个版本的<b>结果一样</b>（1死5活），但直觉判断完全不同。这说明道德判断不只取决于后果，还取决于：</p>
+<ul>
+  <li><span class="kp">作为</span>（doing）vs <span class="kp">允许</span>（allowing）：主动杀人 vs 让死亡发生</li>
+  <li><span class="kp">直接伤害</span> vs <span class="kp">间接伤害</span>：把人当工具 vs 副作用</li>
+</ul>
+
+<p class="exp"><b>双重效应原则</span>（Doctrine of Double Effect）的解释：</p>
+
+<div class="formula-block">
+  可以预见但<b>不意图</b>的伤害（副作用） → 可以允许<br>
+  <b>意图</b>的伤害（作为手段） → 不可以允许
+</div>
+
+<p class="exp">拉杆：那1个人的死是「副作用」 → 允许<br>
+推人：那个人的死是「手段」 → 不允许</p>
+
+<blockquote>
+  <strong>⚠️ 易错提醒：</strong>电车难题不是要求你「正确答案」，而是揭示你<b>隐藏的道德直觉</b>。哲学家利用这个直觉来检验不同伦理学理论。
+</blockquote>
+
+<hr>
+
+<!-- ===== H3: 利己主义与利他主义 ===== -->
+<h3 id="s61669666">6. <span class="kp">利己主义</span>与<span class="kp">利他主义</span> <span class="tag-must">必考</span></h3>
+
+<p class="exp"><b>关键区分：</b></p>
+
+<table>
+  <tr><th>理论</th><th>性质</th><th>核心主张</th></tr>
+  <tr>
+    <td><span class="kp">心理利己主义</span></td>
+    <td>描述性（关于事实）</td>
+    <td>所有人的行为<b>实际上</b>都是出于自利（即使看起来无私）</td>
+  </tr>
+  <tr>
+    <td><span class="kp">伦理利己主义</span></td>
+    <td>规范性（关于应该）</td>
+    <td>人<b>应该</b>追求自己的利益 —— 这是道德上正确的</td>
+  </tr>
+</table>
+
+<div class="example-box">
+  <b>心理利己主义的论证：</b>你捐款给慈善机构 —— 也许是为了获得「助人」的满足感，或避免内疚。所以本质上还是为了自己。<br>
+  <b>反驳：</b>这理论不可证伪！任何行为都能被「解释」为自私。而且混淆了「满足欲望」和「满足自私欲望」 —— 想帮别人也是欲望啊！
+</div>
+
+<p class="exp"><b>伦理利己主义的主要反驳：</b></p>
+<ul>
+  <li><span class="kp">公开性反驳</span>：如果人人都按利己主义行动，结果对所有人更糟（公地悲剧）</li>
+  <li><span class="kp">武断性反驳</span>：为什么你的利益比别人的利益更重要？没有理由就是武断</li>
+  <li><span class="kp">康德式反驳</span>：利己主义无法普遍化 —— 如果人人都只追求自己利益，「追求利益」的概念本身会崩溃</li>
+</ul>
+
+<hr>
+
+<!-- ===== H3: 社会契约论 ===== -->
+<h3 id="s84538679">7. <span class="kp">社会契约论</span>与道德协议 <span class="tag-must">必考</span></h3>
+
+<p class="exp"><b>是什么？</b> 道德被解释为自利理性人之间的<span class="kp">协议</span> —— 我们遵守道德规则，是因为这比「没有规则」的状态更好。</p>
+
+<table>
+  <tr><th>思想家</th><th>核心观点</th><th>关键概念</th></tr>
+  <tr>
+    <td><span class="kp">霍布斯</span> (Hobbes)</td>
+    <td>没有政府的「自然状态」是「孤独、贫穷、肮脏、野蛮、短暂」的 —— 理性人会让渡权利给主权者换取安全</td>
+    <td><span class="kp">自然状态</span> = 所有人对所有人的战争</td>
+  </tr>
+  <tr>
+    <td><span class="kp">卢梭</span> (Rousseau)</td>
+    <td>真正的道德来自「<span class="kp">公意</span>」—— 法律必须表达共同利益，而非个人私利</td>
+    <td><span class="kp">公意</span> = 作为公民集体意志的「共同善」</td>
+  </tr>
+  <tr>
+    <td><span class="kp">罗尔斯</span> (Rawls)</td>
+    <td>设计「<span class="kp">无知之幕</span>」思想实验：正义原则是我们不知道自己在社会中位置时会选择的原则</td>
+    <td><span class="kp">无知之幕</span> = 不知道自己的性别、种族、能力、阶层</td>
+  </tr>
+</table>
+
+<div class="example-box">
+  <b>罗尔斯的思想实验：</b>假设你要设计一个社会的规则，但你不知道自己在其中是富人还是穷人、健康还是残疾、天才还是普通人。你会怎么设计？<br>
+  <b>罗尔斯的答案：</b>你会选择（1）保障基本自由权利；（2）不平等分配只有在有利于最弱势群体时才被允许（差异原则）。因为你可能是那个最弱势的人。
+</div>
+
+<p class="exp"><b>社会契约论的优势：</b>解释了道德规则为什么对我们有约束力 —— 因为我们（明确或隐含地）同意了它们。</p>
+
+<p class="exp"><b>主要批评：</b></p>
+<ul>
+  <li>你什么时候「签了这个合同」？没签过就要遵守吗？</li>
+  <li>可能为不正义辩护 —— 如果强者强加条款给弱者，这也是「契约」吗？</li>
+  <li>排除了非缔约者 —— 动物、未来世代、非公民怎么办？</li>
+</ul>
+
+<hr>
+
+<!-- ===== H3: 道德责任与自由意志 ===== -->
+<h3 id="s87702884">8. <span class="kp">道德责任</span>与<span class="kp">自由意志</span> <span class="tag-must">必考</span></h3>
+
+<p class="exp"><b>核心问题：</b>我们只能为「属于我们自己的」行为负责。但如果一切都被因果决定，我们的行为还是「我们的」吗？</p>
+
+<table>
+  <tr><th>立场</th><th>核心主张</th><th>对道德责任的影响</th></tr>
+  <tr>
+    <td><span class="kp">相容论</span> (Compatibilism)</td>
+    <td>决定论与自由意志<b>可以兼容</span> —— 自由 = 行为出于自己的欲望和品格，而非外部强制</td>
+    <td>保留道德责任：你按自己意愿行动，就要负责</td>
+  </tr>
+  <tr>
+    <td><span class="kp">自由意志论</span> (Libertarianism)</td>
+    <td>真正的自由需要<b>非决定论</span> —— 必须有「本来可以做出其他选择」的可能</td>
+    <td>保留道德责任：你的选择是真正「自由的」</td>
+  </tr>
+  <tr>
+    <td><span class="kp">硬决定论</span> (Hard Determinism)</td>
+    <td>决定论为真，自由意志是幻觉</td>
+    <td><b>取消</b>道德责任：一切都是因果链，没有真正的「选择」</td>
+  </tr>
+</table>
+
+<div class="example-box">
+  <b>场景：</b>张三偷了东西。<br>
+  <b>相容论：</b>如果偷窃是出于他自己的欲望（而非被枪指着），他就是自由的，要负责。<br>
+  <b>自由意志论：</b>如果张三「本来可以不偷」，他才要负责。如果因果链必然导致他偷，他就不负责。<br>
+  <b>硬决定论：</b>张三的偷窃行为是他的基因、环境、经历因果决定的 —— 他别无选择。惩罚也许有用（威慑、改造），但没有「应得的」责任。
+</div>
+
+<p class="exp"><b>为什么重要？</b> 这直接影响惩罚制度、个人责任、自我认同。如果自由意志是幻觉，「你」这个概念本身都需要重新思考。</p>
+
+<hr>
+
+<!-- ==================== H2: 总结对比表 ==================== -->
+<h2 id="s71367523">三大学派终极对比表</h2>
+
+<table>
+  <tr><th>维度</th><th>功利主义</th><th>康德义务论</th><th>美德伦理学</th></tr>
+  <tr>
+    <td><b>核心问题</b></td>
+    <td>什么行为产生最好的结果？</td>
+    <td>什么行为符合普遍法则？</td>
+    <td>一个有美德的人会怎么做？</td>
+  </tr>
+  <tr>
+    <td><b>道德焦点</b></td>
+    <td>后果</td>
+    <td>动机/法则</td>
+    <td>品格</td>
+  </tr>
+  <tr>
+    <td><b>代表人物</b></td>
+    <td>边沁、密尔</td>
+    <td>康德</td>
+    <td>亚里士多德</td>
+  </tr>
+  <tr>
+    <td><b>优点</b></td>
+    <td>清晰、可操作、关注福祉</td>
+    <td>尊重人权、普遍性</td>
+    <td>灵活、关注整体人生</td>
+  </tr>
+  <tr>
+    <td><b>缺点</b></td>
+    <td>可能牺牲正义、难以衡量</td>
+    <td>僵化、忽视后果</td>
+    <td>缺乏明确指导</td>
+  </tr>
+  <tr>
+    <td><b>典型应用</b></td>
+    <td>公共政策、成本收益分析</td>
+    <td>人权、法律普遍性</td>
+    <td>教育、品格培养</td>
+  </tr>
+</table>
+
+<hr>
+
+<!-- ==================== 自检清单 ==================== -->
+<h2 id="s32973778">✅ 自检清单</h2>
+
+<p>学完本章，你应该能够：</p>
+
+<h3 id="s12089642">概念理解 <span class="tag-key">关键</span></h3>
+<ul>
+  <li>□ 解释功利主义的核心原则及其三种主要反驳</li>
+  <li>□ 阐述康德绝对命令的两个公式</li>
+  <li>□ 说明美德伦理学的「中道」概念</li>
+  <li>□ 区分描述性相对主义与元伦理相对主义</li>
+</ul>
+
+<h3 id="s42395543">思想实验 <span class="tag-freq">高频</span></h3>
+<ul>
+  <li>□ 分析电车难题两个版本的直觉差异</li>
+  <li>□ 用双重效应原则解释作为 vs 允许的区别</li>
+  <li>□ 解释罗尔斯「无知之幕」的思想实验</li>
+</ul>
+
+<h3 id="s52596304">理论比较 <span class="tag-info">拓展</span></h3>
+<ul>
+  <li>□ 比较三大伦理学体系的优缺点</li>
+  <li>□ 分析相容论与自由意志论对道德责任的影响</li>
+  <li>□ 评价社会契约论的主要批评</li>
+</ul>
+
+<hr>
+
+<p style="text-align:center; color:#666; font-size:0.9em; margin-top:40px;">
+  📖 本章核心：三大伦理学体系（功利主义、义务论、美德伦理学）+ 经典思想实验（电车难题、无知之幕）+ 核心争议（相对主义、自由意志）
+</p>
+
+</body>
+</html>
+
+
+
+</body>
+</html>

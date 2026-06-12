@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Topic 11 - 后果主义</title>
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\(', '\)']],
+    displayMath: [['$$', '$$'], ['\[', '\]']]
+  }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"></script>
+<style>
+/* === ExamPass Shared Styles === */
+/* Paper-like warm background, clean typography, responsive */
+
+:root {
+  --paper: #fdf6e3;
+  --paper-dark: #f5ecd7;
+  --ink: #2c2c2c;
+  --ink-light: #555;
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
+  --divider: #d6c8a8;
+  --card-bg: #fef9ef;
+  --card-border: #e8dcc8;
+  --correct: #22c55e;
+  --correct-bg: #f0fdf4;
+  --wrong: #ef4444;
+  --wrong-bg: #fef2f2;
+  --tag-bg: #fef3c7;
+  --tag-text: #92400e;
+  --radius: 6px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: "Microsoft YaHei", "Noto Sans SC", "SimSun", sans-serif;
+  font-size: 12pt; line-height: 1.75; color: var(--ink);
+  max-width: 860px; margin: auto; padding: 24px 20px 60px;
+  background: var(--paper);
+}
+
+@media print {
+  body { font-size: 10.5pt; background: #fff; }
+  .no-print { display: none !important; }
+  h1, h2, h3 { page-break-after: avoid; }
+}
+
+/* ── Header ── */
+#exampass-header {
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding: 6px 0; margin-bottom: 0;
+}
+.header-brand { font-size: 1.2em; font-weight: 700; color: #1a1a2e; letter-spacing: 0.3px; }
+.header-url  { font-size: 0.78em; color: #999; }
+.header-divider { border: none; border-top: 2px solid var(--divider); margin: 4px 0 20px 0; }
+
+/* ── Typography ── */
+h1 { font-size: 1.55em; text-align: center; border-bottom: 2px solid var(--divider); padding-bottom: 8px; margin-top: 0; }
+h2 { font-size: 1.25em; border-bottom: 1px solid var(--divider); padding-bottom: 4px; margin-top: 28px; }
+h3 { font-size: 1.08em; margin-top: 20px; color: var(--ink); }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ── Tables ── */
+table { border-collapse: collapse; width: 100%; margin: 10px 0; font-size: 0.95em; }
+td, th { border: 1px solid var(--card-border); padding: 5px 9px; text-align: left; }
+th { background: var(--paper-dark); font-weight: 700; }
+
+/* ── Knowledge point vs explanation ── */
+.kp { font-weight: 700; color: var(--ink); }           /* key point: bold dark */
+.exp { font-weight: 400; color: var(--ink-light); }    /* explanation: lighter */
+.exp em, .exp strong { color: var(--ink); }             /* emphasis inside explanation */
+
+/* ── Block elements ── */
+blockquote {
+  border-left: 3px solid #c0392b; background: #fef9ef;
+  padding: 6px 14px; margin: 10px 0; font-size: 0.95em;
+}
+code { background: #f0ede0; padding: 2px 5px; border-radius: 3px; font-size: 0.92em; }
+pre { background: #f0ede0; padding: 10px; border-radius: var(--radius); overflow-x: auto; }
+
+/* ── TOC ── */
+div.toc {
+  background: var(--card-bg); padding: 14px 18px;
+  border: 1px solid var(--card-border); border-radius: var(--radius); margin-bottom: 22px;
+}
+div.toc ul { padding-left: 18px; }
+div.toc li { margin: 3px 0; font-size: 0.95em; }
+
+/* ── Priority tags ── */
+.tag-must   { background: #fee2e2; color: #991b1b; padding: 1px 6px; border-radius: 3px; font-size: 0.82em; font-weight: 600; }
+.tag-key    { background: #fef3c7; color: #92400e; padding: 1px 6px; border-radius: 3px; font-size: 0.82em; font-weight: 600; }
+.tag-freq   { background: #dbeafe; color: #1e40af; padding: 1px 6px; border-radius: 3px; font-size: 0.82em; font-weight: 600; }
+.tag-info   { background: #f0fdf4; color: #166534; padding: 1px 6px; border-radius: 3px; font-size: 0.82em; font-weight: 600; }
+
+
+</style>
+</head>
+<body>
+
+<header id="exampass-header">
+  <div class="header-left"><span class="header-brand">ExamPass Assistant</span></div>
+  <div class="header-right"><span class="header-url">github.com/WUBING2023/ExamPass-Assistant</span></div>
+</header>
+<hr class="header-divider">
+
+<h1>Topic 11 - 后果主义</h1>
+<div class="toc">
+<h2>目录</h2>
+<ul>
+<li><a href="#s16942677">第10讲：知识与怀疑论</a></li>
+  <li><a href="#s72134332">知识的传统定义：JTB「标签-must」</a></li>
+  <li><a href="#s90984925">盖梯尔问题：JTB 不够用「标签-must」</a></li>
+  <li><a href="#s23872804">怀疑论：我们什么都不知道？「标签-must」</a></li>
+  <li><a href="#s18692059">笛卡尔的普遍怀疑方法「标签-key」</a></li>
+  <li><a href="#s78936302">缸中之脑思想实验「标签-must」</a></li>
+  <li><a href="#s54313307">回应怀疑论：语境主义与相关选择理论「标签-must」</a></li>
+  <li><a href="#s83716987">内部主义 vs 外部主义「标签-must」</a></li>
+  <li><a href="#s66057332">先验知识 vs 后验知识「标签-must」</a></li>
+</ul>
+</div>
+<h2 id="s16942677">第10讲：知识与怀疑论</h2>
+
+<h3 id="s72134332">知识的传统定义：JTB「标签-must」</h3>
+<p class="kp">知识 = 得到辩护的真信念（Justified True Belief）</p>
+<p class="exp">柏拉图以来，哲学家默认「S 知道 P」当且仅当三条同时成立：① P 为真；② S 相信 P；③ S 有理由相信 P。</p>
+<blockquote>易错：三条缺一不可，但三条加在一起就够吗？</blockquote>
+
+<p class="exp">为什么需要三条？</p>
+<table>
+<tr><th>缺少</th><th>会变成什么</th><th>例子</th></tr>
+<tr><td>缺「真」</td><td>错误信念</td><td>相信「地球是平的」</td></tr>
+<tr><td>缺「信念」</td><td>碰巧猜对</td><td>梦里说中彩票号码，但没买</td></tr>
+<tr><td>缺「辩护」</td><td>幸运猜测</td><td>猜「硬币正面」居然对了</td></tr>
+</table>
+
+<h3 id="s90984925">盖梯尔问题：JTB 不够用「标签-must」</h3>
+<p class="kp">盖梯尔反例：有 JTB 三条，却没有知识。</p>
+<p class="exp">先看一个故事：史密斯和琼斯竞聘。史密斯有强证据表明琼斯会拿到工作，且琼斯口袋里有 10 枚硬币。于是史密斯相信「拿到工作的人口袋里有 10 枚硬币」。没想到史密斯自己拿到了工作，他口袋里也正好有 10 枚硬币。</p>
+<p class="exp">这个信念是真的、有辩护的，但我们直觉上觉得史密斯「不知道」这件事。为什么？因为辩护和真相之间是脱节的——证据指向琼斯，真相却落在史密斯自己身上。</p>
+<blockquote>易错：JTB 只要求信念为真，不要求「辩护能连到真相」。</blockquote>
+
+<p class="exp">怎么办？哲学家尝试加第四条条件来排除这种「认知运气」，但至今没有公认的完美方案。</p>
+
+<h3 id="s23872804">怀疑论：我们什么都不知道？「标签-must」</h3>
+<p class="kp">怀疑论论证形式：如果知道 P，就得知道非 Q（Q 是反常识的怀疑假设）；但你不知道非 Q，所以你并不知道 P。</p>
+<p class="exp">例子：如果你知道「我有手」，你就得知道「我不是缸中之脑」。但你无法排除缸中之脑，所以你并不知道我有手。</p>
+<p class="exp">怀疑假设可以很疯狂：做梦、被恶魔欺骗、缸中之脑。关键不在假设是否可能，而在「你能否排除它」。</p>
+
+<p class="exp">怀疑论依赖一条原理——闭合原则：如果你知道 P，并且知道 P 蕴含 Q，那么你就知道 Q。闭合原则 + 排除不了怀疑假设 --&gt; 我们失去日常知识。</p>
+<blockquote>易错：怀疑论不是说「我们错了」，而是说「我们没资格说知道」。</blockquote>
+
+<h3 id="s18692059">笛卡尔的普遍怀疑方法「标签-key」</h3>
+<p class="kp">笛卡尔：凡能被怀疑就全部抛弃，直到找到不可怀疑的起点。</p>
+<p class="exp">他设想一个全能恶魔在骗我——包括数学、感官、记忆都可能被伪造。唯一不可怀疑的是：我正在怀疑这件事本身。</p>
+<p class="kp">「我思故我在」（cogito）是笛卡尔找到的阿基米德点。</p>
+<p class="exp">从「我在思想」推出「我存在」，再尝试重建知识大厦。但笛卡尔后来依赖「上帝不会骗人」来保证外部世界，这一步争议很大。</p>
+
+<h3 id="s78936302">缸中之脑思想实验「标签-must」</h3>
+<p class="kp">缸中之脑（BIV）：把大脑放进营养液，用电脑模拟所有感觉——你完全分不清真假。</p>
+<p class="exp">这是怀疑论的现代升级版。问题：如果你真是 BIV，你的经验与现在一模一样，你怎么证明自己不是？</p>
+<p class="exp">普特南的语义外部主义回应：如果你是 BIV，你说的「大脑」「缸」其实指模拟世界里的东西，所以「我是缸中之脑」这句话在你口中是假的。但这个方案仍被批评没解决根本问题。</p>
+
+<h3 id="s54313307">回应怀疑论：语境主义与相关选择理论「标签-must」</h3>
+
+<p class="kp">语境主义：「知道」的标准会随语境移动。</p>
+<p class="exp">日常聊天：讨论缸中之脑没意义，所以「我知道我有手」成立。哲学课堂：缸中之脑被提起，标准升高，所以「我不知道我有手」。怀疑论只是语境漂移的产物，不是对日常知识的真正威胁。</p>
+
+<p class="kp">相关选择理论：知道 P 只需排除「相关」的替代选项。</p>
+<p class="exp">正常情形下，灯光不好、看走眼是相关替代；缸中之脑太遥远，不算相关。因此日常知识是安全的。</p>
+<blockquote>易错：相关 vs 遥远的边界由谁来定？这是该理论的软肋。</blockquote>
+
+<h3 id="s83716987">内部主义 vs 外部主义「标签-must」</h3>
+
+<p class="kp">内部主义：辩护只靠心灵内部的东西——信念、经验、记忆。</p>
+<p class="kp">外部主义：辩护可以靠外部因素，比如信念形成过程是否可靠。</p>
+
+<table>
+<tr><th></th><th>内部主义</th><th>外部主义</th></tr>
+<tr><td>核心</td><td>我能反思到理由</td><td>过程可靠，即使我说不清</td></tr>
+<tr><td>例子</td><td>我看到红苹果，我知道理由</td><td>鸽子靠磁场导航，它不知道磁场理论，但信念可靠</td></tr>
+<tr><td>难题</td><td>婴儿、动物算有知识吗？</td><td>可靠过程怎么定义？</td></tr>
+</table>
+
+<p class="kp">可靠主义（Goldman）：信念由可靠过程产生即被辩护，不需要主体能解释。</p>
+<blockquote>易错：外部主义容易与「真」混淆——它关心的是「辩护来源」，不是「为什么真」。</blockquote>
+
+<h3 id="s66057332">先验知识 vs 后验知识「标签-must」</h3>
+
+<p class="kp">先验知识：辩护不依赖感官经验（数学、逻辑）。</p>
+<p class="kp">后验知识：辩护需要感官经验（科学、日常观察）。</p>
+<p class="exp">注意：这是关于「辩护来源」的区分，不是关于「真理是否必然」。</p>
+
+<p class="kp">康德：综合先验——既扩展知识，又不靠经验（如「一切皆有因」「7+5=12」）。</p>
+<blockquote>易错：「先验」不是「先天」的同义词；它强调的是辩护方式，不是时间先后。</blockquote>
+
+
+
+</body>
+</html>

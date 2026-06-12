@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Topic 01 - 哲学悖论</title>
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\(', '\)']],
+    displayMath: [['$$', '$$'], ['\[', '\]']]
+  }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"></script>
+<style>
+/* === ExamPass Shared Styles === */
+/* Paper-like warm background, clean typography, responsive */
+
+:root {
+  --paper: #fdf6e3;
+  --paper-dark: #f5ecd7;
+  --ink: #2c2c2c;
+  --ink-light: #555;
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
+  --divider: #d6c8a8;
+  --card-bg: #fef9ef;
+  --card-border: #e8dcc8;
+  --correct: #22c55e;
+  --correct-bg: #f0fdf4;
+  --wrong: #ef4444;
+  --wrong-bg: #fef2f2;
+  --tag-bg: #fef3c7;
+  --tag-text: #92400e;
+  --radius: 6px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: "Microsoft YaHei", "Noto Sans SC", "SimSun", sans-serif;
+  font-size: 12pt; line-height: 1.75; color: var(--ink);
+  max-width: 860px; margin: auto; padding: 24px 20px 60px;
+  background: var(--paper);
+}
+
+@media print {
+  body { font-size: 10.5pt; background: #fff; }
+  .no-print { display: none !important; }
+  h1, h2, h3 { page-break-after: avoid; }
+}
+
+/* ── Header ── */
+#exampass-header {
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding: 6px 0; margin-bottom: 0;
+}
+.header-brand { font-size: 1.2em; font-weight: 700; color: #1a1a2e; letter-spacing: 0.3px; }
+.header-url  { font-size: 0.78em; color: #999; }
+.header-divider { border: none; border-top: 2px solid var(--divider); margin: 4px 0 20px 0; }
+
+/* ── Typography ── */
+h1 { font-size: 1.55em; text-align: center; border-bottom: 2px solid var(--divider); padding-bottom: 8px; margin-top: 0; }
+h2 { font-size: 1.25em; border-bottom: 1px solid var(--divider); padding-bottom: 4px; margin-top: 28px; }
+h3 { font-size: 1.08em; margin-top: 20px; color: var(--ink); }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ── Tables ── */
+table { border-collapse: collapse; width: 100%; margin: 10px 0; font-size: 0.95em; }
+td, th { border: 1px solid var(--card-border); padding: 5px 9px; text-align: left; }
+th { background: var(--paper-dark); font-weight: 700; }
+
+/* ── Knowledge point vs explanation ── */
+.kp { font-weight: 700; color: var(--ink); }           /* key point: bold dark */
+.exp { font-weight: 400; color: var(--ink-light); }    /* explanation: lighter */
+.exp em, .exp strong { color: var(--ink); }             /* emphasis inside explanation */
+
+/* ── Block elements ── */
+blockquote {
+  border-left: 3px solid #c0392b; background: #fef9ef;
+  padding: 6px 14px; margin: 10px 0; font-size: 0.95em;
+}
+code { background: #f0ede0; padding: 2px 5px; border-radius: 3px; font-size: 0.92em; }
+pre { background: #f0ede0; padding: 10px; border-radius: var(--radius); overflow-x: auto; }
+
+/* ── TOC ── */
+div.toc {
+  background: var(--card-bg); padding: 14px 18px;
+  border: 1px solid var(--card-border); border-radius: var(--radius); margin-bottom: 22px;
+}
+div.toc ul { padding-left: 18px; }
+div.toc li { margin: 3px 0; font-size: 0.95em; }
+
+/* ── Priority tags ── */
+.tag-must   { background: #fee2e2; color: #991b1b; padding: 1px 6px; border-radius: 3px; font-size: 0.82em; font-weight: 600; }
+.tag-key    { background: #fef3c7; color: #92400e; padding: 1px 6px; border-radius: 3px; font-size: 0.82em; font-weight: 600; }
+.tag-freq   { background: #dbeafe; color: #1e40af; padding: 1px 6px; border-radius: 3px; font-size: 0.82em; font-weight: 600; }
+.tag-info   { background: #f0fdf4; color: #166534; padding: 1px 6px; border-radius: 3px; font-size: 0.82em; font-weight: 600; }
+
+
+</style>
+</head>
+<body>
+
+<header id="exampass-header">
+  <div class="header-left"><span class="header-brand">ExamPass Assistant</span></div>
+  <div class="header-right"><span class="header-url">github.com/WUBING2023/ExamPass-Assistant</span></div>
+</header>
+<hr class="header-divider">
+
+<h1>Topic 01 - 哲学悖论</h1>
+<div class="toc">
+<h2>目录</h2>
+<ul>
+<li><a href="#s32112262">Topic 1: Philosophical Paradoxes（哲学悖论）</a></li>
+  <li><a href="#s65297125">哲学悖论的结构：三个要件</a></li>
+  <li><a href="#s63489732">分析悖论：分析本身可能既平庸又错</a></li>
+  <li><a href="#s40041362">罗素悖论：集合论里炸出的裂缝</a></li>
+  <li><a href="#s74283709">理发师悖论：罗素悖论的通俗版</a></li>
+  <li><a href="#s75188752">说谎者悖论：一句话否定自己的真值</a></li>
+  <li><a href="#s51230958">摩尔悖论：断言与信念之间的裂缝</a></li>
+  <li><a href="#s47400873">全能悖论：「全能」这个概念可能自相矛盾</a></li>
+  <li><a href="#s24043785">推论悖论：推理似乎不能增加新知识</a></li>
+  <li><a href="#s76000241">经典悖论对比表：结构与机制</a></li>
+  <li><a href="#s64776251">连锁悖论：模糊词的陷阱</a></li>
+  <li><a href="#s82324054">模糊性问题的解决方案：三条路</a></li>
+  <li><a href="#s66109367">高阶模糊性：问题在元层面复活</a></li>
+</ul>
+</div>
+<h2 id="s32112262">Topic 1: Philosophical Paradoxes（哲学悖论）</h2>
+<p><span class="exp">本节回答：为什么我们觉得显然成立的几个前提，一起推出矛盾？哲学悖论不是文字游戏——它逼着我们修正那些「觉得不会错」的直觉。整章围绕一个核心骨架：先学会辨认悖论的结构（kc1.1），再逐个解剖经典悖论，最后聚焦连锁悖论（kc1.9）并进入解决方案（kc1.10）及其自身困难（kc1.11）。</span></p>
+
+<h3 id="s65297125">哲学悖论的结构：三个要件</h3>
+<p><span class="exp">先看一个具体例子。一粒沙子不是「一堆」；如果 n 粒沙子不构成一堆，那么 n+1 粒也不构成一堆——这听起来显然成立。于是一粒一粒加下去，十万粒沙子也不是一堆。但十万粒显然是一堆。这就是连锁悖论（Sorites Paradox）。</span></p>
+<p><span class="exp">从这个例子抽出<span class="kp">悖论</span>的三个必要组成部分：<span class="kp">(1) 一组前提，每个单独看都像是真的</span>；<span class="kp">(2) 一段推理，看起来每一步都合乎逻辑</span>；<span class="kp">(3) 一个结论，要么自相矛盾，要么明显荒谬</span>。</span></p>
+<p><span class="exp">为什么需要这个结构：它告诉我们面对矛盾时该检查哪里。结论荒谬，但你不能直接嘲笑结论——你得决定：否定哪一条前提？还是阻断哪一步推理？这就是哲学分析的开始。</span></p>
+<blockquote>易错：不是每个矛盾都是悖论。悖论的每个前提都必须「逼得你不敢轻易丢掉」——如果随便哪条都能不假思索地扔掉，那只是普通推理错误，不叫悖论。悖论的力量来自「每条前提都舍不得扔，但结论不能接受」的张力。</blockquote>
+<p><span class="tag-must">必考</span></p>
+
+<h3 id="s63489732">分析悖论：分析本身可能既平庸又错</h3>
+<p><span class="exp"><span class="kp">分析</span>（analysis）的目标：把一个概念 X 说成「更基本」的东西——比如把「知识」分析为「得到辩护的真信念」。这要求分析项（analysans）与被分析项（analysandum）意义相同。</span></p>
+<p><span class="exp">但这里出现两难：如果两者的意义真的相同，那分析只是在说「X = X」，信息量为零——<span class="kp">平庸</span>。如果意义不同，那分析就是在把一个不同的东西冒充 X——<span class="kp">错</span>。两个选项都让人无法接受。</span></p>
+<p><span class="exp">为什么需要它：这个悖论逼我们思考「分析」这件事到底在做什么。它不是纯技术问题，而是关于我们能否用更清晰的词解释任何概念这一哲学基本信心的挑战。</span></p>
+<p><span class="tag-key">重点</span></p>
+
+<h3 id="s40041362">罗素悖论：集合论里炸出的裂缝</h3>
+<p><span class="exp">考虑这样一个集合：<span class="kp">$R = \{x : x \notin x\}$</span>——「所有不以自身为元素的集合」构成的集合。现在问：$R$ 是不是自己的元素？</span></p>
+<p><span class="exp">走一遍推理：</span></p>
+<ul>
+<li><span class="exp">假设 $R \in R$。按定义，$R$ 的元素都满足「$x \notin x$」，所以 $R \notin R$。矛盾。</span></li>
+<li><span class="exp">假设 $R \notin R$。那 $R$ 满足「$x \notin x$」的条件，所以 $R \in R$。又矛盾。</span></li>
+</ul>
+<p><span class="exp">无论怎么选都矛盾——这就是<span class="kp">罗素悖论</span>。它炸开了 19 世纪「朴素集合论」的一个大洞：原来「任何条件都能定义一个集合」这条直觉是危险的。</span></p>
+<p><span class="exp">为什么是它而不是别的：关键在「$x \notin x$」这个条件看起来完全无害——「是不是自己的元素」是个简单问题——却导致爆炸。这说明「看起来无害」不等于「真的安全」。</span></p>
+<p><span class="tag-must">必考</span></p>
+
+<h3 id="s74283709">理发师悖论：罗素悖论的通俗版</h3>
+<p><span class="exp">一个理发师规定：「我给村里所有不自己刮脸的男人刮脸，也只给这些人刮脸。」他给自己刮脸吗？</span></p>
+<p><span class="exp">如果他给自己刮脸，按规则他只给「不自己刮脸的人」刮脸，所以他不能给自己刮。如果他不给自己刮脸，按规则他必须给「所有不自己刮脸的人」刮脸，所以他必须给自己刮。</span></p>
+<p><span class="exp">为什么需要它：这个悖论依赖罗素悖论（kc1.3），只是把抽象的集合换成了理发师——让人看到罗素悖论不是集合论的技术问题，而是任何涉及「自我指涉 + 否定」的结构都可能爆炸。</span></p>
+<p><span class="tag-info">背景</span></p>
+
+<h3 id="s75188752">说谎者悖论：一句话否定自己的真值</h3>
+<p><span class="exp">考虑这句话：<span class="kp">「这句话是假的。」</span></span></p>
+<p><span class="exp">走一遍推理：</span></p>
+<ul>
+<li><span class="exp">如果它是真的，那它说自己是假的成立——所以它是假的。矛盾。</span></li>
+<li><span class="exp">如果它是假的，那它说自己是假的这句话不成立——所以它不是假的，也就是真的。又矛盾。</span></li>
+</ul>
+<p><span class="exp">结构：一个句子 <span class="kp">指向自身</span> 并否定自己的真值。这和罗素悖论的「$x \notin x$」同构——只是把集合换成了语句。</span></p>
+<p><span class="exp">为什么需要它：它直接威胁到经典逻辑的「二值原则」——每个有意义的句子非真即假。如果一句话能既真又假，整座逻辑大厦的地基就有裂缝。</span></p>
+<p><span class="tag-must">必考</span></p>
+
+<h3 id="s51230958">摩尔悖论：断言与信念之间的裂缝</h3>
+<p><span class="exp">说出这句话看起来很荒谬：<span class="kp">「在下雨，但我不相信在下雨。」</span></span></p>
+<p><span class="exp">但它不是逻辑矛盾：世界上完全可能一边下雨、一边我没注意到。那为什么我们觉得这句话「不对劲」？</span></p>
+<p><span class="exp">答案不在真值条件，在<span class="kp">断言的规范</span>：断言一个命题，本身就预设了说话者相信它。所以同时断言 p 又否认自己相信 p，违反了断言的实践规则。</span></p>
+<p><span class="exp">为什么需要它：它和说谎者形成清晰对比——说谎者涉及真值层面的矛盾，摩尔悖论涉及言语行为层面的荒谬。这让我们看到「悖论」不只一种。</span></p>
+<blockquote>易错：摩尔悖论不是逻辑矛盾。p ∧ ¬Bp 这个命题完全可以为真（下雨且我不知）。荒谬性来自「断言」这件事本身的规范，不是来自命题内容。</blockquote>
+<p><span class="tag-key">重点</span></p>
+
+<h3 id="s47400873">全能悖论：「全能」这个概念可能自相矛盾</h3>
+<p><span class="exp">问：全能的上帝能造出一块自己举不起来的石头吗？</span></p>
+<ul>
+<li><span class="exp">如果能造出来，那就有一件事祂举不起来——所以祂不全能。</span></li>
+<li><span class="exp">如果造不出来，那就有一件事祂造不出来——所以祂不全能。</span></li>
+</ul>
+<p><span class="exp">两个选项都推出「不全能」。这说明「全能」这个概念可能内部不一致——一个概念如果包含矛盾，它就没有任何实例能实现它。</span></p>
+<p><span class="exp">为什么需要它：它展示了悖论的另一种用途——不是发现外部世界的矛盾，而是在检测某个概念是否自洽。在分析哲学里，这叫「用悖论做概念诊断」。</span></p>
+<p><span class="tag-info">背景</span></p>
+
+<h3 id="s24043785">推论悖论：推理似乎不能增加新知识</h3>
+<p><span class="exp">一个论证要么有效，要么无效：</span></p>
+<ul>
+<li><span class="exp">如果有效，结论已经藏在前提里了——你只是把已知的东西换了个说法，没有新知识。</span></li>
+<li><span class="exp">如果无效，结论根本没被前提担保——不可靠，也不算新知识。</span></li>
+</ul>
+<p><span class="exp">两个选项都推出「推理没用」。但推理显然有用——那问题出在哪里？</span></p>
+<p><span class="exp">为什么需要它：它逼我们区分「信息含量」和「认知价值」——结论可能在信息内容上没超出前提，但对从未想到过这个结论的主体来说仍是新的。这在分析哲学里涉及「逻辑真理是否平凡」的争论。</span></p>
+<p><span class="tag-info">背景</span></p>
+
+<h3 id="s76000241">经典悖论对比表：结构与机制</h3>
+<table>
+<tr><th>悖论</th><th>核心机制</th><th>威胁对象</th><th>自指？</th></tr>
+<tr><td>分析悖论</td><td>同一性 vs 信息量</td><td>哲学分析的可能性</td><td>否</td></tr>
+<tr><td>罗素悖论</td><td>自我隶属 + 否定</td><td>朴素集合论</td><td>是（$x \in x$）</td></tr>
+<tr><td>理发师悖论</td><td>罗素悖论的具象化</td><td>自我指涉规则</td><td>是</td></tr>
+<tr><td>说谎者悖论</td><td>自我指涉 + 真值否定</td><td>二值原则 / 真理论</td><td>是（这句话…）</td></tr>
+<tr><td>摩尔悖论</td><td>断言规范 vs 命题内容</td><td>断言的实践规则</td><td>否（涉及信念而非真值）</td></tr>
+<tr><td>全能悖论</td><td>概念的内在矛盾</td><td>概念一致性</td><td>否</td></tr>
+<tr><td>推论悖论</td><td>有效 vs 信息量</td><td>推理的认识价值</td><td>否</td></tr>
+</table>
+<p><span class="exp">怎么用这张表：遇到一个新悖论，先问「它的核心机制是什么」——自指？概念矛盾？规范冲突？——然后对应到威胁对象，就能快速定位它在哲学地图上的位置。</span></p>
+<p><span class="tag-freq">高频</span></p>
+
+<h3 id="s64776251">连锁悖论：模糊词的陷阱</h3>
+<p><span class="exp">连锁悖论（Sorites Paradox）是本章第二个枢纽，因为它直接逼迫我们面对「模糊性」问题。</span></p>
+<p><span class="exp">用数字走一遍：</span></p>
+<ul>
+<li><span class="exp"><span class="kp">前提 1</span>：1 粒沙子不是堆。（显然真）</span></li>
+<li><span class="exp"><span class="kp">前提 2</span>：如果 n 粒不是堆，那 n+1 粒也不是堆。（听起来也对——多一粒怎么就突然变堆了？）</span></li>
+<li><span class="exp"><span class="kp">重复前提 2</span>：从 n=1 开始，用前提 2 推出 n=2 不是堆；再用一次，n=3 不是堆……每步都只用前提 2。</span></li>
+<li><span class="exp">重复 99999 次后：<span class="kp">100,000 粒沙子不是堆</span>。</span></li>
+<li><span class="exp">但 100,000 粒显然是个大堆。矛盾。</span></li>
+</ul>
+<p><span class="exp">每一步推理都用的是前提 2，看起来没问题。但前提 2 被重复了十万次之后，把一个真命题（1 粒不是堆）输送到一个假命题（10 万粒不是堆）。这说明<span class="kp">前提 2 不是普遍成立的</span>——哪怕它在任何单次使用时都「看起来对」。</span></p>
+<p><span class="exp">为什么是它而不是别的：关键在于「堆」这个词是<span class="kp">模糊的</span>（vague）——没有精确的分界点。连锁悖论利用的正是「模糊词 + 微小变化不改变性质」这条直觉，推出这条直觉本身会导向荒谬。</span></p>
+<p><span class="tag-must">必考</span></p>
+
+<h3 id="s82324054">模糊性问题的解决方案：三条路</h3>
+<p><span class="exp">连锁悖论迫使我们拒绝前提 2 或修改逻辑。哲学家走了三条路：</span></p>
+<table>
+<tr><th>方案</th><th>核心主张</th><th>代价</th></tr>
+<tr><td><span class="kp">认知主义</span>（Epistemicism）</td><td>存在精确分界点（比如恰好 74,287 粒），但我们不知道它在哪里。</td><td>要承认「我们不知道一个显然有界的问题的答案」很难接受。</td></tr>
+<tr><td><span class="kp">多值逻辑 / 模糊逻辑</span></td><td>真值不只是 0 和 1，而是 0 到 1 之间的任何数。堆的真值随粒数连续变化。</td><td>要放弃经典逻辑的二值原则——技术代价大。</td></tr>
+<tr><td><span class="kp">超赋值主义</span>（Supervaluationism）</td><td>一句话「超真」当且仅当它在所有可接受的精确化方式下都真。</td><td>要接受「精确化方式」这个概念本身也是模糊的（见下节）。</td></tr>
+</table>
+<p><span class="exp">怎么用：这三个方案代表了对「模糊性来源」的三种不同诊断——在认知（我们不知道）、在世界上（真值本身是连续的）、在语言（精确化方式多样）。判断哪个方案更可信，本质上是在判断「模糊」到底出在哪个环节。</span></p>
+<p><span class="tag-must">必考</span></p>
+
+<h3 id="s66109367">高阶模糊性：问题在元层面复活</h3>
+<p><span class="exp">上一节的三个方案看似解决了连锁悖论，但它们面对一个共同的挑战：<span class="kp">高阶模糊性</span>。</span></p>
+<p><span class="exp">以认知主义为例。它说存在一条精确的「堆」的分界线。那「显然是堆」这个词呢？从「显然不是堆」到「显然是堆」之间，也有一个过渡地带。按认知主义的逻辑，「显然堆」也该有精确分界线。但「显然堆」的分界线本身看起来也是模糊的——我们同样说不出它在哪里。</span></p>
+<p><span class="exp">这就是<span class="kp">高阶模糊性</span>：当一个模糊谓词被「显然」「清楚」这类修饰语限定后，得到的新的谓词仍然是模糊的。问题不是被解决了，而是被推到了更高一层。</span></p>
+<p><span class="exp">为什么需要它：它是对解决方案的压力测试。任何声称「已经解决模糊性问题」的方案，都得回答：你的方案本身是否也陷入了模糊？如果答案是是，那问题只是被推迟了。</span></p>
+<blockquote>易错：高阶模糊性不是说「我们还没找到解决方案」，而是说「这类方案的结构天然会引发同样的问题」。这是对解决方案框架本身的挑战，不是对某个具体方案的修补要求。</blockquote>
+<p><span class="tag-key">重点</span></p>
+
+
+
+</body>
+</html>

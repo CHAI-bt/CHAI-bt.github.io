@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Topic 05 - 激进怀疑论 - 章节测试</title>
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\(', '\)']],
+    displayMath: [['$$', '$$'], ['\[', '\]']]
+  }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"></script>
+<style>
+/* === ExamPass Shared Styles === */
+/* Paper-like warm background, clean typography, responsive */
+
+:root {
+  --paper: #fdf6e3;
+  --paper-dark: #f5ecd7;
+  --ink: #2c2c2c;
+  --ink-light: #555;
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
+  --divider: #d6c8a8;
+  --card-bg: #fef9ef;
+  --card-border: #e8dcc8;
+  --correct: #22c55e;
+  --correct-bg: #f0fdf4;
+  --wrong: #ef4444;
+  --wrong-bg: #fef2f2;
+  --tag-bg: #fef3c7;
+  --tag-text: #92400e;
+  --radius: 6px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: "Microsoft YaHei", "Noto Sans SC", "SimSun", sans-serif;
+  font-size: 12pt; line-height: 1.75; color: var(--ink);
+  max-width: 860px; margin: auto; padding: 24px 20px 60px;
+  background: var(--paper);
+}
+
+@media print {
+  body { font-size: 10.5pt; background: #fff; }
+  .no-print { display: none !important; }
+  h1, h2, h3 { page-break-after: avoid; }
+}
+
+/* ── Header ── */
+#exampass-header {
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding: 6px 0; margin-bottom: 0;
+}
+.header-brand { font-size: 1.2em; font-weight: 700; color: #1a1a2e; letter-spacing: 0.3px; }
+.header-url  { font-size: 0.78em; color: #999; }
+.header-divider { border: none; border-top: 2px solid var(--divider); margin: 4px 0 20px 0; }
+
+/* ── Typography ── */
+h1 { font-size: 1.55em; text-align: center; border-bottom: 2px solid var(--divider); padding-bottom: 8px; margin-top: 0; }
+h2 { font-size: 1.25em; border-bottom: 1px solid var(--divider); padding-bottom: 4px; margin-top: 28px; }
+h3 { font-size: 1.08em; margin-top: 20px; color: var(--ink); }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ── Tables ── */
+table { border-collapse: collapse; width: 100%; margin: 10px 0; font-size: 0.95em; }
+td, th { border: 1px solid var(--card-border); padding: 5px 9px; text-align: left; }
+th { background: var(--paper-dark); font-weight: 700; }
+
+/* ── Knowledge point vs explanation ── */
+.kp { font-weight: 700; color: var(--ink); }           /* key point: bold dark */
+.exp { font-weight: 400; color: var(--ink-light); }    /* explanation: lighter */
+.exp em, .exp strong { color: var(--ink); }             /* emphasis inside explanation */
+
+/* ── Block elements ── */
+blockquote {
+  border-left: 3px solid #c0392b; background: #fef9ef;
+  padding: 6px 14px; margin: 10px 0; font-size: 0.95em;
+}
+code { background: #f0ede0; padding: 2px 5px; border-radius: 3px; font-size: 0.92em; }
+pre { background: #f0ede0; padding: 10px; border-radius: var(--radius); overflow-x: auto; }
+
+/* ── TOC ── */
+div.toc {
+  background: var(--card-bg); padding: 14px 18px;
+  border: 1px solid var(--card-border); border-radius: var(--radius); margin-bottom: 22px;
+}
+div.toc ul { padding-left: 18px; }
+div.toc li { margin: 3px 0; font-size: 0.95em; }
+
+/* ── Priority tags ── */
+.tag-must   { background: #fee2e2; color: #991b1b; padding: 1px 6px; border-radius: 3px; font-size: 0.82em; font-weight: 600; }
+.tag-key    { background: #fef3c7; color: #92400e; padding: 1px 6px; border-radius: 3px; font-size: 0.82em; font-weight: 600; }
+.tag-freq   { background: #dbeafe; color: #1e40af; padding: 1px 6px; border-radius: 3px; font-size: 0.82em; font-weight: 600; }
+.tag-info   { background: #f0fdf4; color: #166534; padding: 1px 6px; border-radius: 3px; font-size: 0.82em; font-weight: 600; }
+
+/* === Interactive Test Styles === */
+
+/* ── Score box ── */
+#score-box {
+  display: none; background: var(--paper-dark); color: var(--ink);
+  padding: 16px 20px; border-radius: var(--radius); margin: 14px 0;
+  text-align: center; border: 1px solid var(--card-border);
+}
+#score-box .score-num { font-size: 2.2em; font-weight: 700; }
+#score-box .score-label { font-size: 0.85em; color: var(--ink-light); }
+
+/* ── Question card ── */
+.q-card {
+  background: var(--card-bg); border: 1px solid var(--card-border);
+  border-radius: var(--radius); padding: 12px 14px; margin: 10px 0;
+  transition: all 0.15s;
+}
+.q-card.correct { border-left: 3px solid var(--correct); background: #f7fdf4; }
+.q-card.wrong   { border-left: 3px solid var(--wrong); background: #fef9f9; }
+
+.q-num  { font-weight: 700; font-size: 0.98em; margin-bottom: 4px; }
+.q-text { margin-bottom: 8px; font-size: 0.98em; }
+
+/* ── Options (compact) ── */
+.option {
+  display: block; padding: 4px 10px; margin: 3px 0;
+  border: 1px solid var(--card-border); border-radius: 4px;
+  cursor: pointer; transition: all 0.12s; font-size: 0.93em;
+  background: #fefcf5;
+}
+.option:hover            { background: #f0ede0; }
+.option input            { margin-right: 6px; }
+.option.selected         { border-color: var(--accent); background: #eff6ff; }
+.option.correct-answer   { border-color: var(--correct); background: var(--correct-bg); }
+.option.wrong-answer     { border-color: var(--wrong); background: var(--wrong-bg); }
+
+/* ── Textareas (compact) ── */
+.q-textarea {
+  width: 100%; min-height: 56px; border: 1px solid var(--card-border);
+  border-radius: 4px; padding: 6px 10px; font-family: inherit;
+  font-size: 0.93em; background: #fefcf5; resize: vertical;
+}
+.q-textarea:focus { outline: none; border-color: var(--accent); }
+.q-code {
+  font-family: "Consolas", "Monaco", "Courier New", monospace;
+  font-size: 0.88em; line-height: 1.5; background: #1e1e2e; color: #e0e0e0;
+  tab-size: 4; white-space: pre;
+}
+.q-code:focus { border-color: var(--accent); }
+
+/* ── Partial-credit badge ── */
+.badge-partial { background: #fef3c7; color: #92400e; }
+.q-card.partial { border-color: #f59e0b; }
+
+/* ── Result after grading ── */
+.result {
+  display: none; margin-top: 8px; padding: 8px 12px;
+  background: #fefcf5; border: 1px solid var(--card-border);
+  border-radius: 4px; font-size: 0.9em; line-height: 1.6;
+}
+.result .badge {
+  display: inline-block; padding: 1px 9px; border-radius: 3px;
+  font-weight: 700; font-size: 0.82em; margin-right: 6px;
+}
+.badge-ok  { background: var(--correct-bg); color: #166534; }
+.badge-no  { background: var(--wrong-bg); color: #991b1b; }
+.badge-ref { background: #dbeafe; color: #1e40af; }
+
+.result .explanation { margin-top: 4px; color: var(--ink); }
+.result .pitfall { color: #b45309; margin-top: 3px; font-size: 0.9em; }
+
+/* ── Grading button ── */
+.grading-bar { text-align: center; margin: 20px 0; }
+.grading-bar button {
+  font-size: 1em; padding: 8px 32px; background: var(--accent);
+  color: #fff; border: none; border-radius: var(--radius);
+  cursor: pointer; font-weight: 600; letter-spacing: 0.3px;
+}
+.grading-bar button:hover     { background: var(--accent-hover); }
+.grading-bar button:disabled  { background: #bbb; cursor: not-allowed; }
+
+</style>
+</head>
+<body>
+
+<header id="exampass-header">
+  <div class="header-left"><span class="header-brand">ExamPass Assistant</span></div>
+  <div class="header-right"><span class="header-url">github.com/WUBING2023/ExamPass-Assistant</span></div>
+</header>
+<hr class="header-divider">
+
+<h1>Topic 05 - 激进怀疑论 - 章节测试</h1>
+<h2 style="text-align:center">章节测试</h2>
+<p style="text-align:center;color:var(--ink-light);font-size:0.95em">满分 100 分 | 建议 30 分钟 | 选择答案后点击提交批改</p>
+
+<div id="score-box"><div class="score-num" id="score-num">0</div><div class="score-label">总分</div></div>
+<div id="questions-container"></div>
+<div class="grading-bar no-print"><button onclick="gradeAll()" id="grade-btn">提交批改</button></div>
+
+<script>
+var Q = [{"kc_id": "kc5.1", "cognitive_level": "记忆", "difficulty": "基础", "type": "choice", "question": "逻辑学的主要目标是什么？", "options": ["区分好的推理与坏的推理、有效论证与无效论证", "研究所有哲学问题", "证明所有命题都为真", "创造新的语言规则"], "answer": "A", "explanation": "根据kc5.1，逻辑是研究推理和论证的学科，其目标是区分好的推理与坏的推理，有效论证与无效论证。逻辑为我们提供工具来评估结论是否从前提中得出。", "pitfall": "学生可能误以为逻辑学是要证明所有命题都为真，而实际上逻辑关注的是推理的有效性而非内容本身的真假。"}, {"kc_id": "kc5.2", "cognitive_level": "理解", "difficulty": "基础", "type": "tf", "question": "论证由前提和结论两部分组成，前提是作为理由或证据提供的陈述，结论是前提所支持或证明的陈述。", "options": [], "answer": "T", "explanation": "根据kc5.2，论证由前提和结论组成。前提是作为理由或证据提供的陈述，结论是前提所支持或证明的陈述。理解这一结构对于评估任何论证都至关重要。", "pitfall": "学生可能混淆前提和结论的位置，或者不理解它们之间的关系。"}, {"kc_id": "kc5.3", "cognitive_level": "应用", "difficulty": "中等", "type": "choice", "question": "以下哪个选项最准确地描述了演绎推理的有效性？", "options": ["前提和结论都必须是真实的", "如果前提为真，则结论必定为真", "只要前提看起来合理，结论就有效", "结论为真的概率很高"], "answer": "B", "explanation": "根据kc5.3，演绎推理旨在保证如果前提为真，则结论也为真。一个论证是有效的，当且仅当前提为真而结论为假是不可能的。有效性关注的是逻辑联系，而非前提的实际真伪。", "pitfall": "学生常将论证的有效性与前提的真实性混淆，认为有效的论证要求前提实际上为真，而实际上有效性只要求在假设前提为真的情况下结论必然为真。"}, {"kc_id": "kc5.4", "cognitive_level": "理解", "difficulty": "基础", "type": "fill", "question": "归纳推理与演绎推理不同，它为结论提供____支持，使结论____，但不能____它。", "options": [], "answer": "或然的；很可能；保证", "explanation": "根据kc5.4，归纳推理为结论提供或然的（probable）支持，使结论很可能（likely），但不能保证（guarantee）它。与演绎不同，归纳强度是程度问题。", "pitfall": "学生可能混淆归纳与演绎的区别，误以为归纳推理也能像演绎一样保证结论为真。"}, {"kc_id": "kc5.5", "cognitive_level": "应用", "difficulty": "中等", "type": "choice", "question": "当一个人攻击提出论点的人而非论点本身时，犯了哪种逻辑谬误？", "options": ["稻草人谬误", "人身攻击谬误", "循环论证", "虚假二择一"], "answer": "B", "explanation": "根据kc5.5，人身攻击谬误（ad hominem）是指攻击提出论点的人而非论点本身。稻草人谬误是歪曲论点，虚假二择一是指只提供两个选项，循环论证是假设需要证明的东西。", "pitfall": "学生可能混淆不同的逻辑谬误类型，特别是人身攻击与稻草人谬误。"}, {"kc_id": "kc5.6", "cognitive_level": "记忆", "difficulty": "基础", "type": "choice", "question": "在命题逻辑中，用符号'→'表示的逻辑连接词是？", "options": ["条件（如果...那么...）", "合取（并且）", "析取（或者）", "否定（非）"], "answer": "A", "explanation": "根据kc5.6，命题逻辑研究简单命题如何通过逻辑连接词组合：合取（∧）、析取（∨）、否定（¬）、条件（→）和双条件（↔）。'→'表示条件连接词，读作'如果...那么...'。", "pitfall": "学生可能混淆不同逻辑连接词的含义，特别是条件（→）与双条件（↔）的区别。"}, {"kc_id": "kc5.7", "cognitive_level": "应用", "difficulty": "中等", "type": "short", "question": "简述真值表方法如何判断一个论证是否有效。", "options": [], "answer": "真值表系统地显示复杂命题的所有可能的真值。它提供了一种机械方法来判断论证是否有效：如果没有一行显示前提为真而结论为假的情况，则该论证是有效的。", "explanation": "根据kc5.7，真值表系统地显示复杂命题的所有可能真值。它们提供了一种机械方法来确定论证是否有效：如果没有一行显示前提为真而结论为假，则论证有效。", "pitfall": "学生可能误以为只要存在前提为真的行就要求结论为真，而实际上关键是检查是否存在前提真而结论假的行。"}, {"kc_id": "kc5.8", "cognitive_level": "理解", "difficulty": "基础", "type": "choice", "question": "以下哪个例子是标准的三段论？", "options": ["如果下雨，地面会湿；地面湿了；所以下雨了", "所有鸟会飞；企鹅是鸟；所以企鹅会飞", "他学习努力；所以他成绩好", "大多数天鹅是白的；这只鸟是天鹅；所以它可能是白的"], "answer": "B", "explanation": "根据kc5.8，三段论是一种演绎推理形式，有两个前提共享一个共同项。'所有A是B；C是A；所以C是B'是标准的三段论结构。选项B符合这个结构，尽管其大前提在现实中不一定为真。", "pitfall": "学生可能误选A，因为这是常见的推理形式，但它实际上是肯定后件的谬误，不是有效的三段论。"}, {"kc_id": "kc5.3", "cognitive_level": "分析", "difficulty": "较难", "type": "choice", "question": "一个论证的前提都为真且论证有效，但结论看起来与直觉相悖。以下哪项最准确地描述了这个情况？", "options": ["有效性要求结论必须符合直觉", "这个论证实际上无效", "这个论证的前提实际上不为真", "这个论证是有效的，但结论确实为真"], "answer": "D", "explanation": "根据kc5.3，论证的有效性只要求在假设前提为真的情况下结论必然为真，不涉及前提的实际真伪或结论是否符合直觉。一个论证可以前提都真、推理有效，但结论看似奇怪——这往往挑战了我们的直觉而非逻辑。", "pitfall": "学生可能因结论与直觉相悖而错误地认为论证无效，混淆了逻辑有效性与直觉判断。"}, {"kc_id": "kc5.5", "cognitive_level": "应用", "difficulty": "中等", "type": "essay", "question": "请比较人身攻击谬误和稻草人谬误，并各举一个例子说明。", "options": [], "answer": "人身攻击谬误是指攻击提出论点的人而非论点本身，试图通过贬低对方来否定其论点。例如：'你不懂经济学，所以你的经济观点是错的。'稻草人谬误是指歪曲或夸大对方的论点，然后攻击这个被歪曲的版本。例如：'你支持更严格的枪支管制？看来你就是想让守法公民手无寸铁！'两者都偏离了对论点本身的评价，但方式不同：前者攻击人，后者攻击被扭曲的论点。", "explanation": "根据kc5.5，这两种都是常见的逻辑谬误。人身攻击针对人，稻草人针对被歪曲的论点。理解它们的区别有助于识别日常讨论中的推理错误。", "pitfall": "学生可能混淆这两种谬误，不理解它们偏离论证的方式有何不同。"}, {"kc_id": "kc5.6", "cognitive_level": "理解", "difficulty": "基础", "type": "tf", "question": "在命题逻辑中，合取（∧）表示'并且'，只有当两个合取支都为真时，合取式才为真。", "options": [], "answer": "T", "explanation": "根据kc5.6，命题逻辑中的合取连接词（∧）表示'并且'，其真值条件是：只有当两个合取支都为真时，整个合取式才为真；只要有一个合取支为假，整个合取式就为假。", "pitfall": "学生可能将合取与析取混淆，析取只要有一个支为真就为真。"}, {"kc_id": "kc5.4", "cognitive_level": "应用", "difficulty": "中等", "type": "choice", "question": "以下哪个论证是归纳上强的论证？", "options": ["小王今天穿了红衣服；所以明天他会穿蓝衣服", "所有哺乳动物是恒温动物；鲸鱼是哺乳动物；所以鲸鱼是恒温动物", "如果x>2，则x>1；x>2；所以x>1", "我见过的100只天鹅都是白的；所以所有天鹅都是白的"], "answer": "D", "explanation": "根据kc5.4，归纳推理提供或然支持，使结论可能为真但不能保证。选项D是基于观察的归纳推理，虽然结论可能被证伪，但前提是结论的有力支持。选项B和C是演绎论证，A几乎没有支持。", "pitfall": "学生可能误选B或C，因为它们看起来更'强'，但实际上它们是演绎论证，不是归纳论证。"}, {"kc_id": "kc5.2", "cognitive_level": "分析", "difficulty": "较难", "type": "fill", "question": "在评估论证时，区分前提和结论至关重要。前提提供的____，而结论是____的陈述。", "options": [], "answer": "理由或证据；前提所支持或证明", "explanation": "根据kc5.2，前提是作为理由或证据提供的陈述，结论是前提所支持或证明的陈述。理解这一结构是评估任何论证的基础。", "pitfall": "学生可能在复杂论证中难以识别哪个是前提，哪个是结论。"}, {"kc_id": "kc5.7", "cognitive_level": "记忆", "difficulty": "基础", "type": "choice", "question": "真值表方法主要用于评估哪种类型的论证？", "options": ["命题逻辑论证的有效性", "归纳论证的强度", "类比论证的可靠性", "道德论证的合理性"], "answer": "A", "explanation": "根据kc5.7，真值表系统地显示复杂命题的所有可能真值，提供了一种机械方法来确定命题逻辑论证是否有效。", "pitfall": "学生可能误以为真值表方法可以评估所有类型的论证，而它主要用于命题逻辑论证。"}, {"kc_id": "kc5.1", "cognitive_level": "综合", "difficulty": "较难", "type": "comprehensive", "question": "请解释为什么一个论证可以是有效的但不可靠，并举例说明。", "options": [], "answer": "一个论证是有效的，如果假设前提为真则结论必然为真。一个论证是可靠的，如果它有效且所有前提实际上都为真。因此，有效但不可靠的论证是指推理形式正确但至少有一个前提为假的论证。例如：'所有会飞的动物都是鸟；蝙蝠会飞；所以蝙蝠是鸟。'这个论证是有效的（如果前提都真，结论必然真），但不可靠，因为大前提'所有会飞的动物都是鸟'是假的。", "explanation": "根据kc5.1和kc5.3，逻辑学研究推理的有效性，而可靠性要求有效性加上真实的前提。理解这一区别对于评估论证质量至关重要。", "pitfall": "学生常将有效性与可靠性混淆，认为有效的论证就一定是好论证，而忽视了前提真实性的重要性。"}, {"kc_id": "kc5.8", "cognitive_level": "应用", "difficulty": "中等", "type": "choice", "question": "以下哪个选项违反了三段论的有效性规则？", "options": ["所有A是B；x是A；所以x是B", "所有A是B；所有B是C；所以所有A是C", "所有A是B；有些B是C；所以有些A是C", "没有A是B；所有C是A；所以没有C是B"], "answer": "C", "explanation": "根据kc5.8，标准的三段论要求两个前提共享一个共同项，并遵循特定的形式。选项B中，'有些B是C'不能有效地连接A和C，因为中项B没有周延（distributed），这是无效的推理。", "pitfall": "学生可能误以为只要前提为真结论就有效，而忽视了三段论的形式规则。"}, {"kc_id": "kc5.5", "cognitive_level": "记忆", "difficulty": "基础", "type": "tf", "question": "循环论证是指在推理过程中假设了需要被证明的结论。", "options": [], "answer": "T", "explanation": "根据kc5.5，循环推理是一种逻辑谬误，指在论证过程中假设了需要被证明的东西。这是一种常见的推理错误。", "pitfall": "学生可能难以识别循环论证，特别是在复杂论证中当结论被改头换面地藏在前提中时。"}, {"kc_id": "kc5.3", "cognitive_level": "分析", "difficulty": "较难", "type": "essay", "question": "为什么演绎推理的有效性不依赖于前提的实际真伪？请详细解释。", "options": [], "answer": "演绎推理的有效性关注的是前提与结论之间的逻辑联系，而非前提或结论的实际真伪。一个论证是有效的，当且仅当在所有可能的情况下（而不仅仅是现实情况），如果前提为真，则结论不可能为假。这意味着：1）有效性是关于论证形式的评估，而非内容的评估；2）一个有效的论证可以有假前提和假结论；3）有效性只保证前提真时结论必真，不保证前提实际上为真。例如，'所有独角兽都会飞；Fluffy是独角兽；所以Fluffy会飞'是有效论证，即使前提和结论都是假的。", "explanation": "根据kc5.3，演绎推理的有效性是关于逻辑联系的，而非实际真理。这一概念是逻辑学的核心，理解它有助于区分论证形式的好坏与前提事实的真假。", "pitfall": "学生常认为有效的论证必须前提为真，混淆了形式有效性与事实真实性这两个不同层面。"}, {"kc_id": "kc5.6", "cognitive_level": "应用", "difficulty": "中等", "type": "choice", "question": "如果命题P为真，命题Q为假，那么命题'P→Q'（如果P那么Q）的真值是什么？", "options": ["取决于具体语境", "真", "假", "无法确定"], "answer": "C", "explanation": "根据kc5.6，条件命题'P→Q'（如果P那么Q）的真值条件是：只有当P为真而Q为假时，条件命题才为假；其他情况下都为真。因此当P真Q假时，'P→Q'为假。", "pitfall": "学生常误以为P→Q的真值取决于P和Q之间是否有因果或逻辑关系，而实际上在命题逻辑中它只取决于P和Q的真值组合。"}, {"kc_id": "kc5.4", "cognitive_level": "综合", "difficulty": "较难", "type": "comprehensive", "question": "请比较演绎推理和归纳推理的主要区别，并说明为什么科学知识主要依赖于归纳推理。", "options": [], "answer": "演绎推理：1）如果前提真则结论必然为真；2）有效性是二元的（有效或无效）；3）结论不超出前提所包含的信息。归纳推理：1）前提真使结论可能为真但不必然；2）强度有程度之分；3）结论超出前提所包含的信息。科学知识主要依赖归纳推理，因为：1）科学通过观察和实验获得经验数据；2）从有限观察推广到普遍规律需要归纳；3）科学定律和理论无法通过纯演绎获得，必须基于经验证据；4）即使演绎在科学推理中也很重要，但其前提往往来自归纳概括。", "explanation": "根据kc5.3和kc5.4，演绎和归纳是两种基本推理类型。理解它们的区别对于理解科学方法论和日常推理都很重要。", "pitfall": "学生可能认为演绎推理比归纳推理'更好'，而忽视了归纳在获取新知识中的不可替代作用。"}];
+var LABELS = {"page_title": "章节测试", "section": {"choice": "一、选择题", "multi": "二、多选题", "tf": "三、判断题", "fill": "四、填空题", "short": "五、简答题", "calc": "六、计算题", "code": "七、代码题", "essay": "八、问答题", "comprehensive": "九、综合题"}, "section_order": ["choice", "multi", "tf", "fill", "short", "calc", "code", "essay", "comprehensive"], "points_suffix": "分", "true_label": "正确", "false_label": "错误", "placeholder": "在此作答...", "code_placeholder": "在此编写代码...", "pitfall_prefix": "易错提醒：", "correct_label": "正确", "wrong_label": "错误", "partial_label": "部分正确", "answer_prefix": "正确答案：", "reference_label": "参考答案", "graded_label": "已批改", "grade_button": "提交批改", "score_label": "总分", "duration_prefix": "满分 100 分 | 建议 ", "duration_suffix": " 分钟 | 选择答案后点击提交批改"};
+
+// ─── Answer normalization (robust to how the JSON was authored) ──────
+// tf / choice answers may arrive as int index, boolean, letter ("A"),
+// or label string ("正确"/"错误"/"对"/"错"). All are coerced to an
+// option index so grading never silently fails on a type mismatch.
+
+function tfAnswerIndex(ans) {
+  // option 0 = true_label (正确), option 1 = false_label (错误)
+  if (typeof ans === 'boolean') return ans ? 0 : 1;
+  if (typeof ans === 'number') return ans === 0 ? 0 : 1;
+  var s = ('' + ans).trim().toLowerCase();
+  var truthy = ['0', 't', 'true', '正确', '对', '是', 'yes', 'y', '√', '✓'];
+  var falsy  = ['1', 'f', 'false', '错误', '错', '否', 'no', 'n', '×', 'x'];
+  if (truthy.indexOf(s) !== -1) return 0;
+  if (falsy.indexOf(s) !== -1) return 1;
+  return ans ? 0 : 1;
+}
+
+function choiceAnswerIndex(ans, options) {
+  if (typeof ans === 'number') return ans;
+  var s = ('' + ans).trim();
+  if (/^[A-Za-z]$/.test(s)) return s.toUpperCase().charCodeAt(0) - 65;
+  if (/^\d+$/.test(s)) return parseInt(s, 10);
+  if (options) {
+    for (var i = 0; i < options.length; i++) {
+      if (('' + options[i]).trim() === s) return i;
+    }
+  }
+  return parseInt(s, 10);
+}
+
+function multiAnswerSet(ans, options) {
+  var arr = Array.isArray(ans) ? ans : [ans];
+  var set = {};
+  for (var i = 0; i < arr.length; i++) {
+    set[choiceAnswerIndex(arr[i], options)] = true;
+  }
+  return set;
+}
+
+// Normalize free text for fill-in-the-blank comparison: trim, lowercase,
+// drop surrounding whitespace and common punctuation, unify full/half width.
+function normText(s) {
+  s = ('' + s).trim().toLowerCase();
+  s = s.replace(/[\s　]+/g, '');
+  s = s.replace(/[.,;:!?。，、；：！？“”"'（）()【】\[\]<>《》]/g, '');
+  // full-width ASCII -> half-width
+  s = s.replace(/[！-～]/g, function (c) {
+    return String.fromCharCode(c.charCodeAt(0) - 0xfee0);
+  });
+  return s;
+}
+
+// How many blanks does a fill question have? Count underscore / ＿ runs.
+function fillBlankCount(question) {
+  var m = ('' + question).match(/(_{2,}|＿+)/g);
+  return m ? m.length : 0;
+}
+
+// Coerce a fill `answer` into an array (one entry per blank) of accepted
+// answer lists. Handles: string, [synonyms], [[blank1 syns],[blank2 syns]].
+function fillBlankAnswers(ans, nBlanks) {
+  if (nBlanks < 1) nBlanks = 1;
+  if (!Array.isArray(ans)) return padBlanks([[ans]], nBlanks);
+  if (ans.length && Array.isArray(ans[0])) return padBlanks(ans, nBlanks);
+  // flat array of strings
+  if (nBlanks === 1) return [ans];                 // synonyms for one blank
+  if (ans.length === nBlanks) {                    // one answer per blank
+    return ans.map(function (a) { return [a]; });
+  }
+  return padBlanks([ans], nBlanks);                // ambiguous -> all on blank 1
+}
+
+function padBlanks(arr, n) {
+  var out = arr.slice(0, n);
+  while (out.length < n) out.push(['']);
+  return out;
+}
+
+// ─── Build ───────────────────────────────────────────────────────────
+
+function build() {
+  var container = document.getElementById('questions-container');
+  if (!container) { console.error('ExamPass: questions-container not found'); return; }
+
+  // Stable-sort questions by section order so headings group correctly
+  // regardless of input order.
+  var order = LABELS.section_order || [];
+  Q.forEach(function (q, i) { q._i = i; });
+  Q.sort(function (a, b) {
+    var oa = order.indexOf(a.type); if (oa === -1) oa = 99;
+    var ob = order.indexOf(b.type); if (ob === -1) ob = 99;
+    return oa - ob || a._i - b._i;
+  });
+
+  var h = '';
+  var sec = '';
+  var titles = LABELS.section;
+
+  for (var i = 0; i < Q.length; i++) {
+    var q = Q[i];
+    if (q.type !== sec) {
+      sec = q.type;
+      if (titles[q.type]) h += '<h3>' + titles[q.type] + '</h3>';
+    }
+
+    var qid = 'q' + i;
+    h += '<div class="q-card" id="card-' + qid + '">';
+    h += '<div class="q-num">' + (i + 1) + '. (' + q.points + ' ' + LABELS.points_suffix + ')</div>';
+
+    if (q.type === 'fill') {
+      h += '<div class="q-text">' + renderFill(q, qid) + '</div>';
+    } else {
+      h += '<div class="q-text">' + q.question + '</div>';
+    }
+
+    if (q.type === 'choice') {
+      var opts = q.options || [];
+      for (var j = 0; j < opts.length; j++) {
+        h += '<label class="option" id="opt-' + qid + '-' + j + '" onclick="sel(\'' + qid + '\',' + j + ')">';
+        h += '<input type="radio" name="' + qid + '" value="' + j + '">' + String.fromCharCode(65 + j) + '. ' + opts[j] + '</label>';
+      }
+    } else if (q.type === 'multi') {
+      var mopts = q.options || [];
+      for (var k = 0; k < mopts.length; k++) {
+        h += '<label class="option" id="opt-' + qid + '-' + k + '" onclick="toggle(\'' + qid + '\',' + k + ')">';
+        h += '<input type="checkbox" name="' + qid + '" value="' + k + '">' + String.fromCharCode(65 + k) + '. ' + mopts[k] + '</label>';
+      }
+    } else if (q.type === 'tf') {
+      h += '<label class="option" id="opt-' + qid + '-0" onclick="sel(\'' + qid + '\',0)">';
+      h += '<input type="radio" name="' + qid + '" value="0">' + LABELS.true_label + '</label>';
+      h += '<label class="option" id="opt-' + qid + '-1" onclick="sel(\'' + qid + '\',1)">';
+      h += '<input type="radio" name="' + qid + '" value="1">' + LABELS.false_label + '</label>';
+    } else if (q.type === 'fill') {
+      // inputs already rendered inline inside q-text
+    } else if (q.type === 'code') {
+      h += '<textarea class="q-textarea q-code" id="text-' + qid + '" placeholder="' + (LABELS.code_placeholder || LABELS.placeholder) + '" rows="8" spellcheck="false"></textarea>';
+    } else {
+      h += '<textarea class="q-textarea" id="text-' + qid + '" placeholder="' + LABELS.placeholder + '" rows="3"></textarea>';
+    }
+
+    h += '<div class="result" id="result-' + qid + '">';
+    h += '<span class="badge" id="badge-' + qid + '"></span><span id="correct-' + qid + '"></span>';
+    h += '<div class="explanation">' + (q.explanation || '') + '</div>';
+    if (q.pitfall) {
+      h += '<div class="pitfall">' + LABELS.pitfall_prefix + q.pitfall + '</div>';
+    }
+    h += '</div></div>';
+  }
+
+  container.innerHTML = h;
+
+  if (window.MathJax && MathJax.typesetPromise) {
+    MathJax.typesetPromise([container]).catch(function (err) {
+      console.error('MathJax typeset error:', err);
+    });
+  }
+}
+
+// Render fill question text with inline <input> boxes replacing blanks.
+function renderFill(q, qid) {
+  var nBlanks = fillBlankCount(q.question);
+  var k = 0;
+  var html = ('' + q.question).replace(/(_{2,}|＿+)/g, function () {
+    var inp = '<input type="text" class="fill-input" id="fill-' + qid + '-' + k + '" autocomplete="off" spellcheck="false">';
+    k++;
+    return inp;
+  });
+  if (k === 0) {
+    // No markers in text -> append boxes based on answer shape
+    var n = fillBlankAnswers(q.answer, 1).length;
+    var ans = q.answer;
+    if (Array.isArray(ans)) n = Array.isArray(ans[0]) ? ans.length : (ans.length || 1);
+    if (n < 1) n = 1;
+    html += '<div class="fill-row">';
+    for (var b = 0; b < n; b++) {
+      if (n > 1) html += '<span class="fill-tag">' + (b + 1) + '.</span>';
+      html += '<input type="text" class="fill-input" id="fill-' + qid + '-' + b + '" autocomplete="off" spellcheck="false">';
+    }
+    html += '</div>';
+  }
+  return html;
+}
+
+document.addEventListener('DOMContentLoaded', build);
+if (document.readyState === 'interactive' || document.readyState === 'complete') {
+  build();
+}
+
+// ─── Selection handlers ──────────────────────────────────────────────
+
+function sel(qid, idx) {
+  var prefix = 'opt-' + qid + '-';
+  var all = document.querySelectorAll('[id^="' + prefix + '"]');
+  for (var i = 0; i < all.length; i++) all[i].classList.remove('selected');
+  var target = document.getElementById('opt-' + qid + '-' + idx);
+  if (target) target.classList.add('selected');
+  var radio = document.querySelector('input[name="' + qid + '"][value="' + idx + '"]');
+  if (radio) radio.checked = true;
+}
+
+function toggle(qid, idx) {
+  var box = document.querySelector('input[name="' + qid + '"][value="' + idx + '"]');
+  var label = document.getElementById('opt-' + qid + '-' + idx);
+  if (!box) return;
+  box.checked = !box.checked;
+  if (label) label.classList.toggle('selected', box.checked);
+}
+
+// ─── Grading ─────────────────────────────────────────────────────────
+
+function gradeAll() {
+  var score = 0;
+  for (var i = 0; i < Q.length; i++) {
+    var q = Q[i];
+    var qid = 'q' + i;
+    var card = document.getElementById('card-' + qid);
+    var result = document.getElementById('result-' + qid);
+    var badge = document.getElementById('badge-' + qid);
+    var correctEl = document.getElementById('correct-' + qid);
+    if (!card || !result) continue;
+
+    result.style.display = 'block';
+
+    if (q.type === 'choice' || q.type === 'tf') {
+      score += gradeSingle(q, qid, card, badge, correctEl);
+    } else if (q.type === 'multi') {
+      score += gradeMulti(q, qid, card, badge, correctEl);
+    } else if (q.type === 'fill') {
+      score += gradeFill(q, qid, card, badge, correctEl);
+    } else {
+      card.classList.add('correct');
+      badge.className = 'badge badge-ref';
+      badge.textContent = LABELS.reference_label;
+    }
+  }
+
+  var sb = document.getElementById('score-box');
+  if (sb) {
+    sb.style.display = 'block';
+    document.getElementById('score-num').textContent = roundScore(score);
+    sb.scrollIntoView({ behavior: 'smooth' });
+  }
+
+  var opts = document.querySelectorAll('.option');
+  for (var a = 0; a < opts.length; a++) opts[a].style.pointerEvents = 'none';
+  var tas = document.querySelectorAll('.q-textarea');
+  for (var b = 0; b < tas.length; b++) tas[b].disabled = true;
+  var fis = document.querySelectorAll('.fill-input');
+  for (var c = 0; c < fis.length; c++) fis[c].disabled = true;
+
+  var btn = document.getElementById('grade-btn');
+  if (btn) { btn.disabled = true; btn.textContent = LABELS.graded_label; }
+
+  if (window.MathJax && MathJax.typesetPromise) {
+    MathJax.typesetPromise().catch(function (err) {
+      console.error('MathJax typeset error:', err);
+    });
+  }
+}
+
+function roundScore(s) {
+  return Math.round(s * 10) / 10;
+}
+
+function gradeSingle(q, qid, card, badge, correctEl) {
+  var ansIdx = q.type === 'tf' ? tfAnswerIndex(q.answer) : choiceAnswerIndex(q.answer, q.options);
+  var radio = document.querySelector('input[name="' + qid + '"]:checked');
+  if (radio && parseInt(radio.value, 10) === ansIdx) {
+    card.classList.add('correct');
+    badge.className = 'badge badge-ok';
+    badge.textContent = LABELS.correct_label;
+    correctEl.innerHTML = '';
+    var ok = document.getElementById('opt-' + qid + '-' + ansIdx);
+    if (ok) ok.classList.add('correct-answer');
+    return q.points;
+  }
+  card.classList.add('wrong');
+  badge.className = 'badge badge-no';
+  badge.textContent = LABELS.wrong_label;
+  var ansText = q.type === 'choice'
+    ? String.fromCharCode(65 + ansIdx) + '. ' + (q.options ? q.options[ansIdx] : '')
+    : (ansIdx === 0 ? LABELS.true_label : LABELS.false_label);
+  correctEl.innerHTML = LABELS.answer_prefix + ansText;
+  if (radio) {
+    var wrongOpt = document.getElementById('opt-' + qid + '-' + radio.value);
+    if (wrongOpt) wrongOpt.classList.add('wrong-answer');
+  }
+  var corr = document.getElementById('opt-' + qid + '-' + ansIdx);
+  if (corr) corr.classList.add('correct-answer');
+  return 0;
+}
+
+function gradeMulti(q, qid, card, badge, correctEl) {
+  var want = multiAnswerSet(q.answer, q.options);
+  var wantKeys = Object.keys(want).map(Number);
+  var checked = document.querySelectorAll('input[name="' + qid + '"]:checked');
+  var picked = [];
+  for (var i = 0; i < checked.length; i++) picked.push(parseInt(checked[i].value, 10));
+
+  var anyWrong = false, hitCorrect = 0;
+  for (var p = 0; p < picked.length; p++) {
+    if (want[picked[p]]) hitCorrect++;
+    else anyWrong = true;
+  }
+
+  // reveal correct / wrong option markers
+  var mopts = q.options || [];
+  for (var j = 0; j < mopts.length; j++) {
+    var el = document.getElementById('opt-' + qid + '-' + j);
+    if (!el) continue;
+    if (want[j]) el.classList.add('correct-answer');
+    else if (picked.indexOf(j) !== -1) el.classList.add('wrong-answer');
+  }
+
+  var earned;
+  if (!anyWrong && hitCorrect === wantKeys.length && picked.length === wantKeys.length) {
+    earned = q.points;
+    card.classList.add('correct');
+    badge.className = 'badge badge-ok';
+    badge.textContent = LABELS.correct_label;
+    correctEl.innerHTML = '';
+  } else if (!anyWrong && hitCorrect > 0) {
+    // 少选不错选 -> partial credit
+    earned = roundScore(q.points * hitCorrect / wantKeys.length);
+    card.classList.add('partial');
+    badge.className = 'badge badge-partial';
+    badge.textContent = LABELS.partial_label;
+    correctEl.innerHTML = LABELS.answer_prefix + multiAnswerText(wantKeys, mopts);
+  } else {
+    earned = 0;
+    card.classList.add('wrong');
+    badge.className = 'badge badge-no';
+    badge.textContent = LABELS.wrong_label;
+    correctEl.innerHTML = LABELS.answer_prefix + multiAnswerText(wantKeys, mopts);
+  }
+  return earned;
+}
+
+function multiAnswerText(keys, options) {
+  return keys.sort(function (a, b) { return a - b; }).map(function (k) {
+    return String.fromCharCode(65 + k) + '. ' + (options ? options[k] : '');
+  }).join('  ');
+}
+
+function gradeFill(q, qid, card, badge, correctEl) {
+  var nBlanks = fillBlankCount(q.question);
+  var blanks = fillBlankAnswers(q.answer, nBlanks);
+  var n = blanks.length;
+  var hit = 0;
+  var displays = [];
+
+  for (var b = 0; b < n; b++) {
+    var inp = document.getElementById('fill-' + qid + '-' + b);
+    var accepted = blanks[b] || [''];
+    var user = inp ? normText(inp.value) : '';
+    var ok = false;
+    for (var a = 0; a < accepted.length; a++) {
+      if (accepted[a] !== '' && normText(accepted[a]) === user && user !== '') { ok = true; break; }
+    }
+    if (inp) inp.classList.add(ok ? 'fill-ok' : 'fill-no');
+    if (ok) hit++;
+    displays.push((n > 1 ? (b + 1) + '. ' : '') + accepted.filter(function (x) { return x !== ''; }).join(' / '));
+  }
+
+  var earned = roundScore(q.points * hit / n);
+  correctEl.innerHTML = LABELS.answer_prefix + displays.join('   ');
+
+  if (hit === n) {
+    card.classList.add('correct');
+    badge.className = 'badge badge-ok';
+    badge.textContent = LABELS.correct_label;
+  } else if (hit > 0) {
+    card.classList.add('partial');
+    badge.className = 'badge badge-partial';
+    badge.textContent = LABELS.partial_label;
+  } else {
+    card.classList.add('wrong');
+    badge.className = 'badge badge-no';
+    badge.textContent = LABELS.wrong_label;
+  }
+  return earned;
+}
+
+</script>
+</body>
+</html>

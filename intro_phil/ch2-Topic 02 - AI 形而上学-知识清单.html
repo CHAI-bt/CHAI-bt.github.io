@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Topic 02 - AI 形而上学</title>
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\(', '\)']],
+    displayMath: [['$$', '$$'], ['\[', '\]']]
+  }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"></script>
+<style>
+/* === ExamPass Shared Styles === */
+/* Paper-like warm background, clean typography, responsive */
+
+:root {
+  --paper: #fdf6e3;
+  --paper-dark: #f5ecd7;
+  --ink: #2c2c2c;
+  --ink-light: #555;
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
+  --divider: #d6c8a8;
+  --card-bg: #fef9ef;
+  --card-border: #e8dcc8;
+  --correct: #22c55e;
+  --correct-bg: #f0fdf4;
+  --wrong: #ef4444;
+  --wrong-bg: #fef2f2;
+  --tag-bg: #fef3c7;
+  --tag-text: #92400e;
+  --radius: 6px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: "Microsoft YaHei", "Noto Sans SC", "SimSun", sans-serif;
+  font-size: 12pt; line-height: 1.75; color: var(--ink);
+  max-width: 860px; margin: auto; padding: 24px 20px 60px;
+  background: var(--paper);
+}
+
+@media print {
+  body { font-size: 10.5pt; background: #fff; }
+  .no-print { display: none !important; }
+  h1, h2, h3 { page-break-after: avoid; }
+}
+
+/* ── Header ── */
+#exampass-header {
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding: 6px 0; margin-bottom: 0;
+}
+.header-brand { font-size: 1.2em; font-weight: 700; color: #1a1a2e; letter-spacing: 0.3px; }
+.header-url  { font-size: 0.78em; color: #999; }
+.header-divider { border: none; border-top: 2px solid var(--divider); margin: 4px 0 20px 0; }
+
+/* ── Typography ── */
+h1 { font-size: 1.55em; text-align: center; border-bottom: 2px solid var(--divider); padding-bottom: 8px; margin-top: 0; }
+h2 { font-size: 1.25em; border-bottom: 1px solid var(--divider); padding-bottom: 4px; margin-top: 28px; }
+h3 { font-size: 1.08em; margin-top: 20px; color: var(--ink); }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ── Tables ── */
+table { border-collapse: collapse; width: 100%; margin: 10px 0; font-size: 0.95em; }
+td, th { border: 1px solid var(--card-border); padding: 5px 9px; text-align: left; }
+th { background: var(--paper-dark); font-weight: 700; }
+
+/* ── Knowledge point vs explanation ── */
+.kp { font-weight: 700; color: var(--ink); }           /* key point: bold dark */
+.exp { font-weight: 400; color: var(--ink-light); }    /* explanation: lighter */
+.exp em, .exp strong { color: var(--ink); }             /* emphasis inside explanation */
+
+/* ── Block elements ── */
+blockquote {
+  border-left: 3px solid #c0392b; background: #fef9ef;
+  padding: 6px 14px; margin: 10px 0; font-size: 0.95em;
+}
+code { background: #f0ede0; padding: 2px 5px; border-radius: 3px; font-size: 0.92em; }
+pre { background: #f0ede0; padding: 10px; border-radius: var(--radius); overflow-x: auto; }
+
+/* ── TOC ── */
+div.toc {
+  background: var(--card-bg); padding: 14px 18px;
+  border: 1px solid var(--card-border); border-radius: var(--radius); margin-bottom: 22px;
+}
+div.toc ul { padding-left: 18px; }
+div.toc li { margin: 3px 0; font-size: 0.95em; }
+
+/* ── Priority tags ── */
+.tag-must   { background: #fee2e2; color: #991b1b; padding: 1px 6px; border-radius: 3px; font-size: 0.82em; font-weight: 600; }
+.tag-key    { background: #fef3c7; color: #92400e; padding: 1px 6px; border-radius: 3px; font-size: 0.82em; font-weight: 600; }
+.tag-freq   { background: #dbeafe; color: #1e40af; padding: 1px 6px; border-radius: 3px; font-size: 0.82em; font-weight: 600; }
+.tag-info   { background: #f0fdf4; color: #166534; padding: 1px 6px; border-radius: 3px; font-size: 0.82em; font-weight: 600; }
+
+
+</style>
+</head>
+<body>
+
+<header id="exampass-header">
+  <div class="header-left"><span class="header-brand">ExamPass Assistant</span></div>
+  <div class="header-right"><span class="header-url">github.com/WUBING2023/ExamPass-Assistant</span></div>
+</header>
+<hr class="header-divider">
+
+<h1>Topic 02 - AI 形而上学</h1>
+<div class="toc">
+<h2>目录</h2>
+<ul>
+<li><a href="#s26956109">Topic 02: AI 形而上学</a></li>
+  <li><a href="#s77166062">AI 的定义：科学领域还是智能机器？</a></li>
+  <li><a href="#s22699244">图灵测试：用行为定义智能</a></li>
+  <li><a href="#s77710623">强 AI vs 弱 AI：真正的理解还是完美模拟？</a></li>
+  <li><a href="#s88709838">中文房间：语法操作不等于语义理解</a></li>
+  <li><a href="#s60716462">塞尔的深层批判：大脑的因果能力</a></li>
+  <li><a href="#s20882738">行为 vs 理解：核心哲学张力</a></li>
+  <li><a href="#s12126728">人类心灵性：机器能有主观体验吗？</a></li>
+  <li><a href="#s81104373">本章概念对比表：核心立场与论证</a></li>
+</ul>
+</div>
+<h2 id="s26956109">Topic 02: AI 形而上学</h2>
+<p><span class="exp">本节回答：当我们说「机器能思考」时，我们到底在说什么？AI 不只是技术问题，它迫使我们重新审视「智能」「理解」「意识」这些概念本身。整章沿着一条主线展开：先搞清楚 AI「是什么」（定义），再看我们用什么标准判定它有智能（图灵测试），然后进入核心争论——机器是「真有」智能还是「只是模拟」（强 AI vs 弱AI），最后用塞尔的中文房间拆解这个问题，并引出心灵哲学的深层追问。</span></p>
+
+<h3 id="s77166062">AI 的定义：科学领域还是智能机器？</h3>
+<p><span class="exp">先看两个权威定义：</span></p>
+<ul>
+<li><span class="exp">McCarthy（1955）：AI 是<span class="kp">「制造智能机器的科学和工程」</span></span></li>
+<li><span class="exp">Liao（2020）：AI 是<span class="kp">「让机器执行需要认知功能的任务」</span>——这些任务在人类身上需要思考、学习、问题处理等能力</span></li>
+</ul>
+<p><span class="exp">两个定义的共同点：AI 首先是一个<span class="kp">科学/工程学科</span>，而不是某台具体的机器。就像「生物学」是研究生命的科学，不是指某只青蛙；「AI」是研究如何让机器做认知任务，不等于说某台机器有智能。</span></p>
+<p><span class="exp">为什么需要这个区分：很多人一听到 AI 就想到「有智能的机器人」，但哲学讨论必须先澄清——我们讨论的是一个研究领域，还是在讨论某种人工物的本体论地位？这个区分决定了后面所有问题的提法。</span></p>
+<blockquote>易错：不要把「AI」（研究领域）和「AI 系统」（具体实现）混为一谈。McCarthy 和 Liao 的定义都是关于学科/领域的，不是关于某台机器是否「有智能」。</blockquote>
+<p><span class="tag-must">必考</span></p>
+
+<h3 id="s22699244">图灵测试：用行为定义智能</h3>
+<p><span class="exp">图灵（1950）提出了一个天才的转换：与其争论「机器能不能思考」（这个问题太模糊），不如问一个可操作的问题——<span class="kp">「机器能否在行为上让人无法区分它和人类？」</span></span></p>
+<p><span class="exp">这就是<span class="kp">图灵测试</span>（Turing Test）：如果一台机器能在对话中表现得和人一样，以至于人类测试者无法可靠地分辨，那我们就应该承认它具有智能。</span></p>
+<p><span class="exp">图灵为什么被称为「AI 的第一位哲学家」：他不是在造机器，而是在重新定义「智能」的判定标准——从内在状态转向外在表现。这是哲学层面的贡献，不是技术贡献。</span></p>
+<p><span class="exp">核心立场：图灵测试体现的是<span class="kp">行为主义</span>（behaviorism）传统——心理状态不能直接观察，只能通过外部行为来判定。如果行为无法区分，就没有理由说一方有理解、另一方没有。</span></p>
+<blockquote>易错：图灵测试不是功能主义（functionalism）。功能主义关注心理状态的「因果功能角色」，而图灵测试只看行为表现。这是两个不同的哲学立场，学生常混淆。</blockquote>
+<p><span class="tag-must">必考</span></p>
+
+<h3 id="s77710623">强 AI vs 弱 AI：真正的理解还是完美模拟？</h3>
+<p><span class="exp">这是本章的核心分水岭。图灵测试引发了更深的问题：如果机器通过了测试，我们应该承认它「真的有」智能，还是只承认它「完美模拟了」智能？</span></p>
+<table>
+<tr><th>立场</th><th>核心主张</th><th>类比</th></tr>
+<tr><td><span class="kp">强 AI</span>（Strong AI）</td><td>适当编程的计算机本身就具有认知状态和理解——它真的有心智。</td><td>计算机「理解」中文，就像我们理解中文一样。</td></tr>
+<tr><td><span class="kp">弱 AI</span>（Weak AI）</td><td>计算机只是模拟心智的工具——它表现得像有理解，但实际上没有。</td><td>计算机「模拟」风暴，但本身不湿；它「模拟」理解，但本身不理解。</td></tr>
+</table>
+<p><span class="exp">为什么这个区分重要：它决定了我们对 AI 的期待和伦理态度。如果强 AI 成立，AI 就是道德主体；如果弱 AI 成立，AI 只是高级工具。</span></p>
+<p><span class="exp">图灵测试的强解释：Kim（2018）和 Russell & Norvig（2021）指出，图灵的提议是——如果机器做得足够好，我们必须承认它拥有「我们通常赋予人类的完整心智」。这不是弱 AI。</span></p>
+<blockquote>易错：通过图灵测试 ≠ 证明强 AI。图灵测试是行为标准，强 AI 是本体论主张。即使机器通过了测试，弱 AI 支持者仍然可以坚持「它只是完美模拟」。</blockquote>
+<p><span class="tag-must">必考</span></p>
+
+<h3 id="s88709838">中文房间：语法操作不等于语义理解</h3>
+<p><span class="exp">塞尔（Searle, 1980）用著名的<span class="kp">中文房间</span>（Chinese Room）思想实验挑战强 AI：</span></p>
+<p><span class="exp">想象一个不懂中文的人被关在封闭房间。他有一本规则手册（程序），以及大量汉字卡片。房间外的人用中文向房间内递送问题。房间里的人按规则手册的指示，查找对应的汉字组合作为答案递送出去。对房间外的人来说，这个房间完美通过了图灵测试——它能流利地理解和回答中文问题。</span></p>
+<p><span class="exp">但问题来了：房间里有任何理解中文的东西吗？房间里的人完全不懂中文，他只是在机械地操纵符号。他是<span class="kp">语法</span>（syntax，符号操作规则）的专家，但对<span class="kp">语义</span>（semantics，符号的意义）一无所知。</span></p>
+<p><span class="exp">塞尔的结论：仅仅<span class="kp">执行语法操作</span>不足以产生真正的<span class="kp">理解</span>。计算机运行程序，就像房间里的人执行规则——它可以完美操纵符号，但本身不懂这些符号的意义。</span></p>
+<p><span class="exp">论证结构拆解：</span></p>
+<ul>
+<li><span class="exp">前提 1：系统可以完美执行语法操作（符号操纵）。</span></li>
+<li><span class="exp">前提 2：语法操作不等于语义理解。</span></li>
+<li><span class="exp">结论：系统不等于理解——运行程序本身不产生心智。</span></li>
+</ul>
+<p><span class="exp">为什么这个论证重要：它直接攻击强 AI 的计算主义基础——如果计算只是形式操作，而形式操作不等于理解，那「适当编程的计算机本身就具有理解」这个主张就不成立。</span></p>
+<blockquote>易错：塞尔的论证不是说「AI 永远不可能有意识」，而是说「纯计算路径不足以产生理解」。他承认可能有其他方式（比如复制大脑的因果能力），但计算本身不够。</blockquote>
+<p><span class="tag-must">必考</span></p>
+
+<h3 id="s60716462">塞尔的深层批判：大脑的因果能力</h3>
+<p><span class="exp">塞尔的批判不止于中文房间。他指出强 AI 的一个根本错误：<span class="kp">忽视了人类智能的生物学基础</span>。</span></p>
+<p><span class="exp">关键区分：</span></p>
+<ul>
+<li><span class="exp"><span class="kp">模拟大脑功能</span>：运行一个程序来复制大脑的输入输出关系——这是计算机能做的。</span></li>
+<li><span class="kp">复制大脑的因果能力</span>：让系统具有产生意识和理解的因果能力——这是大脑特有的，程序本身不具备。</span></li>
+</ul>
+<p><span class="exp">塞尔的立场：大脑具有特殊的因果能力（causal powers），能产生意识和理解。运行程序是纯形式化的操作，本身不具备这种因果能力。你可以模拟大脑的功能，但不等于复制了产生心智的能力。</span></p>
+<p><span class="exp">为什么需要这个区分：它让我们看到，塞尔的批判不是技术性的（「现在的 AI 不够先进」），而是原则性的（「纯计算路径有内在局限」）。即使未来 AI 通过了所有行为测试，塞尔仍然会说：这只是完美模拟，不是真正的理解。</span></p>
+<p><span class="tag-key">重点</span></p>
+
+<h3 id="s20882738">行为 vs 理解：核心哲学张力</h3>
+<p><span class="exp">图灵测试和中文房间共同揭示了一个深层问题：<span class="kp">行为等价是否足以判定心理同一性</span>？</span></p>
+<table>
+<tr><th>图灵测试的暗示</th><th>中文房间的暗示</th></tr>
+<tr><td>如果行为无法区分，就应承认理解（行为主义标准）。</td><td>行为完美不等于理解（语法 ≠ 语义）。</td></tr>
+<tr><td>通过测试 → 承认机器有完整心智。</td><td>通过测试 ≠ 真正理解，可能只是完美模拟。</td></tr>
+</table>
+<p><span class="exp">这个张力为什么重要：它触及心灵哲学的核心问题——「他心问题」在 AI 时代的版本。我们之所以相信其他人类有心智，是基于行为推断。但中文房间告诉我们，行为推断可能有漏洞：完美的行为表现可能完全缺乏内在理解。</span></p>
+<p><span class="exp">核心问题：如果一台机器在行为上与人无法区分，我们是否必须承认它有与人相同的心理状态？图灵说「是」，塞尔说「不一定」。</span></p>
+<blockquote>易错：不要把图灵和塞尔视为简单的「支持 vs 反对」AI。图灵是在提供智能的判定标准，塞尔是在挑战这个标准的充分性。两者的争论是关于「什么算理解」，不是关于「AI 有没有用」。</blockquote>
+<p><span class="tag-must">必考</span></p>
+
+<h3 id="s12126728">人类心灵性：机器能有主观体验吗？</h3>
+<p><span class="exp">Grève 将问题推向更深层次：即使我们承认机器能「理解」，它能有<span class="kp">主观体验</span>（意识、感受质、意向性）吗？这就是 AI 语境下的<span class="kp">人类心灵性</span>（human mindedness）问题。</span></p>
+<p><span class="exp">核心区分：</span></p>
+<ul>
+<li><span class="exp"><span class="kp">认知理解</span>：处理信息、回答问题、完成任务——弱 AI 也能做到。</span></li>
+<li><span class="kp">现象意识</span>：拥有主观体验、「像某物一样」的感觉——这是塞尔认为计算无法触及的。</span></li>
+</ul>
+<p><span class="exp">塞尔的启示：中文房间论证表明，纯计算不足以产生语义理解。但即使未来 AI 有了理解，它是否会有「理解中文是什么样的感觉」？这是更难的问题，涉及意识的本质。</span></p>
+<p><span class="exp">为什么这个问题重要：如果机器没有主观体验，那它就不是道德主体，我们对它就没有直接的道德义务。这直接影响 AI 伦理和政策的讨论。</span></p>
+<p><span class="tag-info">背景</span></p>
+
+<h3 id="s81104373">本章概念对比表：核心立场与论证</h3>
+<table>
+<tr><th>立场/论证</th><th>核心主张</th><th>主要支持者</th><th>关键挑战</th></tr>
+<tr><td>图灵测试</td><td>行为等价 → 承认智能</td><td>图灵</td><td>行为 ≠ 理解（中文房间）</td></tr>
+<tr><td>强 AI</td><td>运行程序 = 具有心智</td><td>计算主义者</td><td>语法 ≠ 语义（塞尔）</td></tr>
+<tr><td>弱 AI</td><td>AI 只是模拟心智</td><td>工具主义者</td><td>如何解释 AI 的「理解」表现？</td></tr>
+<tr><td>中文房间</td><td>计算 ≠ 理解</td><td>塞尔</td><td>大脑的因果能力是否可复制？</td></tr>
+</table>
+<p><span class="exp">怎么用这张表：遇到「AI 能否理解」的问题，先确定各方在哪个维度上争论——是判定标准（图灵测试）、本体论主张（强/弱 AI）、还是反例（中文房间）？然后对应到关键挑战，就能快速定位争论的核心。</span></p>
+<p><span class="tag-freq">高频</span></p>
+
+
+
+</body>
+</html>

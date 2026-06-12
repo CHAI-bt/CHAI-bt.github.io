@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Topic 12 - 道义论 - 章节测试</title>
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\(', '\)']],
+    displayMath: [['$$', '$$'], ['\[', '\]']]
+  }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"></script>
+<style>
+/* === ExamPass Shared Styles === */
+/* Paper-like warm background, clean typography, responsive */
+
+:root {
+  --paper: #fdf6e3;
+  --paper-dark: #f5ecd7;
+  --ink: #2c2c2c;
+  --ink-light: #555;
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
+  --divider: #d6c8a8;
+  --card-bg: #fef9ef;
+  --card-border: #e8dcc8;
+  --correct: #22c55e;
+  --correct-bg: #f0fdf4;
+  --wrong: #ef4444;
+  --wrong-bg: #fef2f2;
+  --tag-bg: #fef3c7;
+  --tag-text: #92400e;
+  --radius: 6px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: "Microsoft YaHei", "Noto Sans SC", "SimSun", sans-serif;
+  font-size: 12pt; line-height: 1.75; color: var(--ink);
+  max-width: 860px; margin: auto; padding: 24px 20px 60px;
+  background: var(--paper);
+}
+
+@media print {
+  body { font-size: 10.5pt; background: #fff; }
+  .no-print { display: none !important; }
+  h1, h2, h3 { page-break-after: avoid; }
+}
+
+/* ── Header ── */
+#exampass-header {
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding: 6px 0; margin-bottom: 0;
+}
+.header-brand { font-size: 1.2em; font-weight: 700; color: #1a1a2e; letter-spacing: 0.3px; }
+.header-url  { font-size: 0.78em; color: #999; }
+.header-divider { border: none; border-top: 2px solid var(--divider); margin: 4px 0 20px 0; }
+
+/* ── Typography ── */
+h1 { font-size: 1.55em; text-align: center; border-bottom: 2px solid var(--divider); padding-bottom: 8px; margin-top: 0; }
+h2 { font-size: 1.25em; border-bottom: 1px solid var(--divider); padding-bottom: 4px; margin-top: 28px; }
+h3 { font-size: 1.08em; margin-top: 20px; color: var(--ink); }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ── Tables ── */
+table { border-collapse: collapse; width: 100%; margin: 10px 0; font-size: 0.95em; }
+td, th { border: 1px solid var(--card-border); padding: 5px 9px; text-align: left; }
+th { background: var(--paper-dark); font-weight: 700; }
+
+/* ── Knowledge point vs explanation ── */
+.kp { font-weight: 700; color: var(--ink); }           /* key point: bold dark */
+.exp { font-weight: 400; color: var(--ink-light); }    /* explanation: lighter */
+.exp em, .exp strong { color: var(--ink); }             /* emphasis inside explanation */
+
+/* ── Block elements ── */
+blockquote {
+  border-left: 3px solid #c0392b; background: #fef9ef;
+  padding: 6px 14px; margin: 10px 0; font-size: 0.95em;
+}
+code { background: #f0ede0; padding: 2px 5px; border-radius: 3px; font-size: 0.92em; }
+pre { background: #f0ede0; padding: 10px; border-radius: var(--radius); overflow-x: auto; }
+
+/* ── TOC ── */
+div.toc {
+  background: var(--card-bg); padding: 14px 18px;
+  border: 1px solid var(--card-border); border-radius: var(--radius); margin-bottom: 22px;
+}
+div.toc ul { padding-left: 18px; }
+div.toc li { margin: 3px 0; font-size: 0.95em; }
+
+/* ── Priority tags ── */
+.tag-must   { background: #fee2e2; color: #991b1b; padding: 1px 6px; border-radius: 3px; font-size: 0.82em; font-weight: 600; }
+.tag-key    { background: #fef3c7; color: #92400e; padding: 1px 6px; border-radius: 3px; font-size: 0.82em; font-weight: 600; }
+.tag-freq   { background: #dbeafe; color: #1e40af; padding: 1px 6px; border-radius: 3px; font-size: 0.82em; font-weight: 600; }
+.tag-info   { background: #f0fdf4; color: #166534; padding: 1px 6px; border-radius: 3px; font-size: 0.82em; font-weight: 600; }
+
+/* === Interactive Test Styles === */
+
+/* ── Score box ── */
+#score-box {
+  display: none; background: var(--paper-dark); color: var(--ink);
+  padding: 16px 20px; border-radius: var(--radius); margin: 14px 0;
+  text-align: center; border: 1px solid var(--card-border);
+}
+#score-box .score-num { font-size: 2.2em; font-weight: 700; }
+#score-box .score-label { font-size: 0.85em; color: var(--ink-light); }
+
+/* ── Question card ── */
+.q-card {
+  background: var(--card-bg); border: 1px solid var(--card-border);
+  border-radius: var(--radius); padding: 12px 14px; margin: 10px 0;
+  transition: all 0.15s;
+}
+.q-card.correct { border-left: 3px solid var(--correct); background: #f7fdf4; }
+.q-card.wrong   { border-left: 3px solid var(--wrong); background: #fef9f9; }
+
+.q-num  { font-weight: 700; font-size: 0.98em; margin-bottom: 4px; }
+.q-text { margin-bottom: 8px; font-size: 0.98em; }
+
+/* ── Options (compact) ── */
+.option {
+  display: block; padding: 4px 10px; margin: 3px 0;
+  border: 1px solid var(--card-border); border-radius: 4px;
+  cursor: pointer; transition: all 0.12s; font-size: 0.93em;
+  background: #fefcf5;
+}
+.option:hover            { background: #f0ede0; }
+.option input            { margin-right: 6px; }
+.option.selected         { border-color: var(--accent); background: #eff6ff; }
+.option.correct-answer   { border-color: var(--correct); background: var(--correct-bg); }
+.option.wrong-answer     { border-color: var(--wrong); background: var(--wrong-bg); }
+
+/* ── Textareas (compact) ── */
+.q-textarea {
+  width: 100%; min-height: 56px; border: 1px solid var(--card-border);
+  border-radius: 4px; padding: 6px 10px; font-family: inherit;
+  font-size: 0.93em; background: #fefcf5; resize: vertical;
+}
+.q-textarea:focus { outline: none; border-color: var(--accent); }
+.q-code {
+  font-family: "Consolas", "Monaco", "Courier New", monospace;
+  font-size: 0.88em; line-height: 1.5; background: #1e1e2e; color: #e0e0e0;
+  tab-size: 4; white-space: pre;
+}
+.q-code:focus { border-color: var(--accent); }
+
+/* ── Partial-credit badge ── */
+.badge-partial { background: #fef3c7; color: #92400e; }
+.q-card.partial { border-color: #f59e0b; }
+
+/* ── Result after grading ── */
+.result {
+  display: none; margin-top: 8px; padding: 8px 12px;
+  background: #fefcf5; border: 1px solid var(--card-border);
+  border-radius: 4px; font-size: 0.9em; line-height: 1.6;
+}
+.result .badge {
+  display: inline-block; padding: 1px 9px; border-radius: 3px;
+  font-weight: 700; font-size: 0.82em; margin-right: 6px;
+}
+.badge-ok  { background: var(--correct-bg); color: #166534; }
+.badge-no  { background: var(--wrong-bg); color: #991b1b; }
+.badge-ref { background: #dbeafe; color: #1e40af; }
+
+.result .explanation { margin-top: 4px; color: var(--ink); }
+.result .pitfall { color: #b45309; margin-top: 3px; font-size: 0.9em; }
+
+/* ── Grading button ── */
+.grading-bar { text-align: center; margin: 20px 0; }
+.grading-bar button {
+  font-size: 1em; padding: 8px 32px; background: var(--accent);
+  color: #fff; border: none; border-radius: var(--radius);
+  cursor: pointer; font-weight: 600; letter-spacing: 0.3px;
+}
+.grading-bar button:hover     { background: var(--accent-hover); }
+.grading-bar button:disabled  { background: #bbb; cursor: not-allowed; }
+
+</style>
+</head>
+<body>
+
+<header id="exampass-header">
+  <div class="header-left"><span class="header-brand">ExamPass Assistant</span></div>
+  <div class="header-right"><span class="header-url">github.com/WUBING2023/ExamPass-Assistant</span></div>
+</header>
+<hr class="header-divider">
+
+<h1>Topic 12 - 道义论 - 章节测试</h1>
+<h2 style="text-align:center">章节测试</h2>
+<p style="text-align:center;color:var(--ink-light);font-size:0.95em">满分 100 分 | 建议 30 分钟 | 选择答案后点击提交批改</p>
+
+<div id="score-box"><div class="score-num" id="score-num">0</div><div class="score-label">总分</div></div>
+<div id="questions-container"></div>
+<div class="grading-bar no-print"><button onclick="gradeAll()" id="grade-btn">提交批改</button></div>
+
+<script>
+var Q = {"chapter_id": "ch11", "chapter_label": "Topic 11: Morality and Ethics", "questions": [{"kc_id": "kc11.1", "cognitive_level": "记忆", "difficulty": 0.3, "type": "choice", "question": "根据功利主义的基本原则，一个行为的道德价值取决于什么？", "options": ["A. 行为所产生的整体后果", "B. 行为者的动机和意图", "C. 行为是否符合道德规则", "D. 行为是否出于义务感"], "answer": "A", "explanation": "功利主义认为，一个行为的道德价值完全由其后果决定——即它是否最大化了整体幸福或福祉。这是后果论的核心主张。选项B描述的是康德义务论的视角；选项C描述的是义务论的一般特征；选项D描述的是康德对道德价值的特定要求（出于义务而行动）。", "pitfall": "选B：将行为的道德价值与动机混淆，功利主义关注结果而非动机；选C：将后果论与义务论混淆；选D：将康德义务论的观点误认为功利主义的原则。"}, {"kc_id": "kc11.1", "cognitive_level": "理解", "difficulty": 0.45, "type": "choice", "question": "密尔（Mill）对边沁（Bentham）功利主义的主要发展是什么？", "options": ["A. 提出了社会契约作为道德的基础", "B. 区分了高级快乐与低级快乐，认为精神快乐比肉体快乐更有价值", "C. 强调行为的动机比后果更重要", "D. 主张个人自由不应受到任何限制"], "answer": "B", "explanation": "密尔发展了边沁的功利主义，提出了'高级快乐'（如智力、道德、审美活动）与'低级快乐'（如感官享受）的区分，认为前者比后者更有价值。密尔的名言是'做不满足的苏格拉底，胜过做满足的猪'。选项A是社会契约论的观点；选项C是康德义务论的观点；选项D虽然密尔重视个人自由，但这不是他对功利主义的主要理论发展。", "pitfall": "选A：将密尔与社会契约论者混淆；选C：将密尔与义务论混淆；选D：虽然密尔在《论自由》中强调个人自由，但这不是他对功利主义理论本身的贡献。"}, {"kc_id": "kc11.2", "cognitive_level": "理解", "difficulty": 0.5, "type": "choice", "question": "康德'绝对命令'的'普遍法则公式'要求我们如何行动？", "options": ["A. 始终将人当作目的，而不仅仅是手段", "B. 追求最大多数人的最大幸福", "C. 只按照你同时愿意它成为普遍法则的准则行动", "D. 按照有德性的人会做的行动"], "answer": "C", "explanation": "康德的绝对命令有三个主要公式。'普遍法则公式'要求：只按照你同时愿意它成为普遍法则的准则行动。这意味着你的行为准则应该能够被普遍化而不产生矛盾。选项A是'人性公式'；选项B是功利主义的原则；选项D是美德伦理学的观点。", "pitfall": "选A：虽然这也是绝对命令的一部分，但题目问的是'普遍法则公式'；选项B：将功利主义与义务论混淆；选项D：将美德伦理学与义务论混淆。"}, {"kc_id": "kc11.2", "cognitive_level": "分析", "difficulty": 0.6, "type": "choice", "question": "康德认为，一个行为具有真正道德价值的条件是什么？", "options": ["A. 符合社会的期望", "B. 产生了好的后果", "C. 出于自然的情感或倾向", "D. 出于义务而行动，而非仅仅符合义务"], "answer": "D", "explanation": "康德区分了'出于义务'（aus Pflicht）和'符合义务'（gemäß Pflicht）的行为。只有出于义务——即出于对道德法则的尊重——而行动的行为才具有真正的道德价值。一个店主公平定价以吸引顾客是符合义务但不是出于义务，因此没有真正的道德价值。选项B是功利主义的观点；选项A是社会契约论或相对主义的观点；选项C是情感主义的观点。", "pitfall": "选B：将后果论与义务论混淆；选A：将道德与社会规范混淆；选C：将道德与情感混淆，康德明确反对以情感作为道德基础。"}, {"kc_id": "kc11.3", "cognitive_level": "记忆", "difficulty": 0.35, "type": "choice", "question": "美德伦理学（Virtue Ethics）的核心关注点是什么？", "options": ["A. 我应该做什么", "B. 行为会产生什么后果", "C. 我应该遵守什么规则", "D. 我应该成为什么样的人"], "answer": "D", "explanation": "美德伦理学将焦点从'我应该做什么？'（义务论）和'什么行为会产生最好后果？'（后果论）转向'我应该成为什么样的人？'。其核心是培养品格和美德，而非仅仅遵循规则或计算后果。选项A和C是义务论的关注点；选项B是后果论的关注点。", "pitfall": "选A：这是义务论的核心问题，不是美德伦理学的首要关注；选B：这是后果论的问题；选D：这是规则导向伦理学的特征。"}, {"kc_id": "kc11.3", "cognitive_level": "理解", "difficulty": 0.55, "type": "choice", "question": "亚里士多德认为美德是什么？", "options": ["A. 严格遵守道德规则", "B. 两个极端之间的中道", "C. 最大化整体幸福", "D. 出于义务而行动"], "answer": "B", "explanation": "亚里士多德认为美德是使我们在情感和行动上趋向于中道的品质。中道是指在特定情境下，针对特定对象，以适度的方式做出反应。例如，勇敢是怯懦（不及）与鲁莽（过度）之间的中道。选项A是义务论的观点；选项C是功利主义的观点；选项D是康德的观点。", "pitfall": "选A：将美德伦理学与义务论混淆；选C：将美德伦理学与后果论混淆；选D：将美德伦理学与康德的义务论混淆。"}, {"kc_id": "kc11.4", "cognitive_level": "理解", "difficulty": 0.5, "type": "choice", "question": "道德相对主义的核心主张是什么？", "options": ["A. 存在普遍的道德原则适用于所有文化", "B. 科学方法可以发现客观的道德真理", "C. 道德判断完全是主观偏好，没有合理性", "D. 道德真理是相对的，取决于文化、社会或个人视角"], "answer": "D", "explanation": "道德相对主义的核心主张是道德真理不是绝对的，而是相对于文化、社会或个人视角。描述性相对主义指出不同文化有不同的道德信念（事实）；元伦理相对主义认为道德真理本身是相对的（哲学主张）。选项A是道德客观主义的观点；选项C过于极端，相对主义认为道德有其合理性基础，只是不是普遍的；选项B是自然主义或科学主义的观点。", "pitfall": "选A：将相对主义与客观主义混淆；选B：将道德哲学与科学主义混淆；选C：将相对主义与主观主义或情感主义混淆。"}, {"kc_id": "kc11.5", "cognitive_level": "理解", "difficulty": 0.45, "type": "choice", "question": "在'电车难题'的基本版本中，大多数人认为拉下方向盘让电车转向岔道（杀死一人以拯救五人）是允许的。这反映了什么道德直觉？", "options": ["A. 人们总是遵循功利主义原则", "B. 杀死和让死没有道德区别", "C. 在某些情况下，牺牲少数以拯救多数是可接受的", "D. 人们不考虑后果而行动"], "answer": "C", "explanation": "电车难题的基本版本显示，大多数人在这种情境下接受功利主义的推理：牺牲一人以拯救五人。但这并不意味着人们总是遵循功利主义（在'天桥版本'中人们拒绝推人），而是表明后果考量在道德判断中起重要作用。选项A过于绝对，因为人们在'天桥版本'中拒绝功利主义计算；选项D与事实相反；选项B与人们的直觉相反，大多数人认为杀死和让死有区别。", "pitfall": "选A：忽视了人们在'天桥版本'中的不同反应；选B：将道德与科学主义混淆；选C：与事实相反，人们确实考虑后果；选D：忽视了杀死与让死在道德直觉上的重要区别。"}, {"kc_id": "kc11.5", "cognitive_level": "分析", "difficulty": 0.65, "type": "choice", "question": "电车难题的'天桥版本'（推下一个人以阻止电车）与'方向盘版本'（转向岔道）的主要道德区别是什么？", "options": ["A. 前者涉及陌生人，后者涉及亲人", "B. 前者是意外，后者是故意的", "C. 前者涉及直接作为，后者涉及间接允许", "D. 前者后果更严重，后者后果较轻"], "answer": "C", "explanation": "两个版本的后果相同（一死五活），但道德直觉不同。关键区别在于：推人是直接导致伤害的作为（using harm as a means），而转向是让伤害作为间接后果发生（foreseen side effect）。这反映了'双重效应原则'：作为手段造成的伤害比作为副作用造成的伤害更难以辩护。选项D错误，后果相同；选项A错误，两个版本都涉及陌生人；选项B错误，两个版本都是故意的。", "pitfall": "选D：未注意到两个版本的后果完全相同；选A：错误地引入案例中没有的变量；选B：两个版本都是故意的，区别不在于意图而在于因果结构。"}, {"kc_id": "kc11.6", "cognitive_level": "记忆", "difficulty": 0.4, "type": "choice", "question": "伦理利己主义（Ethical Egoism）的核心主张是什么？", "options": ["A. 所有行为都是自私的", "B. 快乐是最高的善", "C. 人们应该追求自己的利益", "D. 道德是社会契约的产物"], "answer": "C", "explanation": "伦理利己主义是一个规范伦理学主张：人们应该追求自己的利益，即最大化自己的善。这与心理利己主义（所有行为都是自私的）不同，后者是一个描述心理学的主张。选项A是心理利己主义；选项B是功利主义（虽然功利主义追求快乐，但追求的是整体快乐而非个人快乐）；选项D是社会契约论。", "pitfall": "选A：混淆了规范主张（应该）与描述主张（是）；选B：将利己主义与功利主义混淆；选D：将利己主义与社会契约论混淆。"}, {"kc_id": "kc11.7", "cognitive_level": "理解", "difficulty": 0.55, "type": "choice", "question": "霍布斯（Hobbes）的社会契约理论中，'自然状态'的特征是什么？", "options": ["A. 和谐、和平、合作的原始状态", "B. 完全自由平等的理想状态", "C. 孤独、贫困、野蛮、粗暴且短暂的生活", "D. 受神圣法律支配的神权政治"], "answer": "C", "explanation": "霍布斯认为，在没有政府（自然状态）的情况下，由于资源稀缺、竞争和相互不信任，人类的生活将是'孤独、贫困、野蛮、粗暴且短暂的'。因此，理性个体通过社会契约建立政治权威以摆脱这种状态。选项A是卢梭的观点；选项B是洛克的观点；选项D是中世纪政治哲学的观点。", "pitfall": "选A：将霍布斯与卢梭混淆，卢梭认为自然状态是和谐的；选B：将霍布斯与洛克混淆；选D：将社会契约论与神权论混淆。"}, {"kc_id": "kc11.8", "cognitive_level": "理解", "difficulty": 0.5, "type": "choice", "question": "相容论（Compatibilism）关于自由意志和决定论的观点是什么？", "options": ["A. 自由意志是一种幻觉，所有行为都是被决定的", "B. 自由意志与决定论是相容的，自由行动是由自身欲望和性格驱动的行动", "C. 自由意志与决定论不相容，真正的自由要求非决定论", "D. 决定论是错误的，因此自由意志是存在的"], "answer": "B", "explanation": "相容论认为自由意志与决定论并不矛盾。自由行动不是没有被决定的行动，而是由行动者自身的欲望、性格和理性驱动的行动，而非外部强制。选项A是硬决定论的观点；选项C是不相容论的观点；选项D是自由意志论（Libertarianism）的观点。", "pitfall": "选A：将相容论与硬决定论混淆；选C：将相容论与不相容论混淆；选D：将相容论与自由意志论混淆。"}, {"kc_id": "kc11.1", "cognitive_level": "应用", "difficulty": 0.55, "type": "tf", "question": "功利主义可能会为了拯救多数人而牺牲无辜者的权利。", "options": ["正确", "错误"], "answer": "正确", "explanation": "这是正确的。功利主义面临的一个重要批评是'正义反对意见'：如果牺牲一个无辜者能够最大化整体幸福（例如，通过陷害一个无辜者来防止暴乱），功利主义似乎要求这样做。这与其'最大多数人的最大幸福'原则是一致的，但与我们关于个人权利的道德直觉相冲突。规则功利主义试图通过关注规则而非个别行为来解决这一问题。", "pitfall": "选'错误'：未理解功利主义的逻辑推论，或者将规则功利主义与行为功利主义的区别忽视。"}, {"kc_id": "kc11.2", "cognitive_level": "应用", "difficulty": 0.5, "type": "tf", "question": "根据康德的义务论，一个行为只要产生了好的后果，就是道德的。", "options": ["正确", "错误"], "answer": "错误", "explanation": "这是错误的。康德义务论认为道德价值不在于后果，而在于行为是否出于义务、是否遵循道德法则。即使一个行为产生了好的后果，如果不是出于对道德法则的尊重（出于义务），就没有真正的道德价值。康德关注的是行为的准则（maxim）和可普遍化性，而非结果。", "pitfall": "选'正确'：将义务论与后果论混淆，未理解康德对后果的明确拒绝。"}, {"kc_id": "kc11.3", "cognitive_level": "应用", "difficulty": 0.6, "type": "tf", "question": "美德伦理学强调通过实践和习惯来培养品格，正如亚里士多德所说，我们成为公正的人是通过做公正的事。", "options": ["正确", "错误"], "answer": "正确", "explanation": "这是正确的。美德伦理学强调道德教育和习惯化：美德是通过实践获得的——我们成为公正的人通过做公正的事，成为勇敢的人通过做勇敢的事。美德不是天生的，而是通过反复实践养成的稳定品格倾向。这与义务论强调规则、后果论强调计算不同。", "pitfall": "选'错误'：未理解美德伦理学对实践和习惯的重视，或者将美德与天生品质混淆。"}, {"kc_id": "kc11.4", "cognitive_level": "应用", "difficulty": 0.65, "type": "tf", "question": "如果道德相对主义是正确的，那么我们就不能批评其他文化的道德实践。", "options": ["正确", "错误"], "answer": "错误", "explanation": "这是错误的。即使道德相对主义为真，我们仍然可以批评其他文化——只要我们是从自己的文化或道德框架出发进行批评。相对主义并不意味着我们必须接受或宽容所有行为，而只是意味着不存在跨文化的绝对道德标准来进行'中立'的批评。我们仍然可以基于自己的价值观进行道德批评。", "pitfall": "选'正确'：误解了相对主义的含义，将'没有绝对标准'等同于'不能有任何标准'。"}, {"kc_id": "kc11.1", "cognitive_level": "分析", "difficulty": 0.75, "type": "fill", "question": "功利主义面临三个主要反对意见：'苛求性反对'认为它要求太多；'______反对'认为它可能为了整体利益而牺牲个人；'______反对'质疑幸福是否可以被量化和在人际间比较。", "options": ["A. 自由；实践", "B. 权利；科学", "C. 正义；测量", "D. 道德；心理"], "answer": "C", "explanation": "功利主义的三个经典反对意见是：(1) 苛求性反对（demandingness objection）：功利主义要求我们总是最大化整体幸福，没有空间留给个人项目；(2) 正义反对（justice objection）：功利主义可能为了拯救多数而牺牲少数人的权利；(3) 测量反对（measurement objection）：幸福是否可以被量化并在不同人之间比较是可疑的。", "pitfall": "选A：虽然自由也是问题，但不是功利主义反对意见的经典分类；选B：虽然权利相关，但'科学'不是标准术语；选D：虽然心理测量相关，但'道德'不准确。"}, {"kc_id": "kc11.2", "cognitive_level": "理解", "difficulty": 0.55, "type": "fill", "question": "康德的绝对命令有三个主要公式：'______公式'要求行为准则可以普遍化；'______公式'要求将人当作目的；'______公式'强调意志自律。", "options": ["A. 自然；理性；自由", "B. 道德；目的；普遍", "C. 义务；人格；意志", "D. 普遍法则；人性；自律"], "answer": "D", "explanation": "康德的绝对命令有三个主要公式：(1) 普遍法则公式（Formula of Universal Law）：只按照你同时愿意它成为普遍法则的准则行动；(2) 人性公式（Formula of Humanity）：始终将人当作目的，不仅仅是手段；(3) 自律公式（Formula of Autonomy）：强调意志是自我立法者。这三个公式被认为是同一道德法则的不同表达。", "pitfall": "选A：使用了康德哲学的其他概念但不是绝对命令的公式名称；选B：部分正确但不够精确；选C：虽然相关但不是标准术语。"}, {"kc_id": "kc11.5", "cognitive_level": "分析", "difficulty": 0.7, "type": "fill", "question": "电车难题揭示了道德判断中的两个重要区别：'______与______的区别'（是直接导致伤害还是允许伤害发生），以及'______与______的区别'（是作为手段造成伤害还是作为副作用造成伤害）。", "options": ["A. 行动；不行动；意图；后果", "B. 主动；被动；直接；间接", "C. 故意；过失；原因；结果", "D. 作为；允许；手段；副作用"], "answer": "D", "explanation": "电车难题揭示了道德判断中的两个重要区别：(1) 作为（doing）与允许（allowing）的区别：主动造成伤害与允许伤害发生可能有不同的道德评价；(2) 手段（means）与副作用（side effect）的区别：以伤害作为达到目的的手段与伤害作为可预见的副作用有不同的道德地位。这反映在'双重效应原则'中。", "pitfall": "选A：虽然相关但未抓住电车难题的核心区别；选B：部分正确但不够精确；选C：虽然相关但不是电车难题揭示的主要区别。"}, {"kc_id": "kc11.6", "cognitive_level": "理解", "difficulty": 0.6, "type": "short", "question": "区分心理利己主义与伦理利己主义，并各举一个支持或反对的论据。", "options": [], "answer": "心理利己主义是一个描述性主张：所有人类行为最终都是自私的，即使看似利他的行为也是为了获得满足感或避免内疚。反对论据：这个观点是难以证伪的——任何行为都可以被重新解释为自私的，这使其成为一个空洞的主张。伦理利己主义是一个规范性主张：人们应该追求自己的利益，这是道德上正确的。反对论据：它无法被普遍化——如果每个人都只追求自己的利益，结果对所有人都会更差（公地悲剧）。两种利己主义的关键区别在于：一个是关于事实的主张，一个是关于规范的主张。", "explanation": "这个问题要求学生能够清晰区分描述性与规范性主张，并为每种立场提供哲学论据。", "pitfall": "混淆两种利己主义；将心理利己主义误认为支持伦理利己主义的论据；论据不充分或不相关。"}, {"kc_id": "kc11.7", "cognitive_level": "分析", "difficulty": 0.7, "type": "short", "question": "解释罗尔斯（Rawls）的'无知之幕'（veil of ignorance）思想实验的目的和运作方式，并说明它如何支持他的正义原则。", "options": [], "answer": "罗尔斯的'无知之幕'是一个思想实验，旨在确保正义原则的选择是公平的。在这个思想实验中，人们被要求选择管理社会的基本原则，但他们不知道自己在社会中的位置——不知道自己的阶级、种族、性别、能力、财富等。这种无知确保没有人能够偏向自己的利益，因为每个人都有可能处于社会中最不利的地位。罗尔斯认为，在这种条件下，人们会选择两个正义原则：(1) 平等的基本自由原则；(2) 差异原则——社会和经济的不平等只有在有利于最不利者时才是正当的。无知之幕通过排除偏见来确保公正性。", "explanation": "这个问题要求学生理解罗尔斯的正义理论的核心机制，并能够解释其哲学目的。", "pitfall": "仅描述无知之幕而不解释其目的；混淆罗尔斯与其他社会契约论者；未提及具体的正义原则。"}, {"kc_id": "kc11.8", "cognitive_level": "综合", "difficulty": 0.8, "type": "short", "question": "比较自由意志论（Libertarianism）与硬决定论（Hard Determinism）关于自由意志和道德责任的观点，并解释它们的含义。", "options": [], "answer": "自由意志论认为：(1) 决定论是错误的，存在真正的非决定性；(2) 人类拥有自由意志，能够在多种可能行动中做出选择；(3) 因此，我们对自己的行为负有道德责任。硬决定论认为：(1) 决定论是正确的，所有事件（包括人类行为）都由先前原因决定；(2) 自由意志是一种幻觉；(3) 因此，严格意义上的道德责任是不存在的。两种观点都接受自由意志与决定论不相容，但在是否接受决定论上相反。相容论则认为决定论为真但自由意志也存在（自由行动是由自身欲望驱动的行动）。", "explanation": "这个问题要求学生能够比较两种极端立场，理解它们的推理，并指出它们与相容论的关系。", "pitfall": "混淆自由意志论与相容论；将硬决定论与相容论混淆；未讨论道德责任的含义。"}, {"kc_id": "kc11.1", "cognitive_level": "综合", "difficulty": 0.85, "type": "essay", "question": "论述功利主义的基本原则、其主要反对意见，以及规则功利主义如何尝试回应这些反对意见。评价规则功利主义是否能够成功解决这些问题。", "options": [], "answer": "功利主义主张行为的道德价值取决于其后果，特别是是否最大化了整体幸福或福祉。它面临三个主要反对意见：(1) 苛求性反对——要求我们总是最大化幸福，没有空间留给个人项目；(2) 正义反对——可能为了多数人利益而牺牲少数人权利；(3) 测量反对——幸福是否可以被量化和比较是可疑的。规则功利主义试图通过改变焦点来解决这些问题：不是询问'什么行为最大化幸福'，而是询问'如果被普遍遵循，什么规则会最大化幸福'。这可能避免个别情况下的不公正（因为'如果允许陷害无辜者的规则被普遍遵循'会降低整体幸福），同时避免苛求性（因为个人可以遵循规则而不必每次都计算后果）。然而，规则功利主义面临自己的问题：(1) 规则功利主义可能'规则 worship'——在明显违背功利的情况下仍遵循规则；(2) 它可能退化为行为功利主义——如果规则足够具体以产生最好后果，就与行为功利主义无异；(3) 它可能仍然要求过多——即使遵循规则，这些规则也可能要求牺牲个人利益。总体而言，规则功利主义在回应个别不公正方面有一定成功，但在根本问题上仍有困难。", "explanation": "这个问题要求学生全面理解功利主义的理论、批评和回应，并进行哲学评价。", "pitfall": "仅描述功利主义而不讨论反对意见；未解释规则功利主义的具体运作；评价缺乏深度或哲学论证。"}, {"kc_id": "kc11.2", "cognitive_level": "综合", "difficulty": 0.9, "type": "essay", "question": "论述康德的义务论、美德伦理学和功利主义在处理道德问题上的主要差异，并评价它们各自的优势与局限。", "options": [], "answer": "三种主要伦理学理论在处理道德问题上有根本差异。功利主义（后果论）关注行为后果，要求最大化整体幸福；其优势是提供了清晰的决策标准并关注实际结果，但可能忽视个人权利和公平。康德义务论关注行为的动机和原则，要求行为可以普遍化并将人当作目的；其优势是强调人的尊严和道德法则的普遍性，但可能过于僵化而忽视情境。美德伦理学关注行为者的品格，询问'我应该成为什么样的人'；其优势是强调道德教育和品格培养，但缺乏具体的行动指导。三种理论反映了道德的不同维度：后果、原则和品格。没有一种理论能够完全捕捉道德生活的复杂性，但每种理论都提供了有价值的洞见。一种综合的方法可能需要结合后果考量、原则约束和品格培养。", "explanation": "这个问题要求学生能够比较三种主要伦理学理论，理解它们的核心差异，并进行平衡的评价。", "pitfall": "仅描述一种理论而不比较；混淆三种理论的核心主张；评价片面或缺乏哲学深度。"}, {"kc_id": "kc11.4", "cognitive_level": "综合", "difficulty": 0.85, "type": "essay", "question": "论述道德相对主义与道德客观主义的主要争论，并评价是否存在跨文化的普遍道德原则。", "options": [], "answer": "道德相对主义与道德客观主义的争论是伦理学的核心问题。道德相对主义认为道德真理是相对的，取决于文化、社会或个人视角。支持论据包括：文化多样性（不同文化有不同的道德实践）、缺乏经验证据（道德事实无法像科学事实一样被验证）、以及促进宽容（相对主义鼓励尊重不同文化）。道德客观主义认为存在普遍的道德原则，适用于所有文化。支持论据包括：某些道德实践被普遍谴责（如种族灭绝）、道德改革的可能性（如果道德是相对的，如何解释一个文化内部的道德进步？）、以及道德争论的实在性（我们进行道德争论时预设了客观标准）。评价：文化多样性的事实并不必然推出道德相对主义——可能存在普遍原则的不同应用。同样，某些被普遍谴责的实践（如奴隶制）的历史存在也不证明没有客观道德标准。最合理的立场可能是'弱客观主义'：存在一些基本的普遍道德原则（如禁止无故杀人、要求某种程度的公平），但在具体应用上允许文化差异。", "explanation": "这个问题要求学生深入理解相对主义与客观主义的哲学争论，并能够提出自己的评价。", "pitfall": "仅描述一方立场而不评价；将描述性相对主义与元伦理相对主义混淆；未考虑中间立场。"}, {"kc_id": "kc11.5", "cognitive_level": "综合", "difficulty": 0.8, "type": "essay", "question": "论述电车难题如何揭示道德判断的复杂性，并分析至少两种不同的伦理学理论如何解释这个难题。", "options": [], "answer": "电车难题揭示了道德判断的复杂性：相同的结果（一死五活）在不同的情境下引发了不同的道德直觉。在'方向盘版本'（转向岔道）中，大多数人认为行动是允许的；在'天桥版本'（推人）中，大多数人认为行动是不允许的。三种伦理学理论对这个难题有不同的解释。功利主义认为两个版本都应该允许，因为结果相同（五活一死）。它难以解释为什么人们的直觉不同。康德义务论认为两个版本都应该禁止，因为杀人是错误的，不能将人当作手段。它难以解释为什么转向似乎是可接受的。美德伦理学关注一个有德性的人会怎么做，强调实践智慧在判断具体情境中的作用。它可能认为一个有实践智慧的人会区分两种情境，但缺乏明确的行动指导。电车难题表明，道德判断不仅涉及后果计算或规则遵循，还涉及因果结构、行动类型（作为vs允许）和情感反应等复杂因素。", "explanation": "这个问题要求学生能够运用不同的伦理学理论分析具体案例，并理解道德判断的复杂性。", "pitfall": "仅描述电车难题而不进行分析；只讨论一种理论；未解释为什么不同版本引发不同直觉。"}, {"kc_id": "kc11.8", "cognitive_level": "综合", "difficulty": 0.9, "type": "essay", "question": "论述自由意志问题如何影响道德责任的基础，并评价相容论是否能够成功维护道德责任。", "options": [], "answer": "道德责任似乎预设了自由意志：我们只能对'我们自己的'行为负责，即由我们自由选择的行为。但如果决定论为真——每个事件都由先前原因决定——我们的行为似乎不是自由的。这引发了自由意志问题对道德责任的威胁。相容论试图通过重新定义自由意志来解决这个问题：自由行动不是未被决定的行动，而是由行动者自身的欲望、性格和理性驱动的行动，而非外部强制。相容论认为，只要行动反映了行动者的意愿，即使是被决定的，行动者仍然负有道德责任。这种观点能够维护我们日常的道德实践和惩罚制度。然而，相容论面临批评：(1) 它可能只是'半measure'——我们真正想要的是能够选择不同的能力，而不仅仅是按照自己的欲望行动；(2) 如果我们的欲望和性格本身是被决定的，我们如何对它们负责？(3) 它可能无法完全解释道德责任的情感基础——我们对真正自由行动者的愤怒和赞扬与对被决定行动者的不同。相容论在维护道德实践方面是实用的，但在哲学上可能不够彻底。", "explanation": "这个问题要求学生理解自由意志问题的哲学深度，并能够评价相容论的优缺点。", "pitfall": "仅描述自由意志问题而不讨论道德责任；将相容论与自由意志论混淆；评价缺乏哲学深度。"}]};
+var LABELS = {"page_title": "章节测试", "section": {"choice": "一、选择题", "multi": "二、多选题", "tf": "三、判断题", "fill": "四、填空题", "short": "五、简答题", "calc": "六、计算题", "code": "七、代码题", "essay": "八、问答题", "comprehensive": "九、综合题"}, "section_order": ["choice", "multi", "tf", "fill", "short", "calc", "code", "essay", "comprehensive"], "points_suffix": "分", "true_label": "正确", "false_label": "错误", "placeholder": "在此作答...", "code_placeholder": "在此编写代码...", "pitfall_prefix": "易错提醒：", "correct_label": "正确", "wrong_label": "错误", "partial_label": "部分正确", "answer_prefix": "正确答案：", "reference_label": "参考答案", "graded_label": "已批改", "grade_button": "提交批改", "score_label": "总分", "duration_prefix": "满分 100 分 | 建议 ", "duration_suffix": " 分钟 | 选择答案后点击提交批改"};
+
+// ─── Answer normalization (robust to how the JSON was authored) ──────
+// tf / choice answers may arrive as int index, boolean, letter ("A"),
+// or label string ("正确"/"错误"/"对"/"错"). All are coerced to an
+// option index so grading never silently fails on a type mismatch.
+
+function tfAnswerIndex(ans) {
+  // option 0 = true_label (正确), option 1 = false_label (错误)
+  if (typeof ans === 'boolean') return ans ? 0 : 1;
+  if (typeof ans === 'number') return ans === 0 ? 0 : 1;
+  var s = ('' + ans).trim().toLowerCase();
+  var truthy = ['0', 't', 'true', '正确', '对', '是', 'yes', 'y', '√', '✓'];
+  var falsy  = ['1', 'f', 'false', '错误', '错', '否', 'no', 'n', '×', 'x'];
+  if (truthy.indexOf(s) !== -1) return 0;
+  if (falsy.indexOf(s) !== -1) return 1;
+  return ans ? 0 : 1;
+}
+
+function choiceAnswerIndex(ans, options) {
+  if (typeof ans === 'number') return ans;
+  var s = ('' + ans).trim();
+  if (/^[A-Za-z]$/.test(s)) return s.toUpperCase().charCodeAt(0) - 65;
+  if (/^\d+$/.test(s)) return parseInt(s, 10);
+  if (options) {
+    for (var i = 0; i < options.length; i++) {
+      if (('' + options[i]).trim() === s) return i;
+    }
+  }
+  return parseInt(s, 10);
+}
+
+function multiAnswerSet(ans, options) {
+  var arr = Array.isArray(ans) ? ans : [ans];
+  var set = {};
+  for (var i = 0; i < arr.length; i++) {
+    set[choiceAnswerIndex(arr[i], options)] = true;
+  }
+  return set;
+}
+
+// Normalize free text for fill-in-the-blank comparison: trim, lowercase,
+// drop surrounding whitespace and common punctuation, unify full/half width.
+function normText(s) {
+  s = ('' + s).trim().toLowerCase();
+  s = s.replace(/[\s　]+/g, '');
+  s = s.replace(/[.,;:!?。，、；：！？“”"'（）()【】\[\]<>《》]/g, '');
+  // full-width ASCII -> half-width
+  s = s.replace(/[！-～]/g, function (c) {
+    return String.fromCharCode(c.charCodeAt(0) - 0xfee0);
+  });
+  return s;
+}
+
+// How many blanks does a fill question have? Count underscore / ＿ runs.
+function fillBlankCount(question) {
+  var m = ('' + question).match(/(_{2,}|＿+)/g);
+  return m ? m.length : 0;
+}
+
+// Coerce a fill `answer` into an array (one entry per blank) of accepted
+// answer lists. Handles: string, [synonyms], [[blank1 syns],[blank2 syns]].
+function fillBlankAnswers(ans, nBlanks) {
+  if (nBlanks < 1) nBlanks = 1;
+  if (!Array.isArray(ans)) return padBlanks([[ans]], nBlanks);
+  if (ans.length && Array.isArray(ans[0])) return padBlanks(ans, nBlanks);
+  // flat array of strings
+  if (nBlanks === 1) return [ans];                 // synonyms for one blank
+  if (ans.length === nBlanks) {                    // one answer per blank
+    return ans.map(function (a) { return [a]; });
+  }
+  return padBlanks([ans], nBlanks);                // ambiguous -> all on blank 1
+}
+
+function padBlanks(arr, n) {
+  var out = arr.slice(0, n);
+  while (out.length < n) out.push(['']);
+  return out;
+}
+
+// ─── Build ───────────────────────────────────────────────────────────
+
+function build() {
+  var container = document.getElementById('questions-container');
+  if (!container) { console.error('ExamPass: questions-container not found'); return; }
+
+  // Stable-sort questions by section order so headings group correctly
+  // regardless of input order.
+  var order = LABELS.section_order || [];
+  Q.forEach(function (q, i) { q._i = i; });
+  Q.sort(function (a, b) {
+    var oa = order.indexOf(a.type); if (oa === -1) oa = 99;
+    var ob = order.indexOf(b.type); if (ob === -1) ob = 99;
+    return oa - ob || a._i - b._i;
+  });
+
+  var h = '';
+  var sec = '';
+  var titles = LABELS.section;
+
+  for (var i = 0; i < Q.length; i++) {
+    var q = Q[i];
+    if (q.type !== sec) {
+      sec = q.type;
+      if (titles[q.type]) h += '<h3>' + titles[q.type] + '</h3>';
+    }
+
+    var qid = 'q' + i;
+    h += '<div class="q-card" id="card-' + qid + '">';
+    h += '<div class="q-num">' + (i + 1) + '. (' + q.points + ' ' + LABELS.points_suffix + ')</div>';
+
+    if (q.type === 'fill') {
+      h += '<div class="q-text">' + renderFill(q, qid) + '</div>';
+    } else {
+      h += '<div class="q-text">' + q.question + '</div>';
+    }
+
+    if (q.type === 'choice') {
+      var opts = q.options || [];
+      for (var j = 0; j < opts.length; j++) {
+        h += '<label class="option" id="opt-' + qid + '-' + j + '" onclick="sel(\'' + qid + '\',' + j + ')">';
+        h += '<input type="radio" name="' + qid + '" value="' + j + '">' + String.fromCharCode(65 + j) + '. ' + opts[j] + '</label>';
+      }
+    } else if (q.type === 'multi') {
+      var mopts = q.options || [];
+      for (var k = 0; k < mopts.length; k++) {
+        h += '<label class="option" id="opt-' + qid + '-' + k + '" onclick="toggle(\'' + qid + '\',' + k + ')">';
+        h += '<input type="checkbox" name="' + qid + '" value="' + k + '">' + String.fromCharCode(65 + k) + '. ' + mopts[k] + '</label>';
+      }
+    } else if (q.type === 'tf') {
+      h += '<label class="option" id="opt-' + qid + '-0" onclick="sel(\'' + qid + '\',0)">';
+      h += '<input type="radio" name="' + qid + '" value="0">' + LABELS.true_label + '</label>';
+      h += '<label class="option" id="opt-' + qid + '-1" onclick="sel(\'' + qid + '\',1)">';
+      h += '<input type="radio" name="' + qid + '" value="1">' + LABELS.false_label + '</label>';
+    } else if (q.type === 'fill') {
+      // inputs already rendered inline inside q-text
+    } else if (q.type === 'code') {
+      h += '<textarea class="q-textarea q-code" id="text-' + qid + '" placeholder="' + (LABELS.code_placeholder || LABELS.placeholder) + '" rows="8" spellcheck="false"></textarea>';
+    } else {
+      h += '<textarea class="q-textarea" id="text-' + qid + '" placeholder="' + LABELS.placeholder + '" rows="3"></textarea>';
+    }
+
+    h += '<div class="result" id="result-' + qid + '">';
+    h += '<span class="badge" id="badge-' + qid + '"></span><span id="correct-' + qid + '"></span>';
+    h += '<div class="explanation">' + (q.explanation || '') + '</div>';
+    if (q.pitfall) {
+      h += '<div class="pitfall">' + LABELS.pitfall_prefix + q.pitfall + '</div>';
+    }
+    h += '</div></div>';
+  }
+
+  container.innerHTML = h;
+
+  if (window.MathJax && MathJax.typesetPromise) {
+    MathJax.typesetPromise([container]).catch(function (err) {
+      console.error('MathJax typeset error:', err);
+    });
+  }
+}
+
+// Render fill question text with inline <input> boxes replacing blanks.
+function renderFill(q, qid) {
+  var nBlanks = fillBlankCount(q.question);
+  var k = 0;
+  var html = ('' + q.question).replace(/(_{2,}|＿+)/g, function () {
+    var inp = '<input type="text" class="fill-input" id="fill-' + qid + '-' + k + '" autocomplete="off" spellcheck="false">';
+    k++;
+    return inp;
+  });
+  if (k === 0) {
+    // No markers in text -> append boxes based on answer shape
+    var n = fillBlankAnswers(q.answer, 1).length;
+    var ans = q.answer;
+    if (Array.isArray(ans)) n = Array.isArray(ans[0]) ? ans.length : (ans.length || 1);
+    if (n < 1) n = 1;
+    html += '<div class="fill-row">';
+    for (var b = 0; b < n; b++) {
+      if (n > 1) html += '<span class="fill-tag">' + (b + 1) + '.</span>';
+      html += '<input type="text" class="fill-input" id="fill-' + qid + '-' + b + '" autocomplete="off" spellcheck="false">';
+    }
+    html += '</div>';
+  }
+  return html;
+}
+
+document.addEventListener('DOMContentLoaded', build);
+if (document.readyState === 'interactive' || document.readyState === 'complete') {
+  build();
+}
+
+// ─── Selection handlers ──────────────────────────────────────────────
+
+function sel(qid, idx) {
+  var prefix = 'opt-' + qid + '-';
+  var all = document.querySelectorAll('[id^="' + prefix + '"]');
+  for (var i = 0; i < all.length; i++) all[i].classList.remove('selected');
+  var target = document.getElementById('opt-' + qid + '-' + idx);
+  if (target) target.classList.add('selected');
+  var radio = document.querySelector('input[name="' + qid + '"][value="' + idx + '"]');
+  if (radio) radio.checked = true;
+}
+
+function toggle(qid, idx) {
+  var box = document.querySelector('input[name="' + qid + '"][value="' + idx + '"]');
+  var label = document.getElementById('opt-' + qid + '-' + idx);
+  if (!box) return;
+  box.checked = !box.checked;
+  if (label) label.classList.toggle('selected', box.checked);
+}
+
+// ─── Grading ─────────────────────────────────────────────────────────
+
+function gradeAll() {
+  var score = 0;
+  for (var i = 0; i < Q.length; i++) {
+    var q = Q[i];
+    var qid = 'q' + i;
+    var card = document.getElementById('card-' + qid);
+    var result = document.getElementById('result-' + qid);
+    var badge = document.getElementById('badge-' + qid);
+    var correctEl = document.getElementById('correct-' + qid);
+    if (!card || !result) continue;
+
+    result.style.display = 'block';
+
+    if (q.type === 'choice' || q.type === 'tf') {
+      score += gradeSingle(q, qid, card, badge, correctEl);
+    } else if (q.type === 'multi') {
+      score += gradeMulti(q, qid, card, badge, correctEl);
+    } else if (q.type === 'fill') {
+      score += gradeFill(q, qid, card, badge, correctEl);
+    } else {
+      card.classList.add('correct');
+      badge.className = 'badge badge-ref';
+      badge.textContent = LABELS.reference_label;
+    }
+  }
+
+  var sb = document.getElementById('score-box');
+  if (sb) {
+    sb.style.display = 'block';
+    document.getElementById('score-num').textContent = roundScore(score);
+    sb.scrollIntoView({ behavior: 'smooth' });
+  }
+
+  var opts = document.querySelectorAll('.option');
+  for (var a = 0; a < opts.length; a++) opts[a].style.pointerEvents = 'none';
+  var tas = document.querySelectorAll('.q-textarea');
+  for (var b = 0; b < tas.length; b++) tas[b].disabled = true;
+  var fis = document.querySelectorAll('.fill-input');
+  for (var c = 0; c < fis.length; c++) fis[c].disabled = true;
+
+  var btn = document.getElementById('grade-btn');
+  if (btn) { btn.disabled = true; btn.textContent = LABELS.graded_label; }
+
+  if (window.MathJax && MathJax.typesetPromise) {
+    MathJax.typesetPromise().catch(function (err) {
+      console.error('MathJax typeset error:', err);
+    });
+  }
+}
+
+function roundScore(s) {
+  return Math.round(s * 10) / 10;
+}
+
+function gradeSingle(q, qid, card, badge, correctEl) {
+  var ansIdx = q.type === 'tf' ? tfAnswerIndex(q.answer) : choiceAnswerIndex(q.answer, q.options);
+  var radio = document.querySelector('input[name="' + qid + '"]:checked');
+  if (radio && parseInt(radio.value, 10) === ansIdx) {
+    card.classList.add('correct');
+    badge.className = 'badge badge-ok';
+    badge.textContent = LABELS.correct_label;
+    correctEl.innerHTML = '';
+    var ok = document.getElementById('opt-' + qid + '-' + ansIdx);
+    if (ok) ok.classList.add('correct-answer');
+    return q.points;
+  }
+  card.classList.add('wrong');
+  badge.className = 'badge badge-no';
+  badge.textContent = LABELS.wrong_label;
+  var ansText = q.type === 'choice'
+    ? String.fromCharCode(65 + ansIdx) + '. ' + (q.options ? q.options[ansIdx] : '')
+    : (ansIdx === 0 ? LABELS.true_label : LABELS.false_label);
+  correctEl.innerHTML = LABELS.answer_prefix + ansText;
+  if (radio) {
+    var wrongOpt = document.getElementById('opt-' + qid + '-' + radio.value);
+    if (wrongOpt) wrongOpt.classList.add('wrong-answer');
+  }
+  var corr = document.getElementById('opt-' + qid + '-' + ansIdx);
+  if (corr) corr.classList.add('correct-answer');
+  return 0;
+}
+
+function gradeMulti(q, qid, card, badge, correctEl) {
+  var want = multiAnswerSet(q.answer, q.options);
+  var wantKeys = Object.keys(want).map(Number);
+  var checked = document.querySelectorAll('input[name="' + qid + '"]:checked');
+  var picked = [];
+  for (var i = 0; i < checked.length; i++) picked.push(parseInt(checked[i].value, 10));
+
+  var anyWrong = false, hitCorrect = 0;
+  for (var p = 0; p < picked.length; p++) {
+    if (want[picked[p]]) hitCorrect++;
+    else anyWrong = true;
+  }
+
+  // reveal correct / wrong option markers
+  var mopts = q.options || [];
+  for (var j = 0; j < mopts.length; j++) {
+    var el = document.getElementById('opt-' + qid + '-' + j);
+    if (!el) continue;
+    if (want[j]) el.classList.add('correct-answer');
+    else if (picked.indexOf(j) !== -1) el.classList.add('wrong-answer');
+  }
+
+  var earned;
+  if (!anyWrong && hitCorrect === wantKeys.length && picked.length === wantKeys.length) {
+    earned = q.points;
+    card.classList.add('correct');
+    badge.className = 'badge badge-ok';
+    badge.textContent = LABELS.correct_label;
+    correctEl.innerHTML = '';
+  } else if (!anyWrong && hitCorrect > 0) {
+    // 少选不错选 -> partial credit
+    earned = roundScore(q.points * hitCorrect / wantKeys.length);
+    card.classList.add('partial');
+    badge.className = 'badge badge-partial';
+    badge.textContent = LABELS.partial_label;
+    correctEl.innerHTML = LABELS.answer_prefix + multiAnswerText(wantKeys, mopts);
+  } else {
+    earned = 0;
+    card.classList.add('wrong');
+    badge.className = 'badge badge-no';
+    badge.textContent = LABELS.wrong_label;
+    correctEl.innerHTML = LABELS.answer_prefix + multiAnswerText(wantKeys, mopts);
+  }
+  return earned;
+}
+
+function multiAnswerText(keys, options) {
+  return keys.sort(function (a, b) { return a - b; }).map(function (k) {
+    return String.fromCharCode(65 + k) + '. ' + (options ? options[k] : '');
+  }).join('  ');
+}
+
+function gradeFill(q, qid, card, badge, correctEl) {
+  var nBlanks = fillBlankCount(q.question);
+  var blanks = fillBlankAnswers(q.answer, nBlanks);
+  var n = blanks.length;
+  var hit = 0;
+  var displays = [];
+
+  for (var b = 0; b < n; b++) {
+    var inp = document.getElementById('fill-' + qid + '-' + b);
+    var accepted = blanks[b] || [''];
+    var user = inp ? normText(inp.value) : '';
+    var ok = false;
+    for (var a = 0; a < accepted.length; a++) {
+      if (accepted[a] !== '' && normText(accepted[a]) === user && user !== '') { ok = true; break; }
+    }
+    if (inp) inp.classList.add(ok ? 'fill-ok' : 'fill-no');
+    if (ok) hit++;
+    displays.push((n > 1 ? (b + 1) + '. ' : '') + accepted.filter(function (x) { return x !== ''; }).join(' / '));
+  }
+
+  var earned = roundScore(q.points * hit / n);
+  correctEl.innerHTML = LABELS.answer_prefix + displays.join('   ');
+
+  if (hit === n) {
+    card.classList.add('correct');
+    badge.className = 'badge badge-ok';
+    badge.textContent = LABELS.correct_label;
+  } else if (hit > 0) {
+    card.classList.add('partial');
+    badge.className = 'badge badge-partial';
+    badge.textContent = LABELS.partial_label;
+  } else {
+    card.classList.add('wrong');
+    badge.className = 'badge badge-no';
+    badge.textContent = LABELS.wrong_label;
+  }
+  return earned;
+}
+
+</script>
+</body>
+</html>

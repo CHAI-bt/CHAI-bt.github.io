@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Topic 05 - 激进怀疑论</title>
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\(', '\)']],
+    displayMath: [['$$', '$$'], ['\[', '\]']]
+  }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"></script>
+<style>
+/* === ExamPass Shared Styles === */
+/* Paper-like warm background, clean typography, responsive */
+
+:root {
+  --paper: #fdf6e3;
+  --paper-dark: #f5ecd7;
+  --ink: #2c2c2c;
+  --ink-light: #555;
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
+  --divider: #d6c8a8;
+  --card-bg: #fef9ef;
+  --card-border: #e8dcc8;
+  --correct: #22c55e;
+  --correct-bg: #f0fdf4;
+  --wrong: #ef4444;
+  --wrong-bg: #fef2f2;
+  --tag-bg: #fef3c7;
+  --tag-text: #92400e;
+  --radius: 6px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: "Microsoft YaHei", "Noto Sans SC", "SimSun", sans-serif;
+  font-size: 12pt; line-height: 1.75; color: var(--ink);
+  max-width: 860px; margin: auto; padding: 24px 20px 60px;
+  background: var(--paper);
+}
+
+@media print {
+  body { font-size: 10.5pt; background: #fff; }
+  .no-print { display: none !important; }
+  h1, h2, h3 { page-break-after: avoid; }
+}
+
+/* ── Header ── */
+#exampass-header {
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding: 6px 0; margin-bottom: 0;
+}
+.header-brand { font-size: 1.2em; font-weight: 700; color: #1a1a2e; letter-spacing: 0.3px; }
+.header-url  { font-size: 0.78em; color: #999; }
+.header-divider { border: none; border-top: 2px solid var(--divider); margin: 4px 0 20px 0; }
+
+/* ── Typography ── */
+h1 { font-size: 1.55em; text-align: center; border-bottom: 2px solid var(--divider); padding-bottom: 8px; margin-top: 0; }
+h2 { font-size: 1.25em; border-bottom: 1px solid var(--divider); padding-bottom: 4px; margin-top: 28px; }
+h3 { font-size: 1.08em; margin-top: 20px; color: var(--ink); }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ── Tables ── */
+table { border-collapse: collapse; width: 100%; margin: 10px 0; font-size: 0.95em; }
+td, th { border: 1px solid var(--card-border); padding: 5px 9px; text-align: left; }
+th { background: var(--paper-dark); font-weight: 700; }
+
+/* ── Knowledge point vs explanation ── */
+.kp { font-weight: 700; color: var(--ink); }           /* key point: bold dark */
+.exp { font-weight: 400; color: var(--ink-light); }    /* explanation: lighter */
+.exp em, .exp strong { color: var(--ink); }             /* emphasis inside explanation */
+
+/* ── Block elements ── */
+blockquote {
+  border-left: 3px solid #c0392b; background: #fef9ef;
+  padding: 6px 14px; margin: 10px 0; font-size: 0.95em;
+}
+code { background: #f0ede0; padding: 2px 5px; border-radius: 3px; font-size: 0.92em; }
+pre { background: #f0ede0; padding: 10px; border-radius: var(--radius); overflow-x: auto; }
+
+/* ── TOC ── */
+div.toc {
+  background: var(--card-bg); padding: 14px 18px;
+  border: 1px solid var(--card-border); border-radius: var(--radius); margin-bottom: 22px;
+}
+div.toc ul { padding-left: 18px; }
+div.toc li { margin: 3px 0; font-size: 0.95em; }
+
+/* ── Priority tags ── */
+.tag-must   { background: #fee2e2; color: #991b1b; padding: 1px 6px; border-radius: 3px; font-size: 0.82em; font-weight: 600; }
+.tag-key    { background: #fef3c7; color: #92400e; padding: 1px 6px; border-radius: 3px; font-size: 0.82em; font-weight: 600; }
+.tag-freq   { background: #dbeafe; color: #1e40af; padding: 1px 6px; border-radius: 3px; font-size: 0.82em; font-weight: 600; }
+.tag-info   { background: #f0fdf4; color: #166534; padding: 1px 6px; border-radius: 3px; font-size: 0.82em; font-weight: 600; }
+
+
+</style>
+</head>
+<body>
+
+<header id="exampass-header">
+  <div class="header-left"><span class="header-brand">ExamPass Assistant</span></div>
+  <div class="header-right"><span class="header-url">github.com/WUBING2023/ExamPass-Assistant</span></div>
+</header>
+<hr class="header-divider">
+
+<h1>Topic 05 - 激进怀疑论</h1>
+<div class="toc">
+<h2>目录</h2>
+<ul>
+<li><a href="#s78185911">Topic 5: Logic and Argumentation（逻辑与论证）</a></li>
+  <li><a href="#s11802649">逻辑的基本定义与目标：区分好坏推理</a></li>
+  <li><a href="#s28956687">论证的结构：前提与结论</a></li>
+  <li><a href="#s22800775">演绎推理：如果前提真，结论必然真</a></li>
+  <li><a href="#s20537224">归纳推理：前提给结论提供「可能」支持</a></li>
+  <li><a href="#s66236071">常见的逻辑谬误：推理中的陷阱</a></li>
+  <li><a href="#s49314891">命题逻辑基础：简单命题如何组合</a></li>
+  <li><a href="#s43694886">真值表方法：机械判定论证有效性</a></li>
+  <li><a href="#s66539524">三段论推理：经典的演绎形式</a></li>
+  <li><a href="#s15204467">逻辑与论证总结表</a></li>
+</ul>
+</div>
+<h2 id="s78185911">Topic 5: Logic and Argumentation（逻辑与论证）</h2>
+<p><span class="exp">本节回答：什么是「讲道理」的理性标准？逻辑提供评估论证的框架——它不告诉你该信什么，只告诉你「如果前提成立，结论是否必然成立」。整章围绕一个骨架：先理解逻辑的基本目标（kc5.1），再拆解论证结构（kc5.2），然后区分演绎与归纳（kc5.3, kc5.4），识别常见谬误（kc5.5），进入命题逻辑（kc5.6）及其真值表方法（kc5.7），最后看三段论（kc5.8）作为经典演绎形式。</span></p>
+
+<h3 id="s11802649">逻辑的基本定义与目标：区分好坏推理</h3>
+<p><span class="exp">先想一个场景。甲说：「如果下雨，地面会湿；现在地面是湿的；所以下过雨了。」乙说：「如果下雨，地面会湿；现在下雨了；所以地面会湿。」你觉得哪个推理「更有力」？</span></p>
+<p><span class="exp">答案是乙。甲的推理看似合理，但「地面湿」可能有别的理由（洒水车、水管破裂）——从结论倒推前提，不一定成立。乙则是从前提顺推结论，只要前提成立，结论必然成立。这就是<span class="kp">逻辑</span>的核心任务：提供一套标准，区分<span class="kp">好推理</span>（前提真则结论不可能假）和<span class="kp">坏推理</span>（前提真但结论仍可能假）。</span></p>
+<p><span class="exp">为什么需要它：逻辑不告诉你「该信什么」，只告诉你「你的推理过程是否可靠」。它是哲学分析的基础工具——你要批评一个论证，先得知道它在哪里可能出错。</span></p>
+<blockquote>易错：逻辑只保证「如果前提真，则结论真」；它不保证前提本身是真的。一个论证可以逻辑有效但前提全假——这叫「有效但不健全」。</blockquote>
+<p><span class="tag-must">必考</span></p>
+
+<h3 id="s28956687">论证的结构：前提与结论</h3>
+<p><span class="exp">任何论证都由两部分组成：<span class="kp">前提</span>（premises）——你给出的理由或证据；<span class="kp">结论</span>（conclusion）——你试图证明的主张。</span></p>
+<p><span class="exp">看一个例子：</p>
+<ul>
+<li><span class="exp"><span class="kp">前提 1</span>：所有哺乳动物都是恒温动物。</span></li>
+<li><span class="exp"><span class="kp">前提 2</span>：鲸鱼是哺乳动物。</span></li>
+<li><span class="exp"><span class="kp">结论</span>：鲸鱼是恒温动物。</span></li>
+</ul>
+<p><span class="exp">这个结构就像盖楼：前提是地基，结论是楼顶。地基不结实，楼就歪了；地基结实但结构设计有问题（推理无效），楼也会塌。</span></p>
+<p><span class="exp">为什么需要它：遇到任何论证，第一步就是识别它的前提和结论。很多争论其实是因为双方没看清楚对方真正的前提是什么——澄清结构，才能开始真正的讨论。</span></p>
+<p><span class="tag-must">必考</span></p>
+
+<h3 id="s22800775">演绎推理：如果前提真，结论必然真</h3>
+<p><span class="exp">上面「鲸鱼是恒温动物」的例子展示了一种经典推理：<span class="kp">演绎推理</span>（deductive reasoning）。它的核心特征是：<span class="kp">如果前提为真，则结论不可能为假</span>。</span></p>
+<p><span class="exp">用符号表示：</p>
+<p><span class="exp">$$P_1, P_2, \ldots, P_n \vdash C$$</span></p>
+<p><span class="exp">意思是：从前提 $P_1, P_2, \ldots, P_n$ 可以<span class="kp">必然地</span>推出结论 $C$。</span></p>
+<p><span class="exp">为什么是枢纽：演绎是逻辑的「黄金标准」——它提供绝对确定性。数学证明、法律推理、计算机程序验证，都依赖演绎。如果你能把自己的论证整理成有效的演绎形式，别人想反驳你就只能攻击你的前提，而不是质疑你的推理过程。</span></p>
+<blockquote>易错：演绎推理的有效性不依赖于前提实际是否为真。例如「所有鸟都会飞；企鹅是鸟；所以企鹅会飞」——这个推理是有效的（形式正确），但第一个前提是假的（企鹅不会飞）。有效 ≠ 健全。</blockquote>
+<p><span class="tag-must">必考</span></p>
+
+<h3 id="s20537224">归纳推理：前提给结论提供「可能」支持</h3>
+<p><span class="exp">看另一个推理：「我见过的天鹅都是白色的；所以所有天鹅都是白色的。」这个推理的前提真，结论却可能假——直到有人发现了黑天鹅。</span></p>
+<p><span class="exp">这是<span class="kp">归纳推理</span>（inductive reasoning）：<span class="kp">前提为真时，结论很可能为真，但不必然为真</span>。归纳推理的强度有强弱之分——观察到的案例越多、越有代表性，推理越强。</span></p>
+<p><span class="exp">对比表：</span></p>
+<table>
+<tr><th></th><th>演绎推理</th><th>归纳推理</th></tr>
+<tr><td>结论的确定性</td><td>必然（前提真则结论不可能假）</td><td>或然（前提真则结论很可能真）</td></tr>
+<tr><td>评价标准</td><td>有效 / 无效</td><td>强 / 弱</td></tr>
+<tr><td>典型场景</td><td>数学证明、三段论</td><td>科学实验、统计概括</td></tr>
+<tr><td>反例的影响</td><td>一个反例推翻整个论证</td><td>反例削弱强度，但不一定推翻</td></tr>
+</table>
+<p><span class="exp">为什么需要它：科学知识大量依赖归纳——从实验数据推出普遍规律。但归纳永远面临「黑天鹅问题」：再多的白天鹅也不能证明「所有天鹅都是白的」。理解这一点，才能理解科学知识的本质。</span></p>
+<p><span class="tag-must">必考</span></p>
+
+<h3 id="s66236071">常见的逻辑谬误：推理中的陷阱</h3>
+<p><span class="exp">即使前提看起来对、结论看起来像是对的，推理过程也可能偷偷出错。以下是高频谬误：</span></p>
+<table>
+<tr><th>谬误名称</th><th>错误模式</th><th>例子</th></tr>
+<tr><td><span class="kp">人身攻击</span>（Ad Hominem）</td><td>攻击说话者而非论证本身</td><td>「你不懂逻辑，所以你的论证是错的。」</td></tr>
+<tr><td><span class="kp">稻草人谬误</span>（Straw Man）</td><td>曲解对方观点再攻击</td><td>「你支持更严格的枪支管制？那你就是想守法公民手无寸铁！」</td></tr>
+<tr><td><span class="kp">虚假两难</span>（False Dilemma）</td><td>只给出两个选项，忽略其他可能</td><td>「你要么完全支持我，要么就是我的敌人。」</td></tr>
+<tr><td><span class="kp">循环论证</span>（Circular Reasoning）</td><td>用结论本身作为前提</td><td>「这本书是真理，因为它说的都是真的。」</td></tr>
+<tr><td><span class="kp">滑坡谬误</span>（Slippery Slope）</td><td>夸大连锁反应的必然性</td><td>「允许同性婚姻，下一步就是允许人与动物结婚，社会就乱了。」</td></tr>
+</table>
+<p><span class="exp">怎么用这张表：遇到一个让你不舒服的论证，先检查它是不是在用「看起来很合理」的推理形式掩盖一个谬误。识别谬误的能力是批判性思维的核心。</span></p>
+<p><span class="tag-freq">高频</span></p>
+
+<h3 id="s49314891">命题逻辑基础：简单命题如何组合</h3>
+<p><span class="exp">前面的讨论都是日常语言。但日常语言有歧义——「或者」在日常用语中可以是「二者择一」也可以是「至少一个」。为了精确分析，逻辑学家发明了<span class="kp">命题逻辑</span>（propositional logic），用符号代替自然语言。</span></p>
+<p><span class="exp">五个基本<span class="kp">逻辑联结词</span>：</span></p>
+<table>
+<tr><th>符号</th><th>名称</th><th>读法</th><th>真值条件</th></tr>
+<tr><td>$\land$</td><td>合取</td><td>「且」</td><td>$p \land q$ 真当且仅当 $p$ 和 $q$ 都真</td></tr>
+<tr><td>$\lor$</td><td>析取</td><td>「或」（包含性）</td><td>$p \lor q$ 真当且仅当至少一个为真</td></tr>
+<tr><td>$\neg$</td><td>否定</td><td>「非」</td><td>$\neg p$ 真当且仅当 $p$ 假</td></tr>
+<tr><td>$\rightarrow$</td><td>条件</td><td>「如果…那么…」</td><td>$p \rightarrow q$ 假当且仅当 $p$ 真且 $q$ 假</td></tr>
+<tr><td>$\leftrightarrow$</td><td>双条件</td><td>「当且仅当」</td><td>$p \leftrightarrow q$ 真当且仅当 $p$ 和 $q$ 同真同假</td></tr>
+</table>
+<p><span class="exp">为什么是枢纽：命题逻辑是「推理的语法」——它把自然语言翻译成精确的符号，让你可以像做数学题一样检查推理是否有效。这是现代逻辑的基石，也是计算机科学中布尔代数的理论基础。</span></p>
+<blockquote>易错：日常语言中的「如果…那么…」往往隐含因果关系或时间顺序，但逻辑中的 $\rightarrow$ 只关心真假组合。「如果 2+2=5，那么雪是白的」在逻辑上为真（因为前件假），尽管听起来很荒谬。</blockquote>
+<p><span class="tag-must">必考</span></p>
+
+<h3 id="s43694886">真值表方法：机械判定论证有效性</h3>
+<p><span class="exp">有了符号，我们就可以用<span class="kp">真值表</span>（truth table）来机械地检查一个论证是否有效——不需要直觉，只需要计算。</span></p>
+<p><span class="exp">方法：列出所有前提和结论的真值组合。如果存在一行：前提全真但结论假，则论证无效；如果不存在这样的行，则论证有效。</span></p>
+<p><span class="exp">例子：检查 $p \rightarrow q, p \vdash q$（肯定前件式）是否有效：</span></p>
+<table>
+<tr><th>$p$</th><th>$q$</th><th>$p \rightarrow q$</th><th>$p$</th><th>$q$（结论）</th></tr>
+<tr><td>T</td><td>T</td><td>T</td><td>T</td><td>T</td></tr>
+<tr><td>T</td><td>F</td><td>F</td><td>T</td><td>F</td></tr>
+<tr><td>F</td><td>T</td><td>T</td><td>F</td><td>T</td></tr>
+<tr><td>F</td><td>F</td><td>T</td><td>F</td><td>F</td></tr>
+</table>
+<p><span class="exp">检查：第一行，前提全真，结论为真✓；第二行，前提之一为假，跳过；第三、四行，前提之一为假，跳过。没有「前提全真但结论假」的行，所以论证有效。</span></p>
+<p><span class="exp">为什么需要它：真值表把逻辑判断从「靠感觉」变成「查表」——就像九九乘法表让你不用从头算乘法。这是逻辑学走向科学化的关键一步。</span></p>
+<p><span class="tag-key">重点</span></p>
+
+<h3 id="s66539524">三段论推理：经典的演绎形式</h3>
+<p><span class="exp">亚里士多德提出的最经典的演绎推理形式是<span class="kp">三段论</span>（syllogism）：两个前提共享一个「中项」，推出结论。</span></p>
+<p><span class="exp">标准形式（Barbara 式）：</p>
+<ul>
+<li><span class="exp"><span class="kp">大前提</span>：所有 M 都是 P。（所有哺乳动物都是恒温动物）</span></li>
+<li><span class="exp"><span class="kp">小前提</span>：所有 S 都是 M。（所有鲸鱼都是哺乳动物）</span></li>
+<li><span class="exp"><span class="kp">结论</span>：所有 S 都是 P。（所有鲸鱼都是恒温动物）</span></li>
+</ul>
+<p><span class="exp">结构图：</p>
+<p><span class="exp">S – M – P</span></p>
+<p><span class="exp">小前提把 S 连到 M，大前提把 M 连到 P，结论直接把 S 连到 P。中项 M 在前提中出现两次，在结论中消失——它的作用是「桥梁」。</span></p>
+<p><span class="exp">为什么需要它：三段论是最常见的演绎推理形式。法律论证、数学证明、日常说理中到处都有它的影子。掌握它，就能快速识别「这个推理的隐藏前提是什么」「这个三段论的中项是什么」。</span></p>
+<blockquote>易错：三段论的有效性要求「中项至少周延一次」——即中项至少要涵盖它的所有成员一次。例如「所有 A 是 B；所有 C 是 B；所以所有 A 是 C」是无效的，因为中项 B 在两个前提中都没周延。</blockquote>
+<p><span class="tag-key">重点</span></p>
+
+<h3 id="s15204467">逻辑与论证总结表</h3>
+<table>
+<tr><th>概念</th><th>是什么</th><th>为什么重要</th><th>怎么用</th></tr>
+<tr><td><span class="kp">逻辑</span></td><td>研究好坏推理的标准</td><td>提供评估论证的工具</td><td>检查推理过程是否可靠</td></tr>
+<tr><td><span class="kp">演绎推理</span></td><td>前提真则结论必然真</td><td>提供绝对确定性</td><td>用于数学证明、法律推理</td></tr>
+<tr><td><span class="kp">归纳推理</span></td><td>前提真则结论很可能真</td><td>科学知识的基础</td><td>从观察推出普遍规律</td></tr>
+<tr><td><span class="kp">逻辑谬误</span></td><td>推理过程中的常见陷阱</td><td>识别错误的论证</td><td>批评或防御论证</td></tr>
+<tr><td><span class="kp">命题逻辑</span></td><td>用符号代替自然语言</td><td>消除歧义，精确分析</td><td>把论证翻译成符号</td></tr>
+<tr><td><span class="kp">真值表</span></td><td>机械判定有效性的方法</td><td>把逻辑判断变成计算</td><td>检查论证是否有效</td></tr>
+<tr><td><span class="kp">三段论</span></td><td>两个前提推出一个结论</td><td>最常见的演绎形式</td><td>识别隐藏前提和中项</td></tr>
+</table>
+<p><span class="exp">怎么用这张表：遇到任何论证，先判断它是演绎还是归纳；如果是演绎，检查是否有效（可用真值表）；如果是归纳，评估强度（样本量、代表性）；最后检查是否有逻辑谬误。这套流程是批判性思维的核心操作。</span></p>
+<p><span class="tag-freq">高频</span></p>
+
+
+
+</body>
+</html>
