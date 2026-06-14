@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>图片转 ASCII 艺术</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: #1a1a2e;
+            color: #eee;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 24px;
+            font-size: 1.8rem;
+            color: #e94560;
+        }
+
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            padding: 16px;
+            background: #16213e;
+            border-radius: 8px;
+        }
+
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        label {
+            font-size: 0.9rem;
+            color: #aaa;
+        }
+
+        input[type="range"] {
+            width: 120px;
+            accent-color: #e94560;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .btn {
+            padding: 8px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: background 0.2s;
+        }
+
+        .btn-primary {
+            background: #e94560;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #c73e54;
+        }
+
+        .btn-secondary {
+            background: #0f3460;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #0a2647;
+        }
+
+        .char-set-selector {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .char-set-btn {
+            padding: 4px 12px;
+            border: 1px solid #444;
+            background: transparent;
+            color: #ccc;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+
+        .char-set-btn.active {
+            border-color: #e94560;
+            background: #e94560;
+            color: white;
+        }
+
+        .output-wrapper {
+            background: #0d1117;
+            border-radius: 8px;
+            padding: 16px;
+            overflow: auto;
+            max-height: 80vh;
+            border: 1px solid #333;
+        }
+
+        #asciiOutput {
+            font-family: "Courier New", "Consolas", "Monaco", monospace;
+            font-size: 8px;
+            line-height: 1;
+            white-space: pre;
+            letter-spacing: 0;
+        }
+
+        .preview-container {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .preview-box {
+            text-align: center;
+        }
+
+        .preview-box h3 {
+            font-size: 0.9rem;
+            color: #888;
+            margin-bottom: 8px;
+        }
+
+        #previewImage {
+            max-width: 400px;
+            max-height: 300px;
+            border-radius: 4px;
+            display: none;
+        }
+
+        .info {
+            text-align: center;
+            color: #666;
+            font-size: 0.85rem;
+            margin-top: 12px;
+        }
+
+        .stats {
+            text-align: center;
+            color: #888;
+            font-size: 0.8rem;
+            margin-top: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🖼️ 图片转 ASCII 艺术</h1>
+
+        <div class="controls">
+            <label class="btn btn-primary" for="fileInput">📁 选择图片</label>
+            <input type="file" id="fileInput" accept="image/*">
+
+            <div class="control-group">
+                <label>宽度:</label>
+                <input type="range" id="widthSlider" min="50" max="5000" value="100">
+                <span id="widthValue">100</span> 字符
+                <button class="btn btn-secondary" id="renderBtn" style="margin-left: 8px;">🎨 渲染</button>
+            </div>
+
+            <div class="control-group">
+                <label>对比度:</label>
+                <input type="range" id="contrastSlider" min="50" max="200" value="100">
+                <span id="contrastValue">100</span>%
+            </div>
+
+            <div class="control-group">
+                <label>字符集:</label>
+                <div class="char-set-selector">
+                    <button class="char-set-btn active" data-chars="@%#*+=-:. ">标准</button>
+                    <button class="char-set-btn" data-chars="█▓▒░ ">方块</button>
+                    <button class="char-set-btn" data-chars="●○◆◇□▪▫">几何</button>
+                    <button class="char-set-btn" data-chars=" .:-=+*#%@">反色</button>
+                </div>
+            </div>
+
+            <button class="btn btn-secondary" id="downloadBtn">💾 下载文本</button>
+        </div>
+
+        <div class="preview-container">
+            <div class="preview-box">
+                <h3>原图</h3>
+                <img id="previewImage" alt="预览">
+            </div>
+        </div>
+
+        <div class="output-wrapper">
+            <div id="asciiOutput">请选择一张图片...</div>
+        </div>
+
+        <div class="stats" id="stats"></div>
+        <div class="info">💡 提示：拖动滑块调整效果，点击字符集按钮切换风格</div>
+    </div>
+
+    <script>
+        // DOM 元素
+        const fileInput = document.getElementById('fileInput');
+        const previewImage = document.getElementById('previewImage');
+        const asciiOutput = document.getElementById('asciiOutput');
+        const widthSlider = document.getElementById('widthSlider');
+        const widthValue = document.getElementById('widthValue');
+        const contrastSlider = document.getElementById('contrastSlider');
+        const contrastValue = document.getElementById('contrastValue');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const statsDiv = document.getElementById('stats');
+        const charSetBtns = document.querySelectorAll('.char-set-btn');
+
+        // 状态
+        let currentImage = null;
+        let currentChars = '@%#*+=-:. ';
+        let asciiText = '';
+
+        // 字符集选择
+        charSetBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                charSetBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentChars = btn.dataset.chars;
+                if (currentImage) convertImage();
+            });
+        });
+
+        // 滑块事件 - 只更新显示值，不渲染
+        widthSlider.addEventListener('input', () => {
+            widthValue.textContent = widthSlider.value;
+        });
+
+        contrastSlider.addEventListener('input', () => {
+            contrastValue.textContent = contrastSlider.value;
+        });
+
+        // 渲染按钮
+        document.getElementById('renderBtn').addEventListener('click', () => {
+            if (currentImage) convertImage();
+        });
+
+        // 文件选择
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const img = new Image();
+                img.onload = () => {
+                    currentImage = img;
+                    previewImage.src = event.target.result;
+                    previewImage.style.display = 'block';
+
+                    // 滑块最大值设为图片宽度
+                    widthSlider.max = img.width;
+                    widthValue.textContent = widthSlider.value;
+                };
+                img.src = event.target.result;
+            };
+            reader.readAsDataURL(file);
+        });
+
+        // 核心转换函数
+        function convertImage() {
+            if (!currentImage) return;
+
+            const targetWidth = parseInt(widthSlider.value);
+            const contrast = parseInt(contrastSlider.value) / 100;
+
+            // 创建 canvas
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+
+            // 计算尺寸（保持宽高比，终端字符高度约为宽度的 2 倍）
+            const aspectRatio = currentImage.height / currentImage.width;
+            const charAspectRatio = 2; // 终端字符高宽比
+            const canvasWidth = targetWidth;
+            const canvasHeight = Math.round(targetWidth * aspectRatio / charAspectRatio);
+
+            canvas.width = canvasWidth;
+            canvas.height = canvasHeight;
+
+            // 绘制并获取像素数据
+            ctx.drawImage(currentImage, 0, 0, canvasWidth, canvasHeight);
+            const imageData = ctx.getImageData(0, 0, canvasWidth, canvasHeight);
+            const pixels = imageData.data;
+
+            // 转换为 ASCII
+            let result = '';
+            for (let y = 0; y < canvasHeight; y++) {
+                let line = '';
+                for (let x = 0; x < canvasWidth; x++) {
+                    const idx = (y * canvasWidth + x) * 4;
+                    const r = pixels[idx];
+                    const g = pixels[idx + 1];
+                    const b = pixels[idx + 2];
+
+                    // 计算灰度（加权公式）
+                    let gray = 0.299 * r + 0.587 * g + 0.114 * b;
+
+                    // 应用对比度
+                    gray = ((gray / 255 - 0.5) * contrast + 0.5) * 255;
+                    gray = Math.max(0, Math.min(255, gray));
+
+                    // 映射到字符
+                    line += grayToChar(gray, currentChars);
+                }
+                result += line + '\n';
+            }
+
+            asciiText = result;
+            asciiOutput.textContent = result;
+
+            // 更新统计
+            statsDiv.textContent = `输出: ${canvasWidth} × ${canvasHeight} 字符 | 原图: ${currentImage.width} × ${currentImage.height} 像素`;
+        }
+
+        // 灰度映射到字符
+        function grayToChar(gray, chars) {
+            // 0(黑) → 第一个字符(最密), 255(白) → 最后一个字符(最疏)
+            const index = Math.floor(gray / 256 * chars.length);
+            return chars[Math.min(index, chars.length - 1)];
+        }
+
+        // 下载功能
+        downloadBtn.addEventListener('click', () => {
+            if (!asciiText) return;
+            const blob = new Blob([asciiText], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'ascii_art.txt';
+            a.click();
+            URL.revokeObjectURL(url);
+        });
+
+        // 拖拽上传
+        document.body.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            document.body.style.background = '#2a2a4e';
+        });
+
+        document.body.addEventListener('dragleave', () => {
+            document.body.style.background = '#1a1a2e';
+        });
+
+        document.body.addEventListener('drop', (e) => {
+            e.preventDefault();
+            document.body.style.background = '#1a1a2e';
+            const file = e.dataTransfer.files[0];
+            if (file && file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        currentImage = img;
+                        previewImage.src = event.target.result;
+                        previewImage.style.display = 'block';
+
+                        widthSlider.max = img.width;
+                        widthValue.textContent = widthSlider.value;
+                    };
+                    img.src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+</body>
+</html>
