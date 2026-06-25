@@ -1,0 +1,3581 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>电动力学笔记 - 公式推导与物理图像</title>
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [
+                    ['$', '$'],
+                    ['\\(', '\\)']
+                ],
+                displayMath: [
+                    ['$$', '$$'],
+                    ['\\[', '\\]']
+                ],
+                processEscapes: true,
+                tags: 'ams'
+            },
+            svg: {
+                fontCache: 'global'
+            },
+            options: {
+                skipHtmlTypes: 'script'
+            }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    </script>
+    <style>
+        /* 全局样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f8f9fc;
+            font-family: 'Georgia', 'Times New Roman', 'Noto Serif SC', serif;
+            color: #1e2a3a;
+            line-height: 1.8;
+            padding: 20px 0 60px 0;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* 主标题 */
+        .main-title {
+            text-align: center;
+            font-size: 2.6rem;
+            font-weight: 700;
+            color: #0b1a2f;
+            padding: 40px 0 12px 0;
+            letter-spacing: 2px;
+            border-bottom: 3px double #c0c8d8;
+            margin-bottom: 40px;
+        }
+        .main-title .sub {
+            display: block;
+            font-size: 1rem;
+            font-weight: 400;
+            color: #4a5a72;
+            margin-top: 8px;
+            letter-spacing: 4px;
+        }
+
+        /* 章节卡片 */
+        .section {
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+            padding: 32px 40px;
+            margin-bottom: 36px;
+            border: 1px solid #eef2f7;
+            transition: box-shadow 0.2s;
+        }
+        .section:hover {
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.07);
+        }
+
+        .section-title {
+            font-size: 1.7rem;
+            font-weight: 700;
+            color: #0b1a2f;
+            border-left: 5px solid #3a6ea5;
+            padding-left: 18px;
+            margin-bottom: 22px;
+            line-height: 1.3;
+        }
+        .section-title .ref {
+            font-size: 1rem;
+            font-weight: 400;
+            color: #5a6f8a;
+            margin-left: 10px;
+        }
+
+        .subsection-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1f3a5f;
+            margin: 28px 0 14px 0;
+            padding-left: 12px;
+            border-bottom: 1px dashed #dce3ed;
+            padding-bottom: 6px;
+        }
+
+        .subsubsection-title {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: #2c4a70;
+            margin: 20px 0 10px 0;
+        }
+
+        p {
+            margin-bottom: 14px;
+            text-align: justify;
+        }
+
+        /* 数学公式块 */
+        .math-block {
+            margin: 18px 0 22px 0;
+            padding: 10px 0;
+            overflow-x: auto;
+        }
+
+        .math-block .MathJax {
+            font-size: 1.05rem;
+        }
+
+        /* 行内公式高亮 */
+        .math-inline {
+            color: #1a3a5c;
+        }
+
+        /* 引用/提示框 */
+        .note-box {
+            background: #f0f4fa;
+            border-left: 4px solid #3a6ea5;
+            padding: 16px 22px;
+            margin: 18px 0 22px 0;
+            border-radius: 0 8px 8px 0;
+            font-size: 0.98rem;
+        }
+        .note-box .label {
+            font-weight: 700;
+            color: #1f3a5f;
+            margin-right: 6px;
+        }
+
+        .warning-box {
+            background: #fdf6ec;
+            border-left: 4px solid #c77d3a;
+            padding: 16px 22px;
+            margin: 18px 0 22px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .result-box {
+            background: #e8f0f9;
+            border-left: 4px solid #1f6a8a;
+            padding: 18px 24px;
+            margin: 18px 0 22px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .result-box .label {
+            font-weight: 700;
+            color: #0f3a5a;
+            margin-right: 6px;
+        }
+
+        /* 列表 */
+        ul,
+        ol {
+            padding-left: 28px;
+            margin-bottom: 16px;
+        }
+        li {
+            margin-bottom: 6px;
+        }
+
+        /* 表格 */
+        .table-wrap {
+            overflow-x: auto;
+            margin: 18px 0 22px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+            background: #fbfdff;
+        }
+        th,
+        td {
+            border: 1px solid #dce3ed;
+            padding: 10px 16px;
+            text-align: left;
+            vertical-align: top;
+        }
+        th {
+            background: #eef3f9;
+            font-weight: 600;
+            color: #1f3a5f;
+        }
+        tr:nth-child(even) {
+            background: #f8fafc;
+        }
+
+        /* 代码风格 (用于特殊标记) */
+        .code-inline {
+            font-family: 'Courier New', monospace;
+            background: #f0f2f5;
+            padding: 0 6px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+
+        /* 阅读进度条 */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 3px;
+            background: linear-gradient(90deg, #3a6ea5, #7b5ea7);
+            z-index: 300;
+            transition: width 0.1s;
+        }
+
+        /* 回到顶部按钮 */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 200;
+            width: 44px;
+            height: 44px;
+            border: none;
+            border-radius: 50%;
+            background: #3a6ea5;
+            color: #ffffff;
+            font-size: 1.2rem;
+            cursor: pointer;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s, transform 0.2s, background 0.15s;
+            box-shadow: 0 4px 12px rgba(58, 110, 165, 0.3);
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .back-to-top:hover {
+            background: #2c5a8a;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 1024px) {
+            .back-to-top {
+                bottom: 24px;
+                right: 24px;
+                width: 38px;
+                height: 38px;
+                font-size: 1rem;
+            }
+        }
+
+        /* 公式溢出渐变提示 */
+        .math-block {
+            position: relative;
+        }
+
+        .math-block::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 30px;
+            background: linear-gradient(to right, transparent, #fff);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .math-block.scrollable::after {
+            opacity: 1;
+        }
+
+        /* 平滑滚动 */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* 键盘焦点可见性 */
+        a:focus-visible,
+        button:focus-visible {
+            outline: 2px solid #3a6ea5;
+            outline-offset: 2px;
+        }
+
+        a:focus:not(:focus-visible),
+        button:focus:not(:focus-visible) {
+            outline: none;
+        }
+
+        /* 侧边栏底部安全区域（适配刘海屏） */
+        .sidebar {
+            padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+        }
+
+        /* 响应式：平板中间尺寸 */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .math-block {
+                font-size: 0.95rem;
+            }
+            .section {
+                padding: 24px 28px;
+            }
+        }
+
+        /* 响应式：手机窄屏 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 14px;
+            }
+            .section {
+                padding: 20px 18px;
+            }
+            .main-title {
+                font-size: 1.9rem;
+                padding: 24px 0 8px 0;
+            }
+            .section-title {
+                font-size: 1.3rem;
+                padding-left: 12px;
+            }
+            .subsection-title {
+                font-size: 1.1rem;
+            }
+            .math-block {
+                font-size: 0.92rem;
+            }
+            table {
+                font-size: 0.85rem;
+            }
+            th,
+            td {
+                padding: 6px 10px;
+            }
+        }
+
+        @media print {
+            body {
+                background: #fff;
+                padding: 0;
+            }
+            .section {
+                box-shadow: none;
+                border: 1px solid #ddd;
+                page-break-inside: avoid;
+            }
+            .main-title {
+                border-bottom-color: #999;
+            }
+        }
+
+        /* 锚点滚动偏移 */
+        .anchor {
+            scroll-margin-top: 20px;
+        }
+
+        /* 侧边栏导航 */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 240px;
+            height: 100vh;
+            overflow-y: auto;
+            overscroll-behavior: contain;
+            background: #ffffff;
+            border-right: 1px solid #e2e8f0;
+            padding: 24px 16px;
+            z-index: 100;
+            box-shadow: 2px 0 12px rgba(0, 0, 0, 0.04);
+            transform: translateX(-100%);
+            transition: transform 0.25s ease;
+        }
+
+        .sidebar-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #4a5a72;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 16px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .sidebar-nav {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .sidebar-nav li {
+            margin-bottom: 4px;
+        }
+
+        .sidebar-nav a {
+            display: block;
+            padding: 6px 12px;
+            font-size: 0.88rem;
+            color: #3a4a5e;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: background 0.15s, color 0.15s;
+        }
+
+        .sidebar-nav a:hover {
+            background: #eef3f9;
+            color: #1f3a5f;
+        }
+
+        .sidebar-nav a.active {
+            background: #dce8f5;
+            color: #0f3a5a;
+            font-weight: 600;
+        }
+
+        .sidebar-nav .nav-sub {
+            padding-left: 16px;
+            font-size: 0.82rem;
+        }
+
+        /* 主内容区域偏移以容纳侧边栏 */
+        .container {
+            margin-left: 260px;
+            max-width: 1000px;
+        }
+
+        /* 窄屏切换按钮 */
+        .sidebar-toggle {
+            display: none;
+            position: fixed;
+            top: 16px;
+            left: 16px;
+            z-index: 200;
+            width: 40px;
+            height: 40px;
+            border: 1px solid #dce3ed;
+            border-radius: 8px;
+            background: #ffffff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 4px;
+            transition: background 0.15s;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .sidebar-toggle:hover {
+            background: #eef3f9;
+        }
+
+        .sidebar-toggle span {
+            display: block;
+            width: 18px;
+            height: 2px;
+            background: #3a4a5e;
+            border-radius: 1px;
+            transition: transform 0.25s ease, opacity 0.25s ease;
+            transform-origin: center;
+        }
+
+        .sidebar-toggle.open span:nth-child(1) {
+            transform: translateY(6px) rotate(45deg);
+        }
+
+        .sidebar-toggle.open span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .sidebar-toggle.open span:nth-child(3) {
+            transform: translateY(-6px) rotate(-45deg);
+        }
+
+        .sidebar.open {
+            display: block;
+            transform: translateX(0);
+        }
+
+        /* 遮罩层 */
+        .sidebar-backdrop {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            -webkit-backdrop-filter: blur(4px);
+            backdrop-filter: blur(4px);
+            z-index: 90;
+            opacity: 0;
+            transition: opacity 0.25s ease, backdrop-filter 0.25s ease, -webkit-backdrop-filter 0.25s ease;
+        }
+
+        .sidebar-backdrop.open {
+            display: block;
+            opacity: 1;
+        }
+
+        /* 内容区域模糊效果 */
+        .container.blur {
+            filter: blur(4px);
+            pointer-events: none;
+            user-select: none;
+            transition: filter 0.25s ease;
+        }
+
+        @media (min-width: 1025px) {
+            .sidebar {
+                transform: translateX(0);
+            }
+            .container {
+                margin-left: 260px;
+                max-width: calc(100vw - 280px);
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .sidebar-toggle {
+                display: flex;
+            }
+            .sidebar {
+                display: block;
+                transform: translateX(-100%);
+            }
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            .container {
+                margin-left: 0 !important;
+            }
+        }
+
+        /* 减少动画偏好 */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+
+        /* 特殊符号装饰 */
+        .divider {
+            text-align: center;
+            color: #b0c0d0;
+            font-size: 1.2rem;
+            letter-spacing: 8px;
+            margin: 10px 0 6px 0;
+            user-select: none;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 阅读进度条 -->
+    <div class="progress-bar" id="progressBar"></div>
+
+    <!-- 回到顶部按钮 -->
+    <button class="back-to-top" id="backToTop" aria-label="回到顶部">↑</button>
+
+    <!-- 窄屏切换按钮 -->
+    <button class="sidebar-toggle" id="sidebarToggle" aria-label="切换目录">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <!-- 遮罩层 -->
+    <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+    <!-- 侧边栏导航 -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-title">目录</div>
+        <ul class="sidebar-nav">
+            <li><a href="#sec-examinations">考试题记录</a></li>
+            <li><a href="#sec-green">格林函数展开式 (3.48)</a></li>
+            <li><a href="#sec-kk">KK 关系 (4.75)</a></li>
+            <li><a href="#sec-propagator">传播子积分推导</a></li>
+            <li><a href="#sec-quadrupole">电四极辐射变换 (5.35)</a></li>
+            <li><a href="#sec-solid-angle">单位矢量分量积分</a></li>
+            <li><a href="#sec-helmholtz">亥姆霍兹方程推迟解</a></li>
+            <li><a href="#sec-spherical-wave">球面波加法定理 (5.44)</a></li>
+            <li><a href="#sec-multipole">多极辐射场展开</a></li>
+            <li><a href="#sec-lw">Liénard-Wiechert 势</a></li>
+            <li><a href="#sec-radiation-power">加速器辐射功率</a></li>
+            <li><a href="#sec-periodic-spectrum">周期性运动辐射谱</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+
+        <!-- 主标题 -->
+        <h1 class="main-title">
+            电动力学笔记
+            <span class="sub">这里记录了考试题目和一些讲义中我个人认为比较困难而且老师跳过了的推导。</span>
+            <span class="sub">推导完全 AI 生成，不保证正确性！！！</span>
+        </h1>
+
+        <!-- ============================================================ -->
+        <!-- 考试题记录                                                    -->
+        <!-- ============================================================ -->
+        <section class="section anchor" id="sec-examinations">
+            <h2 class="section-title">
+                考试题记录
+                <span class="ref">刘川 · 3 学分 · 2026 年春季</span>
+            </h2>
+
+            <h3 class="subsection-title">期中</h3>
+            <ul>
+                <li>1、2、3（75'）：与刘川阁下《电动力学》第八章 1、2 题类似</li>
+                <li>4（25'）：拉普拉斯方程的格林函数在柱坐标中的展开，参考 Jackson 书 3.11 节</li>
+            </ul>
+
+            <h3 class="subsection-title">期末</h3>
+            <ul>
+                <li>
+                    <strong>10 道定性选择题</strong>，一题 1.5 分，没有物理学史等背诵内容，
+                    都是讲义中出现的物理内容，例如：
+                    <ul>
+                        <li>沙尘暴时候天空为何黄</li>
+                        <li>天空哪个方向偏振最大</li>
+                        <li>同步辐射的频谱的上界大概是多少</li>
+                        <li>电子的自能在电子半径趋于 $0$ 时怎么发散</li>
+                    </ul>
+                </li>
+                <li>
+                    <strong>2 道简答题共 15 分</strong>：
+                    <ol>
+                        <li>利用折射率椭球分析各向异性，非磁性，均匀介质中，简谐平面电磁波的行为，包括偏振、相速度、能流方向等</li>
+                        <li>理想金属波导和介质波导的边界条件，可以传播的模式的异同</li>
+                    </ol>
+                </li>
+                <li>
+                    <strong>2 道计算大题各 35 分</strong>（都来自第五章）：
+                    <ol>
+                        <li>
+                            和第 36 节那个例题的 5.2 的模型类似，但是具体情况不同，
+                            包括自然光入射改成线偏振入射、$\hat{\mathbf{n}}$ 不局限在 $xz$ 平面上等等，
+                            要求计算 $\mathbf{p}$、$\mathbf{m}$、某个立体角的特定入射偏振和出射偏振的辐射功率、
+                            总的微分散射截面等问题。
+                        </li>
+                        <li>
+                            和郭硕鸿同志的著作《电动力学（第三版）》的 11 类似，
+                            但是改成一个正电子一个负电子分隔在原点两边，
+                            问瞬时的 $\mathbf{p}$、$\mathbf{m}$、$\overleftrightarrow{\mathbf{D}}$；复数表示的 $\mathbf{p}$；$\mathbf{E}_{\text{sc}}$、$\mathbf{H}_{\text{sc}}$；
+                            某个立体角的辐射功率；总的辐射功率；
+                            某个 $\theta$ 处辐射的偏振度等等。
+                        </li>
+                    </ol>
+                    <div class="note-box">
+                        <span class="label">公式参考：</span>
+                        偶极辐射的公式，即讲义中 5.23 和 5.32 的和的 $1/r$ 衰减的项有提供。
+                    </div>
+                </li>
+            </ul>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- 第1节：格林函数展开式 (3.48) 的补充说明                      -->
+        <!-- ============================================================ -->
+        <section class="section anchor" id="sec-green">
+            <h2 class="section-title">
+                关于格林函数展开式 (3.48) 的补充说明
+                <span class="ref">§ 3.48</span>
+            </h2>
+
+            <h3 class="subsection-title">1. 任意角度函数都能写成这种形式吗？</h3>
+            <p><strong>答案是：不能。</strong></p>
+            <p>
+                对于定义在双球面 \(S^2 \times S^2\) 上的任意双角度函数
+                \(F(\mathbf{n}, \mathbf{n}')\)，其最一般的基底展开应当是具有两个独立求和指标的
+                <strong>双重求和</strong>：
+            </p>
+            <div class="math-block">
+                \[
+                F(\mathbf{n}, \mathbf{n}') =
+                \sum_{l,m} \sum_{l',m'} B_{lm, l'm'} Y_{l'm'}^*(\mathbf{n}') Y_{lm}(\mathbf{n})
+                \]
+            </div>
+            <p>
+                式 (3.48) 之所以能够简化为 \(l=l'\) 且 \(m=m'\) 的
+                <strong>单重对角化求和</strong>，是因为该物理系统（拉普拉斯算子及边界条件）具有
+                <strong>球对称性（旋转不变性）</strong>。
+            </p>
+
+            <h3 class="subsection-title">2. 式 (3.48) 成立的物理与数学原理</h3>
+            <p>
+                格林函数满足以下方程：
+            </p>
+            <div class="math-block">
+                \[
+                \nabla^2 G(\mathbf{x}, \mathbf{x}') = -\delta^3(\mathbf{x} - \mathbf{x}')
+                \]
+            </div>
+            <p>
+                在球坐标系中，拉普拉斯算子可以写为：
+            </p>
+            <div class="math-block">
+                \[
+                \nabla^2 = \frac{1}{r^2} \frac{\partial}{\partial r}\left(r^2 \frac{\partial}{\partial r}\right)
+                - \frac{L^2}{r^2}
+                \]
+            </div>
+            <p>
+                其中 \(L^2\) 是角动量平方算子（其本征函数为球谐函数
+                \(Y_{lm}(\mathbf{n})\)，对应的本征值为 \(l(l+1)\)）。
+            </p>
+            <p>
+                如果将最一般的双重展开形式代入方程：
+            </p>
+            <div class="math-block">
+                \[
+                G(\mathbf{x}, \mathbf{x}') =
+                \sum_{l,m} \sum_{l',m'} g_{lm, l'm'}(r, r') Y_{l'm'}^*(\mathbf{n}') Y_{lm}(\mathbf{n})
+                \]
+            </div>
+            <p>
+                作用拉普拉斯算子后，利用 \(L^2 Y_{lm} = l(l+1) Y_{lm}\)，等号左边变为：
+            </p>
+            <div class="math-block">
+                \[
+                \nabla^2 G =
+                \sum_{l,m} \sum_{l',m'}
+                \left[
+                \frac{1}{r^2} \frac{d}{d r}\left(r^2 \frac{d}{d r}\right)
+                - \frac{l(l+1)}{r^2}
+                \right]
+                g_{lm, l'm'}(r, r') Y_{l'm'}^*(\mathbf{n}') Y_{lm}(\mathbf{n})
+                \]
+            </div>
+            <p>
+                而等号右边的三维 \(\delta\) 函数展开为（对应图片中式 3.47）：
+            </p>
+            <div class="math-block">
+                \[
+                -\delta^3(\mathbf{x} - \mathbf{x}') =
+                -\frac{1}{r^2} \delta(r-r') \sum_{l,m} Y_{lm}^*(\mathbf{n}') Y_{lm}(\mathbf{n})
+                \]
+            </div>
+            <p>
+                由于基函数 \(\{ Y_{l'm'}^*(\mathbf{n}') Y_{lm}(\mathbf{n}) \}\)
+                的正交完备性，对比等式两边的系数：
+            </p>
+            <ol>
+                <li>
+                    当 \(l \neq l'\) 或 \(m \neq m'\) 时，等式右侧对应项系数为 \(0\)，
+                    因而 \(g_{lm, l'm'} = 0\)；
+                </li>
+                <li>
+                    当 \(l = l'\) 且 \(m = m'\) 时，简写 \(g_{lm, lm} = g_{l,m}\)，
+                    它满足方程：
+                    <div class="math-block">
+                        \[
+                        \left[
+                        \frac{1}{r^2} \frac{d}{d r}\left(r^2 \frac{d}{d r}\right)
+                        - \frac{l(l+1)}{r^2}
+                        \right] g_{l,m}(r, r') = -\frac{1}{r^2} \delta(r-r')
+                        \]
+                    </div>
+                </li>
+            </ol>
+            <p>
+                观察上述常微分方程可以发现，其中的微分算子和右端的源项都
+                <strong>不显含参数 \(m\)</strong>。
+                因此，该方程的解 \(g_{l,m}(r, r')\) 与 \(m\) 无关。
+                可以直接记为 \(g_{l,m}(r, r') = g_l(r, r')\)。
+            </p>
+            <div class="result-box">
+                <span class="label">结论：</span>
+                这从数学方程的角度证明了，格林函数的展开必然可以简化为式 (3.48) 的形式。
+            </div>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- 第2节：KK关系                                               -->
+        <!-- ============================================================ -->
+        <section class="section anchor" id="sec-kk">
+            <h2 class="section-title">
+                公式 (4.75)：KK 关系
+                <span class="ref">§ 4.75</span>
+            </h2>
+
+            <h3 class="subsection-title">第一步：式（4.72）—— 标准的柯西积分公式</h3>
+            <p><strong>柯西积分公式</strong>：</p>
+            <div class="math-block">
+                \[
+                f(z_0) = \frac{1}{2\pi i} \oint_{C} \frac{f(z)}{z - z_0}\text{d}z
+                \]
+            </div>
+            <p>
+                只要 \(f(z)\) 在围道 \(C\) 内部解析，且 \(z_0\) <strong>严格在围道内部</strong>，
+                这个公式就成立。
+            </p>
+            <ul>
+                <li>令 \(f(z) = \epsilon(z)/\epsilon_0 - 1\)。</li>
+                <li>
+                    把变量和积分变量重新命名：\(z_0 \to z\)（目标点），
+                    \(z \to \omega'\)（积分变量）。
+                </li>
+                <li>
+                    围道 \(C\) 依然是实轴和上半平面的大圆弧。因为
+                    \(\epsilon(z)/\epsilon_0 - 1\) 在大圆弧上积分为 \(0\)
+                    （由课件提到的式 4.70 保证），所以围道积分只剩下实轴上的积分。
+                </li>
+            </ul>
+            <p>
+                因为目标点 \(z\) <strong>严格在围道内部（上半平面，\(\text{Im}(z) &gt; 0\)）</strong>，
+                极点 \(\omega' = z\) 根本不在实数轴上。所以这里不需要做任何“绕行”或者“挖洞”，
+                直接套用柯西公式，就得到了<strong>式（4.72）</strong>：
+            </p>
+            <div class="math-block">
+                \[
+                \epsilon(z)/\epsilon_0 =
+                1 + \frac{1}{2\pi i} \int_{-\infty}^{\infty}
+                \frac{\epsilon(\omega')/\epsilon_0 - 1}{\omega' - z}\text{d}\omega'
+                \]
+            </div>
+
+            <h3 class="subsection-title">第二步：式（4.73）—— 极限下降法与“魔术公式”</h3>
+            <p>
+                设：
+                \[
+                z = \omega + i\delta \quad (\delta \to 0^+)
+                \]
+                把这个 \(z\) 代入积分的分母，分母变成了 \(\omega' - \omega - i\delta\)。
+                <strong>Sokhotski–Plemelj（索霍茨基-普列梅利）公式</strong>，
+                也就是<strong>式（4.73）</strong>：
+            </p>
+            <div class="math-block">
+                \[
+                \frac{1}{\omega' - \omega - i\delta} =
+                \mathcal{P}\left(\frac{1}{\omega' - \omega}\right) + i\pi \delta(\omega' - \omega)
+                \quad (\delta \to 0^+)
+                \]
+            </div>
+
+            <h3 class="subsection-title">第三步：代数消去</h3>
+            <p>
+                现在我们把式（4.73）代入到式（4.72）的积分里。
+                为了书写简便，我们简写
+                \(F(\omega') = \epsilon(\omega')/\epsilon_0 - 1\)。
+            </p>
+            <div class="math-block">
+                \[
+                \epsilon(\omega)/\epsilon_0 =
+                1 + \frac{1}{2\pi i} \int_{-\infty}^{\infty} F(\omega')
+                \left[
+                \mathcal{P}\left(\frac{1}{\omega' - \omega}\right) + i\pi \delta(\omega' - \omega)
+                \right]\text{d}\omega'
+                \]
+            </div>
+            <p>
+                我们把中括号里的两项拆开分别积分：
+            </p>
+            <div class="math-block">
+                \[
+                \epsilon(\omega)/\epsilon_0 =
+                1 + \frac{1}{2\pi i} \mathcal{P}\int_{-\infty}^{\infty}
+                \frac{F(\omega')}{\omega' - \omega}\text{d}\omega'
+                + \frac{1}{2\pi i} \int_{-\infty}^{\infty} F(\omega') \cdot i\pi \delta(\omega' - \omega)\text{d}\omega'
+                \]
+            </div>
+            <p>
+                看最后一项包含 \(\delta\) 函数的积分：根据 \(\delta\) 函数的性质，
+                积分直接把 \(\omega'\) 替换为 \(\omega\)，并且把 \(i\pi\) 提出来：
+            </p>
+            <div class="math-block">
+                \[
+                \frac{1}{2\pi i} \cdot i\pi \cdot F(\omega) =
+                \frac{1}{2} F(\omega) =
+                \frac{1}{2} \left( \epsilon(\omega)/\epsilon_0 - 1 \right)
+                \]
+            </div>
+            <p>
+                把这一项代回去，整条公式变成了：
+            </p>
+            <div class="math-block">
+                \[
+                \epsilon(\omega)/\epsilon_0 =
+                1 + \frac{1}{2\pi i} \mathcal{P}\int_{-\infty}^{\infty}
+                \frac{\epsilon(\omega')/\epsilon_0 - 1}{\omega' - \omega}\text{d}\omega'
+                + \frac{1}{2} \left( \epsilon(\omega)/\epsilon_0 - 1 \right)
+                \]
+            </div>
+            <p>
+                右边最后一项展开是
+                \(\frac{1}{2}\epsilon(\omega)/\epsilon_0 - \frac{1}{2}\)。
+                与最前方的 \(1\) 合并，右边变成了：
+            </p>
+            <div class="math-block">
+                \[
+                \text{右边} =
+                \frac{1}{2} + \frac{1}{2}\epsilon(\omega)/\epsilon_0
+                + \frac{1}{2\pi i} \mathcal{P}\int_{-\infty}^{\infty}
+                \frac{\epsilon(\omega')/\epsilon_0 - 1}{\omega' - \omega}\text{d}\omega'
+                \]
+            </div>
+            <p>现在把这个结果和左边连起来：</p>
+            <div class="math-block">
+                \[
+                \epsilon(\omega)/\epsilon_0 =
+                \frac{1}{2} + \frac{1}{2}\epsilon(\omega)/\epsilon_0
+                + \frac{1}{2\pi i} \mathcal{P}\int_{-\infty}^{\infty}
+                \frac{\epsilon(\omega')/\epsilon_0 - 1}{\omega' - \omega}\text{d}\omega'
+                \]
+            </div>
+            <p>
+                <strong>等式两边同时减去 \(\frac{1}{2}\epsilon(\omega)/\epsilon_0\)</strong>：
+            </p>
+            <div class="math-block">
+                \[
+                \frac{1}{2}\epsilon(\omega)/\epsilon_0 =
+                \frac{1}{2} + \frac{1}{2\pi i} \mathcal{P}\int_{-\infty}^{\infty}
+                \frac{\epsilon(\omega')/\epsilon_0 - 1}{\omega' - \omega}\text{d}\omega'
+                \]
+            </div>
+            <p><strong>等式两边同时乘以 2</strong>：</p>
+            <div class="math-block">
+                \[
+                \epsilon(\omega)/\epsilon_0 =
+                1 + \frac{1}{\pi i} \mathcal{P}\int_{-\infty}^{\infty}
+                \frac{\epsilon(\omega')/\epsilon_0 - 1}{\omega' - \omega}\text{d}\omega'
+                \]
+            </div>
+
+            <h3 class="subsection-title">第四步：式（4.75）—— 提取实部和虚部</h3>
+            <p>
+                最后一步和我们之前做的一样，把 \(\epsilon(\omega)/\epsilon_0\)
+                拆成实部和虚部，并且利用 \(\frac{1}{i} = -i\) 分离等式：
+            </p>
+            <ul>
+                <li>
+                    <strong>实部对应实部</strong>：由于右边带有
+                    \(\frac{1}{\pi i} = -\frac{i}{\pi}\)，所以右边的实部来自于虚部的贡献
+                    （因为 \(-i \times i = 1\)），并且还要加上左边没有参与积分的那个常数 \(1\)。
+                    这就是<strong>式（4.75）的第一行</strong>。
+                </li>
+                <li>
+                    <strong>虚部对应虚部</strong>：同理，右边的虚部来自于实部的贡献。
+                    这就是<strong>式（4.75）的第二行</strong>。
+                </li>
+            </ul>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- 第3节：传播子（无质量标量场格林函数）积分推导                -->
+        <!-- ============================================================ -->
+        <section class="section anchor" id="sec-propagator">
+            <h2 class="section-title">
+                传播子（无质量标量场格林函数）积分推导笔记
+                <span class="ref">§14, §32</span>
+            </h2>
+
+            <p>
+                本笔记详细推导以下两个公式之间的等价关系：
+            </p>
+            <div class="math-block">
+                \[
+                D^{(+)}(x - x') =
+                -\int \frac{d^4k}{(2\pi)^4}
+                \frac{e^{-ik\cdot(x - x')}}{(k_0 + i\epsilon)^2 - \mathbf{k}\cdot\mathbf{k}}
+                \]
+            </div>
+            <p>与协变形式：</p>
+            <div class="math-block">
+                \[
+                D^{(+)}(x - x') =
+                \frac{\theta(x_0 - x'_0)}{4\pi R}\delta(x_0 - x'_0 - R)
+                =
+                \frac{\theta(x_0 - x'_0)}{2\pi}\delta\left[(x - x')^2\right]
+                \]
+            </div>
+
+            <p>
+                为了书写简便，引入坐标差变量：
+                \[
+                y = x - x', \quad y_0 = x_0 - x'_0, \quad
+                \mathbf{y} = \mathbf{x} - \mathbf{x}', \quad R = |\mathbf{y}|
+                \]
+                记三维动量模长为 \(k = |\mathbf{k}|\)。原式可写为：
+            </p>
+            <div class="math-block">
+                \[
+                D^{(+)}(y) =
+                -\int \frac{d^3\mathbf{k}}{(2\pi)^3} e^{i\mathbf{k}\cdot\mathbf{y}}
+                \left[
+                \int_{-\infty}^{\infty} \frac{dk_0}{2\pi}
+                \frac{e^{-ik_0 y_0}}{(k_0 + i\epsilon)^2 - k^2}
+                \right]
+                \]
+            </div>
+
+            <h3 class="subsection-title">一、 \(k_0\) 的复平面围道积分</h3>
+            <p>
+                我们需要计算关于 \(k_0\) 的复积分：
+            </p>
+            <div class="math-block">
+                \[
+                I_0(y_0, k) = \int_{-\infty}^{\infty} \frac{dk_0}{2\pi}
+                \frac{e^{-ik_0 y_0}}{(k_0 + i\epsilon)^2 - k^2}
+                \]
+            </div>
+
+            <h4 class="subsubsection-title">1. 极点分析</h4>
+            <p>
+                将分母因式分解：
+            </p>
+            <div class="math-block">
+                \[
+                (k_0 + i\epsilon)^2 - k^2 = (k_0 + i\epsilon - k)(k_0 + i\epsilon + k)
+                \]
+            </div>
+            <p>
+                因此，被积函数在复 \(k_0\) 平面上有两个一阶极点：
+            </p>
+            <div class="math-block">
+                \[
+                k_0^{(1)} = k - i\epsilon, \quad k_0^{(2)} = -k - i\epsilon
+                \]
+            </div>
+            <p>
+                由于 \(\epsilon &gt; 0\)，这两个极点都位于复平面的
+                <strong>下半平面</strong>。
+            </p>
+
+            <h4 class="subsubsection-title">2. 分情况讨论围道闭合方向（约当引理）</h4>
+            <p>
+                根据指数因子 \(e^{-ik_0 y_0}\)，设
+                \(k_0 = \text{Re}(k_0) + i \text{Im}(k_0)\)，则：
+            </p>
+            <div class="math-block">
+                \[
+                \left| e^{-ik_0 y_0} \right| = e^{\text{Im}(k_0) y_0}
+                \]
+            </div>
+            <ul>
+                <li>
+                    <strong>当 \(y_0 &lt; 0\) 时：</strong>
+                    为了使大圆弧上的积分趋于零，必须要求
+                    \(\text{Im}(k_0) &gt; 0\)。因此必须在<strong>上半平面</strong>闭合围道。
+                    由于上半平面内没有任何极点，由柯西积分定理可得：
+                    \[
+                    I_0(y_0 &lt; 0, k) = 0
+                    \]
+                </li>
+                <li>
+                    <strong>当 \(y_0 &gt; 0\) 时：</strong>
+                    为了使大圆弧上的积分趋于零，必须要求
+                    \(\text{Im}(k_0) &lt; 0\)。因此必须在<strong>下半平面</strong>闭合围道。
+                    下半平面的围道为<strong>顺时针</strong>方向，根据留数定理，
+                    积分将引入一个额外的负号（\(-2\pi i\)）。
+                    此时包围了两个极点 \(k_0^{(1)}\) 和 \(k_0^{(2)}\)。
+                </li>
+            </ul>
+
+            <h4 class="subsubsection-title">3. 留数计算（在 \(\epsilon \to 0^+\) 极限下）</h4>
+            <ul>
+                <li>
+                    在极点 \(k_0 = k\) 处的留数：
+                    <div class="math-block">
+                        \[
+                        \text{Res}(k_0 = k) =
+                        \lim_{k_0 \to k} (k_0 - k)
+                        \frac{e^{-ik_0 y_0}}{(k_0 - k)(k_0 + k)}
+                        = \frac{e^{-i k y_0}}{2k}
+                        \]
+                    </div>
+                </li>
+                <li>
+                    在极点 \(k_0 = -k\) 处的留数：
+                    <div class="math-block">
+                        \[
+                        \text{Res}(k_0 = -k) =
+                        \lim_{k_0 \to -k} (k_0 + k)
+                        \frac{e^{-ik_0 y_0}}{(k_0 - k)(k_0 + k)}
+                        = \frac{e^{i k y_0}}{-2k} = -\frac{e^{i k y_0}}{2k}
+                        \]
+                    </div>
+                </li>
+            </ul>
+
+            <h4 class="subsubsection-title">4. 得到 \(k_0\) 积分结果</h4>
+            <p>
+                结合顺时针围道的负号，利用留数定理：
+            </p>
+            <div class="math-block">
+                \[
+                I_0(y_0 &gt; 0, k) =
+                \frac{1}{2\pi} \cdot (-2\pi i)
+                \left[ \text{Res}(k_0 = k) + \text{Res}(k_0 = -k) \right]
+                \]
+            </div>
+            <div class="math-block">
+                \[
+                I_0(y_0 &gt; 0, k) =
+                -i \left[ \frac{e^{-i k y_0}}{2k} - \frac{e^{i k y_0}}{2k} \right]
+                = -i \left[ -i \frac{\sin(ky_0)}{k} \right]
+                = -\frac{\sin(ky_0)}{k}
+                \]
+            </div>
+            <p>
+                利用阶跃函数 \(\theta(y_0)\)，可以将两种情况合并表示为：
+            </p>
+            <div class="math-block">
+                \[
+                I_0(y_0, k) = -\theta(y_0) \frac{\sin(ky_0)}{k}
+                \]
+            </div>
+            <p>
+                代回原传播子表达式中（消去原式最外层的负号）：
+            </p>
+            <div class="math-block">
+                \[
+                D^{(+)}(y) =
+                \theta(y_0) \int \frac{d^3\mathbf{k}}{(2\pi)^3}
+                \frac{\sin(ky_0)}{k} e^{i\mathbf{k}\cdot\mathbf{y}}
+                \]
+            </div>
+
+            <h3 class="subsection-title">二、 三维动量 \(\mathbf{k}\) 的积分</h3>
+
+            <h4 class="subsubsection-title">1. 引入球坐标系</h4>
+            <p>
+                在三维动量空间中，选择 \(\mathbf{y}\) 方向为 \(z\) 轴方向，
+                则 \(\mathbf{k}\cdot\mathbf{y} = k R \cos\theta\)，
+                动量微元为 \(d^3\mathbf{k} = k^2 dk \sin\theta d\theta d\phi\)。
+            </p>
+
+            <h4 class="subsubsection-title">2. 角度积分</h4>
+            <p>
+                对角度部分进行积分：
+            </p>
+            <div class="math-block">
+                \[
+                \int e^{i\mathbf{k}\cdot\mathbf{y}} d\Omega =
+                \int_0^{2\pi} d\phi \int_0^{\pi} e^{ikR\cos\theta} \sin\theta d\theta
+                \]
+            </div>
+            <div class="math-block">
+                \[
+                \int_0^{\pi} e^{ikR\cos\theta} \sin\theta d\theta =
+                \int_{-1}^{1} e^{ikRu} du =
+                \frac{e^{ikR} - e^{-ikR}}{ikR}
+                = \frac{2\sin(kR)}{kR}
+                \]
+            </div>
+            <p>
+                因此角度积分结果为：
+            </p>
+            <div class="math-block">
+                \[
+                \int e^{i\mathbf{k}\cdot\mathbf{y}} d\Omega =
+                \frac{4\pi \sin(kR)}{kR}
+                \]
+            </div>
+
+            <h4 class="subsubsection-title">3. 径向积分</h4>
+            <p>
+                将上述角度积分结果代入 \(D^{(+)}(y)\)：
+            </p>
+            <div class="math-block">
+                \[
+                D^{(+)}(y) =
+                \theta(y_0) \frac{1}{(2\pi)^3}
+                \int_0^\infty k^2 dk \frac{\sin(ky_0)}{k}
+                \left[ \frac{4\pi \sin(kR)}{kR} \right]
+                \]
+            </div>
+            <div class="math-block">
+                \[
+                D^{(+)}(y) =
+                \frac{\theta(y_0)}{2\pi^2 R}
+                \int_0^\infty \sin(ky_0) \sin(kR) dk
+                \]
+            </div>
+            <p>
+                利用积化和差公式：
+            </p>
+            <div class="math-block">
+                \[
+                \sin(ky_0) \sin(kR) =
+                \frac{1}{2} \left[ \cos(k(y_0 - R)) - \cos(k(y_0 + R)) \right]
+                \]
+            </div>
+            <p>
+                利用积分公式 \(\int_0^\infty \cos(kx) dk = \pi \delta(x)\)，得到：
+            </p>
+            <div class="math-block">
+                \[
+                \int_0^\infty \sin(ky_0) \sin(kR) dk =
+                \frac{\pi}{2} \left[ \delta(y_0 - R) - \delta(y_0 + R) \right]
+                \]
+            </div>
+            <p>代回后得到：</p>
+            <div class="math-block">
+                \[
+                D^{(+)}(y) =
+                \frac{\theta(y_0)}{4\pi R}
+                \left[ \delta(y_0 - R) - \delta(y_0 + R) \right]
+                \]
+            </div>
+            <p>
+                由于有阶跃函数约束 \(y_0 &gt; 0\)，且空间距离 \(R &gt; 0\)。
+                因此 \(y_0 + R &gt; 0\) 恒成立，第二项 \(\delta(y_0 + R)\) 永远为零。
+                最终得到第一部分结果：
+            </p>
+            <div class="result-box">
+                \[
+                D^{(+)}(y) = \frac{\theta(y_0)}{4\pi R} \delta(y_0 - R)
+                \]
+            </div>
+
+            <h3 class="subsection-title">三、 与协变形式的等价性证明</h3>
+            <p>
+                我们要证明上述结果等价于
+                \(\frac{\theta(y_0)}{2\pi} \delta(y^2)\)，其中
+                \(y^2 = y_0^2 - R^2\) 为闵氏时空下的距离平方。
+            </p>
+            <p>
+                根据狄拉克 \(\delta\) 函数关于复合函数的性质：
+            </p>
+            <div class="math-block">
+                \[
+                \delta(g(x)) = \sum_i \frac{\delta(x - x_i)}{|g'(x_i)|}
+                \]
+            </div>
+            <p>
+                其中 \(x_i\) 是 \(g(x) = 0\) 的根。
+            </p>
+            <p>
+                定义 \(g(y_0) = y_0^2 - R^2\)，其根为 \(y_0 = \pm R\)，
+                导数为 \(g'(y_0) = 2y_0\)。因此：
+            </p>
+            <div class="math-block">
+                \[
+                \delta(y^2) = \delta(y_0^2 - R^2) =
+                \frac{\delta(y_0 - R)}{|2R|} + \frac{\delta(y_0 + R)}{|-2R|}
+                = \frac{1}{2R} \left[ \delta(y_0 - R) + \delta(y_0 + R) \right]
+                \]
+            </div>
+            <p>
+                将其乘以阶跃函数 \(\theta(y_0)\)：
+            </p>
+            <div class="math-block">
+                \[
+                \theta(y_0) \delta(y^2) =
+                \frac{\theta(y_0)}{2R} \left[ \delta(y_0 - R) + \delta(y_0 + R) \right]
+                \]
+            </div>
+            <p>
+                因为 \(\theta(y_0)\) 限制了 \(y_0 &gt; 0\)，
+                所以 \(\theta(y_0)\delta(y_0 + R) = 0\)。上式简化为：
+            </p>
+            <div class="math-block">
+                \[
+                \theta(y_0) \delta(y^2) = \frac{\theta(y_0)}{2R} \delta(y_0 - R)
+                \]
+            </div>
+            <p>
+                两边同时除以 \(2\pi\)：
+            </p>
+            <div class="math-block">
+                \[
+                \frac{\theta(y_0)}{2\pi} \delta(y^2) =
+                \frac{\theta(y_0)}{4\pi R} \delta(y_0 - R)
+                \]
+            </div>
+            <div class="result-box">
+                <span class="label">等价性得证。</span>
+            </div>
+
+            <h3 class="subsection-title">四、 总结与物理意义</h3>
+            <div class="math-block">
+                \[
+                D^{(+)}(x - x') =
+                -\int \frac{d^4k}{(2\pi)^4}
+                \frac{e^{-ik\cdot(x - x')}}{(k_0 + i\epsilon)^2 - \mathbf{k}\cdot\mathbf{k}}
+                =
+                \frac{\theta(x_0 - x'_0)}{4\pi R}\delta(x_0 - x'_0 - R)
+                =
+                \frac{\theta(x_0 - x'_0)}{2\pi}\delta\left[(x - x')^2\right]
+                \]
+            </div>
+            <ul>
+                <li>
+                    阶跃函数 \(\theta(x_0 - x'_0)\) 体现了
+                    <strong>因果律</strong>（若信号从 \(x'\) 传到 \(x\)，则必有
+                    \(x_0 &gt; x'_0\)）。
+                </li>
+                <li>
+                    \(\delta\) 函数 \(\delta[(x-x')^2]\) 体现了无质量场的扰动只能在
+                    <strong>光锥</strong>上传播（传播速度为光速 \(c=1\)）。
+                </li>
+            </ul>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- 第4节：公式(5.35) 电四极辐射变换                             -->
+        <!-- ============================================================ -->
+        <section class="section anchor" id="sec-quadrupole">
+            <h2 class="section-title">
+                公式 (5.35)：推导电四极辐射用到的变换
+                <span class="ref">§ 5.35</span>
+            </h2>
+
+            <p>
+                该等式是电磁多极展开（特别是推导<strong>电四极辐射</strong>）时一个非常关键的数学恒等式。
+            </p>
+            <ul>
+                <li><strong>物理本质</strong>：电荷守恒（连续性方程）。</li>
+                <li>
+                    <strong>数学手段</strong>：分部积分（利用源局域分布、在无穷远处电流为零的边界条件）。
+                </li>
+            </ul>
+
+            <h3 class="subsection-title">推导过程</h3>
+            <p>
+                为简化推导步骤，两边同时去掉因子 \(\frac{1}{2}\)。需要证明的等式为：
+            </p>
+            <div class="math-block">
+                \[
+                \int \mathrm{d}^3\mathbf{x}'
+                \left[ (\mathbf{n} \cdot \mathbf{x}') \mathbf{J}
+                + (\mathbf{n} \cdot \mathbf{J}) \mathbf{x}' \right]
+                =
+                -\mathrm{i}\omega \int \mathrm{d}^3\mathbf{x}' \mathbf{x}'
+                (\mathbf{n} \cdot \mathbf{x}') \rho(\mathbf{x}')
+                \]
+            </div>
+
+            <h4 class="subsubsection-title">1. 引入连续性方程</h4>
+            <p>
+                对于时间谐振场（含有 \(e^{-\mathrm{i}\omega t}\) 因子），
+                电荷守恒对应的连续性方程为：
+            </p>
+            <div class="math-block">
+                \[
+                \nabla' \cdot \mathbf{J}(\mathbf{x}') = \mathrm{i}\omega \rho(\mathbf{x}')
+                \]
+            </div>
+            <p>
+                其中 \(\nabla'\) 代表对源坐标 \(\mathbf{x}'\) 的偏导数。
+            </p>
+            <p>
+                将该方程代入上述等式的右边（RHS）：
+            </p>
+            <div class="math-block">
+                \[
+                \text{RHS} =
+                -\int \mathrm{d}^3\mathbf{x}' \mathbf{x}'
+                (\mathbf{n} \cdot \mathbf{x}')
+                \left[ \nabla' \cdot \mathbf{J}(\mathbf{x}') \right]
+                \]
+            </div>
+
+            <h4 class="subsubsection-title">2. 运用分部积分（指标记号形式）</h4>
+            <p>
+                由于等式两边均为矢量，写出右边项的第 \(i\) 个分量形式：
+            </p>
+            <div class="math-block">
+                \[
+                \text{RHS}_i =
+                -\int \mathrm{d}^3\mathbf{x}'
+                x'_i (n_k x'_k) \left( \sum_j \frac{\partial J_j}{\partial x'_j} \right)
+                \]
+            </div>
+            <p>
+                <em>（此处采用爱因斯坦求和约定，对重复指标 \(k\) 求和，且
+                    \(\mathbf{n} \cdot \mathbf{x}' = n_k x'_k\)）</em>
+            </p>
+            <p>
+                利用分部积分法：
+            </p>
+            <div class="math-block">
+                \[
+                \int u \frac{\partial v}{\partial x'_j} \mathrm{d}^3\mathbf{x}'
+                = -\int v \frac{\partial u}{\partial x'_j} \mathrm{d}^3\mathbf{x}'
+                \]
+            </div>
+            <p>
+                由于电流源 \(\mathbf{J}\) 是局域分布的，在无穷远处为 \(0\)，
+                因此边界项消失。将导数转移到前面的乘积项上：
+            </p>
+            <div class="math-block">
+                \[
+                \text{RHS}_i =
+                \int \mathrm{d}^3\mathbf{x}'
+                \sum_j J_j \frac{\partial}{\partial x'_j}
+                \left[ x'_i (n_k x'_k) \right]
+                \]
+            </div>
+
+            <h4 class="subsubsection-title">3. 计算偏导数</h4>
+            <p>
+                利用求导的乘积法则，注意观测方向单位矢量 \(\mathbf{n}\) 为常数
+                （与积分变量 \(\mathbf{x}'\) 无关）：
+            </p>
+            <div class="math-block">
+                \[
+                \frac{\partial}{\partial x'_j}
+                \left[ x'_i (n_k x'_k) \right]
+                =
+                \left(\frac{\partial x'_i}{\partial x'_j}\right) (n_k x'_k)
+                + x'_i n_k \left(\frac{\partial x'_k}{\partial x'_j}\right)
+                \]
+            </div>
+            <p>
+                结合克罗内克函数关系 \(\frac{\partial x'_a}{\partial x'_b} = \delta_{ab}\)，
+                上式可简化为：
+            </p>
+            <div class="math-block">
+                \[
+                \frac{\partial}{\partial x'_j}
+                \left[ x'_i (n_k x'_k) \right]
+                =
+                \delta_{ij} (\mathbf{n} \cdot \mathbf{x}') + x'_i n_j
+                \]
+            </div>
+
+            <h4 class="subsubsection-title">4. 代回积分式</h4>
+            <p>
+                将偏导数的结果代回 \(\text{RHS}_i\) 表达式中：
+            </p>
+            <div class="math-block">
+                \[
+                \text{RHS}_i =
+                \int \mathrm{d}^3\mathbf{x}'
+                \sum_j J_j
+                \left[ \delta_{ij} (\mathbf{n} \cdot \mathbf{x}') + x'_i n_j \right]
+                \]
+            </div>
+            <p>
+                对求和号进行展开：
+            </p>
+            <ul>
+                <li>
+                    第一项：
+                    \(\sum_j J_j \delta_{ij} (\mathbf{n} \cdot \mathbf{x}')
+                    = J_i (\mathbf{n} \cdot \mathbf{x}')\)
+                </li>
+                <li>
+                    第二项：
+                    \(\sum_j J_j x'_i n_j = x'_i (\mathbf{n} \cdot \mathbf{J})\)
+                </li>
+            </ul>
+            <p>
+                代入后得到分量表达式：
+            </p>
+            <div class="math-block">
+                \[
+                \text{RHS}_i =
+                \int \mathrm{d}^3\mathbf{x}'
+                \left[ (\mathbf{n} \cdot \mathbf{x}') J_i + (\mathbf{n} \cdot \mathbf{J}) x'_i \right]
+                \]
+            </div>
+            <p>
+                将其重新写回矢量形式：
+            </p>
+            <div class="math-block">
+                \[
+                \text{RHS} =
+                \int \mathrm{d}^3\mathbf{x}'
+                \left[ (\mathbf{n} \cdot \mathbf{x}') \mathbf{J}
+                + (\mathbf{n} \cdot \mathbf{J}) \mathbf{x}' \right]
+                \]
+            </div>
+            <p>
+                最后，两边同时乘回因子 \(\frac{1}{2}\)，即完成了数学证明。
+            </p>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- 第5节：单位矢量分量在球面上的立体角积分                      -->
+        <!-- ============================================================ -->
+        <section class="section anchor" id="sec-solid-angle">
+            <h2 class="section-title">
+                单位矢量分量在球面上的立体角积分
+                <span class="ref">(5.41) 用到</span>
+            </h2>
+
+            <p>
+                在电动力学（如多极辐射展开）和理论物理中，经常需要计算单位矢量
+                \(\mathbf{n}\) 的各个分量在整个球面上关于立体角 \(d\Omega\) 的积分。
+                利用空间旋转对称性与反演对称性，可以非常高效地求解这些高阶张量积分。
+            </p>
+
+            <h3 class="subsection-title">1. 奇数阶张量积分</h3>
+            <h4 class="subsubsection-title">结论</h4>
+            <p>
+                对于任意奇数阶的立体角积分，结果全部为 \(0\)：
+            </p>
+            <div class="math-block">
+                \[
+                \int_{S^2} n_{i_1} n_{i_2} \cdots n_{i_{2k+1}} d\Omega = 0
+                \]
+            </div>
+            <p>
+                （例如：\(\int n_i d\Omega = 0\)，“一阶”；
+                \(\int n_i n_j n_k d\Omega = 0\)，“三阶”等。）
+            </p>
+
+            <h4 class="subsubsection-title">对称性解释（空间反演 / 宇称对称性）</h4>
+            <p>
+                球面在空间反演变换 \(\mathbf{n} \to -\mathbf{n}\) 下是完全对称的。
+            </p>
+            <ul>
+                <li>
+                    在该变换下，面积元（立体角元）保持不变，即
+                    \(d\Omega = d\Omega'\)。
+                </li>
+                <li>
+                    但被积函数中含有奇数个分量，每次反演都会产生一个整体的负号：
+                    \[
+                    (-n'_{i_1})(-n'_{i_2})\cdots(-n'_{i_{2k+1}})
+                    = - (n'_{i_1} n'_{i_2} \cdots n'_{i_{2k+1}})
+                    \]
+                </li>
+                <li>
+                    积分代换后得到 \(I = -I\)，因此积分必然为 \(0\)。
+                    在物理图景上，这意味着球面任意一点的被积函数值，
+                    总能在球心对称的另一端找到一个大小相等、符号相反的值与其完全抵消。
+                </li>
+            </ul>
+
+            <h3 class="subsection-title">2. 偶数阶张量积分</h3>
+            <h4 class="subsubsection-title">通项公式</h4>
+            <p>
+                由于球面在旋转下具有各向同性（旋转不变性），偶数阶积分的结果不指向任何特定方向，
+                其表现形式必然是克罗内克符号 \(\delta\) 的对称组合。
+            </p>
+            <p>
+                对于任意 \(2n\) 阶积分，通项公式为：
+            </p>
+            <div class="math-block">
+                \[
+                \int_{S^2} n_{i_1} n_{i_2} \cdots n_{i_{2n}} d\Omega
+                =
+                \frac{4\pi}{(2n+1)!!}
+                \sum_{\text{所有可能配对}} \delta_{a_1 a_2} \cdots \delta_{a_{2n-1} a_{2n}}
+                \]
+            </div>
+            <p>
+                其中：
+            </p>
+            <ul>
+                <li>
+                    双阶乘定义为：\((2n+1)!! = 1 \times 3 \times 5 \times \dots \times (2n+1)\)。
+                </li>
+                <li>
+                    右侧的求和项遍历了 \(2n\) 个指标的所有可能两两不重复配对，
+                    项数共有 \((2n-1)!!\) 项。
+                </li>
+            </ul>
+
+            <h4 class="subsubsection-title">常用低阶特例</h4>
+            <ul>
+                <li>
+                    <strong>二阶积分（\(2n=2\)，共 1 项配对）：</strong>
+                    <div class="math-block">
+                        \[
+                        \int_{S^2} n_j n_k d\Omega = \frac{4\pi}{3} \delta_{jk}
+                        \]
+                    </div>
+                </li>
+                <li>
+                    <strong>四阶积分（\(2n=4\)，共 3 项配对）：</strong>
+                    <div class="math-block">
+                        \[
+                        \int_{S^2} n_i n_j n_k n_l d\Omega
+                        =
+                        \frac{4\pi}{15}
+                        \left(
+                        \delta_{ij}\delta_{kl} + \delta_{ik}\delta_{jl}
+                        + \delta_{il}\delta_{jk}
+                        \right)
+                        \]
+                    </div>
+                </li>
+                <li>
+                    <strong>六阶积分（\(2n=6\)，共 15 项配对）：</strong>
+                    <div class="math-block">
+                        \[
+                        \int_{S^2} n_i n_j n_k n_l n_m n_p d\Omega
+                        =
+                        \frac{4\pi}{105}
+                        \sum_{\text{15种配对}} \delta_{ab}\delta_{cd}\delta_{ef}
+                        \]
+                    </div>
+                </li>
+            </ul>
+
+            <h3 class="subsection-title">3. 推导方法与数学原理：对称性分析与指标缩并</h3>
+            <p>
+                这类积分可以通过分析物理对称性直接确定张量结构，再通过代数方法定出待定系数。
+                以下通过一阶（奇数阶示例）和二阶（偶数阶示例）的具体推导来展示这一方法。
+            </p>
+
+            <h4 class="subsubsection-title">示例一：一阶积分的推导（反演对称性的应用）</h4>
+            <p>
+                求一阶积分 \(I_i = \int_{S^2} n_i d\Omega\)。
+            </p>
+            <ol>
+                <li>
+                    <strong>变量代换</strong>：
+                    作空间反演代换 \(\mathbf{n} = -\mathbf{n}'\)。
+                    由于该正交变换保持测度不变，因此 \(d\Omega = d\Omega'\)，
+                    积分区域保持为整个单位球面 \(S^2\)。代入积分式：
+                    \[
+                    I_i = \int_{S^2} (-n'_i) d\Omega'
+                    \]
+                </li>
+                <li>
+                    <strong>移出负号并对比</strong>：
+                    将负号提至积分号外，由于积分变量与符号选取无关
+                    （把 \(\mathbf{n}'\) 重新写回 \(\mathbf{n}\)）：
+                    \[
+                    I_i = - \int_{S^2} n'_i d\Omega' = - I_i
+                    \]
+                </li>
+                <li>
+                    <strong>得出结论</strong>：
+                    由 \(I_i = -I_i\) 易知：
+                    \[
+                    2I_i = 0 \implies I_i = \int_{S^2} n_i d\Omega = 0
+                    \]
+                </li>
+            </ol>
+
+            <h4 class="subsubsection-title">示例二：二阶积分的推导（指标缩并的应用）</h4>
+            <p>
+                求二阶积分 \(I_{jk} = \int_{S^2} n_j n_k d\Omega\)。
+            </p>
+            <ol>
+                <li>
+                    <strong>第一步：由各向同性确定张量结构</strong>：
+                    由于三维空间的旋转对称性（各向同性），积分结果在坐标旋转下不指向特定方向，
+                    因此其只能由克罗内克符号 \(\delta\) 组合而成。且由于指标 \(j\) 和 \(k\) 对称，
+                    可设：
+                    \[
+                    \int_{S^2} n_j n_k d\Omega = c \, \delta_{jk}
+                    \]
+                    其中 \(c\) 为待定的常数。
+                </li>
+                <li>
+                    <strong>第二步：通过指标缩并求解系数</strong>：
+                    对等式两边同时令 \(k = j\)（即取迹运算），并对指标 \(j\) 从 1 到 3 求和：
+                    <ul>
+                        <li>
+                            <strong>等式左边缩并</strong>：
+                            由于 \(\mathbf{n}\) 是单位矢量，
+                            有 \(\sum_{j=1}^3 n_j^2 = 1\)，
+                            且全球面立体角积分 \(\int_{S^2} d\Omega = 4\pi\)：
+                            \[
+                            \sum_{j=1}^3 \int_{S^2} n_j n_j d\Omega
+                            = \int_{S^2} \left( \sum_{j=1}^3 n_j^2 \right) d\Omega
+                            = \int_{S^2} 1 \, d\Omega = 4\pi
+                            \]
+                        </li>
+                        <li>
+                            <strong>等式右边缩并</strong>：
+                            由于在三维空间中单位矩阵的迹
+                            \(\sum_{j=1}^3 \delta_{jj} = 3\)：
+                            \[
+                            \sum_{j=1}^3 c \, \delta_{jj} = 3c
+                            \]
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <strong>得出结论</strong>：
+                    使两边缩并后的结果相等，得到：
+                    \[
+                    3c = 4\pi \implies c = \frac{4\pi}{3}
+                    \]
+                    代回原假设，即得二阶积分公式：
+                    \[
+                    \int_{S^2} n_j n_k d\Omega = \frac{4\pi}{3} \delta_{jk}
+                    \]
+                </li>
+            </ol>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- 第6节：亥姆霍兹方程格林函数的推迟解                          -->
+        <!-- ============================================================ -->
+        <section class="section anchor" id="sec-helmholtz">
+            <h2 class="section-title">
+                亥姆霍兹方程格林函数的推迟解
+                <span class="ref">(5.5, 5.43)</span>
+            </h2>
+
+            <h3 class="subsection-title">1. 问题背景与控制方程</h3>
+            <p>
+                在经典电动力学的辐射问题中，对于单色波场，我们需要求解亥姆霍兹方程
+                （Helmholtz Equation）的自由空间格林函数。控制方程为：
+            </p>
+            <div class="math-block">
+                \[
+                (\nabla^2 + k^2)G(\mathbf{x}, \mathbf{x}') = -\delta^{(3)}(\mathbf{x}-\mathbf{x}')
+                \]
+            </div>
+            <p>
+                其中：
+            </p>
+            <ul>
+                <li>\(\mathbf{x}\) 为场点（观测点），\(\mathbf{x}'\) 为源点。</li>
+                <li>\(\delta^{(3)}(\mathbf{x}-\mathbf{x}')\) 代表原点处的点源。</li>
+                <li>\(k = \omega/c\) 为波数。</li>
+            </ul>
+
+            <h3 class="subsection-title">2. 利用物理对称性简化变量</h3>
+            <p>
+                由于自由空间具有<strong>平移对称性</strong>和
+                <strong>旋转对称性（各向同性）</strong>，我们可以极大简化问题：
+            </p>
+            <ol>
+                <li>
+                    <strong>平移对称性</strong>：格林函数仅依赖于源点到场点的相对距离矢量
+                    \(\mathbf{R} = \mathbf{x} - \mathbf{x}'\)。
+                    我们将原点建在 \(\mathbf{x}'\) 处，方程化为：
+                    \[
+                    (\nabla^2 + k^2)G(\mathbf{R}) = -\delta^{(3)}(\mathbf{R})
+                    \]
+                </li>
+                <li>
+                    <strong>旋转对称性</strong>：格林函数仅与相对距离的大小
+                    \(R = |\mathbf{R}|\) 有关，即 \(G(\mathbf{R}) = G(R)\)。
+                </li>
+            </ol>
+
+            <h3 class="subsection-title">3. 求解无源区方程（\(R &gt; 0\)）</h3>
+            <p>
+                当避开原点 \(R &gt; 0\) 时，\(\delta\) 函数为 \(0\)，
+                方程退化为齐次方程：
+            </p>
+            <div class="math-block">
+                \[
+                (\nabla^2 + k^2)G(R) = 0
+                \]
+            </div>
+
+            <h4 class="subsubsection-title">3.1 引入径向拉普拉斯算符</h4>
+            <p>
+                在球坐标系下，对于无角向依赖的球对称函数 \(G(R)\)，
+                拉普拉斯算符可简写为：
+            </p>
+            <div class="math-block">
+                \[
+                \nabla^2 G(R) = \frac{1}{R}\frac{\mathrm{d}^2}{\mathrm{d}R^2}(R G)
+                \]
+            </div>
+
+            <h4 class="subsubsection-title">3.2 变换为一维简谐振动方程</h4>
+            <p>
+                代入齐次方程：
+            </p>
+            <div class="math-block">
+                \[
+                \frac{1}{R}\frac{\mathrm{d}^2}{\mathrm{d}R^2}(R G) + k^2 G = 0
+                \]
+            </div>
+            <p>
+                两边同乘以 \(R\)，并引入辅助函数 \(u(R) = R \cdot G(R)\)，
+                方程化为：
+            </p>
+            <div class="math-block">
+                \[
+                \frac{\mathrm{d}^2 u}{\mathrm{d}R^2} + k^2 u = 0
+                \]
+            </div>
+            <p>
+                这是一维简谐振动方程（或一维亥姆霍兹方程），其通解为：
+            </p>
+            <div class="math-block">
+                \[
+                u(R) = A \mathrm{e}^{\mathrm{i} kR} + B \mathrm{e}^{-\mathrm{i}kR}
+                \]
+            </div>
+            <p>
+                还原为 \(G(R)\) 的通解形式：
+            </p>
+            <div class="math-block">
+                \[
+                G(R) = \frac{A \mathrm{e}^{\mathrm{i} kR} + B \mathrm{e}^{-\mathrm{i}kR}}{R}
+                \]
+            </div>
+
+            <h3 class="subsection-title">4. 引入物理边界条件：因果律与推迟波</h3>
+            <p>
+                引入单色波的时间波动因子 \(\mathrm{e}^{-\mathrm{i}\omega t}\)：
+            </p>
+            <ul>
+                <li>
+                    <strong>推迟波（Outward-propagating Retarded Wave）</strong>：
+                    \(\frac{\mathrm{e}^{\mathrm{i}(kR - \omega t)}}{R}\)，
+                    代表波源向外辐射。
+                </li>
+                <li>
+                    <strong>超前波（Inward-propagating Advanced Wave）</strong>：
+                    \(\frac{\mathrm{e}^{-\mathrm{i}(kR + \omega t)}}{R}\)，
+                    代表波从无穷远汇聚到波源。
+                </li>
+            </ul>
+            <p>
+                基于物理因果律（源产生向外传播的辐射），我们选择推迟波，舍弃超前波。
+                因此令 <strong>\(B = 0\)</strong>。
+            </p>
+            <p>
+                此时格林函数的形式简化为：
+            </p>
+            <div class="math-block">
+                \[
+                G(R) = A \frac{\mathrm{e}^{\mathrm{i} kR}}{R}
+                \]
+            </div>
+
+            <h3 class="subsection-title">5. 常数 \(A\) 的严格确定：小球体积分极限法</h3>
+            <p>
+                由于 \(\delta\) 函数在原点 \(R=0\) 处具有奇异性，
+                我们必须通过对包含原点的极小球体 \(V_\epsilon\)（半径为
+                \(\epsilon \to 0\)）进行积分来定出待定系数 \(A\)。
+            </p>
+            <p>
+                在极小球体 \(V_\epsilon\) 内对原方程进行体积分：
+            </p>
+            <div class="math-block">
+                \[
+                \int_{V_\epsilon} \nabla^2 G(\mathbf{R}) \,\mathrm{d}^3\mathbf{R}
+                + k^2 \int_{V_\epsilon} G(\mathbf{R}) \,\mathrm{d}^3\mathbf{R}
+                =
+                \int_{V_\epsilon} -\delta^{(3)}(\mathbf{R}) \,\mathrm{d}^3\mathbf{R}
+                \]
+            </div>
+
+            <h4 class="subsubsection-title">5.1 右边项（源项积分）</h4>
+            <p>
+                根据 \(\delta\) 函数的定义，由于原点在积分区间内：
+            </p>
+            <div class="math-block">
+                \[
+                \lim_{\epsilon \to 0} \int_{V_\epsilon} -\delta^{(3)}(\mathbf{R})
+                \,\mathrm{d}^3\mathbf{R} = -1
+                \]
+            </div>
+
+            <h4 class="subsubsection-title">5.2 左边第二项（\(k^2\) 项积分）</h4>
+            <p>
+                在球坐标系下写出体积积分：
+            </p>
+            <div class="math-block">
+                \[
+                I_2 = \lim_{\epsilon \to 0} k^2 \int_{V_\epsilon}
+                A \frac{\mathrm{e}^{\mathrm{i}kR}}{R} \,\mathrm{d}^3\mathbf{R}
+                = \lim_{\epsilon \to 0} 4\pi k^2 A \int_0^\epsilon R \mathrm{e}^{\mathrm{i}kR} \,\mathrm{d}R
+                = 0
+                \]
+            </div>
+            <p>
+                （由于积分上限趋于 \(0\)，且被积函数在原点连续、有界，
+                该积分严格趋于 \(0\)）。
+            </p>
+
+            <h4 class="subsubsection-title">5.3 左边第一项（拉普拉斯项积分）</h4>
+            <p>
+                利用<strong>高斯散度定理</strong>将体积分转换为极小球面
+                \(S_\epsilon\) 上的面积分：
+            </p>
+            <div class="math-block">
+                \[
+                I_1 = \int_{V_\epsilon} \nabla^2 G(\mathbf{R}) \,\mathrm{d}^3\mathbf{R}
+                = \int_{V_\epsilon} \nabla \cdot (\nabla G) \,\mathrm{d}^3\mathbf{R}
+                = \oint_{S_\epsilon} \nabla G \cdot \mathrm{d}\mathbf{a}
+                \]
+            </div>
+            <p>
+                其中，球坐标下的梯度算符径向分量为
+                \(\nabla G = \frac{\partial G}{\partial R} \hat{\mathbf{e}}_R\)，
+                面积元为 \(\mathrm{d}\mathbf{a} = \hat{\mathbf{R}} \epsilon^2 \mathrm{d}\Omega\)。
+                面积分化为：
+            </p>
+            <div class="math-block">
+                \[
+                I_1 = \left. 4\pi \epsilon^2 \frac{\partial G}{\partial R} \right|_{R=\epsilon}
+                \]
+            </div>
+            <p>
+                对 \(G(R) = A \frac{\mathrm{e}^{\mathrm{i}kR}}{R}\) 求径向偏导数：
+            </p>
+            <div class="math-block">
+                \[
+                \frac{\partial G}{\partial R} =
+                A \left( \frac{\mathrm{i}k \mathrm{e}^{\mathrm{i}kR}}{R}
+                - \frac{\mathrm{e}^{\mathrm{i}kR}}{R^2} \right)
+                \]
+            </div>
+            <p>
+                将导数代入面积分中（令 \(R = \epsilon\)）：
+            </p>
+            <div class="math-block">
+                \[
+                I_1 = 4\pi \epsilon^2 A
+                \left( \frac{\mathrm{i}k \mathrm{e}^{\mathrm{i}k\epsilon}}{\epsilon}
+                - \frac{\mathrm{e}^{\mathrm{i}k\epsilon}}{\epsilon^2} \right)
+                = 4\pi A \left( \mathrm{i}k\epsilon \mathrm{e}^{\mathrm{i}k\epsilon}
+                - \mathrm{e}^{\mathrm{i}k\epsilon} \right)
+                \]
+            </div>
+            <p>
+                取 \(\epsilon \to 0\) 的极限：
+            </p>
+            <div class="math-block">
+                \[
+                \lim_{\epsilon \to 0} I_1 = 4\pi A (0 - 1) = -4\pi A
+                \]
+            </div>
+
+            <h3 class="subsection-title">6. 最终结论</h3>
+            <p>
+                将上述三项积分结果代入整体积分方程：
+            </p>
+            <div class="math-block">
+                \[
+                -4\pi A + 0 = -1 \implies A = \frac{1}{4\pi}
+                \]
+            </div>
+            <p>
+                因此，三维自由空间下的<strong>推迟格林函数</strong>的最终精确表达式为：
+            </p>
+            <div class="result-box">
+                \[
+                G^{(+)}(\mathbf{x}, \mathbf{x}') =
+                \frac{\mathrm{e}^{\mathrm{i}k|\mathbf{x}-\mathbf{x}'|}}
+                {4\pi |\mathbf{x}-\mathbf{x}'|}
+                \]
+            </div>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- 第7节：球面波加法定理                                        -->
+        <!-- ============================================================ -->
+        <section class="section anchor" id="sec-spherical-wave">
+            <h2 class="section-title">
+                球面波加法定理（公式 5.44）的推导
+                <span class="ref">§ 5.44</span>
+            </h2>
+
+            <h3 class="subsection-title">1. 问题重述</h3>
+            <p>
+                我们希望将亥姆霍兹方程的自由空间推迟格林函数：
+            </p>
+            <div class="math-block">
+                \[
+                G(\mathbf{x}, \mathbf{x}') = \frac{\mathrm{e}^{\mathrm{i}k|\mathbf{x}-\mathbf{x}'|}}
+                {4\pi|\mathbf{x}-\mathbf{x}'|}
+                \]
+            </div>
+            <p>
+                展开为以原点为中心的球坐标系下、关于源点
+                \(\mathbf{x}'(r', \mathbf{n}')\) 与场点
+                \(\mathbf{x}(r, \mathbf{n})\) <strong>分离变量</strong>的形式：
+            </p>
+            <div class="math-block">
+                \[
+                \frac{\mathrm{e}^{\mathrm{i}k|\mathbf{x}-\mathbf{x}'|}}
+                {4\pi|\mathbf{x}-\mathbf{x}'|}
+                =
+                \mathrm{i}k \sum_{l,m} j_l(kr_<) h_l^{(1)}(kr_>)
+                Y_{lm}^*(\mathbf{n}') Y_{lm}(\mathbf{n})
+                \]
+            </div>
+
+            <h3 class="subsection-title">2. 第一步：角向展开（降维）</h3>
+            <p>
+                由于格林函数满足方程：
+            </p>
+            <div class="math-block">
+                \[
+                (\nabla^2 + k^2)G(\mathbf{x}, \mathbf{x}') =
+                -\delta^{(3)}(\mathbf{x}-\mathbf{x}')
+                \]
+            </div>
+            <p>
+                我们利用球谐函数 \(Y_{lm}\) 的完备性，将角向变量分离。令：
+            </p>
+            <div class="math-block">
+                \[
+                G(\mathbf{x}, \mathbf{x}') =
+                \sum_{l, m} g_l(r, r') Y_{lm}^*(\mathbf{n}') Y_{lm}(\mathbf{n})
+                \]
+            </div>
+            <p>
+                代入原方程，并利用球坐标下拉普拉斯算符的角向部分
+                \(\hat{L}^2 Y_{lm} = l(l+1)Y_{lm}\)，以及三维
+                \(\delta\) 函数的展开式，可以直接消去角度部分，
+                得到关于<strong>径向函数 \(g_l(r, r')\) 的常微分方程</strong>：
+            </p>
+            <div class="math-block">
+                \[
+                \left[
+                \frac{1}{r^2} \frac{\mathrm{d}}{\mathrm{d}r}
+                \left( r^2 \frac{\mathrm{d}}{\mathrm{d}r} \right)
+                - \frac{l(l+1)}{r^2} + k^2
+                \right] g_l(r, r') = -\frac{\delta(r-r')}{r^2}
+                \]
+            </div>
+
+            <h3 class="subsection-title">3. 第二步：分区间确定径向解的形式</h3>
+            <p>
+                对于 \(r \neq r'\) 的区域，上式右边为 \(0\)，
+                方程即为<strong>球贝塞尔方程</strong>。我们分两个区域讨论：
+            </p>
+            <ol>
+                <li>
+                    <strong>内区域 (\(r &lt; r'\))</strong>：
+                    由于包含原点 \(r = 0\)，为了使物理量不发散，
+                    解只能是<strong>球贝塞尔函数 \(j_l(kr)\)</strong>：
+                    \[
+                    g_l(r, r') = C_1 j_l(kr) \quad (r &lt; r')
+                    \]
+                </li>
+                <li>
+                    <strong>外区域 (\(r &gt; r'\))</strong>：
+                    由于包含 \(r \to \infty\)，为了满足无穷远处的推迟波
+                    （向外辐射）条件，解只能是<strong>第一类球汉克尔函数
+                        \(h_l^{(1)}(kr)\)</strong>：
+                    \[
+                    g_l(r, r') = C_2 h_l^{(1)}(kr) \quad (r &gt; r')
+                    \]
+                </li>
+            </ol>
+            <p>
+                由于格林函数必须满足源点和场点对调的对称性
+                （即 \(g_l(r, r') = g_l(r', r)\)），
+                我们可以将上述两个区域的解统一写成：
+            </p>
+            <div class="math-block">
+                \[
+                g_l(r, r') = A_l j_l(kr_<) h_l^{(1)}(kr_>)
+                \]
+            </div>
+            <p>
+                其中：
+            </p>
+            <ul>
+                <li>\(r_< = \min(r, r')\) 是 \(r\) 和 \(r'\) 中较小的一个。</li>
+                <li>\(r_> = \max(r, r')\) 是 \(r\) 和 \(r'\) 中较大的一个。</li>
+                <li>\(A_l\) 是待定的常数系数。</li>
+            </ul>
+
+            <h3 class="subsection-title">4. 第三步：利用源点的跳跃条件定出系数 \(A_l\)</h3>
+            <p>
+                为了确定 \(A_l\)，我们在包含了源点 \(r'\) 的极小区间
+                \([r'-\epsilon, r'+\epsilon]\) 内，对径向微分方程两边乘以
+                \(r^2\) 并积分：
+            </p>
+            <div class="math-block">
+                \[
+                \int_{r'-\epsilon}^{r'+\epsilon}
+                \left[
+                \frac{\mathrm{d}}{\mathrm{d}r}
+                \left( r^2 \frac{\mathrm{d}g_l}{\mathrm{d}r} \right)
+                - l(l+1)g_l + k^2 r^2 g_l
+                \right] \mathrm{d}r
+                =
+                \int_{r'-\epsilon}^{r'+\epsilon} -\delta(r-r') \mathrm{d}r
+                \]
+            </div>
+            <p>
+                当 \(\epsilon \to 0\) 时，含有 \(g_l\) 连续项的积分趋于 \(0\)，
+                方程简化为：
+            </p>
+            <div class="math-block">
+                \[
+                \left. \left( r^2 \frac{\mathrm{d}g_l}{\mathrm{d}r} \right)
+                \right|_{r'-\epsilon}^{r'+\epsilon} = -1
+                \implies
+                \left. \frac{\mathrm{d}g_l}{\mathrm{d}r} \right|_{r=r'+\epsilon}
+                - \left. \frac{\mathrm{d}g_l}{\mathrm{d}r} \right|_{r=r'-\epsilon}
+                = -\frac{1}{r'^2}
+                \]
+            </div>
+            <p>
+                将两个区域的解：
+            </p>
+            <ul>
+                <li>
+                    当 \(r &gt; r'\) 时，
+                    \(g_l = A_l j_l(kr') h_l^{(1)}(kr)\)
+                </li>
+                <li>
+                    当 \(r &lt; r'\) 时，
+                    \(g_l = A_l h_l^{(1)}(kr') j_l(kr)\)
+                </li>
+            </ul>
+            <p>
+                代入上述导数跳跃条件中（注意对 \(r\) 求导会贡献一个链式法则的系数
+                \(k\)）：
+            </p>
+            <div class="math-block">
+                \[
+                A_l \cdot k \cdot
+                \left[
+                j_l(kr') \frac{\mathrm{d}h_l^{(1)}(z)}{\mathrm{d}z}\Big|_{z=kr'}
+                - h_l^{(1)}(kr') \frac{\mathrm{d}j_l(z)}{\mathrm{d}z}\Big|_{z=kr'}
+                \right]
+                = -\frac{1}{r'^2}
+                \]
+            </div>
+            <p>
+                括号内正是<strong>朗斯基行列式（Wronskian）</strong>
+                \(W[j_l(z), h_l^{(1)}(z)]\)。根据特殊函数论，
+                我们有严格的数学恒等式：
+            </p>
+            <div class="math-block">
+                \[
+                W[j_l(z), h_l^{(1)}(z)] = \frac{\mathrm{i}}{z^2}
+                \]
+            </div>
+
+            <h4 class="subsubsection-title">证明这个恒等式：</h4>
+            <p>
+                <strong>利用阿贝尔恒等式（Abel's Identity）与渐近行为</strong>
+            </p>
+            <p>
+                球贝塞尔函数 \(j_l(z)\) 和球汉克尔函数 \(h_l^{(1)}(z)\)
+                都是<strong>球贝塞尔方程</strong>的解：
+            </p>
+            <div class="math-block">
+                \[
+                z^2 w'' + 2zw' + \left[ z^2 - l(l+1) \right] w = 0
+                \]
+            </div>
+            <p>
+                将方程两边除以 \(z^2\)，写成标准形式：
+            </p>
+            <div class="math-block">
+                \[
+                w'' + \frac{2}{z}w' + \left[ 1 - \frac{l(l+1)}{z^2} \right] w = 0
+                \]
+            </div>
+            <p>
+                <strong>第一步：确定朗斯基行列式的函数形式</strong>
+            </p>
+            <p>
+                根据二阶线性常微分方程的<strong>阿贝尔恒等式</strong>，
+                对于方程 \(w'' + P(z)w' + Q(z)w = 0\) 的任意两个线性无关解
+                \(w_1, w_2\)，它们的朗斯基行列式满足：
+            </p>
+            <div class="math-block">
+                \[
+                W[w_1, w_2](z) = C \exp\left( -\int P(z) \,\mathrm{d}z \right)
+                \]
+            </div>
+            <p>
+                在球贝塞尔方程中，\(P(z) = \frac{2}{z}\)，代入可得：
+            </p>
+            <div class="math-block">
+                \[
+                W[j_l(z), h_l^{(1)}(z)] =
+                C \exp\left( -\int \frac{2}{z} \,\mathrm{d}z \right)
+                = C e^{-2\ln z} = \frac{C}{z^2}
+                \]
+            </div>
+            <p>
+                其中 \(C\) 是一个待定的常数。这意味着，朗斯基行列式在形式上必然正比于
+                \(\frac{1}{z^2}\)。
+            </p>
+            <p>
+                <strong>第二步：通过渐近极限确定常数 \(C\)</strong>
+            </p>
+            <p>
+                为了确定常数 \(C\)，我们可以取 \(z \to \infty\) 时的渐近极限。
+                当 \(z \to \infty\) 时，球贝塞尔函数具有以下渐近形式：
+            </p>
+            <div class="math-block">
+                \[
+                j_l(z) \sim \frac{1}{z} \sin\left( z - \frac{l\pi}{2} \right)
+                \]
+            </div>
+            <div class="math-block">
+                \[
+                h_l^{(1)}(z) \sim -\frac{\mathrm{i}}{z}
+                \exp\left[ \mathrm{i}\left( z - \frac{l\pi}{2} \right) \right]
+                \]
+            </div>
+            <p>
+                为了书写简便，令 \(\theta = z - \frac{l\pi}{2}\)。
+                由于我们只需保留至最高阶项 \(\mathcal{O}(z^{-2})\)，
+                对它们求导时，只需对三角函数或指数部分求导即可
+                （对分母的 \(z\) 求导会引入更低阶的 \(z^{-2}\) 项）：
+            </p>
+            <div class="math-block">
+                \[
+                j_l'(z) \sim \frac{\cos\theta}{z} + \mathcal{O}(z^{-2})
+                \]
+            </div>
+            <div class="math-block">
+                \[
+                \left(h_l^{(1)}\right)'(z) \sim
+                \frac{1}{z} \exp(\mathrm{i}\theta) + \mathcal{O}(z^{-2})
+                \]
+            </div>
+            <p>
+                现在计算朗斯基行列式 \(W = j_l (h_l^{(1)})' - j_l' h_l^{(1)}\)
+                的渐近值：
+            </p>
+            <div class="math-block">
+                \[
+                \begin{aligned}
+                W[j_l(z), h_l^{(1)}(z)]
+                &\sim \left( \frac{\sin\theta}{z} \right)
+                \left( \frac{e^{\mathrm{i}\theta}}{z} \right)
+                - \left( \frac{\cos\theta}{z} \right)
+                \left( -\frac{\mathrm{i}e^{\mathrm{i}\theta}}{z} \right) \\
+                &= \frac{e^{\mathrm{i}\theta}}{z^2}
+                \left( \sin\theta + \mathrm{i}\cos\theta \right)
+                \end{aligned}
+                \]
+            </div>
+            <p>
+                利用欧拉公式，将括号内部改写：
+            </p>
+            <div class="math-block">
+                \[
+                \sin\theta + \mathrm{i}\cos\theta =
+                \mathrm{i} (\cos\theta - \mathrm{i}\sin\theta)
+                = \mathrm{i} e^{-\mathrm{i}\theta}
+                \]
+            </div>
+            <p>
+                代回渐近式中：
+            </p>
+            <div class="math-block">
+                \[
+                W[j_l(z), h_l^{(1)}(z)] \sim
+                \frac{e^{\mathrm{i}\theta}}{z^2}
+                \left( \mathrm{i} e^{-\mathrm{i}\theta} \right)
+                = \frac{\mathrm{i}}{z^2}
+                \]
+            </div>
+            <p>
+                因为无论 \(z\) 取何值，朗斯基行列式都严格等于
+                \(\frac{C}{z^2}\)，而在大 \(z\) 极限下它趋于
+                \(\frac{\mathrm{i}}{z^2}\)，所以常数必然为 \(C = \mathrm{i}\)。
+            </p>
+            <div class="result-box">
+                由此证得：
+                \[
+                W[j_l(z), h_l^{(1)}(z)] = \frac{\mathrm{i}}{z^2}
+                \]
+            </div>
+
+            <p>
+                令 \(z = kr'\) 代入，跳跃条件方程化为：
+            </p>
+            <div class="math-block">
+                \[
+                A_l \cdot k \cdot \left( \frac{\mathrm{i}}{k^2 r'^2} \right)
+                = -\frac{1}{r'^2}
+                \implies A_l \frac{\mathrm{i}}{k r'^2} = -\frac{1}{r'^2}
+                \]
+            </div>
+            <p>
+                两边消去 \(r'^2\)，直接解得系数：
+            </p>
+            <div class="math-block">
+                \[
+                A_l = -\frac{k}{\mathrm{i}} = \mathrm{i}k
+                \]
+            </div>
+
+            <h3 class="subsection-title">5. 最终结论</h3>
+            <p>
+                将 \(A_l = \mathrm{i}k\) 代回，我们得到径向展开系数：
+            </p>
+            <div class="math-block">
+                \[
+                g_l(r, r') = \mathrm{i}k j_l(kr_<) h_l^{(1)}(kr_>)
+                \]
+            </div>
+            <p>
+                将其代入最初的角向展开式，即得到推迟格林函数的球面波加法定理：
+            </p>
+            <div class="result-box">
+                \[
+                \frac{\mathrm{e}^{\mathrm{i}k|\mathbf{x}-\mathbf{x}'|}}
+                {4\pi|\mathbf{x}-\mathbf{x}'|}
+                =
+                \mathrm{i}k \sum_{l,m} j_l(kr_<) h_l^{(1)}(kr_>)
+                Y_{lm}^*(\mathbf{n}') Y_{lm}(\mathbf{n})
+                \]
+            </div>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- 第8节：多极辐射场展开与系数确定                              -->
+        <!-- ============================================================ -->
+        <section class="section anchor" id="sec-multipole">
+            <h2 class="section-title">
+                多极辐射场展开与系数确定
+                <span class="ref">(5.63 到 5.64, 5.65)</span>
+            </h2>
+
+            <h3 class="subsection-title">1. 磁多极场（M）与电多极场（E）的物理图像</h3>
+            <ul>
+                <li>
+                    <strong>磁多极场（横电波, TE波）</strong>：
+                    <ul>
+                        <li>
+                            定义：满足 \(\mathbf{x} \cdot \mathbf{E}^{(M)} = 0\)，
+                            表示电场无径向分量，完全是横向的。
+                        </li>
+                        <li>
+                            物理图像：由磁性源（如随时间简谐振荡的环形电流、磁偶极子）激发。
+                            其电场线呈闭合环状绕在源周围，天然与向外的径向矢量
+                            \(\mathbf{x}\) 垂直。
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <strong>电多极场（横磁波, TM波）</strong>：
+                    <ul>
+                        <li>
+                            定义：满足 \(\mathbf{x} \cdot \mathbf{H}^{(E)} = 0\)，
+                            表示磁场无径向分量。
+                        </li>
+                        <li>
+                            物理图像：由电偶极子或电多极子源激发。
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h3 class="subsection-title">2. 矢量球谐函数 \(\mathbf{X}_{lm}(\mathbf{n})\) 的引入</h3>
+            <ul>
+                <li>
+                    <strong>定义式</strong>：
+                    <div class="math-block">
+                        \[
+                        \mathbf{X}_{lm}(\mathbf{n}) =
+                        \frac{1}{\sqrt{l(l+1)}} \hat{\mathbf{L}} Y_{lm}(\mathbf{n})
+                        \]
+                    </div>
+                    <p>
+                        其中 \(\hat{\mathbf{L}} = -\mathrm{i}(\mathbf{x} \times \nabla)\)
+                        为轨道角动量算符。
+                    </p>
+                </li>
+                <li>
+                    <strong>归一化因子的来源</strong>：
+                    因为角动量平方算符的本征值关系
+                    \(\hat{\mathbf{L}}^2 Y_{lm} = l(l+1) Y_{lm}\)，
+                    在计算 \(\mathbf{X}_{lm}\) 的模长平方积分时，
+                    利用 \(\hat{\mathbf{L}}\) 的厄米性可得：
+                    <div class="math-block">
+                        \[
+                        \int (\hat{\mathbf{L}} Y_{l'm'})^* \cdot
+                        (\hat{\mathbf{L}} Y_{lm}) \mathrm{d}\Omega
+                        = l(l+1)\delta_{ll'}\delta_{mm'}
+                        \]
+                    </div>
+                    <p>
+                        因此分母必须引入 \(\sqrt{l(l+1)}\) 以满足正交归一化。
+                    </p>
+                </li>
+                <li>
+                    <strong>正交归一关系</strong>：
+                    <ol>
+                        <li>
+                            模式间正交：
+                            \(\int \mathbf{X}_{l'm'}^* \cdot \mathbf{X}_{lm}
+                            \mathrm{d}\Omega = \delta_{ll'}\delta_{mm'}\)
+                        </li>
+                        <li>
+                            交叉投影正交：
+                            \(\int \mathbf{X}_{l'm'}^* \cdot
+                            (\mathbf{x} \times \mathbf{X}_{lm}) \mathrm{d}\Omega = 0\)
+                            <ul>
+                                <li>
+                                    物理直观：
+                                    \(\mathbf{x} \times \mathbf{X}_{lm}\)
+                                    相当于将切向矢量旋转了 \(90^\circ\)，
+                                    与原矢量在球面上处处正交。
+                                </li>
+                            </ul>
+                        </li>
+                    </ol>
+                </li>
+            </ul>
+
+            <h3 class="subsection-title">3. 多极展开系数的确定逻辑</h3>
+            <p>
+                以提取磁多极系数 \(a_M(l, m)\) 为例，其核心推导逻辑可分为三步：
+            </p>
+
+            <h4 class="subsubsection-title">第一步：径向投影（降维消项）</h4>
+            <p>
+                利用电场或磁场的展开式，两边同点乘向径 \(\mathbf{x}\)。
+                由于 \(\mathbf{x} \cdot \mathbf{X}_{lm} = 0\)，
+                电多极项（\(a_E\) 项）直接归零，从而将电、磁多极项完全解耦：
+            </p>
+            <div class="math-block">
+                \[
+                \mathbf{x} \cdot \mathbf{H} =
+                \sum_{l', m'}
+                \left[
+                -\frac{\mathrm{i}}{k} a_M(l', m')
+                \mathbf{x} \cdot \left( \nabla \times g_{l'}(kr) \mathbf{X}_{l'm'} \right)
+                \right]
+                \]
+            </div>
+
+            <h4 class="subsubsection-title">第二步：算符化与标量化</h4>
+            <p>
+                利用矢量恒等式 \(\mathbf{x} \cdot (\nabla \times \mathbf{A})
+                = \mathrm{i} \hat{\mathbf{L}} \cdot \mathbf{A}\)，
+                且 \(\hat{\mathbf{L}}\) 仅对角度微商，不作用于径向函数
+                \(g_{l'}(kr)\)：
+            </p>
+            <div class="math-block">
+                \[
+                \mathbf{x} \cdot \left( \nabla \times g_{l'}(kr) \mathbf{X}_{l'm'} \right)
+                = \mathrm{i} g_{l'}(kr) \hat{\mathbf{L}} \cdot \mathbf{X}_{l'm'}
+                \]
+            </div>
+            <p>
+                代入 \(\mathbf{X}_{l'm'}\) 的定义并利用本征值关系化简：
+            </p>
+            <div class="math-block">
+                \[
+                \hat{\mathbf{L}} \cdot \mathbf{X}_{l'm'}
+                = \sqrt{l'(l'+1)} Y_{l'm'}
+                \]
+            </div>
+            <p>
+                将虚数单位相乘 \((-\mathrm{i}) \times \mathrm{i} = 1\) 后，
+                矢量展开式成功化为纯标量的球谐函数展开：
+            </p>
+            <div class="math-block">
+                \[
+                \mathbf{x} \cdot \mathbf{H} =
+                \sum_{l', m'} \frac{\sqrt{l'(l'+1)}}{k}
+                a_M(l', m') g_{l'}(kr) Y_{l'm'}(\mathbf{n})
+                \]
+            </div>
+
+            <h4 class="subsubsection-title">第三步：正交提取</h4>
+            <p>
+                两边同乘 \(Y_{lm}^*(\mathbf{n})\) 并在全立体角内积分。
+                利用普通标量球谐函数的正交归一性
+                \(\int Y_{lm}^* Y_{l'm'} \mathrm{d}\Omega
+                = \delta_{ll'}\delta_{mm'}\)，消去求和号，隔离出特定系数：
+            </p>
+            <div class="math-block">
+                \[
+                a_M(l, m) g_l(kr) =
+                \frac{k}{\sqrt{l(l+1)}} \int Y_{lm}^* (\mathbf{x} \cdot \mathbf{H})
+                \mathrm{d}\Omega
+                \]
+            </div>
+
+            <h3 class="subsection-title">4. 易错点与核心结论</h3>
+            <ul>
+                <li>
+                    <strong>负号的来源</strong>：
+                    在推导电多极系数 \(a_E(l, m)\) 时，原展开式中自带
+                    \(\frac{\mathrm{i}}{k}\)。当再次利用矢量恒等式产生一个
+                    \(\mathrm{i}\) 时，虚数单位相乘为
+                    \(\frac{\mathrm{i}}{k} \times \mathrm{i} = -\frac{1}{k}\)，
+                    这就是公式中负号的数学来源：
+                    <div class="math-block">
+                        \[
+                        Z_0 a_E(l, m) f_l(kr) =
+                        -\frac{k}{\sqrt{l(l+1)}} \int Y_{lm}^* (\mathbf{x} \cdot \mathbf{E})
+                        \mathrm{d}\Omega
+                        \]
+                    </div>
+                </li>
+                <li>
+                    <strong>方法学启示</strong>：
+                    面对复杂的矢量多极场展开，无需直接对复杂的矢量基底进行积分。
+                    利用“向径向投影”将矢量问题降维为标量问题，是简化计算的灵魂。
+                </li>
+            </ul>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- 第9节：Liénard-Wiechert Potential                            -->
+        <!-- ============================================================ -->
+        <section class="section anchor" id="sec-lw">
+            <h2 class="section-title">
+                Liénard-Wiechert Potential
+                <span class="ref">§37</span>
+            </h2>
+
+            <h3 class="subsection-title">1. 物理背景与基本量定义</h3>
+            <p>
+                在高斯单位制且 \(c=1\) 的协变框架下，我们定义以下物理量：
+            </p>
+            <ul>
+                <li>
+                    <strong>闵氏度规</strong>：采用大多负号约定
+                    \(\eta_{\mu\nu} = \text{diag}(1, -1, -1, -1)\)。
+                </li>
+                <li>
+                    <strong>四维坐标</strong>：
+                    \(x^\mu = (x^0, \mathbf{x}) = (t, \mathbf{x})\)。
+                </li>
+                <li>
+                    <strong>无量纲四速度</strong>：
+                    \(u^\mu(\tau) = \frac{dr^\mu(\tau)}{d\tau}\)，
+                    满足规范化条件 \(u^\mu u_\mu = 1\)。
+                </li>
+                <li>
+                    <strong>四维电流密度</strong>：
+                    运动单点电荷的电流密度写为对固有时间 \(\tau\) 的积分形式：
+                    <div class="math-block">
+                        \[
+                        J^\mu(x') = e \int_{-\infty}^{+\infty} d\tau \,
+                        u^\mu(\tau) \, \delta^{(4)}\big[x' - r(\tau)\big]
+                        \]
+                    </div>
+                </li>
+            </ul>
+            <p>
+                根据高斯单位制下的麦克斯韦方程组，在洛伦兹规范下，
+                四维势 \(A^\mu(x)\) 满足波动方程：
+            </p>
+            <div class="math-block">
+                \[
+                \square A^\mu = 4\pi J^\mu
+                \]
+            </div>
+            <p>
+                其推迟解采用推迟格林函数 \(D^R(x, x')\) 表示为：
+            </p>
+            <div class="math-block">
+                \[
+                A^\mu(x) = 4\pi \int d^4 x' \, D^R(x, x') \, J^\mu(x')
+                \]
+            </div>
+            <p>
+                其中，推迟格林函数的表达式为：
+            </p>
+            <div class="math-block">
+                \[
+                D^R(x, x') = \frac{\theta(x^0 - x'^0) \, \delta\big[(x-x')^2\big]}{2\pi}
+                \]
+            </div>
+
+            <h3 class="subsection-title">2. 第一阶段：消去四维空间积分</h3>
+            <p>
+                我们将格林函数与电流密度代入四维势公式中：
+            </p>
+            <div class="math-block">
+                \[
+                A^\mu(x) =
+                4\pi \int d^4 x'
+                \left\{
+                \frac{\theta(x^0 - x'^0) \, \delta\big[(x-x')^2\big]}{2\pi}
+                \right\}
+                \left\{
+                e \int_{-\infty}^{+\infty} d\tau \, u^\mu(\tau) \,
+                \delta^{(4)}\big[x' - r(\tau)\big]
+                \right\}
+                \]
+            </div>
+            <p>
+                常数项提取到积分外部，前方系数相消为：
+                \(\frac{4\pi}{2\pi} = 2\)
+            </p>
+            <p>
+                整理积分顺序，将对 \(d\tau\) 的积分提到最外层：
+            </p>
+            <div class="math-block">
+                \[
+                A^\mu(x) =
+                2e \int_{-\infty}^{+\infty} d\tau \, u^\mu(\tau)
+                \left\{
+                \int d^4 x' \, \theta(x^0 - x'^0) \,
+                \delta\big[(x-x')^2\big] \,
+                \delta^{(4)}\big[x' - r(\tau)\big]
+                \right\}
+                \]
+            </div>
+            <p>
+                利用四维狄拉克 \(\delta^{(4)}\big[x' - r(\tau)\big]\)
+                的筛选性质对四维时空坐标 \(x'\) 积分。
+                这使得大括号内的 \(x'\) 被替换为 \(r(\tau)\)：
+            </p>
+            <div class="math-block">
+                \[
+                \int d^4 x' \, \theta(x^0 - x'^0) \,
+                \delta\big[(x-x')^2\big] \,
+                \delta^{(4)}\big[x' - r(\tau)\big]
+                =
+                \theta\big(x^0 - r^0(\tau)\big) \,
+                \delta\big[(x - r(\tau))^2\big]
+                \]
+            </div>
+            <p>
+                至此，我们消去了四维空间积分，得到固有时间积分表达式：
+            </p>
+            <div class="math-block">
+                \[
+                A^\mu(x) =
+                2e \int_{-\infty}^{+\infty} d\tau \, u^\mu(\tau) \,
+                \theta\big(x^0 - r^0(\tau)\big) \,
+                \delta\big[ (x - r(\tau))^2 \big]
+                \]
+            </div>
+
+            <h3 class="subsection-title">3. 第二阶段：对固有时间 \(\tau\) 积分</h3>
+            <p>
+                我们需要对上述积分中含有平方项的 \(\delta\) 函数进行化简：
+            </p>
+            <div class="math-block">
+                \[
+                \delta\big( f(\tau) \big) =
+                \sum_{i} \frac{\delta(\tau - \tau_i)}{|f'(\tau_i)|}
+                \]
+            </div>
+            <p>
+                其中，复合自变量函数定义为：
+                \(f(\tau) = (x - r(\tau))^2\)
+            </p>
+
+            <h4 class="subsubsection-title">3.1 寻找方程的零点 \(f(\tau) = 0\)</h4>
+            <p>
+                将四维矢量平方展开为时空分量形式：
+            </p>
+            <div class="math-block">
+                \[
+                f(\tau) = \big(x^0 - r^0(\tau)\big)^2
+                - \big(\mathbf{x} - \mathbf{r}(\tau)\big)^2 = 0
+                \]
+            </div>
+            <p>
+                解得：
+            </p>
+            <div class="math-block">
+                \[
+                x^0 - r^0(\tau) = \pm \big|\mathbf{x} - \mathbf{r}(\tau)\big|
+                \]
+            </div>
+            <p>
+                结合因果律条件
+                \(\theta\big(x^0 - r^0(\tau)\big) &gt; 0\)，
+                我们舍去负号，仅保留正根。
+                该方程的唯一实根定义为推迟时间 \(\tau_0\)：
+            </p>
+            <div class="math-block">
+                \[
+                x^0 - r^0(\tau_0) = \big|\mathbf{x} - \mathbf{r}(\tau_0)\big|
+                \]
+            </div>
+
+            <h4 class="subsubsection-title">3.2 计算导数 \(f'(\tau)\)</h4>
+            <p>
+                对 \(f(\tau)\) 关于自变量 \(\tau\) 求导：
+            </p>
+            <div class="math-block">
+                \[
+                f'(\tau) =
+                \frac{d}{d\tau}
+                \left[
+                \eta_{\alpha\beta} \big(x^\alpha - r^\alpha(\tau)\big)
+                \big(x^\beta - r^\beta(\tau)\big)
+                \right]
+                \]
+            </div>
+            <div class="math-block">
+                \[
+                f'(\tau) =
+                2 \eta_{\alpha\beta} \big(x^\alpha - r^\alpha(\tau)\big)
+                \left( -\frac{dr^\beta}{d\tau} \right)
+                \]
+            </div>
+            <p>
+                利用四速度的定义 \(u^\beta = \frac{dr^\beta}{d\tau}\)，代入上式：
+            </p>
+            <div class="math-block">
+                \[
+                f'(\tau) =
+                -2 \eta_{\alpha\beta} \big(x^\alpha - r^\alpha(\tau)\big)
+                u^\beta(\tau) = -2 u(\tau) \cdot \big[x - r(\tau)\big]
+                \]
+            </div>
+            <p>
+                由于四维内积 \(u \cdot [x-r] &gt; 0\) 恒大于零，
+                取绝对值时可以直接消去负号：
+            </p>
+            <div class="math-block">
+                \[
+                |f'(\tau_0)| = 2 u(\tau_0) \cdot \big[x - r(\tau_0)\big]
+                \]
+            </div>
+
+            <h4 class="subsubsection-title">3.3 代入一阶 \(\delta\) 表达式</h4>
+            <p>
+                在推迟时间 \(\tau_0\) 附近，该 \(\delta\) 函数化简为：
+            </p>
+            <div class="math-block">
+                \[
+                \delta\big[ (x - r(\tau))^2 \big] =
+                \frac{\delta(\tau - \tau_0)}
+                {2 u(\tau_0) \cdot \big[x - r(\tau_0)\big]}
+                \]
+            </div>
+
+            <h3 class="subsection-title">4. 第三阶段：消去系数与最终公式</h3>
+            <p>
+                我们将化简后的式子代回到固有时间积分中：
+            </p>
+            <div class="math-block">
+                \[
+                A^\mu(x) =
+                2e \int_{-\infty}^{+\infty} d\tau \, u^\mu(\tau) \,
+                \theta\big(x^0 - r^0(\tau)\big)
+                \left[
+                \frac{\delta(\tau - \tau_0)}
+                {2 u(\tau_0) \cdot \big[x - r(\tau_0)\big]}
+                \right]
+                \]
+            </div>
+            <ol>
+                <li>
+                    <strong>常数相消</strong>：
+                    分子中由格林函数化简带来的系数 \(2\)，
+                    与分母中求导带来的系数 \(2\) 相互抵消。
+                </li>
+                <li>
+                    <strong>执行积分</strong>：
+                    利用 \(\delta(\tau - \tau_0)\) 的筛选性质，
+                    消去积分号与 \(d\tau\)，将剩余各项中的 \(\tau\) 替换为
+                    \(\tau_0\)。
+                </li>
+                <li>
+                    <strong>阶跃函数取值</strong>：
+                    由于 \(\tau_0\) 处满足因果律条件，
+                    \(\theta(x^0 - r^0(\tau_0)) = 1\)。
+                </li>
+            </ol>
+            <p>
+                最终，我们得出高斯单位制下（\(c=1\)）的四维协变形式
+                Liénard-Wiechert 势公式：
+            </p>
+            <div class="result-box">
+                \[
+                A^\mu(x) =
+                \left. \frac{e \, u^\mu(\tau)}{u \cdot [x - r(\tau)]}
+                \right|_{\tau = \tau_0}
+                \]
+            </div>
+
+            <h3 class="subsection-title">5. 总结与物理图景</h3>
+            <p>
+                在这一特定的单位制约定（高斯单位制且 \(c=1\)）下，
+                推导过程展现出了数学结构的自洽性：
+            </p>
+            <ol>
+                <li>
+                    波动方程与推迟格林函数的系数（\(4\pi\) 与
+                    \(\frac{1}{2\pi}\)）结合，在分子产生系数 \(2\)。
+                </li>
+                <li>
+                    四维时空间距平方的导数在分母产生系数 \(2\)。
+                </li>
+                <li>
+                    两者在最后一步积分时相消，使最终结果不含多余常数。
+                </li>
+            </ol>
+            <p>
+                该公式分母上的内积 \(u \cdot [x-r]\) 反映了相对论效应下的多普勒修正。
+                在具体计算粒子辐射或电磁势分布时，这一协变形式能够极为方便地
+                转换到任意惯性参考系中。
+            </p>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- 第10节：相对论性加速器辐射功率推导                          -->
+        <!-- ============================================================ -->
+        <section class="section anchor" id="sec-radiation-power">
+            <h2 class="section-title">
+                相对论性加速器辐射功率推导
+                <span class="ref">(6.35, 6.36)</span>
+            </h2>
+
+            <p>
+                通过经典电动力学中的<strong>李纳（Liénard）公式</strong>。
+            </p>
+
+            <h3 class="subsection-title">1. 李纳公式的双重表示</h3>
+            <p>
+                李纳公式是拉莫尔（Larmor）非相对论辐射公式在相对论下的协变推广。
+                它有两种常用的数学表达形式：
+            </p>
+            <ul>
+                <li>
+                    <strong>四维矢量表示：</strong>
+                    <div class="math-block">
+                        \[
+                        P = -\frac{2}{3} \frac{e^2}{m^2 c^3}
+                        \frac{dp^\mu}{d\tau} \cdot \frac{dp_\mu}{d\tau}
+                        \]
+                    </div>
+                    <p>
+                        其中 \(p^\mu = (E/c, \mathbf{p})\) 为粒子的四维动量，
+                        \(\tau\) 为固有时间（\(d\tau = dt/\gamma\)）。
+                    </p>
+                </li>
+                <li>
+                    <strong>三维运动学表示：</strong>
+                    <div class="math-block">
+                        \[
+                        P = \frac{2}{3} \frac{e^2}{c} \gamma^6
+                        \left[ (\dot{\boldsymbol{\beta}})^2
+                        - (\boldsymbol{\beta} \times \dot{\boldsymbol{\beta}})^2 \right]
+                        \]
+                    </div>
+                    <p>
+                        其中 \(\boldsymbol{\beta} = \mathbf{v}/c\)，
+                        \(\dot{\boldsymbol{\beta}} = \mathbf{a}/c\)。
+                    </p>
+                </li>
+            </ul>
+
+            <h3 class="subsection-title">2. 直线加速器（共线运动，\(\boldsymbol{\beta} \parallel \dot{\boldsymbol{\beta}}\)）</h3>
+            <p>
+                在直线加速器中，粒子做一维直线运动，速度 \(\boldsymbol{\beta}\)
+                与加速度 \(\dot{\boldsymbol{\beta}}\) 平行。
+            </p>
+
+            <h4 class="subsubsection-title">2.1 运动学方法推导</h4>
+            <p>
+                由于方向平行，叉乘项为零：
+                \(\boldsymbol{\beta} \times \dot{\boldsymbol{\beta}} = 0\)。
+                代入式 (2) 得到：
+            </p>
+            <div class="math-block">
+                \[
+                P_{\text{linear}} = \frac{2}{3} \frac{e^2}{c} \gamma^6 \dot{\beta}^2
+                \]
+            </div>
+            <p>
+                相对论性三维动量大小为 \(p = \gamma m v = \gamma m \beta c\)。
+                对其求时间 \(t\) 的导数：
+            </p>
+            <div class="math-block">
+                \[
+                \frac{dp}{dt} = \frac{d}{dt} (\gamma m \beta c)
+                = m c \dot{\beta} \gamma^3
+                \]
+            </div>
+            <p>
+                <em>（注：利用了关系式 \(\dot{\gamma} = \gamma^3 \beta \dot{\beta}\)）</em>。
+            </p>
+            <p>
+                解出 \(\dot{\beta}\) 并代入式 (3) 中，即可得到辐射功率：
+            </p>
+            <div class="math-block">
+                \[
+                P_{\text{linear}} =
+                \frac{2}{3} \frac{e^2}{c} \gamma^6
+                \left( \frac{1}{\gamma^3 m c} \frac{dp}{dt} \right)^2
+                = \frac{2}{3} \frac{e^2}{m^2 c^3}
+                \left( \frac{dp}{dt} \right)^2
+                \]
+            </div>
+
+            <h4 class="subsubsection-title">2.2 四维矢量方法推导</h4>
+            <p>
+                在直线运动中，外力做功的功率为
+                \(\frac{dE}{dt} = \mathbf{F} \cdot \mathbf{v}
+                = v \frac{dp}{dt} = \beta c \frac{dp}{dt}\)。
+            </p>
+            <p>
+                代入四维动量微商的平方：
+            </p>
+            <div class="math-block">
+                \[
+                \frac{dp^\mu}{d\tau} \cdot \frac{dp_\mu}{d\tau}
+                =
+                \gamma^2
+                \left[
+                \frac{1}{c^2} \left( \frac{dE}{dt} \right)^2
+                - \left( \frac{dp}{dt} \right)^2
+                \right]
+                =
+                \gamma^2 \left( \beta^2 - 1 \right)
+                \left(\frac{dp}{dt}\right)^2
+                = -\left(\frac{dp}{dt}\right)^2
+                \]
+            </div>
+            <p>
+                将该结果代回式 (1)，同样得到公式 (5)。
+            </p>
+
+            <h3 class="subsection-title">3. 环形加速器（垂直运动，\(\boldsymbol{\beta} \perp \dot{\boldsymbol{\beta}}\)）</h3>
+            <p>
+                在环形加速器中，粒子做圆周运动，外力充当向心力，
+                其速度 \(\boldsymbol{\beta}\) 垂直于向心加速度
+                \(\dot{\boldsymbol{\beta}}\)。
+            </p>
+
+            <h4 class="subsubsection-title">3.1 运动学方法推导</h4>
+            <p>
+                由于方向垂直，叉乘项为最大值：
+                \((\boldsymbol{\beta} \times \dot{\boldsymbol{\beta}})^2
+                = \beta^2 \dot{\beta}^2\)。代入式 (2) 括号内化简：
+            </p>
+            <div class="math-block">
+                \[
+                (\dot{\boldsymbol{\beta}})^2
+                - (\boldsymbol{\beta} \times \dot{\boldsymbol{\beta}})^2
+                = \dot{\beta}^2 (1 - \beta^2)
+                = \frac{\dot{\beta}^2}{\gamma^2}
+                \]
+            </div>
+            <p>
+                从而得到功率形式：
+            </p>
+            <div class="math-block">
+                \[
+                P_{\text{circular}} =
+                \frac{2}{3} \frac{e^2}{c} \gamma^6
+                \left( \frac{\dot{\beta}^2}{\gamma^2} \right)
+                = \frac{2}{3} \frac{e^2}{c} \gamma^4 \dot{\beta}^2
+                \]
+            </div>
+            <p>
+                若轨道半径为 \(\rho\)，向心加速度大小为
+                \(a = \frac{v^2}{\rho}\)，即
+                \(\dot{\beta} = \frac{a}{c} = \frac{\beta^2 c}{\rho}\)。
+                代入式 (7) 得到<strong>同步辐射经典功率公式</strong>：
+            </p>
+            <div class="math-block">
+                \[
+                P_{\text{circular}} =
+                \frac{2}{3} \frac{e^2 c}{\rho^2} \beta^4 \gamma^4
+                \]
+            </div>
+
+            <h4 class="subsubsection-title">3.2 用动量变化率表达</h4>
+            <p>
+                <strong>重要概念：</strong>
+                在圆周运动中，动量的大小 \(p = |\mathbf{p}|\) 是常数，
+                因此动量标量的变化率为 \(d|\mathbf{p}|/dt = 0\)。
+                此处的“动量变化率”是指<strong>动量矢量变化率的大小</strong>
+                （即向心力的大小）：
+            </p>
+            <div class="math-block">
+                \[
+                \left| \frac{d\mathbf{p}}{dt} \right|
+                = F_{\text{centripetal}} = \gamma m a
+                = \gamma m \frac{\beta^2 c^2}{\rho}
+                \]
+            </div>
+            <p>
+                将该式写为
+                \(\frac{\beta^4}{\rho^2}
+                = \frac{1}{\gamma^2 m^2 c^4}
+                \left| \frac{d\mathbf{p}}{dt} \right|^2\)，
+                并代回同步辐射功率公式 (8)，可得：
+            </p>
+            <div class="math-block">
+                \[
+                P_{\text{circular}} =
+                \frac{2}{3} \frac{e^2 c \gamma^4}{\gamma^2 m^2 c^4}
+                \left| \frac{d\mathbf{p}}{dt} \right|^2
+                = \frac{2}{3} \frac{e^2}{m^2 c^3} \gamma^2
+                \left| \frac{d\mathbf{p}}{dt} \right|^2
+                \]
+            </div>
+
+            <h3 class="subsection-title">4. 对标分析与加速器设计启示</h3>
+            <p>
+                通过比较两个最终形式，我们能够得出极具工程价值的物理结论：
+            </p>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>维度 / 类型</th>
+                            <th>直线加速器 (Linear)</th>
+                            <th>环形加速器 (Circular)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>受力几何关系</strong></td>
+                            <td>\(\boldsymbol{\beta} \parallel \dot{\boldsymbol{\beta}}\)</td>
+                            <td>\(\boldsymbol{\beta} \perp \dot{\boldsymbol{\beta}}\)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>三维运动表示</strong></td>
+                            <td>
+                                \(P_{\text{linear}} =
+                                \frac{2}{3}\frac{e^2}{c}\gamma^6\dot{\beta}^2\)
+                            </td>
+                            <td>
+                                \(P_{\text{circular}} =
+                                \frac{2}{3}\frac{e^2 c}{\rho^2}\beta^4\gamma^4\)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>动量变化率表示</strong></td>
+                            <td>
+                                \(P_{\text{linear}} =
+                                \frac{2}{3} \frac{e^2}{m^2 c^3}
+                                \left( \frac{dp}{dt} \right)^2\)
+                            </td>
+                            <td>
+                                \(P_{\text{circular}} =
+                                \frac{2}{3} \frac{e^2}{m^2 c^3} \gamma^2
+                                \left\| \frac{d\mathbf{p}}{dt} \right\|^2\)
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="note-box">
+                <span class="label">结论与工程启示：</span>
+                <ol>
+                    <li>
+                        <strong>\(\gamma^2\) 放大因子的危害：</strong>
+                        在施加相同大小的外力（动量变化率相同）的前提下，
+                        环形加速器的辐射损失是直线加速器的
+                        <strong>\(\gamma^2\) 倍</strong>。
+                    </li>
+                    <li>
+                        <strong>轻粒子（电子）的加速器设计：</strong>
+                        高能电子的质量 \(m_e\) 极小，因此在加速阶段其
+                        \(\gamma\) 极易达到 \(10^5 \sim 10^6\) 量级。
+                        因为 \(\gamma^2 \approx 10^{10} \sim 10^{12}\)
+                        的放大效应，高能电子在环形轨道中因同步辐射损失的能量是难以接受的。
+                        因此，未来的高能电子对撞机（如 ILC、CLIC）均被设计为
+                        <strong>直线加速器</strong>（Linac）。
+                    </li>
+                    <li>
+                        <strong>重粒子（质子）的加速器设计：</strong>
+                        质子质量是电子的 \(1836\) 倍。在相同能量下，质子的
+                        \(\gamma\) 值要小得多，其同步辐射损失仍在工程可承受范围内。
+                        因此，世界最高能量的质子加速器（如 LHC）依然采用技术更成熟、
+                        轨道可复用的<strong>环形加速器</strong>设计。
+                    </li>
+                </ol>
+            </div>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- 第11节：周期性运动辐射谱的计算                               -->
+        <!-- ============================================================ -->
+        <section class="section anchor" id="sec-periodic-spectrum">
+            <h2 class="section-title">
+                周期性运动辐射谱的计算
+                <span class="ref">(6.52)</span>
+            </h2>
+            <p style="margin-bottom: 10px;">
+                将 \(\mathbf{A}_n\) 转换至发射时间 \(t'\)
+            </p>
+
+            <h3 class="subsection-title">1. 问题背景与挑战</h3>
+            <p>
+                初始的傅里叶系数 \(\mathbf{A}_n\) 是对观测者时间 \(t\) 的积分：
+            </p>
+            <div class="math-block">
+                \[
+                \mathbf{A}_n = \frac{1}{T} \int_{-T/2}^{T/2}
+                \mathbf{A}(t) e^{in\omega_0 t} dt
+                \]
+            </div>
+            <p>
+                其中 \(\mathbf{A}(t) = \sqrt{\frac{c}{4\pi}} R \mathbf{E}_{\text{rad}}(t)\)。
+            </p>
+            <p>
+                <strong>主要挑战：</strong>
+                由于粒子的轨道 \(\mathbf{r}(t')\)、速度
+                \(\boldsymbol{\beta}(t')\) 和加速度
+                \(\dot{\boldsymbol{\beta}}(t')\) 均是以
+                <strong>粒子发射时间 \(t'\)</strong> 为自变量给出的，
+                直接在观测者时间 \(t\) 域内做积分极其困难。
+                因此，必须将积分自变量换元为 \(t'\)。
+            </p>
+
+            <h3 class="subsection-title">2. 自变量换元（从 \(t\) 转换至 \(t'\)）</h3>
+            <p>
+                根据观测者时间与推迟时间的关系：
+            </p>
+            <div class="math-block">
+                \[
+                t = t' + \frac{R(t')}{c}
+                \]
+            </div>
+            <p>
+                对两边微分可得时间膨胀因子：
+            </p>
+            <div class="math-block">
+                \[
+                dt = (1 - \boldsymbol{\beta} \cdot \mathbf{n}) dt'
+                \]
+            </div>
+            <p>
+                将利纳-维谢尔（Liénard-Wiechert）辐射电场
+                \(\mathbf{E}_{\text{rad}}(t)\) 形式代入
+                \(\mathbf{A}(t)\)，并代入上述微分变换。
+                在远区近似下（周期 \(T' \approx T\)），积分式转换为：
+            </p>
+            <div class="math-block">
+                \[
+                \mathbf{A}_n =
+                \frac{e}{T \sqrt{4\pi c}}
+                \int_{-T'/2}^{T'/2}
+                \frac{\mathbf{n} \times [(\mathbf{n} - \boldsymbol{\beta})
+                    \times \dot{\boldsymbol{\beta}}]}
+                {(1 - \boldsymbol{\beta} \cdot \mathbf{n})^3}
+                e^{in\omega_0 t} (1 - \boldsymbol{\beta} \cdot \mathbf{n}) dt'
+                \]
+            </div>
+            <p>
+                约去分母的一项后得到：
+            </p>
+            <div class="math-block">
+                \[
+                \mathbf{A}_n =
+                \frac{e}{T \sqrt{4\pi c}}
+                \int_{-T'/2}^{T'/2}
+                \frac{\mathbf{n} \times [(\mathbf{n} - \boldsymbol{\beta})
+                    \times \dot{\boldsymbol{\beta}}]}
+                {(1 - \boldsymbol{\beta} \cdot \mathbf{n})^2}
+                e^{in\omega_0 \left(t' + \frac{R(t')}{c}\right)} dt'
+                \]
+            </div>
+            <p>
+                该式的被积函数中含有加速度 \(\dot{\boldsymbol{\beta}}\)
+                以及分母奇异项 \((1 - \boldsymbol{\beta} \cdot \mathbf{n})^2\)，
+                直接积分依然非常繁琐。
+            </p>
+
+            <h3 class="subsection-title">3. 核心技巧：分部积分消去加速度</h3>
+            <p>
+                为了进一步简化，利用远区近似下单位方向矢量
+                \(\mathbf{n}\) 近似为常矢量的特点，引入以下微分恒等式：
+            </p>
+            <div class="math-block">
+                \[
+                \frac{\mathbf{n} \times [(\mathbf{n} - \boldsymbol{\beta})
+                    \times \dot{\boldsymbol{\beta}}]}
+                {(1 - \boldsymbol{\beta} \cdot \mathbf{n})^2}
+                =
+                \frac{d}{dt'}
+                \left[
+                \frac{\mathbf{n} \times (\mathbf{n} \times \boldsymbol{\beta})}
+                {1 - \boldsymbol{\beta} \cdot \mathbf{n}}
+                \right]
+                \]
+            </div>
+            <p>
+                将该恒等式代回 \(\mathbf{A}_n\)，并进行<strong>分部积分</strong>：
+            </p>
+            <div class="math-block">
+                \[
+                \mathbf{A}_n =
+                \frac{e}{T \sqrt{4\pi c}}
+                \left\{
+                \left.
+                \left[
+                \frac{\mathbf{n} \times (\mathbf{n} \times \boldsymbol{\beta})}
+                {1 - \boldsymbol{\beta} \cdot \mathbf{n}}
+                e^{in\omega_0 (t' + R/c)}
+                \right]
+                \right|_{-T'/2}^{T'/2}
+                -
+                \int_{-T'/2}^{T'/2}
+                \frac{\mathbf{n} \times (\mathbf{n} \times \boldsymbol{\beta})}
+                {1 - \boldsymbol{\beta} \cdot \mathbf{n}}
+                \frac{d}{dt'}
+                \left( e^{in\omega_0 (t' + R/c)} \right) dt'
+                \right\}
+                \]
+            </div>
+
+            <h4 class="subsubsection-title">边界项与导数项的化简：</h4>
+            <ol>
+                <li>
+                    <strong>边界项为 0：</strong>
+                    由于粒子做完全周期性运动，物理量在区间两端点
+                    \(\pm T'/2\) 处的值相同，因此边界项（第一项）完全对消为
+                    \(0\)。
+                </li>
+                <li>
+                    <strong>指数项对 \(t'\) 求导：</strong>
+                    <div class="math-block">
+                        \[
+                        \frac{d}{dt'}
+                        \left[ in\omega_0 \left( t' + \frac{R(t')}{c} \right) \right]
+                        = in\omega_0 (1 - \boldsymbol{\beta} \cdot \mathbf{n})
+                        \]
+                    </div>
+                </li>
+            </ol>
+            <p>
+                将导数项代回，积分式中的
+                \((1 - \boldsymbol{\beta} \cdot \mathbf{n})\)
+                分子分母<strong>完美约去</strong>：
+            </p>
+            <div class="math-block">
+                \[
+                \mathbf{A}_n =
+                -\frac{i n \omega_0 e}{T \sqrt{4\pi c}}
+                \int_{-T'/2}^{T'/2}
+                [\mathbf{n} \times (\mathbf{n} \times \boldsymbol{\beta})]
+                e^{in\omega_0 \left(t' + \frac{R(t')}{c}\right)} dt'
+                \]
+            </div>
+
+            <h3 class="subsection-title">4. 远区近似与最终形式</h3>
+            <p>
+                在距离源极远处（\(R_0 \gg r(t')\)），距离 \(R(t')\) 可做一级泰勒展开：
+            </p>
+            <div class="math-block">
+                \[
+                R(t') = |\mathbf{x} - \mathbf{r}(t')|
+                \approx R_0 - \mathbf{n} \cdot \mathbf{r}(t')
+                \]
+            </div>
+            <p>
+                其中常数相位因子 \(e^{in\omega_0 R_0/c}\) 在求模平方
+                \(|\mathbf{A}_n|^2\) 时不产生贡献，可直接忽略。
+                因此，得到 \(\mathbf{A}_n\) 的最终标准公式：
+            </p>
+            <div class="math-block">
+                \[
+                \mathbf{A}_n =
+                -\frac{i n \omega_0 e}{T \sqrt{4\pi c}}
+                \int_{-T'/2}^{T'/2}
+                [\mathbf{n} \times (\mathbf{n} \times \boldsymbol{\beta})]
+                e^{in\omega_0 \left(t' - \frac{\mathbf{n} \cdot \mathbf{r}(t')}{c}\right)} dt'
+                \]
+            </div>
+
+            <h3 class="subsection-title">5. 最终第 \(n\) 谐波辐射功率角分布的获得</h3>
+            <p>
+                为了得到具体在每一个分立谱线上的辐射功率，
+                我们需要将求得的 \(\mathbf{A}_n\) 代回第 \(n\) 谐波的平均辐射功率角分布公式中。
+            </p>
+            <p>
+                首先，为了书写和计算简便，我们在不引起混淆的情况下，
+                将粒子发射时间（推迟时间）\(t'\) 简写为 \(t\)。
+                此时 \(\mathbf{A}_n\) 为：
+            </p>
+            <div class="math-block">
+                \[
+                \mathbf{A}_n =
+                -\frac{i n \omega_0 e}{T \sqrt{4\pi c}}
+                \int_{-T/2}^{T/2}
+                [\mathbf{n} \times (\mathbf{n} \times \boldsymbol{\beta}(t))]
+                e^{in\omega_0 \left(t - \frac{\mathbf{n} \cdot \mathbf{r}(t)}{c}\right)} dt
+                \]
+            </div>
+            <p>
+                利用此前由巴塞瓦尔定理推导出的正频率分量平均功率关系：
+            </p>
+            <div class="math-block">
+                \[
+                \frac{dP_n}{d\Omega} = 2|\mathbf{A}_n|^2
+                \]
+            </div>
+            <p>
+                我们将 \(\mathbf{A}_n\) 的表达式代入其中，对其求模平方：
+            </p>
+            <div class="math-block">
+                \[
+                \frac{dP_n}{d\Omega} =
+                2 \cdot
+                \left| -\frac{i n \omega_0 e}{T \sqrt{4\pi c}} \right|^2
+                \cdot
+                \left|
+                \int_{-T/2}^{T/2}
+                [\mathbf{n} \times (\mathbf{n} \times \boldsymbol{\beta}(t))]
+                e^{in\omega_0 \left(t - \frac{\mathbf{n} \cdot \mathbf{r}(t)}{c}\right)} dt
+                \right|^2
+                \]
+            </div>
+            <p>
+                对系数项求平方：
+            </p>
+            <div class="math-block">
+                \[
+                \left| -\frac{i n \omega_0 e}{T \sqrt{4\pi c}} \right|^2
+                = \frac{e^2 n^2 \omega_0^2}{4\pi c T^2}
+                \]
+            </div>
+            <p>
+                两倍的系数项相乘，分母中的 \(4\pi c\) 与分子上的 \(2\) 约分，
+                变为 \(2\pi c\)：
+            </p>
+            <div class="math-block">
+                \[
+                2 \cdot \frac{e^2 n^2 \omega_0^2}{4\pi c T^2}
+                = \frac{e^2 n^2 \omega_0^2}{2\pi c T^2}
+                \]
+            </div>
+            <p>
+                最终，我们便得到了完全周期性运动粒子在
+                <strong>第 \(n\) 个谐波分量上的平均辐射功率角分布公式</strong>：
+            </p>
+            <div class="result-box">
+                \[
+                \frac{dP_n}{d\Omega} =
+                \frac{e^2 n^2 \omega_0^2}{2\pi c T^2}
+                \left|
+                \int_{-T/2}^{T/2}
+                [\mathbf{n} \times (\mathbf{n} \times \boldsymbol{\beta}(t))]
+                e^{in\omega_0 \left(t - \frac{\mathbf{n} \cdot \mathbf{r}(t)}{c}\right)} dt
+                \right|^2
+                \]
+            </div>
+
+            <h3 class="subsection-title">6. 核心物理总结</h3>
+            <p>
+                通过上述推导，公式在数学和物理上获得了极大的简化：
+            </p>
+            <ul>
+                <li>
+                    <strong>去除了加速度项 \(\dot{\boldsymbol{\beta}}\)：</strong>
+                    积分项中只保留了粒子的轨道 \(\mathbf{r}(t')\) 和速度
+                    \(\boldsymbol{\beta}(t')\)，计算时无需再去对速度求导。
+                </li>
+                <li>
+                    <strong>消除了分母奇异性：</strong>
+                    原本分母上的 \((1 - \boldsymbol{\beta} \cdot \mathbf{n})\)
+                    项在超相对论极限下（\(\beta \to 1\)）会趋于 0 导致数值发散，
+                    化简后的公式完全避免了这一数值不稳定性。
+                </li>
+                <li>
+                    <strong>物理图像：</strong>
+                    该式生动地展现了辐射功率谱由轨道运动的相位调制
+                    \(e^{-in\omega_0 \mathbf{n}\cdot\mathbf{r}/c}\) 决定，
+                    是分析同步辐射、回旋辐射等周期性电动力学问题的基石公式。
+                </li>
+            </ul>
+        </section>
+
+    </div>
+    <!-- end container -->
+
+    <script>
+        const sidebar = document.getElementById('sidebar');
+        const toggle = document.getElementById('sidebarToggle');
+        const backdrop = document.getElementById('sidebarBackdrop');
+        const container = document.querySelector('.container');
+        const progressBar = document.getElementById('progressBar');
+        const backToTop = document.getElementById('backToTop');
+
+        // ========== 侧边栏 ==========
+        function openSidebar() {
+            sidebar.classList.add('open');
+            backdrop.classList.add('open');
+            toggle.classList.add('open');
+            container.classList.add('blur');
+            document.body.style.overflow = 'hidden';
+            // 焦点移到侧边栏第一个链接
+            const firstLink = sidebar.querySelector('.sidebar-nav a');
+            if (firstLink) firstLink.focus();
+        }
+
+        function closeSidebar() {
+            sidebar.classList.remove('open');
+            backdrop.classList.remove('open');
+            toggle.classList.remove('open');
+            container.classList.remove('blur');
+            document.body.style.overflow = '';
+            // 焦点返回汉堡按钮
+            toggle.focus();
+        }
+
+        // 侧边栏焦点陷阱：Tab 键在侧边栏内循环
+        sidebar.addEventListener('keydown', function (e) {
+            if (e.key !== 'Tab') return;
+            const focusable = sidebar.querySelectorAll('a, button, [tabindex]:not([tabindex="-1"])');
+            const first = focusable[0];
+            const last = focusable[focusable.length - 1];
+            if (e.shiftKey && document.activeElement === first) {
+                e.preventDefault();
+                last.focus();
+            } else if (!e.shiftKey && document.activeElement === last) {
+                e.preventDefault();
+                first.focus();
+            }
+        });
+
+        toggle.addEventListener('pointerdown', function (e) {
+            e.preventDefault();
+            sidebar.classList.contains('open') ? closeSidebar() : openSidebar();
+        });
+
+        backdrop.addEventListener('pointerdown', closeSidebar);
+
+        sidebar.querySelectorAll('a').forEach(function (link) {
+            link.addEventListener('pointerdown', function () {
+                closeSidebar();
+            });
+        });
+
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && sidebar.classList.contains('open')) {
+                closeSidebar();
+            }
+        });
+
+        window.addEventListener('resize', function () {
+            if (window.innerWidth > 1024) {
+                closeSidebar();
+            }
+        });
+
+        // ========== 滑动手势关闭侧边栏 ==========
+        let touchStartX = 0;
+        let touchStartY = 0;
+
+        document.addEventListener('touchstart', function (e) {
+            touchStartX = e.touches[0].clientX;
+            touchStartY = e.touches[0].clientY;
+        }, { passive: true });
+
+        document.addEventListener('touchend', function (e) {
+            if (!sidebar.classList.contains('open')) return;
+            const touchEndX = e.changedTouches[0].clientX;
+            const touchEndY = e.changedTouches[0].clientY;
+            const diffX = touchEndX - touchStartX;
+            const diffY = touchEndY - touchStartY;
+            // 左滑超过 50px 且水平位移大于垂直位移
+            if (diffX < -50 && Math.abs(diffX) > Math.abs(diffY)) {
+                closeSidebar();
+            }
+        }, { passive: true });
+
+        // ========== 阅读进度条 ==========
+        function getDocHeight() {
+            return Math.max(
+                document.body.scrollHeight,
+                document.documentElement.scrollHeight,
+                document.body.offsetHeight,
+                document.documentElement.offsetHeight
+            );
+        }
+
+        function updateProgressBar() {
+            const scrollTop = window.scrollY;
+            const winHeight = window.innerHeight;
+            const docHeight = getDocHeight() - winHeight;
+            const progress = docHeight > 0 ? Math.min((scrollTop / docHeight) * 100, 100) : 0;
+            progressBar.style.width = progress + '%';
+        }
+
+        // ========== 回到顶部 ==========
+        function updateBackToTop() {
+            if (window.scrollY > 200) {
+                backToTop.classList.add('visible');
+            } else {
+                backToTop.classList.remove('visible');
+            }
+        }
+
+        backToTop.addEventListener('pointerdown', function (e) {
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // ========== 侧边栏 Scrollspy ==========
+        function updateScrollspy() {
+            const sections = document.querySelectorAll('.section');
+            const navLinks = sidebar.querySelectorAll('.sidebar-nav a');
+            let currentSection = null;
+
+            sections.forEach(function (section) {
+                const rect = section.getBoundingClientRect();
+                if (rect.top <= 120) {
+                    currentSection = section.id;
+                }
+            });
+
+            navLinks.forEach(function (link) {
+                link.classList.remove('active');
+                if (currentSection && link.getAttribute('href') === '#' + currentSection) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        // 点击链接时立即高亮
+        sidebar.querySelectorAll('a').forEach(function (link) {
+            link.addEventListener('pointerdown', function () {
+                sidebar.querySelectorAll('a').forEach(function (l) {
+                    l.classList.remove('active');
+                });
+                link.classList.add('active');
+            });
+        });
+
+        // URL hash 加载时高亮对应链接
+        if (window.location.hash) {
+            const hashLink = sidebar.querySelector('a[href="' + window.location.hash + '"]');
+            if (hashLink) hashLink.classList.add('active');
+        }
+
+        // ========== 公式溢出检测 ==========
+        function checkMathOverflow() {
+            document.querySelectorAll('.math-block').forEach(function (block) {
+                if (block.scrollWidth > block.clientWidth) {
+                    block.classList.add('scrollable');
+                } else {
+                    block.classList.remove('scrollable');
+                }
+            });
+        }
+
+        // ========== 统一滚动事件监听 ==========
+        let ticking = false;
+        window.addEventListener('scroll', function () {
+            if (!ticking) {
+                window.requestAnimationFrame(function () {
+                    updateProgressBar();
+                    updateBackToTop();
+                    updateScrollspy();
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        });
+
+        // 页面加载时初始化
+        updateProgressBar();
+        updateBackToTop();
+        updateScrollspy();
+        checkMathOverflow();
+
+        // 窗口大小变化时重新检测公式溢出
+        window.addEventListener('resize', function () {
+            checkMathOverflow();
+        });
+    </script>
+
+</body>
+</html>
