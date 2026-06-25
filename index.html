@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CHAI-bt</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background: #f7f8fb;
+            color: #1a1d23;
+            line-height: 1.7;
+            min-height: 100vh;
+        }
+
+        .wrapper {
+            max-width: 640px;
+            margin: 0 auto;
+            padding: 80px 24px 60px;
+        }
+
+        h1 {
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: #0b1a2f;
+            margin-bottom: 36px;
+        }
+
+        .link-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .link-list a {
+            display: block;
+            background: #fff;
+            border: 1px solid #e2e5ea;
+            border-radius: 10px;
+            padding: 16px 20px;
+            text-decoration: none;
+            color: #1a1d23;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: box-shadow 0.15s, border-color 0.15s;
+        }
+
+        .link-list a:hover {
+            border-color: #3a6ea5;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+        }
+
+        .link-list .desc {
+            display: block;
+            font-size: 0.85rem;
+            color: #5a5f6b;
+            font-weight: 400;
+            margin-top: 2px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="wrapper">
+        <h1>CHAI-bt</h1>
+        <ul class="link-list">
+            <li>
+                <a href="electrodynamics/Electrodynamics_Notes.html">
+                    电动力学笔记
+                    <span class="desc">考试题记录 · 公式推导与物理图像</span>
+                </a>
+            </li>
+            <li>
+                <a href="image_to_ascii/index.html">
+                    图片转 ASCII 艺术
+                    <span class="desc">上传图片 → 字符画输出</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+</body>
+</html>
