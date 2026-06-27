@@ -756,7 +756,7 @@
                 \nabla^2 G =
                 \sum_{l,m} \sum_{l',m'}
                 \left[
-                \frac{1}{r^2} \frac{d}{d r}\left(r^2 \frac{d}{d r}\right)
+                \frac{1}{r^2} \frac{\mathrm{d}}{\mathrm{d} r}\left(r^2 \frac{\mathrm{d}}{\mathrm{d} r}\right)
                 - \frac{l(l+1)}{r^2}
                 \right]
                 g_{lm, l'm'}(r, r') Y_{l'm'}^*(\mathbf{n}') Y_{lm}(\mathbf{n})
@@ -786,7 +786,7 @@
                     <div class="math-block">
                         \[
                         \left[
-                        \frac{1}{r^2} \frac{d}{d r}\left(r^2 \frac{d}{d r}\right)
+                        \frac{1}{r^2} \frac{\mathrm{d}}{\mathrm{d} r}\left(r^2 \frac{\mathrm{d}}{\mathrm{d} r}\right)
                         - \frac{l(l+1)}{r^2}
                         \right] g_{l,m}(r, r') = -\frac{1}{r^2} \delta(r-r')
                         \]
@@ -818,7 +818,7 @@
             <p><strong>柯西积分公式</strong>：</p>
             <div class="math-block">
                 \[
-                f(z_0) = \frac{1}{2\pi i} \oint_{C} \frac{f(z)}{z - z_0}\text{d}z
+                f(z_0) = \frac{1}{2\pi \mathrm{i}} \oint_{C} \frac{f(z)}{z - z_0}\mathrm{d}z
                 \]
             </div>
             <p>
@@ -845,8 +845,8 @@
             <div class="math-block">
                 \[
                 \epsilon(z)/\epsilon_0 =
-                1 + \frac{1}{2\pi i} \int_{-\infty}^{\infty}
-                \frac{\epsilon(\omega')/\epsilon_0 - 1}{\omega' - z}\text{d}\omega'
+                1 + \frac{1}{2\pi \mathrm{i}} \int_{-\infty}^{\infty}
+                \frac{\epsilon(\omega')/\epsilon_0 - 1}{\omega' - z}\mathrm{d}\omega'
                 \]
             </div>
 
@@ -854,18 +854,18 @@
             <p>设：</p>
             <div class="math-block">
                 \[
-                z = \omega + i\delta \quad (\delta \to 0^+)
+                z = \omega + \mathrm{i}\delta \quad (\delta \to 0^+)
                 \]
             </div>
             <p>
-                把这个 \(z\) 代入积分的分母，分母变成了 \(\omega' - \omega - i\delta\)。
+                把这个 \(z\) 代入积分的分母，分母变成了 \(\omega' - \omega - \mathrm{i}\delta\)。
                 <strong>Sokhotski–Plemelj（索霍茨基-普列梅利）公式</strong>，
                 也就是<strong>式（4.73）</strong>：
             </p>
             <div class="math-block">
                 \[
-                \frac{1}{\omega' - \omega - i\delta} =
-                \mathcal{P}\left(\frac{1}{\omega' - \omega}\right) + i\pi \delta(\omega' - \omega)
+                \frac{1}{\omega' - \omega - \mathrm{i}\delta} =
+                \mathcal{P}\left(\frac{1}{\omega' - \omega}\right) + \mathrm{i}\pi \delta(\omega' - \omega)
                 \quad (\delta \to 0^+)
                 \]
             </div>
@@ -879,10 +879,10 @@
             <div class="math-block">
                 \[
                 \epsilon(\omega)/\epsilon_0 =
-                1 + \frac{1}{2\pi i} \int_{-\infty}^{\infty} F(\omega')
+                1 + \frac{1}{2\pi \mathrm{i}} \int_{-\infty}^{\infty} F(\omega')
                 \left[
-                \mathcal{P}\left(\frac{1}{\omega' - \omega}\right) + i\pi \delta(\omega' - \omega)
-                \right]\text{d}\omega'
+                \mathcal{P}\left(\frac{1}{\omega' - \omega}\right) + \mathrm{i}\pi \delta(\omega' - \omega)
+                \right]\mathrm{d}\omega'
                 \]
             </div>
             <p>
@@ -891,18 +891,18 @@
             <div class="math-block">
                 \[
                 \epsilon(\omega)/\epsilon_0 =
-                1 + \frac{1}{2\pi i} \mathcal{P}\int_{-\infty}^{\infty}
-                \frac{F(\omega')}{\omega' - \omega}\text{d}\omega'
-                + \frac{1}{2\pi i} \int_{-\infty}^{\infty} F(\omega') \cdot i\pi \delta(\omega' - \omega)\text{d}\omega'
+                1 + \frac{1}{2\pi \mathrm{i}} \mathcal{P}\int_{-\infty}^{\infty}
+                \frac{F(\omega')}{\omega' - \omega}\mathrm{d}\omega'
+                + \frac{1}{2\pi \mathrm{i}} \int_{-\infty}^{\infty} F(\omega') \cdot \mathrm{i}\pi \delta(\omega' - \omega)\mathrm{d}\omega'
                 \]
             </div>
             <p>
                 看最后一项包含 \(\delta\) 函数的积分：根据 \(\delta\) 函数的性质，
-                积分直接把 \(\omega'\) 替换为 \(\omega\)，并且把 \(i\pi\) 提出来：
+                积分直接把 \(\omega'\) 替换为 \(\omega\)，并且把 \(\mathrm{i}\pi\) 提出来：
             </p>
             <div class="math-block">
                 \[
-                \frac{1}{2\pi i} \cdot i\pi \cdot F(\omega) =
+                \frac{1}{2\pi \mathrm{i}} \cdot \mathrm{i}\pi \cdot F(\omega) =
                 \frac{1}{2} F(\omega) =
                 \frac{1}{2} \left( \epsilon(\omega)/\epsilon_0 - 1 \right)
                 \]
@@ -913,8 +913,8 @@
             <div class="math-block">
                 \[
                 \epsilon(\omega)/\epsilon_0 =
-                1 + \frac{1}{2\pi i} \mathcal{P}\int_{-\infty}^{\infty}
-                \frac{\epsilon(\omega')/\epsilon_0 - 1}{\omega' - \omega}\text{d}\omega'
+                1 + \frac{1}{2\pi \mathrm{i}} \mathcal{P}\int_{-\infty}^{\infty}
+                \frac{\epsilon(\omega')/\epsilon_0 - 1}{\omega' - \omega}\mathrm{d}\omega'
                 + \frac{1}{2} \left( \epsilon(\omega)/\epsilon_0 - 1 \right)
                 \]
             </div>
@@ -927,8 +927,8 @@
                 \[
                 \text{右边} =
                 \frac{1}{2} + \frac{1}{2}\epsilon(\omega)/\epsilon_0
-                + \frac{1}{2\pi i} \mathcal{P}\int_{-\infty}^{\infty}
-                \frac{\epsilon(\omega')/\epsilon_0 - 1}{\omega' - \omega}\text{d}\omega'
+                + \frac{1}{2\pi \mathrm{i}} \mathcal{P}\int_{-\infty}^{\infty}
+                \frac{\epsilon(\omega')/\epsilon_0 - 1}{\omega' - \omega}\mathrm{d}\omega'
                 \]
             </div>
             <p>现在把这个结果和左边连起来：</p>
@@ -936,8 +936,8 @@
                 \[
                 \epsilon(\omega)/\epsilon_0 =
                 \frac{1}{2} + \frac{1}{2}\epsilon(\omega)/\epsilon_0
-                + \frac{1}{2\pi i} \mathcal{P}\int_{-\infty}^{\infty}
-                \frac{\epsilon(\omega')/\epsilon_0 - 1}{\omega' - \omega}\text{d}\omega'
+                + \frac{1}{2\pi \mathrm{i}} \mathcal{P}\int_{-\infty}^{\infty}
+                \frac{\epsilon(\omega')/\epsilon_0 - 1}{\omega' - \omega}\mathrm{d}\omega'
                 \]
             </div>
             <p>
@@ -946,29 +946,29 @@
             <div class="math-block">
                 \[
                 \frac{1}{2}\epsilon(\omega)/\epsilon_0 =
-                \frac{1}{2} + \frac{1}{2\pi i} \mathcal{P}\int_{-\infty}^{\infty}
-                \frac{\epsilon(\omega')/\epsilon_0 - 1}{\omega' - \omega}\text{d}\omega'
+                \frac{1}{2} + \frac{1}{2\pi \mathrm{i}} \mathcal{P}\int_{-\infty}^{\infty}
+                \frac{\epsilon(\omega')/\epsilon_0 - 1}{\omega' - \omega}\mathrm{d}\omega'
                 \]
             </div>
             <p><strong>等式两边同时乘以 2</strong>：</p>
             <div class="math-block">
                 \[
                 \epsilon(\omega)/\epsilon_0 =
-                1 + \frac{1}{\pi i} \mathcal{P}\int_{-\infty}^{\infty}
-                \frac{\epsilon(\omega')/\epsilon_0 - 1}{\omega' - \omega}\text{d}\omega'
+                1 + \frac{1}{\pi \mathrm{i}} \mathcal{P}\int_{-\infty}^{\infty}
+                \frac{\epsilon(\omega')/\epsilon_0 - 1}{\omega' - \omega}\mathrm{d}\omega'
                 \]
             </div>
 
             <h3 class="subsection-title">第四步：式（4.75）—— 提取实部和虚部</h3>
             <p>
                 最后一步和我们之前做的一样，把 \(\epsilon(\omega)/\epsilon_0\)
-                拆成实部和虚部，并且利用 \(\frac{1}{i} = -i\) 分离等式：
+                拆成实部和虚部，并且利用 \(\frac{1}{\mathrm{i}} = -\mathrm{i}\) 分离等式：
             </p>
             <ul>
                 <li>
                     <strong>实部对应实部</strong>：由于右边带有
-                    \(\frac{1}{\pi i} = -\frac{i}{\pi}\)，所以右边的实部来自于虚部的贡献
-                    （因为 \(-i \times i = 1\)），并且还要加上左边没有参与积分的那个常数 \(1\)。
+                    \(\frac{1}{\pi \mathrm{i}} = -\frac{\mathrm{i}}{\pi}\)，所以右边的实部来自于虚部的贡献
+                    （因为 \(-\mathrm{i} \times \mathrm{i} = 1\)），并且还要加上左边没有参与积分的那个常数 \(1\)。
                     这就是<strong>式（4.75）的第一行</strong>。
                 </li>
                 <li>
@@ -993,8 +993,8 @@
             <div class="math-block">
                 \[
                 D^{(+)}(x - x') =
-                -\int \frac{d^4k}{(2\pi)^4}
-                \frac{e^{-ik\cdot(x - x')}}{(k_0 + i\epsilon)^2 - \mathbf{k}\cdot\mathbf{k}}
+                -\int \frac{\mathrm{d}^4k}{(2\pi)^4}
+                \frac{e^{-ik\cdot(x - x')}}{(k_0 + \mathrm{i}\epsilon)^2 - \mathbf{k}\cdot\mathbf{k}}
                 \]
             </div>
             <p>与协变形式：</p>
@@ -1018,10 +1018,10 @@
             <div class="math-block">
                 \[
                 D^{(+)}(y) =
-                -\int \frac{d^3\mathbf{k}}{(2\pi)^3} e^{i\mathbf{k}\cdot\mathbf{y}}
+                -\int \frac{\mathrm{d}^3\mathbf{k}}{(2\pi)^3} e^{\mathrm{i}\mathbf{k}\cdot\mathbf{y}}
                 \left[
-                \int_{-\infty}^{\infty} \frac{dk_0}{2\pi}
-                \frac{e^{-ik_0 y_0}}{(k_0 + i\epsilon)^2 - k^2}
+                \int_{-\infty}^{\infty} \frac{\mathrm{d}k_0}{2\pi}
+                \frac{e^{-ik_0 y_0}}{(k_0 + \mathrm{i}\epsilon)^2 - k^2}
                 \right]
                 \]
             </div>
@@ -1032,8 +1032,8 @@
             </p>
             <div class="math-block">
                 \[
-                I_0(y_0, k) = \int_{-\infty}^{\infty} \frac{dk_0}{2\pi}
-                \frac{e^{-ik_0 y_0}}{(k_0 + i\epsilon)^2 - k^2}
+                I_0(y_0, k) = \int_{-\infty}^{\infty} \frac{\mathrm{d}k_0}{2\pi}
+                \frac{e^{-ik_0 y_0}}{(k_0 + \mathrm{i}\epsilon)^2 - k^2}
                 \]
             </div>
 
@@ -1043,7 +1043,7 @@
             </p>
             <div class="math-block">
                 \[
-                (k_0 + i\epsilon)^2 - k^2 = (k_0 + i\epsilon - k)(k_0 + i\epsilon + k)
+                (k_0 + \mathrm{i}\epsilon)^2 - k^2 = (k_0 + \mathrm{i}\epsilon - k)(k_0 + \mathrm{i}\epsilon + k)
                 \]
             </div>
             <p>
@@ -1051,7 +1051,7 @@
             </p>
             <div class="math-block">
                 \[
-                k_0^{(1)} = k - i\epsilon, \quad k_0^{(2)} = -k - i\epsilon
+                k_0^{(1)} = k - \mathrm{i}\epsilon, \quad k_0^{(2)} = -k - \mathrm{i}\epsilon
                 \]
             </div>
             <p>
@@ -1062,7 +1062,7 @@
             <h4 class="subsubsection-title">2. 分情况讨论围道闭合方向（约当引理）</h4>
             <p>
                 根据指数因子 \(e^{-ik_0 y_0}\)，设
-                \(k_0 = \text{Re}(k_0) + i \text{Im}(k_0)\)，则：
+                \(k_0 = \text{Re}(k_0) + \mathrm{i} \text{Im}(k_0)\)，则：
             </p>
             <div class="math-block">
                 \[
@@ -1086,7 +1086,7 @@
                     为了使大圆弧上的积分趋于零，必须要求
                     \(\text{Im}(k_0) &lt; 0\)。因此必须在<strong>下半平面</strong>闭合围道。
                     下半平面的围道为<strong>顺时针</strong>方向，根据留数定理，
-                    积分将引入一个额外的负号（\(-2\pi i\)）。
+                    积分将引入一个额外的负号（\(-2\pi \mathrm{i}\)）。
                     此时包围了两个极点 \(k_0^{(1)}\) 和 \(k_0^{(2)}\)。
                 </li>
             </ul>
@@ -1100,7 +1100,7 @@
                         \text{Res}(k_0 = k) =
                         \lim_{k_0 \to k} (k_0 - k)
                         \frac{e^{-ik_0 y_0}}{(k_0 - k)(k_0 + k)}
-                        = \frac{e^{-i k y_0}}{2k}
+                        = \frac{e^{-\mathrm{i} k y_0}}{2k}
                         \]
                     </div>
                 </li>
@@ -1111,7 +1111,7 @@
                         \text{Res}(k_0 = -k) =
                         \lim_{k_0 \to -k} (k_0 + k)
                         \frac{e^{-ik_0 y_0}}{(k_0 - k)(k_0 + k)}
-                        = \frac{e^{i k y_0}}{-2k} = -\frac{e^{i k y_0}}{2k}
+                        = \frac{e^{\mathrm{i} k y_0}}{-2k} = -\frac{e^{\mathrm{i} k y_0}}{2k}
                         \]
                     </div>
                 </li>
@@ -1124,15 +1124,15 @@
             <div class="math-block">
                 \[
                 I_0(y_0 &gt; 0, k) =
-                \frac{1}{2\pi} \cdot (-2\pi i)
+                \frac{1}{2\pi} \cdot (-2\pi \mathrm{i})
                 \left[ \text{Res}(k_0 = k) + \text{Res}(k_0 = -k) \right]
                 \]
             </div>
             <div class="math-block">
                 \[
                 I_0(y_0 &gt; 0, k) =
-                -i \left[ \frac{e^{-i k y_0}}{2k} - \frac{e^{i k y_0}}{2k} \right]
-                = -i \left[ -i \frac{\sin(ky_0)}{k} \right]
+                -\mathrm{i} \left[ \frac{e^{-\mathrm{i} k y_0}}{2k} - \frac{e^{\mathrm{i} k y_0}}{2k} \right]
+                = -\mathrm{i} \left[ -\mathrm{i} \frac{\sin(ky_0)}{k} \right]
                 = -\frac{\sin(ky_0)}{k}
                 \]
             </div>
@@ -1150,8 +1150,8 @@
             <div class="math-block">
                 \[
                 D^{(+)}(y) =
-                \theta(y_0) \int \frac{d^3\mathbf{k}}{(2\pi)^3}
-                \frac{\sin(ky_0)}{k} e^{i\mathbf{k}\cdot\mathbf{y}}
+                \theta(y_0) \int \frac{\mathrm{d}^3\mathbf{k}}{(2\pi)^3}
+                \frac{\sin(ky_0)}{k} e^{\mathrm{i}\mathbf{k}\cdot\mathbf{y}}
                 \]
             </div>
 
@@ -1161,7 +1161,7 @@
             <p>
                 在三维动量空间中，选择 \(\mathbf{y}\) 方向为 \(z\) 轴方向，
                 则 \(\mathbf{k}\cdot\mathbf{y} = k R \cos\theta\)，
-                动量微元为 \(d^3\mathbf{k} = k^2 dk \sin\theta d\theta d\phi\)。
+                动量微元为 \(\mathrm{d}^3\mathbf{k} = k^2 \mathrm{d}k \sin\theta \mathrm{d}\theta \mathrm{d}\phi\)。
             </p>
 
             <h4 class="subsubsection-title">2. 角度积分</h4>
@@ -1170,14 +1170,14 @@
             </p>
             <div class="math-block">
                 \[
-                \int e^{i\mathbf{k}\cdot\mathbf{y}} d\Omega =
-                \int_0^{2\pi} d\phi \int_0^{\pi} e^{ikR\cos\theta} \sin\theta d\theta
+                \int e^{\mathrm{i}\mathbf{k}\cdot\mathbf{y}} \mathrm{d}\Omega =
+                \int_0^{2\pi} \mathrm{d}\phi \int_0^{\pi} e^{ikR\cos\theta} \sin\theta \mathrm{d}\theta
                 \]
             </div>
             <div class="math-block">
                 \[
-                \int_0^{\pi} e^{ikR\cos\theta} \sin\theta d\theta =
-                \int_{-1}^{1} e^{ikRu} du =
+                \int_0^{\pi} e^{ikR\cos\theta} \sin\theta \mathrm{d}\theta =
+                \int_{-1}^{1} e^{ikRu} \mathrm{d}u =
                 \frac{e^{ikR} - e^{-ikR}}{ikR}
                 = \frac{2\sin(kR)}{kR}
                 \]
@@ -1187,7 +1187,7 @@
             </p>
             <div class="math-block">
                 \[
-                \int e^{i\mathbf{k}\cdot\mathbf{y}} d\Omega =
+                \int e^{\mathrm{i}\mathbf{k}\cdot\mathbf{y}} \mathrm{d}\Omega =
                 \frac{4\pi \sin(kR)}{kR}
                 \]
             </div>
@@ -1200,7 +1200,7 @@
                 \[
                 D^{(+)}(y) =
                 \theta(y_0) \frac{1}{(2\pi)^3}
-                \int_0^\infty k^2 dk \frac{\sin(ky_0)}{k}
+                \int_0^\infty k^2 \mathrm{d}k \frac{\sin(ky_0)}{k}
                 \left[ \frac{4\pi \sin(kR)}{kR} \right]
                 \]
             </div>
@@ -1208,7 +1208,7 @@
                 \[
                 D^{(+)}(y) =
                 \frac{\theta(y_0)}{2\pi^2 R}
-                \int_0^\infty \sin(ky_0) \sin(kR) dk
+                \int_0^\infty \sin(ky_0) \sin(kR) \mathrm{d}k
                 \]
             </div>
             <p>
@@ -1221,11 +1221,11 @@
                 \]
             </div>
             <p>
-                利用积分公式 \(\int_0^\infty \cos(kx) dk = \pi \delta(x)\)，得到：
+                利用积分公式 \(\int_0^\infty \cos(kx) \mathrm{d}k = \pi \delta(x)\)，得到：
             </p>
             <div class="math-block">
                 \[
-                \int_0^\infty \sin(ky_0) \sin(kR) dk =
+                \int_0^\infty \sin(ky_0) \sin(kR) \mathrm{d}k =
                 \frac{\pi}{2} \left[ \delta(y_0 - R) - \delta(y_0 + R) \right]
                 \]
             </div>
@@ -1311,8 +1311,8 @@
             <div class="math-block">
                 \[
                 D^{(+)}(x - x') =
-                -\int \frac{d^4k}{(2\pi)^4}
-                \frac{e^{-ik\cdot(x - x')}}{(k_0 + i\epsilon)^2 - \mathbf{k}\cdot\mathbf{k}}
+                -\int \frac{\mathrm{d}^4k}{(2\pi)^4}
+                \frac{e^{-ik\cdot(x - x')}}{(k_0 + \mathrm{i}\epsilon)^2 - \mathbf{k}\cdot\mathbf{k}}
                 =
                 \frac{\theta(x_0 - x'_0)}{4\pi R}\delta(x_0 - x'_0 - R)
                 =
@@ -1393,7 +1393,7 @@
 
             <h4 class="subsubsection-title">2. 运用分部积分（指标记号形式）</h4>
             <p>
-                由于等式两边均为矢量，写出右边项的第 \(i\) 个分量形式：
+                由于等式两边均为矢量，写出右边项的第 \(\mathrm{i}\) 个分量形式：
             </p>
             <div class="math-block">
                 \[
@@ -1518,7 +1518,7 @@
 
             <p>
                 在电动力学（如多极辐射展开）和理论物理中，经常需要计算单位矢量
-                \(\mathbf{n}\) 的各个分量在整个球面上关于立体角 \(d\Omega\) 的积分。
+                \(\mathbf{n}\) 的各个分量在整个球面上关于立体角 \(\mathrm{d}\Omega\) 的积分。
                 利用空间旋转对称性与反演对称性，可以非常高效地求解这些高阶张量积分。
             </p>
 
@@ -1529,12 +1529,12 @@
             </p>
             <div class="math-block">
                 \[
-                \int_{S^2} n_{i_1} n_{i_2} \cdots n_{i_{2k+1}} d\Omega = 0
+                \int_{S^2} n_{i_1} n_{i_2} \cdots n_{i_{2k+1}} \mathrm{d}\Omega = 0
                 \]
             </div>
             <p>
-                （例如：\(\int n_i d\Omega = 0\)，“一阶”；
-                \(\int n_i n_j n_k d\Omega = 0\)，“三阶”等。）
+                （例如：\(\int n_i \mathrm{d}\Omega = 0\)，“一阶”；
+                \(\int n_i n_j n_k \mathrm{d}\Omega = 0\)，“三阶”等。）
             </p>
 
             <h4 class="subsubsection-title">对称性解释（空间反演 / 宇称对称性）</h4>
@@ -1544,7 +1544,7 @@
             <ul>
                 <li>
                     在该变换下，面积元（立体角元）保持不变，即
-                    \(d\Omega = d\Omega'\)。
+                    \(\mathrm{d}\Omega = \mathrm{d}\Omega'\)。
                 </li>
                 <li>
                     但被积函数中含有奇数个分量，每次反演都会产生一个整体的负号：
@@ -1573,7 +1573,7 @@
             </p>
             <div class="math-block">
                 \[
-                \int_{S^2} n_{i_1} n_{i_2} \cdots n_{i_{2n}} d\Omega
+                \int_{S^2} n_{i_1} n_{i_2} \cdots n_{i_{2n}} \mathrm{d}\Omega
                 =
                 \frac{4\pi}{(2n+1)!!}
                 \sum_{\text{所有可能配对}} \delta_{a_1 a_2} \cdots \delta_{a_{2n-1} a_{2n}}
@@ -1591,7 +1591,7 @@
                     <strong>二阶积分（\(2n=2\)，共 1 项配对）：</strong>
                     <div class="math-block">
                         \[
-                        \int_{S^2} n_j n_k d\Omega = \frac{4\pi}{3} \delta_{jk}
+                        \int_{S^2} n_j n_k \mathrm{d}\Omega = \frac{4\pi}{3} \delta_{jk}
                         \]
                     </div>
                 </li>
@@ -1599,7 +1599,7 @@
                     <strong>四阶积分（\(2n=4\)，共 3 项配对）：</strong>
                     <div class="math-block">
                         \[
-                        \int_{S^2} n_i n_j n_k n_l d\Omega
+                        \int_{S^2} n_i n_j n_k n_l \mathrm{d}\Omega
                         =
                         \frac{4\pi}{15}
                         \left(
@@ -1613,7 +1613,7 @@
                     <strong>六阶积分（\(2n=6\)，共 15 项配对）：</strong>
                     <div class="math-block">
                         \[
-                        \int_{S^2} n_i n_j n_k n_l n_m n_p d\Omega
+                        \int_{S^2} n_i n_j n_k n_l n_m n_p \mathrm{d}\Omega
                         =
                         \frac{4\pi}{105}
                         \sum_{\text{15种配对}} \delta_{ab}\delta_{cd}\delta_{ef}
@@ -1630,16 +1630,16 @@
 
             <h4 class="subsubsection-title">示例一：一阶积分的推导（反演对称性的应用）</h4>
             <p>
-                求一阶积分 \(I_i = \int_{S^2} n_i d\Omega\)。
+                求一阶积分 \(I_i = \int_{S^2} n_i \mathrm{d}\Omega\)。
             </p>
             <ol>
                 <li>
                     <strong>变量代换</strong>：
                     作空间反演代换 \(\mathbf{n} = -\mathbf{n}'\)。
-                    由于该正交变换保持测度不变，因此 \(d\Omega = d\Omega'\)，
+                    由于该正交变换保持测度不变，因此 \(\mathrm{d}\Omega = \mathrm{d}\Omega'\)，
                     积分区域保持为整个单位球面 \(S^2\)。代入积分式：
                     \[
-                    I_i = \int_{S^2} (-n'_i) d\Omega'
+                    I_i = \int_{S^2} (-n'_i) \mathrm{d}\Omega'
                     \]
                 </li>
                 <li>
@@ -1647,21 +1647,21 @@
                     将负号提至积分号外，由于积分变量与符号选取无关
                     （把 \(\mathbf{n}'\) 重新写回 \(\mathbf{n}\)）：
                     \[
-                    I_i = - \int_{S^2} n'_i d\Omega' = - I_i
+                    I_i = - \int_{S^2} n'_i \mathrm{d}\Omega' = - I_i
                     \]
                 </li>
                 <li>
                     <strong>得出结论</strong>：
                     由 \(I_i = -I_i\) 易知：
                     \[
-                    2I_i = 0 \implies I_i = \int_{S^2} n_i d\Omega = 0
+                    2I_i = 0 \implies I_i = \int_{S^2} n_i \mathrm{d}\Omega = 0
                     \]
                 </li>
             </ol>
 
             <h4 class="subsubsection-title">示例二：二阶积分的推导（指标缩并的应用）</h4>
             <p>
-                求二阶积分 \(I_{jk} = \int_{S^2} n_j n_k d\Omega\)。
+                求二阶积分 \(I_{jk} = \int_{S^2} n_j n_k \mathrm{d}\Omega\)。
             </p>
             <ol>
                 <li>
@@ -1670,7 +1670,7 @@
                     因此其只能由克罗内克符号 \(\delta\) 组合而成。且由于指标 \(j\) 和 \(k\) 对称，
                     可设：
                     \[
-                    \int_{S^2} n_j n_k d\Omega = c \, \delta_{jk}
+                    \int_{S^2} n_j n_k \mathrm{d}\Omega = c \, \delta_{jk}
                     \]
                     其中 \(c\) 为待定的常数。
                 </li>
@@ -1682,12 +1682,12 @@
                             <strong>等式左边缩并</strong>：
                             由于 \(\mathbf{n}\) 是单位矢量，
                             有 \(\sum_{j=1}^3 n_j^2 = 1\)，
-                            且全球面立体角积分 \(\int_{S^2} d\Omega = 4\pi\)：
+                            且全球面立体角积分 \(\int_{S^2} \mathrm{d}\Omega = 4\pi\)：
                             <div class="math-block">
                                 \[
-                                \sum_{j=1}^3 \int_{S^2} n_j n_j d\Omega
-                                = \int_{S^2} \left( \sum_{j=1}^3 n_j^2 \right) d\Omega
-                                = \int_{S^2} 1 \, d\Omega = 4\pi
+                                \sum_{j=1}^3 \int_{S^2} n_j n_j \mathrm{d}\Omega
+                                = \int_{S^2} \left( \sum_{j=1}^3 n_j^2 \right) \mathrm{d}\Omega
+                                = \int_{S^2} 1 \, \mathrm{d}\Omega = 4\pi
                                 \]
                             </div>
                         </li>
@@ -1709,7 +1709,7 @@
                     \]
                     代回原假设，即得二阶积分公式：
                     \[
-                    \int_{S^2} n_j n_k d\Omega = \frac{4\pi}{3} \delta_{jk}
+                    \int_{S^2} n_j n_k \mathrm{d}\Omega = \frac{4\pi}{3} \delta_{jk}
                     \]
                 </li>
             </ol>
@@ -2535,7 +2535,7 @@
             <ul>
                 <li>
                     <strong>闵氏度规</strong>：采用大多负号约定
-                    \(\eta_{\mu\nu} = \text{diag}(1, -1, -1, -1)\)。
+                    \(\eta_{\mu\nu} = \mathrm{diag}(1, -1, -1, -1)\)。
                 </li>
                 <li>
                     <strong>四维坐标</strong>：
@@ -2543,7 +2543,7 @@
                 </li>
                 <li>
                     <strong>无量纲四速度</strong>：
-                    \(u^\mu(\tau) = \frac{dr^\mu(\tau)}{d\tau}\)，
+                    \(u^\mu(\tau) = \frac{\mathrm{d}r^\mu(\tau)}{\mathrm{d}\tau}\)，
                     满足规范化条件 \(u^\mu u_\mu = 1\)。
                 </li>
                 <li>
@@ -2551,7 +2551,7 @@
                     运动单点电荷的电流密度写为对固有时间 \(\tau\) 的积分形式：
                     <div class="math-block">
                         \[
-                        J^\mu(x') = e \int_{-\infty}^{+\infty} d\tau \,
+                        J^\mu(x') = e \int_{-\infty}^{+\infty} \mathrm{d}\tau \,
                         u^\mu(\tau) \, \delta^{(4)}\big[x' - r(\tau)\big]
                         \]
                     </div>
@@ -2571,7 +2571,7 @@
             </p>
             <div class="math-block">
                 \[
-                A^\mu(x) = 4\pi \int d^4 x' \, D^R(x, x') \, J^\mu(x')
+                A^\mu(x) = 4\pi \int \mathrm{d}^4 x' \, D^R(x, x') \, J^\mu(x')
                 \]
             </div>
             <p>
@@ -2590,12 +2590,12 @@
             <div class="math-block">
                 \[
                 A^\mu(x) =
-                4\pi \int d^4 x'
+                4\pi \int \mathrm{d}^4 x'
                 \left\{
                 \frac{\theta(x^0 - x'^0) \, \delta\big[(x-x')^2\big]}{2\pi}
                 \right\}
                 \left\{
-                e \int_{-\infty}^{+\infty} d\tau \, u^\mu(\tau) \,
+                e \int_{-\infty}^{+\infty} \mathrm{d}\tau \, u^\mu(\tau) \,
                 \delta^{(4)}\big[x' - r(\tau)\big]
                 \right\}
                 \]
@@ -2605,14 +2605,14 @@
                 \(\frac{4\pi}{2\pi} = 2\)
             </p>
             <p>
-                整理积分顺序，将对 \(d\tau\) 的积分提到最外层：
+                整理积分顺序，将对 \(\mathrm{d}\tau\) 的积分提到最外层：
             </p>
             <div class="math-block">
                 \[
                 A^\mu(x) =
-                2e \int_{-\infty}^{+\infty} d\tau \, u^\mu(\tau)
+                2e \int_{-\infty}^{+\infty} \mathrm{d}\tau \, u^\mu(\tau)
                 \left\{
-                \int d^4 x' \, \theta(x^0 - x'^0) \,
+                \int \mathrm{d}^4 x' \, \theta(x^0 - x'^0) \,
                 \delta\big[(x-x')^2\big] \,
                 \delta^{(4)}\big[x' - r(\tau)\big]
                 \right\}
@@ -2625,7 +2625,7 @@
             </p>
             <div class="math-block">
                 \[
-                \int d^4 x' \, \theta(x^0 - x'^0) \,
+                \int \mathrm{d}^4 x' \, \theta(x^0 - x'^0) \,
                 \delta\big[(x-x')^2\big] \,
                 \delta^{(4)}\big[x' - r(\tau)\big]
                 =
@@ -2639,7 +2639,7 @@
             <div class="math-block">
                 \[
                 A^\mu(x) =
-                2e \int_{-\infty}^{+\infty} d\tau \, u^\mu(\tau) \,
+                2e \int_{-\infty}^{+\infty} \mathrm{d}\tau \, u^\mu(\tau) \,
                 \theta\big(x^0 - r^0(\tau)\big) \,
                 \delta\big[ (x - r(\tau))^2 \big]
                 \]
@@ -2652,7 +2652,7 @@
             <div class="math-block">
                 \[
                 \delta\big( f(\tau) \big) =
-                \sum_{i} \frac{\delta(\tau - \tau_i)}{|f'(\tau_i)|}
+                \sum_{\mathrm{i}} \frac{\delta(\tau - \tau_i)}{|f'(\tau_i)|}
                 \]
             </div>
             <p>
@@ -2697,7 +2697,7 @@
             <div class="math-block">
                 \[
                 f'(\tau) =
-                \frac{d}{d\tau}
+                \frac{\mathrm{d}}{\mathrm{d}\tau}
                 \left[
                 \eta_{\alpha\beta} \big(x^\alpha - r^\alpha(\tau)\big)
                 \big(x^\beta - r^\beta(\tau)\big)
@@ -2708,11 +2708,11 @@
                 \[
                 f'(\tau) =
                 2 \eta_{\alpha\beta} \big(x^\alpha - r^\alpha(\tau)\big)
-                \left( -\frac{dr^\beta}{d\tau} \right)
+                \left( -\frac{\mathrm{d}r^\beta}{\mathrm{d}\tau} \right)
                 \]
             </div>
             <p>
-                利用四速度的定义 \(u^\beta = \frac{dr^\beta}{d\tau}\)，代入上式：
+                利用四速度的定义 \(u^\beta = \frac{\mathrm{d}r^\beta}{\mathrm{d}\tau}\)，代入上式：
             </p>
             <div class="math-block">
                 \[
@@ -2750,7 +2750,7 @@
             <div class="math-block">
                 \[
                 A^\mu(x) =
-                2e \int_{-\infty}^{+\infty} d\tau \, u^\mu(\tau) \,
+                2e \int_{-\infty}^{+\infty} \mathrm{d}\tau \, u^\mu(\tau) \,
                 \theta\big(x^0 - r^0(\tau)\big)
                 \left[
                 \frac{\delta(\tau - \tau_0)}
@@ -2767,7 +2767,7 @@
                 <li>
                     <strong>执行积分</strong>：
                     利用 \(\delta(\tau - \tau_0)\) 的筛选性质，
-                    消去积分号与 \(d\tau\)，将剩余各项中的 \(\tau\) 替换为
+                    消去积分号与 \(\mathrm{d}\tau\)，将剩余各项中的 \(\tau\) 替换为
                     \(\tau_0\)。
                 </li>
                 <li>
@@ -2836,12 +2836,12 @@
                     <div class="math-block">
                         \[
                         P = -\frac{2}{3} \frac{e^2}{m^2 c^3}
-                        \frac{dp^\mu}{d\tau} \cdot \frac{dp_\mu}{d\tau}
+                        \frac{\mathrm{d}p^\mu}{\mathrm{d}\tau} \cdot \frac{\mathrm{d}p_\mu}{\mathrm{d}\tau}
                         \]
                     </div>
                     <p>
                         其中 \(p^\mu = (E/c, \mathbf{p})\) 为粒子的四维动量，
-                        \(\tau\) 为固有时间（\(d\tau = dt/\gamma\)）。
+                        \(\tau\) 为固有时间（\(\mathrm{d}\tau = \mathrm{d}t/\gamma\)）。
                     </p>
                 </li>
                 <li>
@@ -2883,7 +2883,7 @@
             </p>
             <div class="math-block">
                 \[
-                \frac{dp}{dt} = \frac{d}{dt} (\gamma m \beta c)
+                \frac{\mathrm{d}p}{\mathrm{d}t} = \frac{\mathrm{d}}{\mathrm{d}t} (\gamma m \beta c)
                 = m c \dot{\beta} \gamma^3
                 \]
             </div>
@@ -2897,34 +2897,34 @@
                 \[
                 P_{\text{linear}} =
                 \frac{2}{3} \frac{e^2}{c} \gamma^6
-                \left( \frac{1}{\gamma^3 m c} \frac{dp}{dt} \right)^2
+                \left( \frac{1}{\gamma^3 m c} \frac{\mathrm{d}p}{\mathrm{d}t} \right)^2
                 = \frac{2}{3} \frac{e^2}{m^2 c^3}
-                \left( \frac{dp}{dt} \right)^2
+                \left( \frac{\mathrm{d}p}{\mathrm{d}t} \right)^2
                 \]
             </div>
 
             <h4 class="subsubsection-title">2.2 四维矢量方法推导</h4>
             <p>
                 在直线运动中，外力做功的功率为
-                \(\frac{dE}{dt} = \mathbf{F} \cdot \mathbf{v}
-                = v \frac{dp}{dt} = \beta c \frac{dp}{dt}\)。
+                \(\frac{\mathrm{d}E}{\mathrm{d}t} = \mathbf{F} \cdot \mathbf{v}
+                = v \frac{\mathrm{d}p}{\mathrm{d}t} = \beta c \frac{\mathrm{d}p}{\mathrm{d}t}\)。
             </p>
             <p>
                 代入四维动量微商的平方：
             </p>
             <div class="math-block">
                 \[
-                \frac{dp^\mu}{d\tau} \cdot \frac{dp_\mu}{d\tau}
+                \frac{\mathrm{d}p^\mu}{\mathrm{d}\tau} \cdot \frac{\mathrm{d}p_\mu}{\mathrm{d}\tau}
                 =
                 \gamma^2
                 \left[
-                \frac{1}{c^2} \left( \frac{dE}{dt} \right)^2
-                - \left( \frac{dp}{dt} \right)^2
+                \frac{1}{c^2} \left( \frac{\mathrm{d}E}{\mathrm{d}t} \right)^2
+                - \left( \frac{\mathrm{d}p}{\mathrm{d}t} \right)^2
                 \right]
                 =
                 \gamma^2 \left( \beta^2 - 1 \right)
-                \left(\frac{dp}{dt}\right)^2
-                = -\left(\frac{dp}{dt}\right)^2
+                \left(\frac{\mathrm{d}p}{\mathrm{d}t}\right)^2
+                = -\left(\frac{\mathrm{d}p}{\mathrm{d}t}\right)^2
                 \]
             </div>
             <p>
@@ -2980,13 +2980,13 @@
             <p>
                 <strong>重要概念：</strong>
                 在圆周运动中，动量的大小 \(p = |\mathbf{p}|\) 是常数，
-                因此动量标量的变化率为 \(d|\mathbf{p}|/dt = 0\)。
+                因此动量标量的变化率为 \(\mathrm{d}|\mathbf{p}|/\mathrm{d}t = 0\)。
                 此处的“动量变化率”是指<strong>动量矢量变化率的大小</strong>
                 （即向心力的大小）：
             </p>
             <div class="math-block">
                 \[
-                \left| \frac{d\mathbf{p}}{dt} \right|
+                \left| \frac{\mathrm{d}\mathbf{p}}{\mathrm{d}t} \right|
                 = F_{\text{centripetal}} = \gamma m a
                 = \gamma m \frac{\beta^2 c^2}{\rho}
                 \]
@@ -2995,16 +2995,16 @@
                 将该式写为
                 \(\frac{\beta^4}{\rho^2}
                 = \frac{1}{\gamma^2 m^2 c^4}
-                \left| \frac{d\mathbf{p}}{dt} \right|^2\)，
+                \left| \frac{\mathrm{d}\mathbf{p}}{\mathrm{d}t} \right|^2\)，
                 并代回同步辐射功率公式 (8)，可得：
             </p>
             <div class="math-block">
                 \[
                 P_{\text{circular}} =
                 \frac{2}{3} \frac{e^2 c \gamma^4}{\gamma^2 m^2 c^4}
-                \left| \frac{d\mathbf{p}}{dt} \right|^2
+                \left| \frac{\mathrm{d}\mathbf{p}}{\mathrm{d}t} \right|^2
                 = \frac{2}{3} \frac{e^2}{m^2 c^3} \gamma^2
-                \left| \frac{d\mathbf{p}}{dt} \right|^2
+                \left| \frac{\mathrm{d}\mathbf{p}}{\mathrm{d}t} \right|^2
                 \]
             </div>
 
@@ -3044,12 +3044,12 @@
                             <td>
                                 \(P_{\text{linear}} =
                                 \frac{2}{3} \frac{e^2}{m^2 c^3}
-                                \left( \frac{dp}{dt} \right)^2\)
+                                \left( \frac{\mathrm{d}p}{\mathrm{d}t} \right)^2\)
                             </td>
                             <td>
                                 \(P_{\text{circular}} =
                                 \frac{2}{3} \frac{e^2}{m^2 c^3} \gamma^2
-                                \left\| \frac{d\mathbf{p}}{dt} \right\|^2\)
+                                \left\| \frac{\mathrm{d}\mathbf{p}}{\mathrm{d}t} \right\|^2\)
                             </td>
                         </tr>
                     </tbody>
@@ -3104,7 +3104,7 @@
             <div class="math-block">
                 \[
                 \mathbf{A}_n = \frac{1}{T} \int_{-T/2}^{T/2}
-                \mathbf{A}(t) e^{in\omega_0 t} dt
+                \mathbf{A}(t) e^{in\omega_0 t} \mathrm{d}t
                 \]
             </div>
             <p>
@@ -3134,7 +3134,7 @@
             </p>
             <div class="math-block">
                 \[
-                dt = (1 - \boldsymbol{\beta} \cdot \mathbf{n}) dt'
+                \mathrm{d}t = (1 - \boldsymbol{\beta} \cdot \mathbf{n}) \mathrm{d}t'
                 \]
             </div>
             <p>
@@ -3151,7 +3151,7 @@
                 \frac{\mathbf{n} \times [(\mathbf{n} - \boldsymbol{\beta})
                     \times \dot{\boldsymbol{\beta}}]}
                 {(1 - \boldsymbol{\beta} \cdot \mathbf{n})^3}
-                e^{in\omega_0 t} (1 - \boldsymbol{\beta} \cdot \mathbf{n}) dt'
+                e^{in\omega_0 t} (1 - \boldsymbol{\beta} \cdot \mathbf{n}) \mathrm{d}t'
                 \]
             </div>
             <p>
@@ -3165,7 +3165,7 @@
                 \frac{\mathbf{n} \times [(\mathbf{n} - \boldsymbol{\beta})
                     \times \dot{\boldsymbol{\beta}}]}
                 {(1 - \boldsymbol{\beta} \cdot \mathbf{n})^2}
-                e^{in\omega_0 \left(t' + \frac{R(t')}{c}\right)} dt'
+                e^{in\omega_0 \left(t' + \frac{R(t')}{c}\right)} \mathrm{d}t'
                 \]
             </div>
             <p>
@@ -3185,7 +3185,7 @@
                     \times \dot{\boldsymbol{\beta}}]}
                 {(1 - \boldsymbol{\beta} \cdot \mathbf{n})^2}
                 =
-                \frac{d}{dt'}
+                \frac{\mathrm{d}}{\mathrm{d}t'}
                 \left[
                 \frac{\mathbf{n} \times (\mathbf{n} \times \boldsymbol{\beta})}
                 {1 - \boldsymbol{\beta} \cdot \mathbf{n}}
@@ -3211,8 +3211,8 @@
                 \int_{-T'/2}^{T'/2}
                 \frac{\mathbf{n} \times (\mathbf{n} \times \boldsymbol{\beta})}
                 {1 - \boldsymbol{\beta} \cdot \mathbf{n}}
-                \frac{d}{dt'}
-                \left( e^{in\omega_0 (t' + R/c)} \right) dt'
+                \frac{\mathrm{d}}{\mathrm{d}t'}
+                \left( e^{in\omega_0 (t' + R/c)} \right) \mathrm{d}t'
                 \right\}
                 \]
             </div>
@@ -3229,7 +3229,7 @@
                     <strong>指数项对 \(t'\) 求导：</strong>
                     <div class="math-block">
                         \[
-                        \frac{d}{dt'}
+                        \frac{\mathrm{d}}{\mathrm{d}t'}
                         \left[ in\omega_0 \left( t' + \frac{R(t')}{c} \right) \right]
                         = in\omega_0 (1 - \boldsymbol{\beta} \cdot \mathbf{n})
                         \]
@@ -3244,10 +3244,10 @@
             <div class="math-block">
                 \[
                 \mathbf{A}_n =
-                -\frac{i n \omega_0 e}{T \sqrt{4\pi c}}
+                -\frac{\mathrm{i} n \omega_0 e}{T \sqrt{4\pi c}}
                 \int_{-T'/2}^{T'/2}
                 [\mathbf{n} \times (\mathbf{n} \times \boldsymbol{\beta})]
-                e^{in\omega_0 \left(t' + \frac{R(t')}{c}\right)} dt'
+                e^{in\omega_0 \left(t' + \frac{R(t')}{c}\right)} \mathrm{d}t'
                 \]
             </div>
 
@@ -3269,10 +3269,10 @@
             <div class="math-block">
                 \[
                 \mathbf{A}_n =
-                -\frac{i n \omega_0 e}{T \sqrt{4\pi c}}
+                -\frac{\mathrm{i} n \omega_0 e}{T \sqrt{4\pi c}}
                 \int_{-T'/2}^{T'/2}
                 [\mathbf{n} \times (\mathbf{n} \times \boldsymbol{\beta})]
-                e^{in\omega_0 \left(t' - \frac{\mathbf{n} \cdot \mathbf{r}(t')}{c}\right)} dt'
+                e^{in\omega_0 \left(t' - \frac{\mathbf{n} \cdot \mathbf{r}(t')}{c}\right)} \mathrm{d}t'
                 \]
             </div>
 
@@ -3289,10 +3289,10 @@
             <div class="math-block">
                 \[
                 \mathbf{A}_n =
-                -\frac{i n \omega_0 e}{T \sqrt{4\pi c}}
+                -\frac{\mathrm{i} n \omega_0 e}{T \sqrt{4\pi c}}
                 \int_{-T/2}^{T/2}
                 [\mathbf{n} \times (\mathbf{n} \times \boldsymbol{\beta}(t))]
-                e^{in\omega_0 \left(t - \frac{\mathbf{n} \cdot \mathbf{r}(t)}{c}\right)} dt
+                e^{in\omega_0 \left(t - \frac{\mathbf{n} \cdot \mathbf{r}(t)}{c}\right)} \mathrm{d}t
                 \]
             </div>
             <p>
@@ -3300,7 +3300,7 @@
             </p>
             <div class="math-block">
                 \[
-                \frac{dP_n}{d\Omega} = 2|\mathbf{A}_n|^2
+                \frac{\mathrm{d}P_n}{\mathrm{d}\Omega} = 2|\mathbf{A}_n|^2
                 \]
             </div>
             <p>
@@ -3308,14 +3308,14 @@
             </p>
             <div class="math-block">
                 \[
-                \frac{dP_n}{d\Omega} =
+                \frac{\mathrm{d}P_n}{\mathrm{d}\Omega} =
                 2 \cdot
-                \left| -\frac{i n \omega_0 e}{T \sqrt{4\pi c}} \right|^2
+                \left| -\frac{\mathrm{i} n \omega_0 e}{T \sqrt{4\pi c}} \right|^2
                 \cdot
                 \left|
                 \int_{-T/2}^{T/2}
                 [\mathbf{n} \times (\mathbf{n} \times \boldsymbol{\beta}(t))]
-                e^{in\omega_0 \left(t - \frac{\mathbf{n} \cdot \mathbf{r}(t)}{c}\right)} dt
+                e^{in\omega_0 \left(t - \frac{\mathbf{n} \cdot \mathbf{r}(t)}{c}\right)} \mathrm{d}t
                 \right|^2
                 \]
             </div>
@@ -3324,7 +3324,7 @@
             </p>
             <div class="math-block">
                 \[
-                \left| -\frac{i n \omega_0 e}{T \sqrt{4\pi c}} \right|^2
+                \left| -\frac{\mathrm{i} n \omega_0 e}{T \sqrt{4\pi c}} \right|^2
                 = \frac{e^2 n^2 \omega_0^2}{4\pi c T^2}
                 \]
             </div>
@@ -3344,12 +3344,12 @@
             </p>
             <div class="result-box">
                 \[
-                \frac{dP_n}{d\Omega} =
+                \frac{\mathrm{d}P_n}{\mathrm{d}\Omega} =
                 \frac{e^2 n^2 \omega_0^2}{2\pi c T^2}
                 \left|
                 \int_{-T/2}^{T/2}
                 [\mathbf{n} \times (\mathbf{n} \times \boldsymbol{\beta}(t))]
-                e^{in\omega_0 \left(t - \frac{\mathbf{n} \cdot \mathbf{r}(t)}{c}\right)} dt
+                e^{in\omega_0 \left(t - \frac{\mathbf{n} \cdot \mathbf{r}(t)}{c}\right)} \mathrm{d}t
                 \right|^2
                 \]
             </div>
