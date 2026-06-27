@@ -1548,10 +1548,12 @@
                 </li>
                 <li>
                     但被积函数中含有奇数个分量，每次反演都会产生一个整体的负号：
-                    \[
-                    (-n'_{i_1})(-n'_{i_2})\cdots(-n'_{i_{2k+1}})
-                    = - (n'_{i_1} n'_{i_2} \cdots n'_{i_{2k+1}})
-                    \]
+                    <div class="math-block">
+                        \[
+                        (-n'_{i_1})(-n'_{i_2})\cdots(-n'_{i_{2k+1}})
+                        = - (n'_{i_1} n'_{i_2} \cdots n'_{i_{2k+1}})
+                        \]
+                    </div>
                 </li>
                 <li>
                     积分代换后得到 \(I = -I\)，因此积分必然为 \(0\)。
@@ -1578,17 +1580,10 @@
                 \]
             </div>
             <p>
-                其中：
+                其中，
+                右侧的求和项遍历了 \(2n\) 个指标的所有可能两两不重复配对，
+                项数共有 \((2n-1)!!\) 项。
             </p>
-            <ul>
-                <li>
-                    双阶乘定义为：\((2n+1)!! = 1 \times 3 \times 5 \times \dots \times (2n+1)\)。
-                </li>
-                <li>
-                    右侧的求和项遍历了 \(2n\) 个指标的所有可能两两不重复配对，
-                    项数共有 \((2n-1)!!\) 项。
-                </li>
-            </ul>
 
             <h4 class="subsubsection-title">常用低阶特例</h4>
             <ul>
@@ -1688,11 +1683,13 @@
                             由于 \(\mathbf{n}\) 是单位矢量，
                             有 \(\sum_{j=1}^3 n_j^2 = 1\)，
                             且全球面立体角积分 \(\int_{S^2} d\Omega = 4\pi\)：
-                            \[
-                            \sum_{j=1}^3 \int_{S^2} n_j n_j d\Omega
-                            = \int_{S^2} \left( \sum_{j=1}^3 n_j^2 \right) d\Omega
-                            = \int_{S^2} 1 \, d\Omega = 4\pi
-                            \]
+                            <div class="math-block">
+                                \[
+                                \sum_{j=1}^3 \int_{S^2} n_j n_j d\Omega
+                                = \int_{S^2} \left( \sum_{j=1}^3 n_j^2 \right) d\Omega
+                                = \int_{S^2} 1 \, d\Omega = 4\pi
+                                \]
+                            </div>
                         </li>
                         <li>
                             <strong>等式右边缩并</strong>：
