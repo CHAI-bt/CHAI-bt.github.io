@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>博饼 · 物理模拟</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; height: 100%; overflow: hidden; }
+  body {
+    background: #0f0f1a;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    color: #fff;
+    user-select: none;
+  }
+  #c { display: block; width: 100%; height: 100%; }
+
+  #panel {
+    position: fixed; top: 20px; left: 20px;
+    background: rgba(20, 20, 35, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px;
+    padding: 18px 22px;
+    min-width: 260px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    z-index: 10;
+  }
+  #panel h1 { font-size: 18px; margin: 0 0 2px; font-weight: 700; letter-spacing: 2px; }
+  #panel .sub { font-size: 11px; color: #7a7a9a; margin-bottom: 16px; letter-spacing: 0.5px; }
+
+  #diceRow { display: flex; gap: 7px; margin-bottom: 16px; }
+  .die {
+    width: 34px; height: 34px;
+    background: #fdfcf8;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 19px; font-weight: 800;
+    color: #1a1a1a;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+  }
+  .die.four { color: #d32f2f; }
+  .die.placeholder { color: #bbb; background: #2a2a3e; box-shadow: none; }
+
+  #prize {
+    font-size: 23px; font-weight: 800;
+    min-height: 30px; margin-bottom: 3px;
+    letter-spacing: 1px;
+  }
+  #bonus { font-size: 14px; color: #ffd166; min-height: 19px; margin-bottom: 14px; font-weight: 600; }
+
+  #rollBtn {
+    width: 100%; padding: 13px;
+    font-size: 16px; font-weight: 700; letter-spacing: 2px;
+    border: none; border-radius: 10px;
+    background: linear-gradient(135deg, #e74c3c, #a8231a);
+    color: #fff; cursor: pointer;
+    transition: all 0.15s;
+    box-shadow: 0 4px 14px rgba(231, 76, 60, 0.35);
+  }
+  #rollBtn:hover:not(:disabled) { filter: brightness(1.15); }
+  #rollBtn:active:not(:disabled) { transform: scale(0.97); }
+  #rollBtn:disabled { opacity: 0.45; cursor: not-allowed; box-shadow: none; }
+
+  #status { font-size: 11px; color: #7a7a9a; margin-top: 10px; text-align: center; height: 15px; }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+
+<div id="panel">
+  <h1>博 饼</h1>
+  <div class="sub">PHYSICS SIMULATION</div>
+  <div id="diceRow"></div>
+  <div id="prize">准备开始</div>
+  <div id="bonus"></div>
+  <button id="rollBtn">掷 骰 子</button>
+  <div id="status"></div>
+</div>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/",
+    "cannon-es": "https://cdn.jsdelivr.net/npm/cannon-es@0.20.0/dist/cannon-es.js"
+  }
+}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import * as CANNON from 'cannon-es';
+import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+/* ============================================================
+   物理参数
+   ============================================================ */
+const BOWL_INNER_R  = 4.6;   // 位置钳制半径
+const BOWL_VIS_R    = 5.0;   // 物理碗底半径
+const WALL_H        = 20;    // 物理墙高
+const WALL_THICK    = 1.6;
+const WALL_SEGMENTS = 48;
+
+const FLOOR_TOP_Y   = -0.15; // 物理碗底顶面 y
+
+/* ============================================================
+   1. 物理世界
+   ============================================================ */
+const world = new CANNON.World({ gravity: new CANNON.Vec3(0, -30, 0) });
+world.broadphase = new CANNON.NaiveBroadphase();
+world.allowSleep = true;
+world.solver.iterations = 14;
+world.solver.tolerance  = 0.001;
+
+const diceMat   = new CANNON.Material('dice');
+const groundMat = new CANNON.Material('ground');
+
+world.addContactMaterial(new CANNON.ContactMaterial(diceMat, groundMat, {
+  friction: 0.35, restitution: 0.2,
+  contactEquationStiffness: 1e8,
+  contactEquationRelaxation: 3,
+}));
+world.addContactMaterial(new CANNON.ContactMaterial(diceMat, diceMat, {
+  friction: 0.3, restitution: 0.2,
+  contactEquationStiffness: 1e8,
+  contactEquationRelaxation: 3,
+}));
+
+/* --- 物理碗底：圆柱，顶面在 FLOOR_TOP_Y --- */
+const bowlFloorShape = new CANNON.Cylinder(BOWL_VIS_R, BOWL_VIS_R, 1, 32);
+const bowlFloorBody  = new CANNON.Body({
+  mass: 0, shape: bowlFloorShape, material: groundMat,
+});
+bowlFloorBody.position.set(0, FLOOR_TOP_Y - 0.5, 0);
+world.addBody(bowlFloorBody);
+
+/* --- 物理碗壁：一圈厚实盒体 --- */
+for (let i = 0; i < WALL_SEGMENTS; i++) {
+  const theta = (i / WALL_SEGMENTS) * Math.PI * 2;
+  const segArc = (2 * Math.PI * BOWL_VIS_R) / WALL_SEGMENTS;
+  const halfW  = segArc * 0.9;
+
+  const shape = new CANNON.Box(new CANNON.Vec3(halfW, WALL_H / 2, WALL_THICK / 2));
+  const body  = new CANNON.Body({ mass: 0, shape, material: groundMat });
+  body.position.set(
+    Math.cos(theta) * (BOWL_VIS_R - WALL_THICK / 2),
+    WALL_H / 2,
+    Math.sin(theta) * (BOWL_VIS_R - WALL_THICK / 2)
+  );
+  body.quaternion.setFromEuler(0, -(theta + Math.PI / 2), 0);
+  world.addBody(body);
+}
+
+/* ============================================================
+   2. 渲染场景
+   ============================================================ */
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x0a0a12);
+scene.fog = new THREE.Fog(0x0a0a12, 20, 40);
+
+const camera = new THREE.PerspectiveCamera(45, innerWidth / innerHeight, 0.1, 100);
+camera.position.set(0, 11, 12);
+camera.lookAt(0, 0.5, 0);
+
+const renderer = new THREE.WebGLRenderer({
+  canvas: document.getElementById('c'), antialias: true,
+});
+renderer.setSize(innerWidth, innerHeight);
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.15;
+
+/* --- 环境贴图：提供最主要的弥散光 --- */
+const pmrem = new THREE.PMREMGenerator(renderer);
+pmrem.compileEquirectangularShader();
+const envTexture = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+scene.environment = envTexture;
+
+/* ============================================================
+   3. 弥散光源系统
+   ============================================================ */
+// 半球光：天空暖白 + 地面暗红（碗反射），提供整体弥散
+const hemi = new THREE.HemisphereLight(0xfff6e6, 0x2a1210, 1.1);
+scene.add(hemi);
+
+// 唯一的方向光：只用来产生柔和阴影，强度压低
+const shadowLight = new THREE.DirectionalLight(0xfff4e0, 0.9);
+shadowLight.position.set(3, 18, 6);
+shadowLight.castShadow = true;
+shadowLight.shadow.mapSize.set(2048, 2048);
+shadowLight.shadow.camera.left   = -10;
+shadowLight.shadow.camera.right  =  10;
+shadowLight.shadow.camera.top    =  10;
+shadowLight.shadow.camera.bottom = -10;
+shadowLight.shadow.camera.near   = 1;
+shadowLight.shadow.camera.far    = 40;
+shadowLight.shadow.bias = -0.0008;
+shadowLight.shadow.radius = 8;   // 柔和阴影边缘
+scene.add(shadowLight);
+
+// 三个低强度点光环绕，打破方向感，让光照更弥散
+for (let i = 0; i < 3; i++) {
+  const a = (i / 3) * Math.PI * 2 + Math.PI / 5;
+  const light = new THREE.PointLight(0xffe8cc, 12, 30, 1.8);
+  light.position.set(Math.cos(a) * 6.5, 9, Math.sin(a) * 6.5);
+  scene.add(light);
+}
+
+/* ============================================================
+   4. 真实的碗：LatheGeometry 剖面旋转
+   ============================================================ */
+// 剖面点从底部外中心 → 外壁 → 碗口外翻 → 内壁 → 内底中心
+// x = 半径，y = 高度
+const bowlProfile = [
+  // 外底（平坦，稍厚）
+  new THREE.Vector2(0.00, -0.65),
+  new THREE.Vector2(1.20, -0.65),
+  new THREE.Vector2(2.30, -0.60),
+  new THREE.Vector2(3.20, -0.45),
+  new THREE.Vector2(3.90, -0.18),
+  new THREE.Vector2(4.40,  0.30),
+  new THREE.Vector2(4.72,  1.10),
+  new THREE.Vector2(4.88,  2.00),
+  new THREE.Vector2(4.96,  2.90),
+  // 碗口外翻
+  new THREE.Vector2(5.05,  3.35),
+  new THREE.Vector2(5.15,  3.65),
+  new THREE.Vector2(5.20,  3.78),   // 边缘最高点
+  // 内壁下来
+  new THREE.Vector2(5.02,  3.60),
+  new THREE.Vector2(4.82,  3.25),
+  new THREE.Vector2(4.68,  2.40),
+  new THREE.Vector2(4.55,  1.40),
+  new THREE.Vector2(4.30,  0.55),
+  new THREE.Vector2(3.90, -0.05),
+  new THREE.Vector2(3.20, -0.25),
+  new THREE.Vector2(2.20, -0.30),
+  new THREE.Vector2(1.20, -0.28),
+  new THREE.Vector2(0.00, -0.25),   // 内底中心
+];
+
+const bowlGeometry = new THREE.LatheGeometry(bowlProfile, 96);
+
+// 陶瓷碗材质：釉面深红
+const bowlMaterial = new THREE.MeshPhysicalMaterial({
+  color: 0x7a1010,
+  roughness: 0.32,
+  metalness: 0.05,
+  clearcoat: 1.0,
+  clearcoatRoughness: 0.12,
+  side: THREE.DoubleSide,
+  envMapIntensity: 1.0,
+});
+
+const bowlMesh = new THREE.Mesh(bowlGeometry, bowlMaterial);
+bowlMesh.castShadow    = true;
+bowlMesh.receiveShadow = true;
+scene.add(bowlMesh);
+
+// 碗身加一层柔光反射，让内壁看起来有釉面
+const bowlInner = new THREE.Mesh(
+  new THREE.LatheGeometry(bowlProfile.slice(11), 96),
+  new THREE.MeshPhysicalMaterial({
+    color: 0x8a1818,
+    roughness: 0.22,
+    metalness: 0.0,
+    clearcoat: 1.0,
+    clearcoatRoughness: 0.06,
+    transparent: true,
+    opacity: 0.35,
+    side: THREE.BackSide,
+    envMapIntensity: 1.4,
+  })
+);
+bowlInner.position.y = 0.005;
+bowlMesh.add(bowlInner);
+
+/* ============================================================
+   5. 骰子贴图（瓷白 + 釉面高光点数）
+   ============================================================ */
+function makeDiceTexture(n) {
+  const S  = 512;
+  const cv = document.createElement('canvas');
+  cv.width = cv.height = S;
+  const ctx = cv.getContext('2d');
+
+  ctx.fillStyle = '#faf6ee';
+  ctx.fillRect(0, 0, S, S);
+
+  const grad = ctx.createRadialGradient(S/2, S/2, S*0.15, S/2, S/2, S*0.78);
+  grad.addColorStop(0,   'rgba(255,255,255,0.45)');
+  grad.addColorStop(0.6, 'rgba(255,255,255,0)');
+  grad.addColorStop(1,   'rgba(120,100,80,0.10)');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, S, S);
+
+  const LAYOUT = {
+    1: [[0.5, 0.5]],
+    2: [[0.28, 0.28], [0.72, 0.72]],
+    3: [[0.28, 0.28], [0.5, 0.5], [0.72, 0.72]],
+    4: [[0.28, 0.28], [0.72, 0.28], [0.28, 0.72], [0.72, 0.72]],
+    5: [[0.28, 0.28], [0.72, 0.28], [0.5, 0.5], [0.28, 0.72], [0.72, 0.72]],
+    6: [[0.28, 0.22], [0.72, 0.22], [0.28, 0.5], [0.72, 0.5], [0.28, 0.78], [0.72, 0.78]],
+  };
+
+  const isRed = (n === 1 || n === 4);
+  const baseColor = isRed ? '#b22222' : '#1a1a1a';
+  const R = S * 0.085;
+
+  for (const [x, y] of LAYOUT[n]) {
+    const cx = x * S;
+    const cy = y * S;
+
+    ctx.beginPath();
+    ctx.arc(cx, cy + R * 0.08, R * 1.05, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(0,0,0,0.10)';
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(cx, cy, R, 0, Math.PI * 2);
+    ctx.fillStyle = baseColor;
+    ctx.fill();
+
+    const hg = ctx.createRadialGradient(
+      cx - R * 0.4, cy - R * 0.4, R * 0.05,
+      cx, cy, R
+    );
+    hg.addColorStop(0, 'rgba(255,255,255,0.55)');
+    hg.addColorStop(0.5, 'rgba(255,255,255,0.05)');
+    hg.addColorStop(1, 'rgba(255,255,255,0)');
+    ctx.beginPath();
+    ctx.arc(cx, cy, R, 0, Math.PI * 2);
+    ctx.fillStyle = hg;
+    ctx.fill();
+  }
+
+  const tex = new THREE.CanvasTexture(cv);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.anisotropy = 16;
+  return tex;
+}
+
+/* ============================================================
+   6. 圆角骰子几何 + 陶瓷材质
+   ============================================================ */
+const FACE_TO_VALUE = [1, 6, 2, 5, 3, 4];
+const diceGeometry  = new RoundedBoxGeometry(1, 1, 1, 6, 0.14);
+
+const diceMaterials = FACE_TO_VALUE.map(n =>
+  new THREE.MeshPhysicalMaterial({
+    map: makeDiceTexture(n),
+    roughness: 0.10,
+    metalness: 0.0,
+    clearcoat: 1.0,
+    clearcoatRoughness: 0.03,
+    reflectivity: 0.5,
+    sheen: 0.4,
+    sheenColor: new THREE.Color(0xfff4e0),
+    sheenRoughness: 0.6,
+    envMapIntensity: 1.2,
+  })
+);
+
+/* ============================================================
+   7. 骰子管理
+   ============================================================ */
+const diceList = [];
+let rolling     = false;
+let settleTimer = 0;
+let rollStart   = 0;
+
+function clearDice() {
+  for (const { mesh, body } of diceList) {
+    scene.remove(mesh);
+    world.removeBody(body);
+  }
+  diceList.length = 0;
+}
+
+function spawnDice() {
+  clearDice();
+
+  const SPAWN_R = 2.8;
+  const startAngle = Math.random() * Math.PI * 2;
+
+  for (let i = 0; i < 6; i++) {
+    const mesh = new THREE.Mesh(diceGeometry, diceMaterials);
+    mesh.castShadow = true;
+    mesh.receiveShadow = true;
+    scene.add(mesh);
+
+    const body = new CANNON.Body({
+      mass: 1,
+      shape: new CANNON.Box(new CANNON.Vec3(0.5, 0.5, 0.5)),
+      material: diceMat,
+      linearDamping: 0.06,
+      angularDamping: 0.10,
+    });
+    body.allowSleep      = true;
+    body.sleepSpeedLimit = 0.4;
+    body.sleepTimeLimit  = 0.4;
+
+    const a = startAngle + (i / 6) * Math.PI * 2;
+    body.position.set(
+      Math.cos(a) * SPAWN_R,
+      5.0 + i * 0.8,
+      Math.sin(a) * SPAWN_R
+    );
+
+    body.quaternion.setFromEuler(
+      Math.random() * Math.PI * 2,
+      Math.random() * Math.PI * 2,
+      Math.random() * Math.PI * 2
+    );
+
+    const inwardX = -Math.cos(a) * (0.5 + Math.random() * 0.5);
+    const inwardZ = -Math.sin(a) * (0.5 + Math.random() * 0.5);
+    body.velocity.set(inwardX, -6 - Math.random() * 3, inwardZ);
+
+    body.angularVelocity.set(
+      (Math.random() - 0.5) * 70,
+      (Math.random() - 0.5) * 70,
+      (Math.random() - 0.5) * 70
+    );
+
+    world.addBody(body);
+    diceList.push({ mesh, body });
+  }
+}
+
+/* ============================================================
+   8. 读取骰子点数
+   ============================================================ */
+const FACE_AXES = [
+  { axis: new THREE.Vector3( 1,  0,  0), value: 1 },
+  { axis: new THREE.Vector3(-1,  0,  0), value: 6 },
+  { axis: new THREE.Vector3( 0,  1,  0), value: 2 },
+  { axis: new THREE.Vector3( 0, -1,  0), value: 5 },
+  { axis: new THREE.Vector3( 0,  0,  1), value: 3 },
+  { axis: new THREE.Vector3( 0,  0, -1), value: 4 },
+];
+
+function readDieValue(body) {
+  const q = new THREE.Quaternion(
+    body.quaternion.x, body.quaternion.y, body.quaternion.z, body.quaternion.w
+  );
+  let bestY = -Infinity, bestValue = 1;
+  for (const { axis, value } of FACE_AXES) {
+    const worldAxis = axis.clone().applyQuaternion(q);
+    if (worldAxis.y > bestY) { bestY = worldAxis.y; bestValue = value; }
+  }
+  return bestValue;
+}
+
+/* ============================================================
+   9. 博饼规则（支持叠加奖励）
+   ============================================================ */
+function judge(dice) {
+  const counts = [0,0,0,0,0,0,0];
+  for (const d of dice) counts[d]++;
+  const c4 = counts[4];
+
+  if (c4 === 6) return { main: '六勃红', bonuses: [] };
+  for (let n = 1; n <= 6; n++)
+    if (n !== 4 && counts[n] === 6) return { main: '六勃黑', bonuses: [] };
+  if (c4 === 4 && counts[1] === 2) return { main: '状元插金花', bonuses: [] };
+  if (c4 === 5) return { main: '五红', bonuses: [] };
+
+  for (let n = 1; n <= 6; n++) {
+    if (n !== 4 && counts[n] === 5) {
+      return { main: '五子', bonuses: (c4 === 1) ? ['一秀'] : [] };
+    }
+  }
+  if (c4 === 4) return { main: '四红', bonuses: [] };
+  if (counts[1]===1 && counts[2]===1 && counts[3]===1 &&
+      counts[4]===1 && counts[5]===1 && counts[6]===1)
+    return { main: '对堂', bonuses: [] };
+  if (c4 === 3) return { main: '三红', bonuses: [] };
+
+  for (let n = 1; n <= 6; n++) {
+    if (n !== 4 && counts[n] === 4) {
+      let bonuses = [];
+      if (c4 === 1) bonuses = ['一秀'];
+      else if (c4 === 2) bonuses = ['二举'];
+      return { main: '四进', bonuses };
+    }
+  }
+  if (c4 === 2) return { main: '二举', bonuses: [] };
+  if (c4 === 1) return { main: '一秀', bonuses: [] };
+  return { main: '无奖', bonuses: [] };
+}
+
+/* ============================================================
+   10. UI
+   ============================================================ */
+const diceRowEl = document.getElementById('diceRow');
+const prizeEl   = document.getElementById('prize');
+const bonusEl   = document.getElementById('bonus');
+const statusEl  = document.getElementById('status');
+const rollBtn   = document.getElementById('rollBtn');
+
+const PRIZE_COLORS = {
+  '六勃红':'#ff4757','六勃黑':'#a55eea','状元插金花':'#ff6b81',
+  '五红':'#ff6348','五子':'#ffa502','四红':'#ff7f50',
+  '对堂':'#7bed9f','三红':'#70a1ff','四进':'#1e90ff',
+  '二举':'#b8e994','一秀':'#dfe4ea','无奖':'#57606f',
+};
+
+function renderDiceRow(values) {
+  diceRowEl.innerHTML = '';
+  for (let i = 0; i < 6; i++) {
+    const el = document.createElement('div');
+    el.className = 'die';
+    if (values) {
+      el.textContent = values[i];
+      if (values[i] === 4) el.classList.add('four');
+    } else {
+      el.textContent = '?';
+      el.classList.add('placeholder');
+    }
+    diceRowEl.appendChild(el);
+  }
+}
+
+function startRoll() {
+  if (rolling) return;
+  spawnDice();
+  rolling = true;
+  settleTimer = 0;
+  rollStart = performance.now();
+  rollBtn.disabled = true;
+  statusEl.textContent = '骰子滚动中…';
+  prizeEl.textContent = '…';
+  prizeEl.style.color = '#7a7a9a';
+  bonusEl.textContent = '';
+  renderDiceRow(null);
+}
+
+function finishRoll() {
+  if (!rolling) return;
+  rolling = false;
+
+  const values = diceList.map(({ body }) => readDieValue(body));
+  const result = judge(values);
+  const elapsed = ((performance.now() - rollStart) / 1000).toFixed(1);
+
+  renderDiceRow(values);
+  prizeEl.textContent = result.main;
+  prizeEl.style.color = PRIZE_COLORS[result.main] || '#fff';
+  bonusEl.textContent = result.bonuses.length
+    ? '附加奖励：' + result.bonuses.join(' + ') : '';
+
+  const total = values.reduce((a, b) => a + b, 0);
+  statusEl.textContent = `点数 [${values.join(' ')}] · 合计 ${total} · 用时 ${elapsed}s`;
+  rollBtn.disabled = false;
+}
+
+rollBtn.addEventListener('click', startRoll);
+
+/* ============================================================
+   11. 主循环
+   ============================================================ */
+const clock = new THREE.Clock();
+const MAX_DT   = 1 / 30;
+const FIXED_DT = 1 / 240;
+
+function animate() {
+  requestAnimationFrame(animate);
+
+  const dt = Math.min(clock.getDelta(), MAX_DT);
+  world.step(FIXED_DT, dt, 20);
+
+  if (rolling) {
+    for (const { body } of diceList) {
+      const r = Math.hypot(body.position.x, body.position.z);
+
+      if (r > BOWL_INNER_R - 0.5) {
+        const scale = (BOWL_INNER_R - 0.5) / r;
+        body.position.x *= scale;
+        body.position.z *= scale;
+        const nx = -body.position.x / (r || 1);
+        const nz = -body.position.z / (r || 1);
+        const vn = body.velocity.x * nx + body.velocity.z * nz;
+        if (vn < 0) {
+          body.velocity.x -= 2 * vn * nx;
+          body.velocity.z -= 2 * vn * nz;
+        }
+      }
+
+      if (r > BOWL_VIS_R + 2 ||
+          body.position.y < -3 ||
+          body.position.y > 25 ||
+          !isFinite(body.position.x)) {
+        body.position.set(0, 3, 0);
+        body.velocity.set(0, -3, 0);
+        body.angularVelocity.set(0, 0, 0);
+      }
+    }
+  }
+
+  for (const { mesh, body } of diceList) {
+    mesh.position.set(body.position.x, body.position.y, body.position.z);
+    mesh.quaternion.set(
+      body.quaternion.x, body.quaternion.y, body.quaternion.z, body.quaternion.w
+    );
+  }
+
+  if (rolling) {
+    let allStill = true;
+    for (const { body } of diceList) {
+      if (body.velocity.lengthSquared() > 0.4 ||
+          body.angularVelocity.lengthSquared() > 0.4) {
+        allStill = false;
+        break;
+      }
+    }
+    if (allStill) {
+      settleTimer += dt;
+      if (settleTimer > 0.5) finishRoll();
+    } else {
+      settleTimer = 0;
+    }
+    if (rolling && performance.now() - rollStart > 12000) finishRoll();
+  }
+
+  renderer.render(scene, camera);
+}
+
+/* ============================================================
+   12. 初始化
+   ============================================================ */
+addEventListener('resize', () => {
+  camera.aspect = innerWidth / innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight);
+});
+
+renderDiceRow(null);
+animate();
+</script>
+</body>
+</html>

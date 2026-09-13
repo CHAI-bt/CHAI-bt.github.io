@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>球谐函数本征态 - 自适应经线可视化</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <style>
+    .paper-grid {
+      background-color: #121418;
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.07) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+      background-size: 18px 18px;
+    }
+    .tnum { font-feature-settings: "tnum"; font-variant-numeric: tabular-nums; }
+    input[type=number]::-webkit-inner-spin-button, 
+    input[type=number]::-webkit-outer-spin-button { 
+      -webkit-appearance: none; 
+      margin: 0; 
+    }
+  </style>
+</head>
+<body class="bg-[#0b0c0e] flex items-center justify-center min-h-screen p-4 text-[#e6edf3]">
+
+  <div class="flex flex-col w-full max-w-[480px] bg-[#16191f] p-4 rounded-md border border-[#2b303a] shadow-2xl">
+    
+    <!-- 3D 视口 -->
+    <div class="paper-grid relative aspect-square w-full rounded-sm border border-[#2b303a] overflow-hidden cursor-grab active:cursor-grabbing">
+      <div id="canvas-container" class="absolute inset-0"></div>
+    </div>
+
+    <!-- 底部控制栏 -->
+    <div class="mt-3 flex items-end justify-between gap-4" role="group" aria-label="球谐函数本征态">
+      <div id="presets-group" class="flex items-end gap-1.5"></div>
+
+      <div class="flex items-center gap-3">
+        <div class="flex items-center gap-1 text-[11px] font-mono text-[#8b949e]">
+          <span>l:</span>
+          <input id="input-l" type="number" min="0" max="6" value="3" 
+            class="w-5 text-center border-b border-[#484f58] bg-transparent text-white outline-none focus:border-[#58a6ff] tnum">
+          <span>m:</span>
+          <input id="input-m" type="number" min="-6" max="6" value="3" 
+            class="w-6 text-center border-b border-[#484f58] bg-transparent text-white outline-none focus:border-[#58a6ff] tnum">
+          <button id="btn-apply" class="text-[10px] px-1.5 py-0.5 bg-[#21262d] hover:bg-[#30363d] text-gray-200 border border-[#363b42] rounded transition-colors">确定</button>
+        </div>
+
+        <p class="font-mono text-xs text-[#8b949e] tracking-tight">
+          Y(<span id="label-l" class="tnum font-semibold text-white">3</span>,<span id="label-m" class="tnum font-semibold text-white">3</span>)
+        </p>
+      </div>
+    </div>
+
+    <!-- 说明文本及当前采样切片数提示 -->
+    <div class="mt-2 flex items-center justify-between text-[12px] text-[#8b949e] select-none h-8">
+      <p id="orb-description" class="leading-relaxed"></p>
+      <span id="slice-count-badge" class="font-mono text-[10px] text-[#58a6ff] bg-[#1b222d] px-1.5 py-0.5 rounded border border-[#2b384a] whitespace-nowrap ml-2">切片: 46</span>
+    </div>
+  </div>
+
+  <script>
+    const PRESETS = [
+      { l: 0, m: 0, desc: "l = 0，各向同性；没有角向节面，所以是一个球。" },
+      { l: 1, m: 0, desc: "l = 1，一个角向节面（xy 平面）把球切成上下两瓣。" },
+      { l: 2, m: 0, desc: "l = 2, m = 0；两个锥形节面，留下两瓣加一圈环。" },
+      { l: 2, m: 2, desc: "同为 l = 2 但 m = 2；节面改为竖直，四瓣落在赤道面上。" },
+      { l: 3, m: 3, desc: "l = 3, m = 3；绕轴一周变号三次，得到六瓣。" }
+    ];
+
+    const container = document.getElementById('canvas-container');
+    const scene = new THREE.Scene();
+    
+    const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
+    camera.position.set(0, 0.4, 4.2);
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setSize(container.clientWidth, container.clientHeight);
+    container.appendChild(renderer.domElement);
+
+    const controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.08;
+
+    // 中间贯穿红虚线
+    const axisGeom = new THREE.BufferGeometry().setFromPoints([
+      new THREE.Vector3(0, -2.4, 0),
+      new THREE.Vector3(0, 2.4, 0)
+    ]);
+    const axisMat = new THREE.LineDashedMaterial({
+      color: 0xff6666,
+      dashSize: 0.08,
+      gapSize: 0.06,
+      transparent: true,
+      opacity: 0.7
+    });
+    const axisLine = new THREE.Line(axisGeom, axisMat);
+    axisLine.computeLineDistances();
+    scene.add(axisLine);
+
+    // 数学函数
+    function legendre(l, m, x) {
+      m = Math.abs(m);
+      if (m > l) return 0;
+      let pmm = 1.0;
+      if (m > 0) {
+        const somx2 = Math.sqrt(Math.max(0, (1.0 - x) * (1.0 + x)));
+        let fact = 1.0;
+        for (let i = 1; i <= m; i++) {
+          pmm *= -fact * somx2;
+          fact += 2.0;
+        }
+      }
+      if (l === m) return pmm;
+      let pmmp1 = x * (2.0 * m + 1.0) * pmm;
+      if (l === m + 1) return pmmp1;
+      let pll = 0;
+      for (let ll = m + 2; ll <= l; ll++) {
+        pll = ((2.0 * ll - 1.0) * x * pmmp1 - (ll + m - 1.0) * pmm) / (ll - m);
+        pmm = pmmp1;
+        pmmp1 = pll;
+      }
+      return pll;
+    }
+
+    function factorial(n) {
+      let res = 1;
+      for (let i = 2; i <= n; i++) res *= i;
+      return res;
+    }
+
+    function realSphericalHarmonic(l, m, theta, phi) {
+      const absM = Math.abs(m);
+      const K = Math.sqrt(((2 * l + 1) / (4 * Math.PI)) * (factorial(l - absM) / factorial(l + absM)));
+      const P = legendre(l, absM, Math.cos(theta));
+      if (m > 0) return Math.SQRT2 * K * P * Math.cos(m * phi);
+      if (m < 0) return Math.SQRT2 * K * P * Math.sin(absM * phi);
+      return K * P;
+    }
+
+    // ========================================================
+    // 【核心创新】：最大 72 条容量池 + 独立动态透明度 Shader
+    // ========================================================
+    const MAX_SLICES = 72;     // 最大容量
+    const numThetaSteps = 180;
+    const totalPoints = numThetaSteps + 1;
+    const curvesGroup = new THREE.Group();
+    scene.add(curvesGroup);
+
+    // 基础着色器（支持近粗远细 + 独立每条线的平滑淡入淡出 lineAlpha）
+    function createLineMaterial() {
+      return new THREE.ShaderMaterial({
+        transparent: true,
+        depthWrite: false,
+        uniforms: {
+          nearDist:  { value: 2.3 },
+          farDist:   { value: 6.1 },
+          lineAlpha: { value: 0.0 } // 动态控制每根线的透明度权重
+        },
+        vertexShader: `
+          varying float vDepth;
+          void main() {
+            vec4 mvPos = modelViewMatrix * vec4(position, 1.0);
+            vDepth = -mvPos.z;
+            gl_Position = projectionMatrix * mvPos;
+          }
+        `,
+        fragmentShader: `
+          uniform float nearDist;
+          uniform float farDist;
+          uniform float lineAlpha;
+          varying float vDepth;
+          void main() {
+            float factor = clamp((vDepth - nearDist) / (farDist - nearDist), 0.0, 1.0);
+            vec3 nearColor = vec3(1.0, 1.0, 1.0);
+            vec3 farColor  = vec3(0.42, 0.46, 0.52);
+
+            vec3 color = mix(nearColor, farColor, factor);
+            // 综合计算：深度衰减 * 该线条自身的淡入淡出权重
+            float alpha = mix(0.88, 0.12, factor) * lineAlpha;
+
+            gl_FragColor = vec4(color, alpha);
+          }
+        `
+      });
+    }
+
+    const lines = [];
+    const currentPositions = [];
+    const targetPositions = [];
+    const currentAlphas = new Float32Array(MAX_SLICES);
+    const targetAlphas = new Float32Array(MAX_SLICES);
+
+    // 预先建立 72 根线，之后完全无需重复 GC 销毁
+    for (let s = 0; s < MAX_SLICES; s++) {
+      const geom = new THREE.BufferGeometry();
+      const posArray = new Float32Array(totalPoints * 3);
+      geom.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+      
+      const mat = createLineMaterial();
+      const line = new THREE.LineLoop(geom, mat);
+      curvesGroup.add(line);
+      lines.push(line);
+
+      currentPositions.push(posArray);
+      targetPositions.push(new Float32Array(totalPoints * 3));
+    }
+
+    // 根据 m 的大小自适应计算所需切片数
+    function getSliceCountForM(m) {
+      const absM = Math.abs(m);
+      // m=0: 16条（疏朗极简）；m=1: 26条；m=3: 46条；m>=5: 66~72条
+      return Math.min(MAX_SLICES, 16 + absM * 10);
+    }
+
+    function setTargetHarmonic(l, m, instant = false) {
+      const scale = 1.9;
+      const activeCount = getSliceCountForM(m);
+      document.getElementById('slice-count-badge').textContent = `切片: ${activeCount}`;
+
+      for (let s = 0; s < MAX_SLICES; s++) {
+        const tgt = targetPositions[s];
+        const cur = currentPositions[s];
+        let ptr = 0;
+
+        if (s < activeCount) {
+          // 在有效切片范围内：均匀分布在 [0, PI)
+          targetAlphas[s] = 1.0; // 目标状态：完全激活淡入
+          const phi = (s / activeCount) * Math.PI; 
+
+          for (let i = 0; i <= numThetaSteps; i++) {
+            const t = (i / numThetaSteps) * Math.PI * 2;
+            let theta, currentPhi;
+
+            if (t <= Math.PI) {
+              theta = t;
+              currentPhi = phi;
+            } else {
+              theta = 2 * Math.PI - t;
+              currentPhi = phi + Math.PI;
+            }
+
+            const val = realSphericalHarmonic(l, m, theta, currentPhi);
+            const r = Math.abs(val) * scale;
+
+            const y = r * Math.cos(theta);
+            const x = r * Math.sin(theta) * Math.cos(currentPhi);
+            const z = r * Math.sin(theta) * Math.sin(currentPhi);
+
+            tgt[ptr] = x;
+            tgt[ptr + 1] = y;
+            tgt[ptr + 2] = z;
+
+            if (instant) {
+              cur[ptr] = x;
+              cur[ptr + 1] = y;
+              cur[ptr + 2] = z;
+            }
+            ptr += 3;
+          }
+        } else {
+          // 超出范围的多余线条：目标状态为淡出隐退 (targetAlpha = 0)
+          targetAlphas[s] = 0.0;
+          // 目标点收拢在原点，避免在空间遗留怪异骨架
+          for (let i = 0; i <= numThetaSteps; i++) {
+            tgt[ptr] = 0;
+            tgt[ptr + 1] = 0;
+            tgt[ptr + 2] = 0;
+            ptr += 3;
+          }
+        }
+
+        if (instant) {
+          currentAlphas[s] = targetAlphas[s];
+          lines[s].material.uniforms.lineAlpha.value = currentAlphas[s];
+          lines[s].geometry.attributes.position.needsUpdate = true;
+        }
+      }
+    }
+
+    // UI 事件
+    const presetsGroup = document.getElementById('presets-group');
+    const labelL = document.getElementById('label-l');
+    const labelM = document.getElementById('label-m');
+    const inputL = document.getElementById('input-l');
+    const inputM = document.getElementById('input-m');
+    const descEl = document.getElementById('orb-description');
+
+    function applyState(l, m, instant = false) {
+      labelL.textContent = l;
+      labelM.textContent = m;
+      inputL.value = l;
+      inputM.value = m;
+
+      document.querySelectorAll('.tick-btn').forEach(btn => {
+        const bl = parseInt(btn.dataset.l);
+        const bm = parseInt(btn.dataset.m);
+        const line = btn.querySelector('span');
+        const isActive = (bl === l && bm === m);
+        btn.setAttribute('aria-pressed', isActive);
+        if (isActive) {
+          line.className = "w-px h-4 bg-white transition-[height,background-color] duration-150";
+        } else {
+          line.className = "w-px h-2 bg-[#484f58] group-hover:h-3 group-hover:bg-[#8b949e] transition-[height,background-color] duration-150";
+        }
+      });
+
+      const preset = PRESETS.find(p => p.l === l && p.m === m);
+      descEl.textContent = preset ? preset.desc : `自定义高阶态：l = ${l}, m = ${m}。`;
+
+      setTargetHarmonic(l, m, instant);
+    }
+
+    PRESETS.forEach(p => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.dataset.l = p.l;
+      btn.dataset.m = p.m;
+      btn.className = "tick-btn group flex h-5 w-5 items-end justify-center focus:outline-none";
+      btn.innerHTML = `<span class="w-px h-2 bg-[#484f58] transition-[height,background-color] duration-150"></span>`;
+      btn.onclick = () => applyState(p.l, p.m);
+      presetsGroup.appendChild(btn);
+    });
+
+    document.getElementById('btn-apply').onclick = () => {
+      let l = parseInt(inputL.value);
+      let m = parseInt(inputM.value);
+      if (isNaN(l) || isNaN(m)) return;
+      if (Math.abs(m) > l) {
+        alert('|m| 必须小于或等于 l');
+        return;
+      }
+      applyState(l, m);
+    };
+
+    applyState(3, 3, true);
+
+    // ========================================================
+    // 动画主循环：双重插值（位置 LERP + 透明度 LERP）
+    // ========================================================
+    function animate() {
+      requestAnimationFrame(animate);
+
+      const posLerp = 0.07;
+      const alphaLerp = 0.08;
+
+      for (let s = 0; s < MAX_SLICES; s++) {
+        // 1. 透明度平滑淡入/淡出
+        const alphaDiff = targetAlphas[s] - currentAlphas[s];
+        if (Math.abs(alphaDiff) > 0.001) {
+          currentAlphas[s] += alphaDiff * alphaLerp;
+          lines[s].material.uniforms.lineAlpha.value = currentAlphas[s];
+        }
+
+        // 如果线条完全透明不可见，跳过其顶点更新，节省大量 GPU 传输
+        if (currentAlphas[s] < 0.005 && targetAlphas[s] === 0.0) continue;
+
+        // 2. 顶点位置平滑形变
+        const cur = currentPositions[s];
+        const tgt = targetPositions[s];
+        const posAttr = lines[s].geometry.attributes.position;
+        let needsUpdate = false;
+
+        for (let i = 0; i < cur.length; i++) {
+          const diff = tgt[i] - cur[i];
+          if (Math.abs(diff) > 0.0001) {
+            cur[i] += diff * posLerp;
+            needsUpdate = true;
+          } else {
+            cur[i] = tgt[i];
+          }
+        }
+
+        if (needsUpdate) {
+          posAttr.needsUpdate = true;
+        }
+      }
+
+      controls.update();
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    window.addEventListener('resize', () => {
+      const w = container.clientWidth;
+      const h = container.clientHeight;
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+      renderer.setSize(w, h);
+    });
+  </script>
+</body>
+</html>
