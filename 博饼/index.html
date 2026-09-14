@@ -8,54 +8,95 @@
   * { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; height: 100%; overflow: hidden; }
   body {
-    background: #0f0f1a;
+    background: #0a0a12;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
     color: #fff;
     user-select: none;
   }
   #c { display: block; width: 100%; height: 100%; }
 
-  #panel {
-    position: fixed; top: 20px; left: 20px;
-    background: rgba(20, 20, 35, 0.85);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 16px;
-    padding: 18px 22px;
-    min-width: 260px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  .panel {
+    position: fixed;
+    background: rgba(18, 18, 30, 0.88);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.55);
     z-index: 10;
+    overflow: hidden;
   }
-  #panel h1 { font-size: 18px; margin: 0 0 2px; font-weight: 700; letter-spacing: 2px; }
-  #panel .sub { font-size: 11px; color: #7a7a9a; margin-bottom: 16px; letter-spacing: 0.5px; }
+  .panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    cursor: pointer;
+    user-select: none;
+    background: rgba(255,255,255,0.03);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .panel-header:hover { background: rgba(255,255,255,0.06); }
+  .panel-header h1 { font-size: 16px; margin: 0; font-weight: 800; letter-spacing: 2px; }
+  .panel-header h2 { font-size: 12px; margin: 0; font-weight: 600; letter-spacing: 1.5px; color: #a8a8c0; }
+  .toggle {
+    font-size: 18px;
+    color: #6a6a85;
+    line-height: 1;
+    transition: transform 0.25s;
+    font-weight: 300;
+  }
+  .panel.collapsed .toggle { transform: rotate(-90deg); }
+  .panel-content {
+    padding: 16px;
+    transition: max-height 0.3s ease, opacity 0.2s ease, padding 0.25s ease;
+    max-height: 900px;
+    opacity: 1;
+    overflow: hidden;
+  }
+  .panel.collapsed .panel-content {
+    max-height: 0 !important;
+    opacity: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
 
-  #diceRow { display: flex; gap: 7px; margin-bottom: 16px; }
-  .die {
-    width: 34px; height: 34px;
-    background: #fdfcf8;
-    border-radius: 8px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 19px; font-weight: 800;
-    color: #1a1a1a;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.4);
-  }
-  .die.four { color: #d32f2f; }
-  .die.placeholder { color: #bbb; background: #2a2a3e; box-shadow: none; }
+  /* ========== 主面板 ========== */
+  #mainPanel { top: 20px; left: 20px; width: 300px; }
 
   #prize {
-    font-size: 23px; font-weight: 800;
-    min-height: 30px; margin-bottom: 3px;
+    font-size: 30px;
+    font-weight: 800;
+    min-height: 40px;
+    text-align: center;
+    margin-bottom: 4px;
+    letter-spacing: 3px;
+    transition: color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  #bonus {
+    font-size: 14px;
+    color: #ffd166;
+    min-height: 22px;
+    text-align: center;
+    margin-bottom: 18px;
+    font-weight: 600;
     letter-spacing: 1px;
   }
-  #bonus { font-size: 14px; color: #ffd166; min-height: 19px; margin-bottom: 14px; font-weight: 600; }
 
   #rollBtn {
-    width: 100%; padding: 13px;
-    font-size: 16px; font-weight: 700; letter-spacing: 2px;
-    border: none; border-radius: 10px;
+    width: 100%;
+    padding: 14px;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    border: none;
+    border-radius: 10px;
     background: linear-gradient(135deg, #e74c3c, #a8231a);
-    color: #fff; cursor: pointer;
+    color: #fff;
+    cursor: pointer;
     transition: all 0.15s;
     box-shadow: 0 4px 14px rgba(231, 76, 60, 0.35);
   }
@@ -63,20 +104,419 @@
   #rollBtn:active:not(:disabled) { transform: scale(0.97); }
   #rollBtn:disabled { opacity: 0.45; cursor: not-allowed; box-shadow: none; }
 
-  #status { font-size: 11px; color: #7a7a9a; margin-top: 10px; text-align: center; height: 15px; }
+  #status {
+    font-size: 11px;
+    color: #7a7a9a;
+    margin-top: 10px;
+    text-align: center;
+    height: 15px;
+    letter-spacing: 0.5px;
+  }
+
+  /* ========== 参数面板 ========== */
+  #paramPanel { top: 20px; right: 20px; width: 290px; }
+
+  .section { margin-bottom: 18px; }
+  .section:last-child { margin-bottom: 0; }
+  .section-label {
+    font-size: 11px;
+    color: #a8a8c0;
+    margin-bottom: 9px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+
+  .material-picker {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .material-btn {
+    padding: 11px 8px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    background: rgba(255,255,255,0.04);
+    border: 1.5px solid rgba(255,255,255,0.1);
+    border-radius: 9px;
+    color: #a8a8c0;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    justify-content: center;
+  }
+  .material-btn:hover {
+    background: rgba(255,255,255,0.09);
+    color: #fff;
+  }
+  .material-btn.active {
+    background: linear-gradient(135deg, rgba(231, 76, 60, 0.25), rgba(168, 35, 26, 0.25));
+    border-color: #e74c3c;
+    color: #fff;
+    box-shadow: 0 0 0 1px rgba(231, 76, 60, 0.4), 0 4px 12px rgba(231, 76, 60, 0.25);
+  }
+  .material-swatch {
+    width: 14px;
+    height: 14px;
+    border-radius: 4px;
+    flex-shrink: 0;
+    box-shadow: inset 0 -2px 3px rgba(0,0,0,0.25), 0 1px 2px rgba(0,0,0,0.4);
+  }
+  .material-swatch.ceramic { background: linear-gradient(135deg, #ffffff, #e8dfd0); }
+  .material-swatch.plastic { background: linear-gradient(135deg, #ffffff, #d0d0d0); }
+  .material-swatch.wood    { background: linear-gradient(135deg, #e8c398, #a07548); }
+  .material-swatch.bone    { background: linear-gradient(135deg, #faf0dd, #cdbb98); }
+
+  .param-row { margin-bottom: 14px; }
+  .param-row:last-child { margin-bottom: 0; }
+  .param-row label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: #a8a8c0;
+    margin-bottom: 7px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+  }
+  .param-row .val {
+    color: #ffa502;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+  .param-row input[type=range] {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 4px;
+    border-radius: 2px;
+    background: linear-gradient(90deg, #e74c3c, #ffa502);
+    outline: none;
+    cursor: pointer;
+  }
+  .param-row input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #fff;
+    border: 2px solid #e74c3c;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+    transition: transform 0.1s;
+  }
+  .param-row input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.15); }
+  .param-row input[type=range]::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #fff;
+    border: 2px solid #e74c3c;
+    cursor: pointer;
+  }
+
+  .material-info {
+    margin-top: 10px;
+    padding: 10px 12px;
+    background: rgba(255,255,255,0.03);
+    border-radius: 8px;
+    font-size: 11px;
+    color: #8a8aa0;
+    line-height: 1.8;
+  }
+  .material-info .row {
+    display: flex;
+    justify-content: space-between;
+  }
+  .material-info .row span:last-child {
+    color: #c8c8dc;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .divider {
+    height: 1px;
+    background: rgba(255,255,255,0.06);
+    margin: 18px 0;
+  }
+
+  /* ========== 历史面板 ========== */
+  #historyPanel {
+    bottom: 20px;
+    left: 20px;
+    width: 320px;
+    max-height: 50vh;
+    display: flex;
+    flex-direction: column;
+  }
+  #historyPanel .panel-content {
+    padding: 8px 12px;
+    overflow-y: auto;
+    max-height: 44vh;
+  }
+  #historyPanel.collapsed .panel-content { max-height: 0 !important; }
+
+  .history-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 4px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    font-size: 13px;
+  }
+  .history-item:last-child { border-bottom: none; }
+
+  .history-dice-text {
+    font-family: "SF Mono", "Menlo", "Consolas", monospace;
+    font-size: 13px;
+    color: #a8a8c0;
+    letter-spacing: 2px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+  .history-prize {
+    margin-left: auto;
+    font-weight: 700;
+    font-size: 13px;
+    white-space: nowrap;
+    letter-spacing: 0.5px;
+  }
+  .history-empty {
+    text-align: center;
+    color: #55556a;
+    font-size: 12px;
+    padding: 20px 0;
+  }
+  #historyPanel .panel-content::-webkit-scrollbar { width: 6px; }
+  #historyPanel .panel-content::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.1);
+    border-radius: 3px;
+  }
+
+  /* ========== 规则按钮 ========== */
+  .floating-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 12px 22px;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    border: none;
+    border-radius: 50px;
+    background: linear-gradient(135deg, #6c5ce7, #4b3bc4);
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.15s;
+    box-shadow: 0 6px 20px rgba(108, 92, 231, 0.45);
+    z-index: 20;
+  }
+  .floating-btn:hover { filter: brightness(1.15); transform: translateY(-1px); }
+  .floating-btn:active { transform: scale(0.96); }
+
+  .modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    opacity: 1;
+    transition: opacity 0.25s;
+    padding: 20px;
+  }
+  .modal.hidden { opacity: 0; pointer-events: none; }
+
+  .modal-content {
+    background: #16162a;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 18px;
+    max-width: 620px;
+    width: 100%;
+    max-height: 85vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.7);
+    transform: scale(1);
+    transition: transform 0.25s;
+  }
+  .modal.hidden .modal-content { transform: scale(0.95); }
+
+  .modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .modal-header h2 { font-size: 18px; margin: 0; letter-spacing: 2px; }
+  .modal-header .close {
+    font-size: 28px;
+    color: #6a6a85;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0 6px;
+    transition: color 0.15s;
+  }
+  .modal-header .close:hover { color: #fff; }
+
+  .modal-body { padding: 16px 24px 24px; overflow-y: auto; }
+  .modal-body::-webkit-scrollbar { width: 8px; }
+  .modal-body::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.12);
+    border-radius: 4px;
+  }
+
+  .rule-section { margin-bottom: 22px; }
+  .rule-section:last-child { margin-bottom: 0; }
+  .rule-section h3 {
+    font-size: 13px;
+    color: #a8a8c0;
+    margin: 0 0 10px;
+    letter-spacing: 2px;
+    font-weight: 600;
+  }
+  .rule-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .rule-table tr { border-bottom: 1px solid rgba(255,255,255,0.05); }
+  .rule-table tr:last-child { border-bottom: none; }
+  .rule-table td { padding: 9px 4px; vertical-align: middle; }
+  .rule-table td:first-child { font-weight: 700; width: 110px; white-space: nowrap; }
+  .rule-table td:last-child { color: #c8c8dc; font-size: 12px; }
+  .rule-bonus {
+    background: rgba(255, 209, 102, 0.06);
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 12px;
+    color: #ffd166;
+    line-height: 1.9;
+  }
+  .rule-bonus strong { color: #ffb020; }
+
+  @media (max-width: 900px) {
+    #paramPanel { display: none; }
+    #historyPanel { display: none; }
+  }
 </style>
 </head>
 <body>
 <canvas id="c"></canvas>
 
-<div id="panel">
-  <h1>博 饼</h1>
-  <div class="sub">PHYSICS SIMULATION</div>
-  <div id="diceRow"></div>
-  <div id="prize">准备开始</div>
-  <div id="bonus"></div>
-  <button id="rollBtn">掷 骰 子</button>
-  <div id="status"></div>
+<div id="mainPanel" class="panel">
+  <div class="panel-header" data-toggle>
+    <h1>博 饼</h1>
+    <span class="toggle">−</span>
+  </div>
+  <div class="panel-content">
+    <div id="prize">准备开始</div>
+    <div id="bonus"></div>
+    <button id="rollBtn">掷 骰 子</button>
+    <div id="status"></div>
+  </div>
+</div>
+
+<div id="paramPanel" class="panel">
+  <div class="panel-header" data-toggle>
+    <h2>设置</h2>
+    <span class="toggle">−</span>
+  </div>
+  <div class="panel-content">
+
+    <div class="section">
+      <div class="section-label">骰子材质</div>
+      <div class="material-picker">
+        <button class="material-btn active" data-material="ceramic">
+          <span class="material-swatch ceramic"></span>陶瓷
+        </button>
+        <button class="material-btn" data-material="plastic">
+          <span class="material-swatch plastic"></span>塑料
+        </button>
+        <button class="material-btn" data-material="wood">
+          <span class="material-swatch wood"></span>木质
+        </button>
+        <button class="material-btn" data-material="bone">
+          <span class="material-swatch bone"></span>骨质
+        </button>
+      </div>
+      <div class="material-info" id="materialInfo">
+        <div class="row"><span>弹性</span><span id="mi-rest">0.18</span></div>
+        <div class="row"><span>摩擦</span><span id="mi-fric">0.35</span></div>
+        <div class="row"><span>角阻尼</span><span id="mi-damp">0.10</span></div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="section">
+      <div class="section-label">可调参数</div>
+      <div class="param-row">
+        <label>下落高度 <span class="val" id="v-dropHeight">5.0</span></label>
+        <input type="range" min="2.5" max="9" step="0.1" value="5.0" data-param="dropHeight">
+      </div>
+      <div class="param-row">
+        <label>初始角速度 <span class="val" id="v-angularSpeed">70</span></label>
+        <input type="range" min="15" max="130" step="1" value="70" data-param="angularSpeed">
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div id="historyPanel" class="panel collapsed">
+  <div class="panel-header" data-toggle>
+    <h2>历史记录 <span id="historyCount" style="color:#ffa502">(0)</span></h2>
+    <span class="toggle">−</span>
+  </div>
+  <div class="panel-content" id="historyContent">
+    <div class="history-empty">还没有记录</div>
+  </div>
+</div>
+
+<button id="ruleBtn" class="floating-btn">规 则</button>
+
+<div id="ruleModal" class="modal hidden">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>博 饼 规 则</h2>
+      <span class="close" id="closeRule">×</span>
+    </div>
+    <div class="modal-body">
+      <div class="rule-section">
+        <h3>奖 项 等 级（从大到小）</h3>
+        <table class="rule-table">
+          <tr><td style="color:#ff4757">六勃红</td><td>六个 4</td></tr>
+          <tr><td style="color:#a55eea">六勃黑</td><td>六个相同且非 4</td></tr>
+          <tr><td style="color:#ff6b81">状元插金花</td><td>四个 4 + 两个 1</td></tr>
+          <tr><td style="color:#ff6348">五红</td><td>五个 4 + 一个非 4</td></tr>
+          <tr><td style="color:#ffa502">五子</td><td>五个相同（非 4）+ 一个不同</td></tr>
+          <tr><td style="color:#ff7f50">四红</td><td>四个 4 + 两个其他</td></tr>
+          <tr><td style="color:#7bed9f">对堂</td><td>1、2、3、4、5、6 各一个</td></tr>
+          <tr><td style="color:#70a1ff">三红</td><td>三个 4 + 三个非 4</td></tr>
+          <tr><td style="color:#1e90ff">四进</td><td>四个相同（非 4）+ 两个不同</td></tr>
+          <tr><td style="color:#b8e994">二举</td><td>两个 4</td></tr>
+          <tr><td style="color:#dfe4ea">一秀</td><td>一个 4</td></tr>
+        </table>
+      </div>
+      <div class="rule-section">
+        <h3>附 加 奖 励（可叠加）</h3>
+        <div class="rule-bonus">
+          · 获得 <strong>五子</strong> 且剩下那颗是 <strong>4</strong> → 附加 <strong>一秀</strong><br>
+          · 获得 <strong>四进</strong> 且剩下两颗中有 <strong>1 个 4</strong> → 附加 <strong>一秀</strong><br>
+          · 获得 <strong>四进</strong> 且剩下两颗中有 <strong>2 个 4</strong> → 附加 <strong>二举</strong>
+        </div>
+      </div>
+      <div class="rule-section">
+        <h3>材 质 手 感</h3>
+        <div style="font-size:12px;color:#a8a8c0;line-height:1.9;">
+          <span style="color:#ffd166">陶瓷</span>：中等弹性，光滑釉面<br>
+          <span style="color:#ffd166">塑料</span>：高弹性，落地蹦跳明显<br>
+          <span style="color:#ffd166">木质</span>：低弹性，快速吸收能量<br>
+          <span style="color:#ffd166">骨质</span>：中等偏上，接近传统骰子手感
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script type="importmap">
@@ -94,22 +534,64 @@ import * as THREE from 'three';
 import * as CANNON from 'cannon-es';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 /* ============================================================
-   物理参数
+   材质预设
    ============================================================ */
-const BOWL_INNER_R  = 4.6;   // 位置钳制半径
-const BOWL_VIS_R    = 5.0;   // 物理碗底半径
-const WALL_H        = 20;    // 物理墙高
+const MATERIALS = {
+  ceramic: {
+    name: '陶瓷',
+    restitution: 0.18, friction: 0.35, angularDamping: 0.10, linearDamping: 0.06,
+    bgInner: '#ffffff', bgOuter: '#e8dfd0', shadowColor: 'rgba(120,100,80,0.15)',
+    pipBlack: '#1a1a1a', pipRed: '#b22222',
+    roughness: 0.10, clearcoat: 1.0, clearcoatRoughness: 0.03,
+  },
+  plastic: {
+    name: '塑料',
+    restitution: 0.34, friction: 0.26, angularDamping: 0.05, linearDamping: 0.035,
+    bgInner: '#ffffff', bgOuter: '#d0d0d0', shadowColor: 'rgba(80,80,80,0.18)',
+    pipBlack: '#0a0a0a', pipRed: '#e53935',
+    roughness: 0.18, clearcoat: 0.55, clearcoatRoughness: 0.08,
+  },
+  wood: {
+    name: '木质',
+    restitution: 0.09, friction: 0.58, angularDamping: 0.24, linearDamping: 0.13,
+    bgInner: '#e8c398', bgOuter: '#a07548', shadowColor: 'rgba(60,35,15,0.28)',
+    pipBlack: '#2a1810', pipRed: '#7a1515',
+    roughness: 0.72, clearcoat: 0.05, clearcoatRoughness: 0.45,
+  },
+  bone: {
+    name: '骨质',
+    restitution: 0.22, friction: 0.42, angularDamping: 0.14, linearDamping: 0.08,
+    bgInner: '#faf0dd', bgOuter: '#cdbb98', shadowColor: 'rgba(90,70,40,0.20)',
+    pipBlack: '#1a1410', pipRed: '#8b2020',
+    roughness: 0.40, clearcoat: 0.28, clearcoatRoughness: 0.15,
+  },
+};
+
+let currentMatKey = 'ceramic';
+
+/* ============================================================
+   可调参数
+   ============================================================ */
+const params = {
+  dropHeight: 5.0,
+  angularSpeed: 70,
+};
+
+const GRAVITY = 30;
+const BOWL_INNER_R  = 4.6;
+const BOWL_VIS_R    = 5.0;
+const WALL_H        = 20;
 const WALL_THICK    = 1.6;
 const WALL_SEGMENTS = 48;
-
-const FLOOR_TOP_Y   = -0.15; // 物理碗底顶面 y
+const FLOOR_TOP_Y   = -0.15;
 
 /* ============================================================
    1. 物理世界
    ============================================================ */
-const world = new CANNON.World({ gravity: new CANNON.Vec3(0, -30, 0) });
+const world = new CANNON.World({ gravity: new CANNON.Vec3(0, -GRAVITY, 0) });
 world.broadphase = new CANNON.NaiveBroadphase();
 world.allowSleep = true;
 world.solver.iterations = 14;
@@ -118,18 +600,22 @@ world.solver.tolerance  = 0.001;
 const diceMat   = new CANNON.Material('dice');
 const groundMat = new CANNON.Material('ground');
 
-world.addContactMaterial(new CANNON.ContactMaterial(diceMat, groundMat, {
-  friction: 0.35, restitution: 0.2,
+const cmDiceGround = new CANNON.ContactMaterial(diceMat, groundMat, {
+  friction: MATERIALS[currentMatKey].friction,
+  restitution: MATERIALS[currentMatKey].restitution,
   contactEquationStiffness: 1e8,
   contactEquationRelaxation: 3,
-}));
-world.addContactMaterial(new CANNON.ContactMaterial(diceMat, diceMat, {
-  friction: 0.3, restitution: 0.2,
-  contactEquationStiffness: 1e8,
-  contactEquationRelaxation: 3,
-}));
+});
+world.addContactMaterial(cmDiceGround);
 
-/* --- 物理碗底：圆柱，顶面在 FLOOR_TOP_Y --- */
+const cmDiceDice = new CANNON.ContactMaterial(diceMat, diceMat, {
+  friction: MATERIALS[currentMatKey].friction * 0.85,
+  restitution: MATERIALS[currentMatKey].restitution,
+  contactEquationStiffness: 1e8,
+  contactEquationRelaxation: 3,
+});
+world.addContactMaterial(cmDiceDice);
+
 const bowlFloorShape = new CANNON.Cylinder(BOWL_VIS_R, BOWL_VIS_R, 1, 32);
 const bowlFloorBody  = new CANNON.Body({
   mass: 0, shape: bowlFloorShape, material: groundMat,
@@ -137,14 +623,12 @@ const bowlFloorBody  = new CANNON.Body({
 bowlFloorBody.position.set(0, FLOOR_TOP_Y - 0.5, 0);
 world.addBody(bowlFloorBody);
 
-/* --- 物理碗壁：一圈厚实盒体 --- */
 for (let i = 0; i < WALL_SEGMENTS; i++) {
-  const theta = (i / WALL_SEGMENTS) * Math.PI * 2;
+  const theta  = (i / WALL_SEGMENTS) * Math.PI * 2;
   const segArc = (2 * Math.PI * BOWL_VIS_R) / WALL_SEGMENTS;
   const halfW  = segArc * 0.9;
-
-  const shape = new CANNON.Box(new CANNON.Vec3(halfW, WALL_H / 2, WALL_THICK / 2));
-  const body  = new CANNON.Body({ mass: 0, shape, material: groundMat });
+  const shape  = new CANNON.Box(new CANNON.Vec3(halfW, WALL_H / 2, WALL_THICK / 2));
+  const body   = new CANNON.Body({ mass: 0, shape, material: groundMat });
   body.position.set(
     Math.cos(theta) * (BOWL_VIS_R - WALL_THICK / 2),
     WALL_H / 2,
@@ -159,7 +643,7 @@ for (let i = 0; i < WALL_SEGMENTS; i++) {
    ============================================================ */
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x0a0a12);
-scene.fog = new THREE.Fog(0x0a0a12, 20, 40);
+scene.fog = new THREE.Fog(0x0a0a12, 20, 42);
 
 const camera = new THREE.PerspectiveCamera(45, innerWidth / innerHeight, 0.1, 100);
 camera.position.set(0, 11, 12);
@@ -175,20 +659,25 @@ renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 1.15;
 
-/* --- 环境贴图：提供最主要的弥散光 --- */
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.target.set(0, 0.5, 0);
+controls.enableDamping = true;
+controls.dampingFactor = 0.08;
+controls.enablePan = false;
+controls.minDistance = 8;
+controls.maxDistance = 22;
+controls.minPolarAngle = Math.PI * 0.12;
+controls.maxPolarAngle = Math.PI * 0.47;
+controls.rotateSpeed = 0.7;
+controls.update();
+
 const pmrem = new THREE.PMREMGenerator(renderer);
 pmrem.compileEquirectangularShader();
 const envTexture = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
 scene.environment = envTexture;
 
-/* ============================================================
-   3. 弥散光源系统
-   ============================================================ */
-// 半球光：天空暖白 + 地面暗红（碗反射），提供整体弥散
-const hemi = new THREE.HemisphereLight(0xfff6e6, 0x2a1210, 1.1);
-scene.add(hemi);
+scene.add(new THREE.HemisphereLight(0xfff6e6, 0x2a1210, 1.1));
 
-// 唯一的方向光：只用来产生柔和阴影，强度压低
 const shadowLight = new THREE.DirectionalLight(0xfff4e0, 0.9);
 shadowLight.position.set(3, 18, 6);
 shadowLight.castShadow = true;
@@ -199,11 +688,10 @@ shadowLight.shadow.camera.top    =  10;
 shadowLight.shadow.camera.bottom = -10;
 shadowLight.shadow.camera.near   = 1;
 shadowLight.shadow.camera.far    = 40;
-shadowLight.shadow.bias = -0.0008;
-shadowLight.shadow.radius = 8;   // 柔和阴影边缘
+shadowLight.shadow.bias   = -0.0008;
+shadowLight.shadow.radius = 8;
 scene.add(shadowLight);
 
-// 三个低强度点光环绕，打破方向感，让光照更弥散
 for (let i = 0; i < 3; i++) {
   const a = (i / 3) * Math.PI * 2 + Math.PI / 5;
   const light = new THREE.PointLight(0xffe8cc, 12, 30, 1.8);
@@ -212,91 +700,81 @@ for (let i = 0; i < 3; i++) {
 }
 
 /* ============================================================
-   4. 真实的碗：LatheGeometry 剖面旋转
+   3. 碗
    ============================================================ */
-// 剖面点从底部外中心 → 外壁 → 碗口外翻 → 内壁 → 内底中心
-// x = 半径，y = 高度
 const bowlProfile = [
-  // 外底（平坦，稍厚）
-  new THREE.Vector2(0.00, -0.65),
-  new THREE.Vector2(1.20, -0.65),
-  new THREE.Vector2(2.30, -0.60),
-  new THREE.Vector2(3.20, -0.45),
-  new THREE.Vector2(3.90, -0.18),
-  new THREE.Vector2(4.40,  0.30),
-  new THREE.Vector2(4.72,  1.10),
-  new THREE.Vector2(4.88,  2.00),
-  new THREE.Vector2(4.96,  2.90),
-  // 碗口外翻
-  new THREE.Vector2(5.05,  3.35),
-  new THREE.Vector2(5.15,  3.65),
-  new THREE.Vector2(5.20,  3.78),   // 边缘最高点
-  // 内壁下来
-  new THREE.Vector2(5.02,  3.60),
-  new THREE.Vector2(4.82,  3.25),
-  new THREE.Vector2(4.68,  2.40),
-  new THREE.Vector2(4.55,  1.40),
-  new THREE.Vector2(4.30,  0.55),
-  new THREE.Vector2(3.90, -0.05),
-  new THREE.Vector2(3.20, -0.25),
-  new THREE.Vector2(2.20, -0.30),
-  new THREE.Vector2(1.20, -0.28),
-  new THREE.Vector2(0.00, -0.25),   // 内底中心
+  new THREE.Vector2(0.00, -0.65), new THREE.Vector2(1.20, -0.65),
+  new THREE.Vector2(2.30, -0.60), new THREE.Vector2(3.20, -0.45),
+  new THREE.Vector2(3.90, -0.18), new THREE.Vector2(4.40,  0.30),
+  new THREE.Vector2(4.72,  1.10), new THREE.Vector2(4.88,  2.00),
+  new THREE.Vector2(4.96,  2.90), new THREE.Vector2(5.05,  3.35),
+  new THREE.Vector2(5.15,  3.65), new THREE.Vector2(5.20,  3.78),
+  new THREE.Vector2(5.02,  3.60), new THREE.Vector2(4.82,  3.25),
+  new THREE.Vector2(4.68,  2.40), new THREE.Vector2(4.55,  1.40),
+  new THREE.Vector2(4.30,  0.55), new THREE.Vector2(3.90, -0.05),
+  new THREE.Vector2(3.20, -0.25), new THREE.Vector2(2.20, -0.30),
+  new THREE.Vector2(1.20, -0.28), new THREE.Vector2(0.00, -0.25),
 ];
-
 const bowlGeometry = new THREE.LatheGeometry(bowlProfile, 96);
 
-// 陶瓷碗材质：釉面深红
 const bowlMaterial = new THREE.MeshPhysicalMaterial({
-  color: 0x7a1010,
-  roughness: 0.32,
-  metalness: 0.05,
-  clearcoat: 1.0,
-  clearcoatRoughness: 0.12,
-  side: THREE.DoubleSide,
-  envMapIntensity: 1.0,
+  color: 0x7a1010, roughness: 0.32, metalness: 0.05,
+  clearcoat: 1.0, clearcoatRoughness: 0.12,
+  side: THREE.DoubleSide, envMapIntensity: 1.0,
 });
-
 const bowlMesh = new THREE.Mesh(bowlGeometry, bowlMaterial);
-bowlMesh.castShadow    = true;
+bowlMesh.castShadow = true;
 bowlMesh.receiveShadow = true;
 scene.add(bowlMesh);
 
-// 碗身加一层柔光反射，让内壁看起来有釉面
 const bowlInner = new THREE.Mesh(
   new THREE.LatheGeometry(bowlProfile.slice(11), 96),
   new THREE.MeshPhysicalMaterial({
-    color: 0x8a1818,
-    roughness: 0.22,
-    metalness: 0.0,
-    clearcoat: 1.0,
-    clearcoatRoughness: 0.06,
-    transparent: true,
-    opacity: 0.35,
-    side: THREE.BackSide,
-    envMapIntensity: 1.4,
+    color: 0x8a1818, roughness: 0.22, metalness: 0.0,
+    clearcoat: 1.0, clearcoatRoughness: 0.06,
+    transparent: true, opacity: 0.35,
+    side: THREE.BackSide, envMapIntensity: 1.4,
   })
 );
 bowlInner.position.y = 0.005;
 bowlMesh.add(bowlInner);
 
 /* ============================================================
-   5. 骰子贴图（瓷白 + 釉面高光点数）
+   4. 骰子贴图
    ============================================================ */
-function makeDiceTexture(n) {
-  const S  = 512;
+function makeDiceTexture(n, mat) {
+  const S = 512;
   const cv = document.createElement('canvas');
   cv.width = cv.height = S;
   const ctx = cv.getContext('2d');
 
-  ctx.fillStyle = '#faf6ee';
+  const grad = ctx.createRadialGradient(S*0.35, S*0.30, S*0.05, S/2, S/2, S*0.82);
+  grad.addColorStop(0, mat.bgInner);
+  grad.addColorStop(1, mat.bgOuter);
+  ctx.fillStyle = grad;
   ctx.fillRect(0, 0, S, S);
 
-  const grad = ctx.createRadialGradient(S/2, S/2, S*0.15, S/2, S/2, S*0.78);
-  grad.addColorStop(0,   'rgba(255,255,255,0.45)');
-  grad.addColorStop(0.6, 'rgba(255,255,255,0)');
-  grad.addColorStop(1,   'rgba(120,100,80,0.10)');
-  ctx.fillStyle = grad;
+  if (mat.name === '木质') {
+    ctx.globalAlpha = 0.12;
+    ctx.strokeStyle = '#5a3010';
+    ctx.lineWidth = 2.5;
+    for (let i = 0; i < 9; i++) {
+      ctx.beginPath();
+      const baseY = (i + 0.5) * S / 9;
+      ctx.moveTo(0, baseY);
+      for (let x = 0; x <= S; x += 20) {
+        const noise = Math.sin(x * 0.03 + i * 2.1) * 8 + Math.cos(x * 0.07 + i) * 4;
+        ctx.lineTo(x, baseY + noise);
+      }
+      ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  const vg = ctx.createRadialGradient(S/2, S/2, S*0.3, S/2, S/2, S*0.75);
+  vg.addColorStop(0, 'rgba(0,0,0,0)');
+  vg.addColorStop(1, mat.shadowColor);
+  ctx.fillStyle = vg;
   ctx.fillRect(0, 0, S, S);
 
   const LAYOUT = {
@@ -309,12 +787,11 @@ function makeDiceTexture(n) {
   };
 
   const isRed = (n === 1 || n === 4);
-  const baseColor = isRed ? '#b22222' : '#1a1a1a';
+  const baseColor = isRed ? mat.pipRed : mat.pipBlack;
   const R = S * 0.085;
 
   for (const [x, y] of LAYOUT[n]) {
-    const cx = x * S;
-    const cy = y * S;
+    const cx = x * S, cy = y * S;
 
     ctx.beginPath();
     ctx.arc(cx, cy + R * 0.08, R * 1.05, 0, Math.PI * 2);
@@ -327,8 +804,7 @@ function makeDiceTexture(n) {
     ctx.fill();
 
     const hg = ctx.createRadialGradient(
-      cx - R * 0.4, cy - R * 0.4, R * 0.05,
-      cx, cy, R
+      cx - R * 0.4, cy - R * 0.4, R * 0.05, cx, cy, R
     );
     hg.addColorStop(0, 'rgba(255,255,255,0.55)');
     hg.addColorStop(0.5, 'rgba(255,255,255,0.05)');
@@ -346,28 +822,41 @@ function makeDiceTexture(n) {
 }
 
 /* ============================================================
-   6. 圆角骰子几何 + 陶瓷材质
+   5. 骰子几何 + 材质
    ============================================================ */
 const FACE_TO_VALUE = [1, 6, 2, 5, 3, 4];
 const diceGeometry  = new RoundedBoxGeometry(1, 1, 1, 6, 0.14);
 
-const diceMaterials = FACE_TO_VALUE.map(n =>
-  new THREE.MeshPhysicalMaterial({
-    map: makeDiceTexture(n),
-    roughness: 0.10,
-    metalness: 0.0,
-    clearcoat: 1.0,
-    clearcoatRoughness: 0.03,
-    reflectivity: 0.5,
-    sheen: 0.4,
-    sheenColor: new THREE.Color(0xfff4e0),
-    sheenRoughness: 0.6,
-    envMapIntensity: 1.2,
-  })
-);
+let diceMaterials = [];
+
+function buildDiceMaterials(matKey) {
+  const mat = MATERIALS[matKey];
+  return FACE_TO_VALUE.map(n =>
+    new THREE.MeshPhysicalMaterial({
+      map: makeDiceTexture(n, mat),
+      roughness: mat.roughness,
+      metalness: 0.0,
+      clearcoat: mat.clearcoat,
+      clearcoatRoughness: mat.clearcoatRoughness,
+      reflectivity: 0.5,
+      envMapIntensity: 1.2,
+    })
+  );
+}
+
+function rebuildDiceMaterials() {
+  for (const m of diceMaterials) {
+    if (m.map) m.map.dispose();
+    m.dispose();
+  }
+  diceMaterials = buildDiceMaterials(currentMatKey);
+  for (const { mesh } of diceList) {
+    mesh.material = diceMaterials;
+  }
+}
 
 /* ============================================================
-   7. 骰子管理
+   6. 骰子管理
    ============================================================ */
 const diceList = [];
 let rolling     = false;
@@ -385,8 +874,10 @@ function clearDice() {
 function spawnDice() {
   clearDice();
 
+  const mat = MATERIALS[currentMatKey];
   const SPAWN_R = 2.8;
   const startAngle = Math.random() * Math.PI * 2;
+  const baseY = params.dropHeight;
 
   for (let i = 0; i < 6; i++) {
     const mesh = new THREE.Mesh(diceGeometry, diceMaterials);
@@ -398,8 +889,8 @@ function spawnDice() {
       mass: 1,
       shape: new CANNON.Box(new CANNON.Vec3(0.5, 0.5, 0.5)),
       material: diceMat,
-      linearDamping: 0.06,
-      angularDamping: 0.10,
+      linearDamping: mat.linearDamping,
+      angularDamping: mat.angularDamping,
     });
     body.allowSleep      = true;
     body.sleepSpeedLimit = 0.4;
@@ -408,7 +899,7 @@ function spawnDice() {
     const a = startAngle + (i / 6) * Math.PI * 2;
     body.position.set(
       Math.cos(a) * SPAWN_R,
-      5.0 + i * 0.8,
+      baseY + i * 0.8,
       Math.sin(a) * SPAWN_R
     );
 
@@ -422,10 +913,11 @@ function spawnDice() {
     const inwardZ = -Math.sin(a) * (0.5 + Math.random() * 0.5);
     body.velocity.set(inwardX, -6 - Math.random() * 3, inwardZ);
 
+    const w = params.angularSpeed;
     body.angularVelocity.set(
-      (Math.random() - 0.5) * 70,
-      (Math.random() - 0.5) * 70,
-      (Math.random() - 0.5) * 70
+      (Math.random() - 0.5) * w,
+      (Math.random() - 0.5) * w,
+      (Math.random() - 0.5) * w
     );
 
     world.addBody(body);
@@ -434,7 +926,7 @@ function spawnDice() {
 }
 
 /* ============================================================
-   8. 读取骰子点数
+   7. 读取骰子点数
    ============================================================ */
 const FACE_AXES = [
   { axis: new THREE.Vector3( 1,  0,  0), value: 1 },
@@ -458,7 +950,7 @@ function readDieValue(body) {
 }
 
 /* ============================================================
-   9. 博饼规则（支持叠加奖励）
+   8. 博饼规则
    ============================================================ */
 function judge(dice) {
   const counts = [0,0,0,0,0,0,0];
@@ -496,13 +988,14 @@ function judge(dice) {
 }
 
 /* ============================================================
-   10. UI
+   9. UI 引用
    ============================================================ */
-const diceRowEl = document.getElementById('diceRow');
-const prizeEl   = document.getElementById('prize');
-const bonusEl   = document.getElementById('bonus');
-const statusEl  = document.getElementById('status');
-const rollBtn   = document.getElementById('rollBtn');
+const prizeEl        = document.getElementById('prize');
+const bonusEl        = document.getElementById('bonus');
+const statusEl       = document.getElementById('status');
+const rollBtn        = document.getElementById('rollBtn');
+const historyContent = document.getElementById('historyContent');
+const historyCount   = document.getElementById('historyCount');
 
 const PRIZE_COLORS = {
   '六勃红':'#ff4757','六勃黑':'#a55eea','状元插金花':'#ff6b81',
@@ -511,22 +1004,53 @@ const PRIZE_COLORS = {
   '二举':'#b8e994','一秀':'#dfe4ea','无奖':'#57606f',
 };
 
-function renderDiceRow(values) {
-  diceRowEl.innerHTML = '';
-  for (let i = 0; i < 6; i++) {
-    const el = document.createElement('div');
-    el.className = 'die';
-    if (values) {
-      el.textContent = values[i];
-      if (values[i] === 4) el.classList.add('four');
-    } else {
-      el.textContent = '?';
-      el.classList.add('placeholder');
-    }
-    diceRowEl.appendChild(el);
-  }
+/* ============================================================
+   10. 历史记录
+   ============================================================ */
+const history = [];
+const MAX_HISTORY = 30;
+
+function addHistory(dice, main, bonuses) {
+  history.unshift({ dice: [...dice], main, bonuses: [...bonuses] });
+  if (history.length > MAX_HISTORY) history.pop();
+  renderHistory();
 }
 
+function renderHistory() {
+  historyCount.textContent = `(${history.length})`;
+
+  if (history.length === 0) {
+    historyContent.innerHTML = '<div class="history-empty">还没有记录</div>';
+    return;
+  }
+
+  const frag = document.createDocumentFragment();
+  for (const item of history) {
+    const row = document.createElement('div');
+    row.className = 'history-item';
+
+    const diceText = document.createElement('span');
+    diceText.className = 'history-dice-text';
+    diceText.textContent = item.dice.join(' ');
+    row.appendChild(diceText);
+
+    const prizeSpan = document.createElement('span');
+    prizeSpan.className = 'history-prize';
+    prizeSpan.style.color = PRIZE_COLORS[item.main] || '#fff';
+    prizeSpan.textContent = item.bonuses.length
+      ? `${item.main}+${item.bonuses.join('+')}`
+      : item.main;
+    row.appendChild(prizeSpan);
+
+    frag.appendChild(row);
+  }
+  historyContent.innerHTML = '';
+  historyContent.appendChild(frag);
+}
+
+/* ============================================================
+   11. 掷骰流程
+   ============================================================ */
 function startRoll() {
   if (rolling) return;
   spawnDice();
@@ -537,8 +1061,8 @@ function startRoll() {
   statusEl.textContent = '骰子滚动中…';
   prizeEl.textContent = '…';
   prizeEl.style.color = '#7a7a9a';
+  prizeEl.style.fontSize = '30px';
   bonusEl.textContent = '';
-  renderDiceRow(null);
 }
 
 function finishRoll() {
@@ -549,21 +1073,96 @@ function finishRoll() {
   const result = judge(values);
   const elapsed = ((performance.now() - rollStart) / 1000).toFixed(1);
 
-  renderDiceRow(values);
   prizeEl.textContent = result.main;
   prizeEl.style.color = PRIZE_COLORS[result.main] || '#fff';
+  // 长名字自动缩小字号
+  prizeEl.style.fontSize = result.main.length >= 5 ? '24px' : '30px';
   bonusEl.textContent = result.bonuses.length
     ? '附加奖励：' + result.bonuses.join(' + ') : '';
 
-  const total = values.reduce((a, b) => a + b, 0);
-  statusEl.textContent = `点数 [${values.join(' ')}] · 合计 ${total} · 用时 ${elapsed}s`;
+  statusEl.textContent = `用时 ${elapsed}s`;
   rollBtn.disabled = false;
+
+  addHistory(values, result.main, result.bonuses);
 }
 
 rollBtn.addEventListener('click', startRoll);
 
 /* ============================================================
-   11. 主循环
+   12. 面板折叠
+   ============================================================ */
+document.querySelectorAll('.panel-header[data-toggle]').forEach(header => {
+  header.addEventListener('click', () => {
+    header.parentElement.classList.toggle('collapsed');
+  });
+});
+
+/* ============================================================
+   13. 材质切换 + 参数滑块
+   ============================================================ */
+const materialInfoEls = {
+  rest: document.getElementById('mi-rest'),
+  fric: document.getElementById('mi-fric'),
+  damp: document.getElementById('mi-damp'),
+};
+
+function updateMaterialInfo() {
+  const m = MATERIALS[currentMatKey];
+  materialInfoEls.rest.textContent = m.restitution.toFixed(2);
+  materialInfoEls.fric.textContent = m.friction.toFixed(2);
+  materialInfoEls.damp.textContent = m.angularDamping.toFixed(2);
+}
+
+function applyMaterialPhysics() {
+  const m = MATERIALS[currentMatKey];
+  cmDiceGround.friction    = m.friction;
+  cmDiceGround.restitution = m.restitution;
+  cmDiceDice.friction      = m.friction * 0.85;
+  cmDiceDice.restitution   = m.restitution;
+}
+
+document.querySelectorAll('.material-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.material-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentMatKey = btn.dataset.material;
+
+    applyMaterialPhysics();
+    rebuildDiceMaterials();
+    updateMaterialInfo();
+  });
+});
+
+document.querySelectorAll('input[type=range]').forEach(slider => {
+  const key = slider.dataset.param;
+  const valEl = document.getElementById('v-' + key);
+
+  slider.addEventListener('input', () => {
+    const val = parseFloat(slider.value);
+    params[key] = val;
+    if (key === 'dropHeight') valEl.textContent = val.toFixed(1);
+    else valEl.textContent = val;
+  });
+});
+
+/* ============================================================
+   14. 规则模态框
+   ============================================================ */
+const ruleModal  = document.getElementById('ruleModal');
+const ruleBtn    = document.getElementById('ruleBtn');
+const closeRule  = document.getElementById('closeRule');
+
+ruleBtn.addEventListener('click', () => ruleModal.classList.remove('hidden'));
+closeRule.addEventListener('click', () => ruleModal.classList.add('hidden'));
+ruleModal.addEventListener('click', (e) => {
+  if (e.target === ruleModal) ruleModal.classList.add('hidden');
+});
+addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') ruleModal.classList.add('hidden');
+});
+
+/* ============================================================
+   15. 主循环
    ============================================================ */
 const clock = new THREE.Clock();
 const MAX_DT   = 1 / 30;
@@ -625,14 +1224,15 @@ function animate() {
     } else {
       settleTimer = 0;
     }
-    if (rolling && performance.now() - rollStart > 12000) finishRoll();
+    if (rolling && performance.now() - rollStart > 14000) finishRoll();
   }
 
+  controls.update();
   renderer.render(scene, camera);
 }
 
 /* ============================================================
-   12. 初始化
+   16. 初始化
    ============================================================ */
 addEventListener('resize', () => {
   camera.aspect = innerWidth / innerHeight;
@@ -640,7 +1240,9 @@ addEventListener('resize', () => {
   renderer.setSize(innerWidth, innerHeight);
 });
 
-renderDiceRow(null);
+diceMaterials = buildDiceMaterials(currentMatKey);
+applyMaterialPhysics();
+updateMaterialInfo();
 animate();
 </script>
 </body>
