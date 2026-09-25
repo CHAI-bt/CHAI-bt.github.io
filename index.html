@@ -5,98 +5,307 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bob C.'s Page</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
-            background: #f7f8fb;
-            color: #1a1d23;
+            background: linear-gradient(
+                135deg,
+                #0f0c29 0%,
+                #302b63 25%,
+                #24243e 50%,
+                #1a1a2e 75%,
+                #16213e 100%
+            );
+            background-size: 400% 400%;
+            color: #fff;
             line-height: 1.7;
             min-height: 100vh;
+            padding: 40px 20px;
+            animation: gradientShift 15s ease infinite;
         }
 
-        .wrapper {
-            max-width: 640px;
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .liquid-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.6;
+            animation: blobMove 20s ease-in-out infinite;
+        }
+
+        .blob-1 {
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(102, 126, 234, 0.8) 0%, rgba(118, 75, 162, 0.4) 50%, transparent 70%);
+            top: -200px;
+            left: -100px;
+            animation-delay: 0s;
+        }
+
+        .blob-2 {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(240, 147, 251, 0.7) 0%, rgba(102, 126, 234, 0.4) 50%, transparent 70%);
+            bottom: -150px;
+            right: -100px;
+            animation-delay: -5s;
+        }
+
+        .blob-3 {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(255, 118, 117, 0.6) 0%, rgba(102, 126, 234, 0.3) 50%, transparent 70%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation-delay: -10s;
+        }
+
+        @keyframes blobMove {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(50px, 50px) scale(1.1); }
+            50% { transform: translate(0, 100px) scale(1); }
+            75% { transform: translate(-50px, 50px) scale(0.9); }
+        }
+
+        .container {
+            max-width: 700px;
             margin: 0 auto;
-            padding: 80px 24px 60px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .avatar {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            margin: 0 auto 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2),
+                        inset 0 1px 1px rgba(255, 255, 255, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 56px;
+            animation: avatarFloat 4s ease-in-out infinite;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        @keyframes avatarFloat {
+            0%, 100% { transform: translateY(0); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.3); }
+            50% { transform: translateY(-15px); box-shadow: 0 16px 48px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.3); }
         }
 
         h1 {
-            font-size: 1.6rem;
-            font-weight: 600;
-            color: #0b1a2f;
-            margin-bottom: 36px;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            animation: fadeInDown 0.8s ease;
+        }
+
+        h2 {
+            font-size: 1rem;
+            font-weight: 300;
+            margin-bottom: 40px;
+            opacity: 0.9;
+            animation: fadeInDown 0.8s ease 0.2s backwards;
         }
 
         .link-list {
             list-style: none;
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 16px;
         }
 
         .link-list a {
-            display: block;
-            background: #fff;
-            border: 1px solid #e2e5ea;
-            border-radius: 10px;
-            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 20px 24px;
             text-decoration: none;
-            color: #1a1d23;
+            color: #fff;
             font-size: 1rem;
-            font-weight: 500;
-            transition: box-shadow 0.15s, border-color 0.15s;
+            font-weight: 600;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+            animation: fadeInUp 0.6s ease backwards;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .link-list a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .link-list a:hover::before {
+            left: 100%;
+        }
+
+        .link-list a:nth-child(1) { animation-delay: 0.3s; }
+        .link-list a:nth-child(2) { animation-delay: 0.4s; }
+        .link-list a:nth-child(3) { animation-delay: 0.5s; }
+        .link-list a:nth-child(4) { animation-delay: 0.6s; }
+        .link-list a:nth-child(5) { animation-delay: 0.7s; }
+
+        .icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.1) 100%);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            flex-shrink: 0;
+            transition: all 0.4s ease;
+            border: 1px solid rgba(255, 255, 255, 0.25);
         }
 
         .link-list a:hover {
-            border-color: #3a6ea5;
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+            background: rgba(255, 255, 255, 0.18);
+            transform: translateY(-6px) scale(1.02);
+            box-shadow: 0 16px 48px rgba(102, 126, 234, 0.4),
+                        0 0 80px rgba(240, 147, 251, 0.2);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        .link-list a:hover .icon {
+            transform: scale(1.15) rotate(5deg);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.15) 100%);
+        }
+
+        .content {
+            flex: 1;
+            text-align: left;
+        }
+
+        .link-list .title {
+            display: block;
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 4px;
         }
 
         .link-list .desc {
             display: block;
             font-size: 0.85rem;
-            color: #5a5f6b;
+            opacity: 0.8;
             font-weight: 400;
-            margin-top: 2px;
+            line-height: 1.5;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
     </style>
 </head>
 <body>
 
-    <div class="wrapper">
-        <h1>Bob C.'s Page</h1>
-        <h3>School of Physics, P.K.U., Beijing, P.R.C.</h3>
+    <div class="container">
+        <div class="avatar">🎓</div>
+        <h1>Bob C.</h1>
+        <h2>Peking University · School of Physics</h2>
         <ul class="link-list">
             <li>
                 <a href="electrodynamics/index.html">
-                    电动力学笔记
-                    <span class="desc">考试题记录 · 公式推导与物理图像</span>
+                    <div class="icon">⚡</div>
+                    <div class="content">
+                        <span class="title">电动力学笔记</span>
+                        <span class="desc">考试题记录 · 公式推导与物理图像</span>
+                    </div>
                 </a>
             </li>
             <li>
                 <a href="image_to_ascii/index.html">
-                    图片转 ASCII 艺术
-                    <span class="desc">上传图片 → 字符画输出</span>
+                    <div class="icon">🎨</div>
+                    <div class="content">
+                        <span class="title">图片转 ASCII 艺术</span>
+                        <span class="desc">上传图片 → 字符画输出</span>
+                    </div>
                 </a>
             </li>
-            
             <li>
                 <a href="球谐函数/index.html">
-                    绘制球谐函数
-                    <span class="desc">量子力学、电动力学</span>
+                    <div class="icon">⭕</div>
+                    <div class="content">
+                        <span class="title">绘制球谐函数</span>
+                        <span class="desc">量子力学、电动力学</span>
+                    </div>
                 </a>
             </li>
             <li>
                 <a href="博饼/index.html">
-                    博饼模拟器
-                    <span class="desc">闽南民俗</span>
+                    <div class="icon">🎲</div>
+                    <div class="content">
+                        <span class="title">博饼模拟器</span>
+                        <span class="desc">闽南民俗</span>
+                    </div>
                 </a>
             </li>
-             <li>
+            <li>
                 <a href="统计力学/index.html">
-                    统计力学思维导图
-                    <span class="desc">2026年秋季学期，黄华卿老师</span>
+                    <div class="icon">📊</div>
+                    <div class="content">
+                        <span class="title">统计力学思维导图</span>
+                        <span class="desc">2026年秋季学期，黄华卿老师</span>
+                    </div>
                 </a>
             </li>
         </ul>
