@@ -1,0 +1,2219 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>统计力学讲义 · 思维导图（16 讲全图 + 全局关系）</title>
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['$', '$']], displayMath: [] },
+  chtml: { scale: 0.95 },
+  startup: { typeset: false }
+};
+window.__mjReady = false;
+window.__mjFailed = false;
+</script>
+<script id="mj-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+        onload="window.__mjReady=true;window.__mjFlush&&window.__mjFlush();"
+        onerror="window.__mjFailed=true;window.__mjFlush&&window.__mjFlush();"></script>
+<style>
+:root{
+  --bg:#f5f6f8; --panel:#ffffff; --ink:#1f2530; --muted:#6b7482;
+  --line:#cbd5e1; --accent:#2563eb; --key:#b45309; --thm:#6d28d9;
+  --eg:#047857; --opt:#94a3b8; --link:#ea580c;
+  --shadow:0 1px 2px rgba(16,24,40,.06),0 4px 14px rgba(16,24,40,.06);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font:14px/1.6 "Segoe UI","Microsoft YaHei","Source Han Sans SC",system-ui,sans-serif;
+  display:flex; overflow:hidden;
+}
+/* ---------- sidebar ---------- */
+#side{
+  width:290px; min-width:290px; height:100%; overflow:auto;
+  background:#111827; color:#e5e7eb; padding:16px 12px 40px;
+}
+#side h1{font-size:16px;margin:0 0 4px}
+#side .sub{font-size:12px;color:#9ca3af;margin-bottom:12px}
+#search{width:100%;padding:7px 9px;border-radius:7px;border:1px solid #374151;
+  background:#1f2937;color:#f9fafb;font-size:13px}
+.grp{margin-top:16px}
+.grp>.gt{font-size:12px;color:#93c5fd;letter-spacing:.5px;text-transform:uppercase;
+  margin:0 0 6px;font-weight:700}
+.lbtn{display:flex;gap:7px;align-items:baseline;padding:5px 8px;border-radius:6px;
+  cursor:pointer;font-size:13px;color:#d1d5db;line-height:1.35}
+.lbtn:hover{background:#1f2937}
+.lbtn.act{background:#2563eb;color:#fff}
+.lbtn .pp{color:#6b7280;font-size:11px;flex:none}
+.lbtn.act .pp{color:#dbeafe}
+.gbtn{display:block;margin:6px 0 0;padding:7px 9px;border-radius:7px;background:#0b3b8c;
+  color:#fff;font-size:13px;cursor:pointer;border:1px solid #1d4ed8}
+.gbtn:hover{background:#1d4ed8}
+#side .foot{margin-top:18px;font-size:11px;color:#6b7280;line-height:1.5}
+/* ---------- main ---------- */
+#main{flex:1;height:100%;display:flex;flex-direction:column;min-width:0}
+#head{background:var(--panel);border-bottom:1px solid var(--line);padding:10px 18px 8px;
+  box-shadow:var(--shadow);z-index:5}
+#head .ht{display:flex;flex-wrap:wrap;gap:10px;align-items:baseline}
+#head h2{font-size:19px;margin:0}
+#head .file{font-size:12px;color:var(--muted);font-family:ui-monospace,Consolas,monospace}
+#sum{font-size:13px;color:#374151;margin:4px 0 0;max-width:1100px}
+#bar{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:8px}
+button.tb,select.tb{
+  font-size:12px;padding:4px 9px;border-radius:6px;border:1px solid var(--line);
+  background:#fff;color:var(--ink);cursor:pointer}
+button.tb:hover{border-color:var(--accent);color:var(--accent)}
+button.tb.on{background:var(--accent);border-color:var(--accent);color:#fff}
+#bar .sp{flex:1}
+#bar .lbl{font-size:12px;color:var(--muted)}
+#wrap{flex:1;position:relative;overflow:auto;background:
+  radial-gradient(circle at 1px 1px, #e2e8f0 1px, transparent 0) 0 0/22px 22px}
+#stage{position:absolute;top:0;left:0;transform-origin:0 0;will-change:transform}
+#scroller{position:absolute;top:0;left:0;pointer-events:none}
+#edges{position:absolute;top:0;left:0;overflow:visible;pointer-events:none}
+#nodes{position:absolute;top:0;left:0;width:6000px;height:6000px}
+/* ---------- nodes ---------- */
+.node{position:absolute;max-width:368px;padding:5px 9px;border-radius:8px;background:#fff;
+  border:1px solid var(--line);box-shadow:var(--shadow);font-size:13px;line-height:1.45;
+  cursor:default;transition:box-shadow .15s, transform .05s}
+.node .bd{display:inline-block;font-size:10px;font-weight:700;padding:0 5px;border-radius:9px;
+  margin-right:6px;vertical-align:1px;background:#eef2ff;color:#4338ca}
+.node .kids{font-size:10px;color:var(--opt);margin-left:6px}
+.node.root{background:#111827;color:#fff;border-color:#111827;font-size:15px;font-weight:700;max-width:250px}
+.node.root .bd{background:#374151;color:#e5e7eb}
+.node.sec{border-left:4px solid var(--accent);background:#f7faff;font-weight:700;max-width:290px}
+.node.key{border-left:4px solid var(--key);background:#fffbf3;font-weight:700}
+.node.key .bd{background:#fef3c7;color:#92400e}
+.node.thm{border-left:4px solid var(--thm);background:#faf5ff}
+.node.thm .bd{background:#ede9fe;color:#5b21b6}
+.node.eq{font-family:ui-monospace,Consolas,"Courier New",monospace;background:#f8fafc;font-size:13px}
+.node.eq .bd{background:#e2e8f0;color:#334155}
+.node.eg{border-left:4px solid var(--eg);background:#f0fdf7}
+.node.eg .bd{background:#d1fae5;color:#065f46}
+.node.opt{border-style:dashed;color:var(--muted);background:#fafafa;border-left:4px solid var(--opt)}
+.node.opt .bd{background:#f1f5f9;color:#64748b}
+.node.linked{outline:2px solid var(--link);outline-offset:1px}
+.node.flash{animation:fl 1.1s ease-out 2}
+@keyframes fl{0%{box-shadow:0 0 0 3px rgba(234,88,12,.55)}100%{box-shadow:var(--shadow)}}
+.node:hover{box-shadow:0 3px 10px rgba(16,24,40,.16)}
+.node.has-k{cursor:pointer}
+/* ---------- panels ---------- */
+#panels{position:absolute;right:14px;top:14px;width:400px;max-height:calc(100% - 28px);
+  overflow:auto;background:rgba(255,255,255,.97);border:1px solid var(--line);border-radius:10px;
+  box-shadow:var(--shadow);padding:12px 14px;font-size:13px;display:none}
+#panels h3{font-size:14px;margin:0 0 8px;display:flex;align-items:center;gap:8px}
+#panels h3 .x{margin-left:auto;cursor:pointer;color:var(--muted);font-size:16px;line-height:1}
+.keys{margin-bottom:4px}
+.kp{font-size:12.5px;line-height:1.5;background:#fffbeb;border:1px solid #fde68a;border-radius:7px;
+  padding:5px 8px;margin-bottom:5px;color:#451a03}
+.chain{border-left:3px solid var(--link);background:#fff7ed;border-radius:0 7px 7px 0;
+  padding:6px 9px;margin-bottom:7px;cursor:pointer}
+.chain:hover{background:#ffedd5}
+.chain b{color:#9a3412}
+.chain .why{color:#57534e;font-size:12px;margin-top:2px}
+.chain .num{display:inline-block;width:18px;height:18px;border-radius:9px;background:var(--link);
+  color:#fff;font-size:11px;text-align:center;line-height:18px;margin-right:5px;font-weight:700}
+.rel .chip{display:inline-block;margin:3px 4px 0 0;padding:3px 8px;border-radius:12px;font-size:12px;
+  background:#eef2ff;color:#3730a3;cursor:pointer;border:1px solid #c7d2fe}
+.rel .chip:hover{background:#c7d2fe}
+.rel .chip.out{background:#ecfdf5;color:#065f46;border-color:#a7f3d0}
+.rel .chip.out:hover{background:#a7f3d0}
+.note{font-size:12px;color:#4b5563;background:#f8fafc;border:1px dashed var(--line);
+  border-radius:7px;padding:7px 9px;margin-top:9px}
+/* ---------- global view ---------- */
+#global{display:none;padding:26px 30px 90px;overflow:auto;height:100%}
+#global h2{font-size:22px;margin:0 0 4px}
+#global p.lede{max-width:1000px;color:#374151}
+#gw{background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);
+  padding:8px;margin:16px 0;overflow:auto}
+#gsvg{display:block}
+.card{background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);
+  padding:14px 18px;margin:16px 0;max-width:1180px}
+.card h3{margin:0 0 10px;font-size:16px}
+.step{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:1px dashed #e5e7eb}
+.step:last-child{border-bottom:none}
+.step .n{flex:none;width:26px;height:26px;border-radius:13px;background:#111827;color:#fff;
+  text-align:center;line-height:26px;font-size:12px;font-weight:700}
+.step .tx{font-size:13px}
+.step .tx em{font-style:normal;color:var(--muted);font-size:12px}
+.step .tx .jump{color:var(--accent);cursor:pointer;text-decoration:underline dotted}
+.tbl{width:100%;border-collapse:collapse;font-size:13px}
+.tbl th,.tbl td{border-bottom:1px solid #e5e7eb;padding:6px 8px;text-align:left;vertical-align:top}
+.tbl th{background:#f8fafc;font-size:12px;color:var(--muted)}
+.tbl td.f{font-family:ui-monospace,Consolas,monospace;white-space:nowrap}
+.tbl tr:hover td{background:#f9fafb}
+.legend{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 0}
+.legend span{font-size:12px;padding:2px 8px;border-radius:11px;border:1px solid var(--line);background:#fff}
+.legend i{font-style:normal;font-weight:700;margin-right:4px}
+#mjwarn{display:none;position:fixed;left:14px;bottom:14px;background:#7f1d1d;color:#fee2e2;
+  padding:8px 12px;border-radius:8px;font-size:12px;z-index:99;box-shadow:var(--shadow)}
+@media print{
+  #side,#bar,#panels,#mjwarn{display:none!important}
+  body{overflow:visible;height:auto}#wrap{overflow:visible}#scroller{display:none}
+}
+</style>
+</head>
+<body>
+<nav id="side">
+  <h1>统计力学讲义 · 思维导图</h1>
+  <div class="sub">16 份讲义 / 7 章 · 重点公式、定理与推导关系</div>
+  <input id="search" placeholder="搜索公式或概念，回车跳转定位…">
+  <div class="gbtn" id="gopen">◉ 全局关系图（七章依赖 + 主线推导）</div>
+  <div id="navlist"></div>
+  <div class="foot">
+    数据由 16 份 PDF 正文逐节整理而成。星标 ★ 为本讲重点；
+    ◇ 定理、= 公式、例 模型实例、⚠ 讲义注明"不要求/选讲"。<br>
+    橙色连线 = 推导关系（可点右上"推导链"开关）。
+  </div>
+</nav>
+
+<div id="main">
+  <div id="head">
+    <div class="ht"><h2 id="h-title"></h2><span class="file" id="h-file"></span></div>
+    <p id="sum"></p>
+    <div id="bar">
+      <button class="tb" id="b-expand">展开全部</button>
+      <button class="tb" id="b-collapse">收起到小节</button>
+      <select class="tb" id="b-depth">
+        <option value="2">深度 2</option><option value="3">深度 3</option>
+        <option value="4">深度 4</option><option value="5" selected>深度 5</option><option value="9">全部展开</option>
+      </select>
+      <button class="tb on" id="b-links">推导链</button>
+      <button class="tb on" id="b-rel">承前 / 启后</button>
+      <button class="tb on" id="b-panel">侧栏面板</button>
+      <span class="sp"></span>
+      <span class="lbl" id="h-count"></span>
+      <button class="tb" id="b-fit" title="按宽度适配（导图很高，纵向用滚动条）">适应宽度</button>
+      <button class="tb" id="b-in">＋</button>
+      <button class="tb" id="b-out">－</button>
+      <button class="tb" id="b-print">打印</button>
+    </div>
+  </div>
+
+  <div id="wrap">
+    <div id="scroller"></div>
+    <div id="stage">
+      <svg id="edges"></svg>
+      <div id="nodes"></div>
+    </div>
+    <div id="panels"></div>
+  </div>
+
+  <div id="global"></div>
+</div>
+<div id="mjwarn">公式渲染库（MathJax CDN）加载失败：已按原始 LaTeX 显示，联网后刷新即可。</div>
+
+<script>
+window.__errs=[];
+window.addEventListener('unhandledrejection',e=>{window.__errs.push('promise: '+(e.reason&&e.reason.message||e.reason));});
+window.onerror=function(m,s,l,c){ window.__errs.push(m+' @line '+l+':'+c); return false; };
+</script>
+<script>
+/* ================= 数据（由讲义正文整理） ================= */
+/* 节点构造助手：k = 类别（root/sec/key/thm/eq/eg/opt/p），t = 标题（可含 $...$ 公式），c = 子节点 */
+const mk=(k)=>(t,c)=>({t,k,c:c===undefined?[]:c});
+const root=mk('root'),sec=mk('sec'),key=mk('key'),th=mk('thm'),eq=mk('eq'),eg=mk('eg'),op=mk('opt'),p=mk('p');
+const LECTURES = [
+  {
+    id:"l1a", ch:1, chName:"第一章 热力学回顾", short:"I. 定律、卡诺定理与熵", title:"第一章 热力学回顾 I — 第零/第一/第二定律、卡诺定理与熵",
+    file:"lecture1-thermal part1.pdf", pages:13,
+    cover:"热力学基本概念、第零定律与温标、第一定律与热容/焓、卡诺热机、第二定律两种表述、克劳修斯不等式与熵增加原理",
+    summary:"全课程的地基：先立\"温度\"（第零定律）、再立\"内能\"（第一定律）、最后立\"熵\"（第二定律＋卡诺定理）。讲义反复强调：物态方程在热力学里只能靠实验，而统计物理可以从模型推导出来——这正是本课程的存在理由。",
+    key:["◇ 第零定律 ⇒ 温度是态函数", "◇ 卡诺定理：可逆机效率最高、只依赖两热源温度", "◇ 克劳修斯不等式 ⇒ 熵存在且 $dS=\\delta Q/T$", "★ 熵增加原理＝孤立系的自发方向判据"],
+    tree: root("第一章 热力学回顾 I",[
+        sec("绪论：两门学科的分工",[
+          key("统计力学＝对大量自由度平衡性质的概率方法"),
+          key("热力学＝宏观系统热平衡性质的唯象描述"),
+          p("热力学不追问机理、只讲态变量间的普遍关系；统计力学给出微观解释")
+        ]),
+        sec("I.A 基本概念",[
+          th("平衡态：无外界影响时长时间宏观性质不变",[
+            p("区别于非平衡定态；观测时间须大于弛豫时间"),
+            key("平衡是动态平衡：微观涨落始终存在"),
+            p("孤立系必趋于平衡；平衡性质是点函数、与历史无关")
+          ]),
+          eq("壁的两种理想化：绝热壁 / 导热壁"),
+          eq("态变量成对出现：$(V,p),\\ (L,F),\\ (\\mathbf M,\\mathbf H),\\ (\\mathbf P,\\mathbf E),\\ (n_i,\\mu)$")
+        ]),
+        sec("I.B 热力学第零定律",[
+          th("第零定律（热平衡的可传递性）：$A\\sim C,\\ B\\sim C\\Rightarrow A\\sim B$",[
+            key("推论：存在共同态函数＝温度"),
+            eq("$\\theta=\\Phi(x_1,x_2,x_3,\\dots)$，物态方程 $F(x_1,\\dots,x_n,\\theta)=0$"),
+            p("证明思路：对 $C$ 的两个约束 $f_{AC}=0,\\ f_{BC}=0$ 消去 $C$ 的坐标 ⇒ $\\theta_A=\\theta_B$")
+          ]),
+          key("热力学内物态方程只能由实验给出；统计物理中可由模型推导 ← 本课程动机"),
+          eg("物态方程实例",[
+            eq("理想气体 $pV=nRT$；范德瓦尔斯 $(p+a/v^2)(v-b)=RT$"),
+            eq("顺磁体 $M=\\dfrac{C}{T}H$（或 $M=\\dfrac{C}{T-\\theta}H$）；弹性线 $F=(K+DT)(L-L_0)$"),
+            eq("简单固/液体 $dV=V[\\alpha dT-\\kappa_T dp]$")
+          ]),
+          eq("理想气体温标：$T=273.16\\lim_{p\\to0}\\dfrac{(pV)_{sys}}{(pV)_{trip}}$；三相点 273.16 K"),
+          eq("三个实验系数：$\\alpha=\\dfrac1V(\\partial V/\\partial T)_p,\\ \\beta=\\dfrac1p(\\partial p/\\partial T)_V,\\ \\kappa_T=-\\dfrac1V(\\partial V/\\partial p)_T$")
+        ]),
+        sec("I.C 热力学第一定律",[
+          th("能量守恒／第一类永动机不可能 ⇒ 内能 U 是态函数",[
+            eq("绝热功定义 $\\Delta W=-pdV+F dL+VMH\\,dB=U(X_f)-U(X_i)$"),
+            key("$dU=\\delta Q+\\delta W=\\delta Q+\\sum_i Y_i dy_i$：两项各依路径，其和为全微分"),
+            p("初末态必须是平衡态，中间过程可以不平衡")
+          ]),
+          key("准静态过程：无限缓慢、每一时刻都是平衡态 ⇒ 功可用态变量表示（无摩擦即最可逆）"),
+          eq("热容量 $C_y=\\lim_{\\Delta\\theta\\to0}Q_y/\\Delta\\theta$；$C_V=(\\partial U/\\partial T)_V,\\ C_p=(\\partial H/\\partial T)_p$"),
+          eq("焓 $H=U+pV$，定压过程 $\\Delta H=Q_p$；$C_p-C_V=p(\\partial V/\\partial T)_p$"),
+          eg("理想气体（焦耳定律 $U=U(T)$ ＋ $pV=nRT$）",[
+            eq("$C_p-C_V=nR=Nk_B$；单原子 $C_V=\\tfrac32 nR$，$U=\\int C_V dT+U_0$"),
+            eq("焦耳自由膨胀：$\\delta Q=\\delta W=0\\Rightarrow(\\partial U/\\partial V)_T=0$"),
+            p("焦耳实验精度不足，真实气体 $(\\partial U/\\partial V)_T\\ne0$ ⇒ 第四章")
+          ])
+        ]),
+        sec("I.D 卡诺热机与卡诺循环",[
+          eg("两恒温热源间的可逆循环：二等温＋二绝热",[
+            eq("$Q_1=RT_1\\ln\\dfrac{V_2}{V_1},\\qquad Q_2=-RT_2\\ln\\dfrac{V_3}{V_4}$"),
+            eq("绝热线 $TV^{\\gamma-1}=$ const ⇒ $\\dfrac{V_2}{V_1}=\\dfrac{V_3}{V_4}$"),
+            eq("$W=R(T_1-T_2)\\ln\\dfrac{V_2}{V_1}$")
+          ]),
+          key("效率 $\\eta=W/Q_1=1-Q_2/Q_1$；制冷系数 $\\epsilon=T_2/(T_1-T_2)$"),
+          key("第二类永动机不可能：$\\eta=1$ 被禁止 ⇒ 必须有低温热源")
+        ]),
+        sec("I.E 热力学第二定律",[
+          th("Clausius 表述：热不能自动由低温传向高温而不引起其他变化"),
+          th("Kelvin 表述：不能从单一热源吸热全部变为功而不产生其他影响",[
+            p("揭示热功转化的不等价性")
+          ]),
+          key("两种表述等价（反证：用 $W=Q_1-Q_2$ 驱动可逆卡诺机逆循环）"),
+          key("统一的本质：热现象过程的不可逆性；无摩擦准静态只是理想极限"),
+          th("卡诺定理：两恒温热源间可逆热机效率最大、彼此相等、只与两热源温度而与工质无关",[
+            key("绝对热力学温标：$Q_2/Q_1=F(\\theta_1,\\theta_2)=f(\\theta_2)/f(\\theta_1)\\Rightarrow T_2/T_1$"),
+            p("与理想气体温标一致，用三相点定标"),
+            eq("$\\eta=1-T_2/T_1$")
+          ]),
+          key("初末态不等价 ⇒ 必须存在判别自发方向的态函数")
+        ]),
+        sec("I.F 克劳修斯不等式与熵",[
+          th("克劳修斯不等式 $\\oint\\dfrac{\\delta Q}{T}\\le0$（可逆取等号）",[
+            p("证明：二热源用卡诺定理；$n$ 热源配一 $T_0$ 热源＋可逆卡诺机 $Q_{0i}=(T_0/T_i)Q_i$，再用 Kelvin 表述"),
+            p("不可逆时 $T$ 是热源温度")
+          ]),
+          key("熵的存在性：可逆循环积分为零 ⇒ 积分与路径无关",[
+            eq("$S(P)-S(P_0)=\\int\\dfrac{\\delta Q}{T},\\qquad \\delta Q=T\\,dS$（$1/T$ 是积分因子）"),
+            eq("$S-S_0=\\int\\dfrac{dU-\\delta W}{T}$ ⇒ $U=U(S,y_i)$ 为特性函数")
+          ]),
+          th("熵增加原理：$\\Delta S\\ge\\int\\delta Q/T$；绝热/孤立系 $\\Delta S\\ge0$",[
+            key("这就是热力学第二定律的数学表述＝自发过程方向的判据")
+          ]),
+          p("熵是态函数、广延可加；$T$–$S$ 图下面积＝吸热；绝热可逆＝等熵"),
+          op("热力学只给出 $\\Delta S$，熵的绝对值（附加常数）留待统计物理 $S=k_B\\ln\\Omega$ 确定")
+        ])
+      ]),
+    chains:[
+      {a:"第零定律（热平衡的可传递性）", b:"推论：存在共同态函数＝温度", why:"可传递性使温度成为系统的态函数，进而写出物态方程"},
+      {a:"能量守恒／第一类永动机不可能", b:"$dU=\\delta Q+\\delta W", why:"绝热功与路径无关 ⇒ 定义内能；吸热与做功之和为全微分"},
+      {a:"Kelvin 表述", b:"卡诺定理", why:"若存在比可逆机更高效的机器，与单一热源换热即可造出第二类永动机"},
+      {a:"卡诺定理", b:"绝对热力学温标", why:"效率只依赖两热源温度 ⇒ $Q_2/Q_1$ 可分解为 $f(\\theta_2)/f(\\theta_1)$，据此定义与工质无关的温标"},
+      {a:"卡诺定理", b:"克劳修斯不等式", why:"把多个可逆卡诺机拼成任意循环并取极限，即得 $\\oint\\delta Q/T\\le0$"},
+      {a:"克劳修斯不等式", b:"熵的存在性", why:"可逆循环积分为零 ⇒ $\\delta Q/T$ 是恰当微分 ⇒ 熵作为态函数存在"},
+      {a:"熵的存在性", b:"熵增加原理", why:"不等式 $dS\\ge\\delta Q/T$ 在绝热条件下直接给出 $\\Delta S\\ge0$"}
+    ],
+    before:[{id:"l1b", txt:"本讲定义的 $S,U,H$ 在 part2 做勒让德变换"}],
+    after:[{id:"l3b", txt:"熵增加原理 ⇒ 微正则系综的平衡判据"}, {id:"l3b", txt:"$S=k_B\\ln\\Omega$ 补上熵的绝对值"}, {id:"l2", txt:"\"微观涨落\"需要概率语言"}, {id:"l7", txt:"不可逆性/时间箭头由 H 定理给出统计证明"}],
+    note:"讲义原话提示：热力学范围内物态方程只能由实验得到，统计物理中可以由物理假设和模型推导；\"微观上内能是分子无规运动能量的统计均值\"。"
+  },
+  {
+    id:"l1b", ch:1, chName:"第一章 热力学回顾", short:"II. 基本方程、热力学势与平衡判据", title:"第一章 热力学回顾 II — 基本微分方程、热力学势、平衡与稳定性判据",
+    file:"lecture1-thermal part2.pdf", pages:14,
+    cover:"热力学基本微分方程、四个热力学势与勒让德变换、化学势与广延性、麦克斯韦关系、相律、平衡判据与稳定性条件、第三定律",
+    summary:"讲义称 $dU=TdS+\\sum Y_i dy_i$ 是\"热力学中最核心、最重要的方程\"。本讲把四个特性函数、化学势、麦克斯韦关系和稳定性条件串成一张网——第三、六章的几乎每个公式都是它的统计翻译。",
+    key:["= 基本方程 $dU=TdS+\\sum Y_i dy_i+\\mu dN$", "★ 四个特性函数 $U,H,F,G$（＋巨势 $J$）由勒让德变换相连", "◇ 广延性 ⇒ 欧拉关系 ⇒ Gibbs–Duhem", "◇ 平衡判据 $\\delta F_{T,V}\\le0$ 与稳定条件 $C_V\\ge0,\\ \\kappa_T\\ge0$"],
+    tree: root("第一章 热力学回顾 II",[
+        sec("I.G 热力学基本微分方程",[
+          key("$dU=\\delta Q+\\delta W=T\\,dS+\\sum_i Y_i dy_i$：讲义称\"最核心、最重要\""),
+          eq("加入化学功：$dU=TdS+\\sum_i Y_i dy_i+\\mu dN$（$\\mu$ 为化学势）"),
+          p("只有准静态过程才能用广义力/广义位移表达功；$\\delta Q,\\delta W$ 是路径量，其和为全微分")
+        ]),
+        sec("I.H 热力学势（特性函数）",[
+          key("定律 ↔ 态函数：热零 ⇒ $T$；热一（$\\eta\\le1$）⇒ $U$；热二（$\\eta<1$）⇒ $S$"),
+          p("$n$ 种做功方式＋1 种传热 ⇒ 独立变量数 $n+1$；$dS=\\dfrac{dU}{T}-\\sum\\dfrac{Y_i}{T}dy_i$"),
+          th("焓 $H(S,Y_i)=U-Y_iy_i$（等 $Y$、绝热过程 $dH\\le0$）",[
+            eq("$dH=TdS-y_i dY_i+\\mu dN,\\quad y_i=-(\\partial H/\\partial Y_i)_{S,Y}$")
+          ]),
+          th("亥姆霍兹自由能 $F(T,y_i)=U-TS$（等温过程 $dF\\le0$）",[
+            eq("$dF=-SdT+Y_idy_i+\\mu dN,\\quad Y_i=(\\partial F/\\partial y_i)_T,\\ S=-(\\partial F/\\partial T)_y$"),
+            eq("吉布斯–亥姆霍兹：$U=F-T(\\partial F/\\partial T)_y=-T^2\\big(\\partial(F/T)/\\partial T\\big)_y$")
+          ]),
+          th("吉布斯自由能 $G(T,Y_i)=H-TS$（等温等 $Y$ 过程 $dG\\le0$）",[
+            eq("$dG=-SdT-y_idY_i+\\mu dN$"),
+            key("$G$ 的变量全是强度量 ⇒ 不能确定体系大小；完整描述至少需要一个广延量")
+          ]),
+          key("化学势 $\\mu=G/n=u-Ts+pv$；两相平衡时化学势相等＝交换粒子无需额外能量"),
+          th("巨热力学势 $J=F-\\mu N=U-TS-\\mu N=Y_iy_i$",[
+            eq("$dJ=-SdT+Y_idy_i-Nd\\mu$"),
+            p("自然变量 $(T,y_i,\\mu)$ ⇒ 第三章巨正则系综的热力学对应物")
+          ])
+        ]),
+        sec("I.I 有用的数学结论",[
+          th("广延性 ⇒ 欧拉关系：$U(\\lambda S,\\lambda y,\\lambda N)=\\lambda U$ 对 $\\lambda$ 求导取 $\\lambda=1$",[
+            eq("$U=TS+Y\\!\\cdot\\!y+\\mu N$"),
+            key("Gibbs–Duhem：$SdT+y\\,dY+Nd\\mu=0$ ⇒ $(T,Y,\\mu)$ 不能独立确定状态"),
+            eq("理想气体积分得 $\\mu=\\mu_0+k_BT\\ln(p/p_0)$")
+          ]),
+          th("麦克斯韦关系（二阶混合偏导可换序）",[
+            eq("$(\\partial T/\\partial y)_S=(\\partial Y/\\partial S)_y,\\qquad -(\\partial S/\\partial y)_T=(\\partial Y/\\partial T)_y$"),
+            eq("$(\\partial S/\\partial V)_{U,N}=p/T,\\qquad(\\partial\\mu/\\partial p)_{N,T}=(\\partial V/\\partial N)_{T,p}$")
+          ]),
+          eq("$(\\partial U/\\partial V)_T=T(\\partial p/\\partial T)_V-p$ ⇒ 理想气体 $U=U(T)$"),
+          key("$C_p-C_V=T(\\partial p/\\partial T)_V(\\partial V/\\partial T)_p=\\dfrac{TV\\alpha^2}{\\kappa_T}\\ge0$"),
+          th("吉布斯相律 $f=n+c+1-p$",[
+            eg("水三相点 $n=c=1,\\ p=3\\Rightarrow f=0$ ⇒ 可作温标基准点"),
+            p("气液共存线上只剩一个独立强度量；盐水则三相点不唯一")
+          ])
+        ]),
+        sec("I.J 平衡判据",[
+          th("熵判据 $(\\Delta S)_{U,V,N}\\ge0$；平衡 $\\delta S=0$、稳定 $\\delta^2S<0$"),
+          eq("等价判据：$(\\Delta U)_{S,V}\\le0,\\ (\\Delta H)_{S,P}\\le0,\\ (\\Delta F)_{T,V}\\le0,\\ (\\Delta G)_{T,P}\\le0,\\ (\\Delta J)_{T,V,\\mu}\\le0$"),
+          key("相平衡三条件（对 $\\delta\\bar S=\\delta S-\\frac1T\\delta U-\\frac pT\\delta V+\\frac\\mu T\\delta n$ 取极值）",[
+            eq("热平衡 $T_\\alpha=T$；力学平衡 $p_\\alpha=p$；相/化学平衡 $\\mu_\\alpha=\\mu$"),
+            p("方向判据：能量自高温相流出、系统膨胀、物质由高化学势相转入低化学势相")
+          ])
+        ]),
+        sec("I.K 相平衡的稳定性条件",[
+          key("类比牛顿力学：平衡＝热力学势取极值，稳定＝二阶变分正定（Hessian 半正定）"),
+          eq("总判据 $\\delta T\\,\\delta S+\\sum\\delta Y_i\\delta y_i+\\sum\\delta\\mu_\\alpha\\delta N_\\alpha\\ge0$"),
+          th("推论：$C_y\\ge0,\\quad\\kappa_T\\ge0,\\quad\\kappa_T/\\kappa_S=C_p/C_V\\Rightarrow\\kappa_T>\\kappa_S>0,\\quad(\\partial N/\\partial\\mu)_{T,V}\\ge0$",[
+            p("这三式正是第三章涨落公式 $\\langle(\\Delta E)^2\\rangle=k_BT^2C_V$、$\\langle(\\Delta N)^2\\rangle$ 的热力学对应")
+          ]),
+          eg("临界点条件 $(\\partial P/\\partial V)_{T_c}=0$、二阶导＝0、三阶导为负",[
+            op("实际等温线在临界点非解析：$\\delta P\\sim(\\delta V)^\\delta,\\ \\delta\\approx4.2$（CO₂）；讲义注明完整解决需更高阶课程")
+          ])
+        ]),
+        sec("I.L 热力学第三定律",[
+          key("热三是量子效应的宏观表现，必须用量子统计解释"),
+          th("能斯特定理 $\\lim_{T\\to0}(\\Delta S)_T=0$；绝对零度不可由有限步骤达到",[
+            eq("推论 $\\lim_{T\\to0}(\\partial S/\\partial Y)_T=0\\Rightarrow\\alpha\\to0,\\ \\beta\\to0,\\ C_p-C_V\\to0$"),
+            p("与理想气体 $C_p-C_V=R$ 不矛盾：低温下理想气体模型本身失效"),
+            p("最有效降温手段是绝热过程（绝热去磁）")
+          ]),
+          eq("绝对熵 $S(T,y)=\\displaystyle\\int_0^T\\dfrac{C_y}{T}dT$（普朗克 1911 年取 $S_0=0$）"),
+          eg("低温比热的不同幂次：绝缘固体 $\\sim T^3$、金属 $\\sim T$、超导体 $\\sim e^{-\\Delta/T}$、超流 $^4$He $\\sim T^3$"),
+          th("各定律的微观来源",[
+            p("热一＝能量守恒；热零/热二源于 $N\\gg1$（$S=k_B\\ln\\Omega$，无单粒子类比，不可逆性是集体行为）"),
+            p("热三＝基态唯一（$\\Omega\\sim O(1)$）；经典理想气体反而 $\\alpha\\sim1/T$ 发散")
+          ])
+        ])
+      ]),
+    chains:[
+      {a:"热力学基本微分方程", b:"焓 $H(S,Y_i)", why:"等 $Y$、绝热条件下 $\\delta W\\le Ydy,\\ \\delta Q=0$ ⇒ $d(U-Yy)\\le0$，焓成为特性函数"},
+      {a:"热力学基本微分方程", b:"亥姆霍兹自由能", why:"等温且 $\\delta W=0$ 时 $d(U-TS)\\le0$ ⇒ $F$ 判据；第三章由 $F=-k_BT\\ln Z$ 给出"},
+      {a:"广延性 ⇒ 欧拉关系", b:"Gibbs–Duhem", why:"欧拉关系再取全微分并与基本方程对比即得 $SdT+y\\,dY+Nd\\mu=0$"},
+      {a:"麦克斯韦关系（二阶混合偏导可换序）", b:"$C_p-C_V=", why:"用 $(\\partial S/\\partial V)_T=(\\partial p/\\partial T)_V$ 把热容差化为可测量 $\\alpha,\\kappa_T$，并证明其非负"},
+      {a:"熵判据", b:"相平衡三条件", why:"在 $\\delta U=\\delta V=\\delta n=0$ 约束下对 $\\delta S$ 取极值 ⇒ $T_\\alpha,p_\\alpha,\\mu_\\alpha$ 分别相等"},
+      {a:"类比牛顿力学：平衡＝热力学势取极值，稳定＝二阶变分正定（Hessian 半正定）", b:"推论：$C_y\\ge0", why:"二阶变分正定逐项展开即得热容、压缩率、$(\\partial N/\\partial\\mu)$ 的非负性"},
+      {a:"能斯特定理", b:"绝对熵", why:"$(\\partial S/\\partial Y)_T\\to0$ 使 $S=\\int_0^T C_y/T\\,dT$ 有限 ⇒ 熵获得绝对零点"}
+    ],
+    before:[{id:"l1a", txt:"熵与基本方程来自 I.F 的克劳修斯不等式"}],
+    after:[{id:"l3c", txt:"$F=-k_BT\\ln Z$、$J=-k_BT\\ln\\Xi$ 与 $dF,dJ$ 一一对应"}, {id:"l3c", txt:"稳定性 $C_V,\\kappa_T\\ge0$ 由能量/粒子数涨落公式重证"}, {id:"l4b", txt:"临界点条件与平均场临界指数"}, {id:"l6c", txt:"$G$ 的极小化＝朗道自由能展开的热力学依据"}, {id:"l5", txt:"热三与低温比热的幂次由量子气体解释"}],
+    note:"讲义在本讲两处埋下伏笔：\"后面会看到还需要一个化学功的部分\"（→巨正则）与\"后面统计物理的部分会继续讨论这个临界问题\"（→第六章）。"
+  },
+  {
+    id:"l2", ch:2, chName:"第二章 概率论初步", short:"概率、累积量与中心极限定理", title:"第二章 概率论初步 — 从随机变量到热力学极限下的鞍点法",
+    file:"lecture2-probability.pdf", pages:11,
+    cover:"样本空间与概率公理、矩与累积量、重要分布、多变量与关联、中心极限定理、大数规则与鞍点法、Stirling 公式",
+    summary:"讲义自注\"这节比较数学，考试不要求\"，但它提供了后面每一步都用的语言：累积量＝关联函数、中心极限定理⇒相对涨落 $1/\\sqrt N$、鞍点法＋Stirling ⇒ 配分函数由最大项决定。第三章的三个系综推导全靠后两件工具。",
+    key:["★ 累积量生成函数 $\\ln\\tilde p(k)$＝连通图之和", "◇ 中心极限定理 ⇒ 相对涨落 $\\sim1/\\sqrt N$", "◇ 鞍点法：指数积分由极值点决定", "◇ Stirling 公式由鞍点法导出"],
+    tree: root("第二章 概率论初步",[
+        op("讲义注明：\"这节比较数学，考试不要求\"；但下列标 ★/◇ 的四处是后续章节的直接工具"),
+        sec("II.A 随机变量",[
+          p("样本空间 $S=\\{x_1,x_2,\\dots\\}$，事件 $E\\subset S$；离散（硬币、骰子）或连续（速度分量）"),
+          th("概率三公理：$p(E)\\ge0$；互斥事件可加；$p(S)=1$"),
+          eq("客观概率（频率定义）$p(A)=\\lim_{N\\to\\infty}N_A/N$"),
+          key("主观概率／贝叶斯等可能假设",[
+            p("讲义原话：\"统计力学中的所有概率分配都是基于主观的\"，必须交由测量检验并修正")
+          ])
+        ]),
+        sec("II.B 单个随机变量",[
+          eq("累积分布与概率密度 $P(x),\\ p(x)=dP/dx,\\ \\int p\\,dx=1$"),
+          eq("期望与换元（Jacobi）：$\\langle F\\rangle=\\int p(x)F(x)dx,\\quad p_F(f)=\\sum_i p(x_i)\\, |dx/dF|$"),
+          key("矩与特征函数（Fourier 变换）",[
+            eq("$m_n=\\langle x^n\\rangle,\\qquad \\tilde p(k)=\\langle e^{-ikx}\\rangle=\\int p(x)e^{-ikx}dx$"),
+            p("特征函数与 PDF 一一对易 ⇒ 求和的分布化为乘积")
+          ]),
+          th("累积量（半不变量）生成函数",[
+            eq("$\\ln\\tilde p(k)=\\sum_{n\\ge1}\\dfrac{(-ik)^n}{n!}\\langle x^n\\rangle_c$"),
+            p("前四阶＝均值、方差、偏度、峰度；$\\sigma_x^2=\\langle x^2\\rangle_c=\\langle x^2\\rangle-\\langle x\\rangle^2$"),
+            key("矩–累积量的\"团簇\"图解关系：矩＝所有图的乘积之和 ⇒ 与第四章集团展开同构")
+          ]),
+          eg("重要分布",[
+            eq("高斯：$p=\\dfrac1{\\sqrt{2\\pi\\sigma^2}}e^{-(x-\\lambda)^2/2\\sigma^2}$，$\\ln\\tilde p=-ik\\lambda-\\tfrac{k^2\\sigma^2}2$ ⇒ 唯一使 $n\\ge3$ 累积量为零的分布"),
+            eq("二项/多项：$\\langle N_A\\rangle_c=Np_A,\\ \\langle N_A^2\\rangle_c=Np_Ap_B$ ⇒ 均值 $\\propto N$、标准差 $\\propto\\sqrt N$"),
+            eq("泊松（放射性衰变）：各阶累积量相同 $\\langle M^n\\rangle_c=\\alpha T$")
+          ])
+        ]),
+        sec("II.D 多个随机变量与关联",[
+          eq("联合/约化/条件 PDF；独立时 $p(\\mathbf x)=\\prod p_i(x_i)$"),
+          key("联合累积量＝关联函数：$\\langle x_\\alpha x_\\beta\\rangle_c=\\langle x_\\alpha x_\\beta\\rangle-\\langle x_\\alpha\\rangle\\langle x_\\beta\\rangle$",[
+            p("独立时为零 ⇒ 非零关联正是\"粒子间有相互作用\"的标志（第四、六章的核心语言）")
+          ]),
+          eq("联合高斯：$p\\propto(\\det C)^{-1/2}\\exp[-\\tfrac12\\sum(C^{-1})_{mn}x_mx_n]$，$\\langle x_mx_n\\rangle_c=C_{mn}$"),
+          th("Wick 定理：零均值高斯的 $2n$ 阶矩＝所有两两配对之和",[
+            eq("$\\langle x_ax_bx_cx_d\\rangle=C_{ab}C_{cd}+C_{ac}C_{bd}+C_{ad}C_{bc}$"),
+            p("高斯分布完全由协方差决定 ⇒ 第六章对涨落做高斯积分的依据")
+          ])
+        ]),
+        sec("II.E 随机变量求和与中心极限定理",[
+          key("和的 PDF 含 $\\delta(X-\\sum x_i)$ ⇒ 特征函数相乘 ⇒ 累积量相加"),
+          th("中心极限定理",[
+            eq("$y=\\dfrac{\\sum x_i-N\\langle x\\rangle_c}{\\sqrt N}\\Rightarrow p(y)\\to\\dfrac1{\\sqrt{2\\pi\\langle x^2\\rangle_c}}e^{-y^2/2\\langle x^2\\rangle_c}$"),
+            eq("$\\langle y^n\\rangle_c\\propto N^{1-n/2}\\to0$：高阶累积量消失 ⇒ 极限分布只能是高斯"),
+            p("非独立同分布也成立，只要关联累积量增长慢于 $O(N^{m/2})$")
+          ]),
+          key("相对涨落 $\\sigma/\\langle X\\rangle\\sim1/\\sqrt N$ ⇒ 宏观量看起来完全确定"),
+          eg("一维无规行走：每步二项分布，$N\\to\\infty$ 后位移呈高斯")
+        ]),
+        sec("II.F 热力学极限下的求和与积分（Rules for Large Numbers）",[
+          key("三类量级：强度量 $O(N^0)$、广延量 $O(N^1)$、指数量 $O(e^{N\\phi})$（如微观态数）"),
+          th("指数和由最大项决定：$\\lim\\dfrac1N\\ln\\sum e^{N\\phi_i}=\\phi_{max}$"),
+          th("鞍点法（最速下降）",[
+            eq("$I=\\displaystyle\\int dx\\,e^{N\\phi(x)}\\approx\\sqrt{\\dfrac{2\\pi}{N|\\phi^{\\prime\\prime}(x_{max})|}}\\ e^{N\\phi(x_{max})}$"),
+            op("讲义注：\"复平面中适当的极值是鞍点。上面介绍的简化版本足以满足本课程的目的\""),
+            p("误差 $O(1/N)$；多峰竞争被指数压低 ⇒ 相变的雏形")
+          ]),
+          th("Stirling 公式作为鞍点法的例子",[
+            eq("$N!=\\Gamma(N+1)=\\int_0^\\infty x^Ne^{-x}dx\\Rightarrow\\ln N!=N\\ln N-N-\\tfrac12\\ln(2\\pi N)+\\cdots$"),
+            key("正是它保证 $\\ln\\Omega$ 的广延性 ⇒ 第三章 $S=k_B\\ln\\Omega$ 成立、Gibbs $N!$ 佯谬可解")
+          ])
+        ])
+      ]),
+    chains:[
+      {a:"客观概率（频率定义）", b:"主观概率／贝叶斯等可能假设", why:"频率定义无法直接用于单次测量的平衡系统 ⇒ 采用等可能的主观指派，再由实验检验"},
+      {a:"矩与特征函数（Fourier 变换）", b:"累积量（半不变量）生成函数", why:"对特征函数取 $\\ln$ 把矩阵（图）中的连通部分分离出来 ⇒ 累积量比矩更本质"},
+      {a:"特征函数相乘", b:"中心极限定理", why:"乘积取对数后可加，$1/\\sqrt N$ 归一后各阶累积量按 $N^{1-n/2}$ 消失 ⇒ 只剩高斯"},
+      {a:"中心极限定理", b:"相对涨落", why:"均值 $\\propto N$、标准差 $\\propto\\sqrt N$ ⇒ 相对涨落 $\\sim N^{-1/2}$，$N\\sim10^{23}$ 时宏观量确定"},
+      {a:"联合累积量＝关联函数", b:"Wick 定理", why:"关联函数是二阶累积量；高斯情形所有高阶矩都由它配对给出 ⇒ 关联决定一切"},
+      {a:"鞍点法（最速下降）", b:"指数和由最大项决定", why:"积分与求和在 $N\\to\\infty$ 下同由极值点决定 ⇒ 配分函数可只取最大项"},
+      {a:"Stirling 公式作为鞍点法的例子", b:"广延性", why:"鞍点法直接作用在 $\\Gamma$ 函数积分上即得 $\\ln N!$，为熵的广延性提供阶数"}
+    ],
+    before:[{id:"l1a", txt:"\"微观涨落\"与宏观量的确定性是本章要解释的现象"}],
+    after:[{id:"l3a", txt:"概率密度 $\\rho(q,p)$、系综平均就是期望值"}, {id:"l3b", txt:"$S=k_B\\ln\\Omega$ 的广延性依赖 Stirling"}, {id:"l3c", txt:"累积量＝涨落；鞍点法＝正则/巨正则推导的核心手法"}, {id:"l4a", txt:"矩–累积量的团簇图解＝Mayer 集团展开的雏形"}, {id:"l6d", txt:"Wick 定理与联合高斯＝Landau-Ginzburg 涨落积分的工具"}, {id:"l7", txt:"分子混沌假设＝统计独立性假设的极端使用"}],
+    note:"讲义目的陈述：\"回顾概率论中的一些重要结果，并介绍将在课程其余部分中使用的符号\"；并强调\"为了讨论宏观系统的平衡特性，完全了解其组成粒子的行为是不必要的\"。"
+  },
+  {
+    id:"l3a", ch:3, chName:"第三章 经典统计系综理论", short:"I. 相空间、刘维尔定理", title:"第三章 经典系综理论 I — 基本概念、相空间与刘维尔定理",
+    file:"lecture3-ensemble part1.pdf", pages:9,
+    cover:"统计物理三要素、微观态/宏观态、等几率原理、相空间与概率密度、时间平均与系综平均、刘维尔定理与刘维尔方程、平衡分布只能是 $H$ 的函数",
+    summary:"本章是全课程的计算引擎。part1 只做两件事：把\"宏观量＝系综平均\"设为公设（吉布斯立场），再用刘维尔定理证明平衡分布只能写成 $\\rho_{eq}=\\rho(H)$ —— 这一步把\"等几率原理\"从动力学中隔离出来，成为真正的独立公设。",
+    key:["★ 统计力学三要素：力学描述＋等几率原理＋系综平均", "◇ 刘维尔定理 $d\\tilde\\rho/dt=0$：相体积守恒、密度沿轨道不变", "◇ 平衡 ⇒ $\\{\\rho_{eq},H\\}=0\\Rightarrow\\rho_{eq}=\\rho(H)$", "⚠ 刘维尔定理不回答\"为何趋衡\"——留给第七章"],
+    tree: root("第三章 经典系综理论 I",[
+        sec("III.0 统计物理学的基本概念",[
+          key("统计力学三要素（刘志荣）",[
+            p("① 微观态由（经典/量子）力学定律描述"),
+            p("② 等几率原理"),
+            p("③ 热力学性质＝系综平均")
+          ]),
+          eq("宏观观测＝宏观态 $\\leftrightarrow$ 微观态：$(E,V,N)$ 或 $(T,p,N)$ 等极少参量 ↔ 海量参量"),
+          eq("系综对照表：$(E,V,N)$ 微正则 ｜ $(T,V,N)$ 正则 ｜ $(T,V,\\mu)$ 巨正则 ｜ $(T,p,N)$ Gibbs 系综"),
+          th("等几率原理（最重要的公设）",[
+            p("平衡态孤立系所有可能的微观态出现概率相等；适用条件 $N,V,E$ 确定，$E\\in[E,E+\\Delta E],\\ \\Delta E\\ll E$"),
+            key("不能由动力学推出；若要推导须引入各态历经假设（某种意义上二者等价）")
+          ]),
+          key("统计规律性：纯力学方程时间反演不变 ⇒ 无法解释热现象的不可逆"),
+          eq("宏观观测的尺度：空间\"宏观小微观大\"、时间\"宏观短微观长\"",[
+            eg("$1\\,$cm³ 气体（0℃、1 atm）约 $10^{19}$ 个分子、碰撞 $\\sim10^{29}$/s；取 $10^{-6}$ cm³ 仍含 $\\sim10^{13}$ 分子")
+          ])
+        ]),
+        sec("III.A 经典系综的基本概念",[
+          key("任何统计理论要回答的三问：如何描述微观运动／如何统计平均（核心＝统计权重）／如何算宏观量"),
+          eq("相空间：$N$ 个全同粒子、每粒子自由度 $r$、$f=Nr$；$(q_1..q_f,p_1..p_f)$ 张成 $2f$ 维 $\\Gamma$ 空间"),
+          eq("相体积元 $d\\Gamma=d\\mathbf q\\,d\\mathbf p=\\prod_i dq_i\\,dp_i$；任一时刻＝一个代表点，演化＝相轨道"),
+          eq("哈密顿正则方程 $\\dot q_i=\\partial H/\\partial p_i,\\quad \\dot p_i=-\\partial H/\\partial q_i$",[
+            p("解唯一 ⇒ 相轨道不相交；$H$ 守恒 ⇒ 轨道永远留在能量面 $H=E$（$(2f-1)$ 维超曲面）上")
+          ]),
+          eq("概率密度 $\\rho(q,p,t)d\\Gamma$ ＝ $t$ 时刻代表点出现在该区域内的概率；归一化 $\\int\\rho\\,d\\Gamma=1$"),
+          key("两种平均",[
+            eq("时间平均 $\\bar B=\\dfrac1\\tau\\int_{t_0}^{t_0+\\tau}B(q(t),p(t))dt$：物理意义明确但需求解 $10^{23}$ 个方程，实际不可用"),
+            th("各态历经假设：足够长时间内代表点遍历能量面 ⇒ 时间平均＝相空间平均"),
+            eq("系综平均 $\\langle B\\rangle=\\int d\\mathbf p\\,d\\mathbf q\\,\\rho(q,p,t)B(q,p)$")
+          ]),
+          key("吉布斯立场：不还原为力学，直接公设\"宏观量＝微观量的系综平均\"",[
+            p("统计物理的主要任务＝确定分布函数 $\\rho(q,p,t)$"),
+            op("概率学派讨论：客观概率须证各态历经（严格证明只对极简化系统成立）；贝叶斯立场下概率源于信息不完备，无需各态历经")
+          ])
+        ]),
+        sec("III.B 刘维尔定理",[
+          key("平衡态系综的定义：$\\langle B\\rangle$ 不依赖时间（对应热力学\"宏观性质长期不变\"）"),
+          eq("随动（streamline）导数 $\\dfrac{d\\tilde\\rho}{dt}=\\dfrac{\\partial\\tilde\\rho}{\\partial t}+\\sum_i\\Big(\\dfrac{\\partial\\tilde\\rho}{\\partial q_i}\\dot q_i+\\dfrac{\\partial\\tilde\\rho}{\\partial p_i}\\dot p_i\\Big)$"),
+          th("刘维尔定理：$d\\tilde\\rho/dt=0$ —— 相空间密度沿正则轨道守恒，行为如不可压缩流体",[
+            p("证明要点：$dq_i'=dq_i(1+\\partial\\dot q_i/\\partial q_i\\,dt)$ 等，交叉二阶导相消 ⇒ $d\\Gamma'=d\\Gamma$"),
+            eq("连续性方程 $\\partial\\tilde\\rho/\\partial t+\\nabla\\cdot(\\tilde\\rho v)=0$，其中 $\\nabla\\cdot v=\\sum(\\partial\\dot q_i/\\partial q_i+\\partial\\dot p_i/\\partial p_i)=0$"),
+            p("讲义类比：\"正步走\"——边两端速度一致则面积元不膨胀不压缩")
+          ]),
+          th("刘维尔方程",[
+            eq("$\\dfrac{\\partial\\tilde\\rho}{\\partial t}=\\{H,\\tilde\\rho\\}=-\\{\\tilde\\rho,H\\}$"),
+            eq("泊松括号 $\\{A,B\\}=\\sum_i\\big(\\dfrac{\\partial A}{\\partial q_i}\\dfrac{\\partial B}{\\partial p_i}-\\dfrac{\\partial A}{\\partial p_i}\\dfrac{\\partial B}{\\partial q_i}\\big)=-\\{B,A\\}$")
+          ]),
+          key("三条直接推论",[
+            p("(1) 时间反演 $(\\mathbf p,\\mathbf q,t)\\to(-\\mathbf p,\\mathbf q,-t)$ 使括号变号 ⇒ $\\tilde\\rho(\\mathbf p,\\mathbf q,t)=\\tilde\\rho(-\\mathbf p,\\mathbf q,-t)$"),
+            eq("(2) 任意力学量演化 $\\dfrac{d\\langle O\\rangle}{dt}=\\langle\\{O,H\\}\\rangle$（分部积分、边界 $\\rho=0$）"),
+            th("(3) 平衡态 ⇒ $\\partial\\rho_{eq}/\\partial t=0$ 即 $\\{\\rho_{eq},H\\}=0$ ⇒ $\\rho_{eq}=\\rho(H)$",[
+              key("平衡分布只能是哈密顿量（及其运动积分）的函数——这是等几率原理的动力学容许性"),
+              eq("微正则 $\\rho\\propto\\delta(H-E)$、正则 $\\rho\\propto e^{-\\beta H}$ 都属此类"),
+              p("存在其他运动积分（能量、总动量、总角动量等共 7 个）满足 $\\{L_n,H\\}=0$ ⇒ $\\rho_{eq}=\\rho(H,L_n)$：同一守恒量扇区内态等概率")
+            ])
+          ]),
+          op("(4) 局限：定理纯由力学导出，只回答\"如何定义平衡态\"，不回答\"为何朝平衡态演化\"；趋豫/趋衡属动理论（玻尔兹曼 H 定理），需额外统计假设")
+        ])
+      ]),
+    chains:[
+      {a:"哈密顿正则方程", b:"解唯一 ⇒ 相轨道不相交", why:"正则方程解的唯一性使轨道不能相交，能量守恒又把轨道锁在能量面上"},
+      {a:"刘维尔定理：$d\\tilde\\rho/dt=0$", b:"刘维尔方程", why:"连续性方程配散度为零 $\\nabla\\cdot v=0$ 即改写为泊松括号形式"},
+      {a:"各态历经假设", b:"系综平均", why:"若代表点遍历能量面，长时间平均可换成相空间加权平均 ⇒ 宏观量可算"},
+      {a:"平衡态系综的定义", b:"$\\rho_{eq}=\\rho(H)$", why:"$\\langle B\\rangle$ 与时间无关 ⇒ $\\partial_t\\rho_{eq}=0$ ⇒ $\\{\\rho_{eq},H\\}=0$ ⇒ 只能是 $H$ 的函数"},
+      {a:"等几率原理（最重要的公设）", b:"$\\rho_{eq}=\\rho(H)$", why:"$\\rho(H)$ 只给出函数形式，具体取 $\\delta(H-E)$ 需额外的等几率假设"},
+      {a:"概率密度 $\\rho(q,p,t)", b:"吉布斯立场", why:"把 $\\rho$ 当作统计权重而非力学量：主任务是确定分布，而不是求解轨道"},
+      {a:"刘维尔方程", b:"局限：定理纯由力学导出", why:"方程时间反演不变 ⇒ 无法产生单调趋于平衡的行为 ⇒ 趋衡问题必须交给第七章"}
+    ],
+    before:[{id:"l1a", txt:"平衡态、态变量、不可逆性等概念全部沿用第一章"}, {id:"l2", txt:"概率密度、期望值＝PDF 与 $\\langle\\cdot\\rangle$ 的直接推广"}],
+    after:[{id:"l3b", txt:"$\\rho=\\delta(H-E)$：微正则特例"}, {id:"l3c", txt:"$\\rho\\propto e^{-\\beta H}$：正则特例"}, {id:"l4a", txt:"含相互作用的 $H$ 代入 $Z_N$ 即集团展开"}, {id:"l7", txt:"本讲遗留的趋衡问题＝玻尔兹曼方程的主题"}],
+    note:"讲义明言：等几率原理\"不能由动力学推出\"，与刘维尔定理是相互独立的两个层次——定理给必要条件，公设给分布。"
+  },
+  {
+    id:"l3b", ch:3, chName:"第三章 经典统计系综理论", short:"II. 微正则系综与玻尔兹曼熵", title:"第三章 经典系综理论 II — 微正则系综、玻尔兹曼熵与理想气体",
+    file:"lecture3-ensemble part2.pdf", pages:8,
+    cover:"等概率原理的数学形式、微观状态数 $\\Omega$、玻尔兹曼熵、由熵重推热力学三定律、Sackur–Tetrode 公式、Gibbs 佯谬与 $N!$、Maxwell 速度分布、二能级负温度",
+    summary:"这一讲是统计物理\"重发热力学\"的示范：只用 $S=k_B\\ln\\Omega$ 与熵极大，就把第零、第一、第二定律连同 $p,\\mu,T$ 的定义全部推出来，全程不涉及具体系统 ⇒ 玻尔兹曼关系普遍成立。",
+    key:["◇ 等概率原理 $\\rho=C\\delta(H-E)$", "★ $S=k_B\\ln\\Omega$：熵＝态数的对数", "◇ 由熵极大重推热三定律与 $1/T=(\\partial S/\\partial E)_{N,V}$", "= Sackur–Tetrode ⇒ $pV=Nk_BT$、$E=\\tfrac32Nk_BT$、$\\mu$"],
+    tree: root("第三章 微正则系综 III.C",[
+        sec("§A 微正则系综的定义",[
+          key("孤立系：$E,V,N$ 恒定（统计物理习惯用 $E$ 而非 $U$ 表示内能）"),
+          th("等概率原理（系综理论的第二假设）",[
+            eq("$\\rho(q,p,t)=C\\,\\delta(H(q,p)-E)$"),
+            eq("$p_{\\{E,V,N\\}}(p,q,t)=1/\\Omega$（在能量壳内），否则为 0"),
+            p("更常用能壳形式 $E\\le H\\le E+\\Delta E$，其中 $\\rho=C$"),
+            key("逻辑关系：等概率 ⇒ 满足刘维尔定理，反之不然（定理只保证同一轨道上 $\\rho$ 不变）")
+          ]),
+          eq("微观状态数（配分函数的前身）$\\Omega(E,V,N)=\\dfrac1{N!\\,h^{Nr}}\\displaystyle\\int_{E\\le H\\le E+\\Delta E}d\\mathbf p\\,d\\mathbf q$",[
+            p("相格 $h^{Nr}$ 来自量子化；$N!$ 来自全同粒子不可分辨（定域系去掉 $N!$）"),
+            p("取能壳是为避免零测度；$\\Delta E$ 的贡献取 $\\ln$ 后可忽略（$E\\propto N\\to\\infty$）"),
+            eq("正则变换的 Jacobian 幺正 ⇒ $d\\mathbf p' d\\mathbf q'=d\\mathbf p\\,d\\mathbf q$ ⇒ 概率不变"),
+            p("真实准孤立系总有环境微扰，$\\Delta E\\to0$ 但足以改变微观态 ⇒ 物理上\"保证\"了各态历经")
+          ]),
+          key("玻尔兹曼熵 $S=k_B\\ln\\Omega(N,E,V)=k_B\\langle-\\ln\\rho\\rangle$",[
+            p("类比信息熵 $\\sum -p\\ln p$；$k_B=R/N_A=1.381\\times10^{-23}$ J/K"),
+            op("朗道视熵为无量纲量（则温度取能量量纲）")
+          ])
+        ]),
+        sec("§B 微正则分布的热力学公式（重推三大定律）",[
+          th("第零定律 ⇒ 温度的统计定义",[
+            eq("$\\Omega=\\int\\Omega_1(E_1)\\Omega_2(E_0-E_1)dE_1\\approx\\Omega_1(\\bar E_1)\\Omega_2(E_0-\\bar E_1)$（鞍点近似）"),
+            eq("$\\partial\\Omega/\\partial E_1=0\\Rightarrow\\Big(\\dfrac{\\partial S_1}{\\partial E_1}\\Big)=\\Big(\\dfrac{\\partial S_2}{\\partial E_2}\\Big)\\equiv\\dfrac1T$"),
+            key("$1/T=(\\partial S/\\partial E)_{N,V}$：经验温度＝绝对温度，其余系统由同一函数描述"),
+            p("$\\ln\\Omega\\propto N$ 才使 $S$ 为广延量；次要极大被指数压低（类比洗牌、黑白胡椒混合）")
+          ]),
+          th("第一定律 ⇒ 压强与化学势",[
+            eq("带活塞准静态过程：$\\delta S=[-p(\\partial S/\\partial E)_V+(\\partial S/\\partial V)_E]\\delta V=0\\Rightarrow(\\partial S/\\partial V)_{E,N}=p/T$"),
+            eq("$dS=\\dfrac1T dE+\\dfrac pT dV-\\dfrac\\mu T dN\\iff dE=TdS-pdV+\\mu dN=\\delta Q+\\delta W$"),
+            key("$S(E,N,V)$ 是特性函数；$\\mu/T=-(\\partial S/\\partial N)_{E,V}$"),
+            p("力学平衡 $p_1=p_2$、化学平衡 $\\mu_1=\\mu_2$ 同样由熵极大得出")
+          ]),
+          th("第二定律 ⇒ 熵增加",[
+            eq("$\\Omega_1(\\bar E_1)\\Omega_2(\\bar E_2)\\ge\\Omega_1(E_1)\\Omega_2(E_2)\\Rightarrow\\Delta S\\ge0$"),
+            eq("两温度系统热接触 $\\Delta S=(1/T_1-1/T_2)\\delta E_1\\ge0$ ⇒ 热自高温流向低温"),
+            key("结论与具体相互作用形式无关（$y_1,y_2$ 可完全不同）⇒ 玻尔兹曼关系的普适性")
+          ]),
+          op("第三定律：讲义明言\"目前没办法得到\"（需量子统计的基态唯一性）"),
+          key("主线：微正则 $(E,N,V)\\Rightarrow S(E,N,V)\\Rightarrow$ 全部热力学性质")
+        ]),
+        sec("§C 微正则分布计算举例",[
+          eg("单原子理想气体（$H=\\sum p_i^2/2m$）",[
+            p("几何：$3N$ 维空间中半径 $\\sqrt{2mE}$ 与 $\\sqrt{2m(E+\\Delta E)}$ 之间的球壳"),
+            eq("$d$ 维立体角 $S_d=\\dfrac{2\\pi^{d/2}}{(d/2-1)!}$（由高斯积分与球坐标对比得出）"),
+            eq("$\\Omega=\\dfrac{3N}{2E}\\dfrac{(V/h^3)^N(2\\pi mE)^{3N/2}}{N!\\,(3N/2)!}\\Delta E$"),
+            key("Sackur–Tetrode 公式：$S=Nk_B\\ln\\big[(\\tfrac{4\\pi mE}{3Nh^2})^{3/2}\\tfrac VN\\big]+\\tfrac52 Nk_B$",[
+              p("1912 年基于普朗克量子化提出，早于薛定谔方程；用 $h$ 把黑体辐射与分子熵联系起来")
+            ]),
+            eq("求导即得 $E=\\tfrac32Nk_BT$（能量均分）、$pV=Nk_BT$、$\\mu=k_BT\\ln\\big[\\tfrac p{k_BT}(\\tfrac{h^2}{2\\pi mk_BT})^{3/2}\\big]$"),
+            p("压强的纯微观推导：不再依赖\"分子撞壁\"的模型假设")
+          ]),
+          eg("Gibbs 佯谬与 $N!$ 的必要性",[
+            p("无 $N!$ 时 $(E,V,N)\\to\\lambda(E,V,N)$ 使 $S\\to\\lambda(S+Nk_B\\ln\\lambda)$，破坏广延性（根源是 $\\Omega\\sim V^N$）"),
+            eq("混合熵 $\\Delta S_{mix}=-Nk_B\\big[\\tfrac{N_1}N\\ln\\tfrac{V_1}V+\\tfrac{N_2}N\\ln\\tfrac{V_2}V\\big]$"),
+            key("加 $N!$ 后同种气体混合 $\\Delta S_{mix}=0$，不同种仍得混合熵"),
+            op("$N!$ 不影响 $E,p$ 但影响 $\\mu$（应为强度量）；定域可分辨系（固体中二能级缺陷）不需 $N!$")
+          ]),
+          eg("Maxwell 速度分布律（由微正则导出）",[
+            eq("$p(p_1)\\propto\\dfrac{V}{\\Omega(E,V,N)}\\,\\Omega(E-\\tfrac{p_1^2}{2m},\\,V,\\,N-1)$"),
+            eq("$\\Rightarrow p(p_1)=\\dfrac1{(2\\pi mk_BT)^{3/2}}\\exp\\big(-\\dfrac{p_1^2}{2mk_BT}\\big)$")
+          ]),
+          eg("固体中的二能级缺陷（定域系，$n_i=0,1$，能级 $0,\\epsilon$）",[
+            eq("$\\Omega=\\dfrac{N!}{N_1!(N-N_1)!},\\quad E=\\epsilon N_1$"),
+            eq("$S\\approx-Nk_B\\big[\\tfrac{E}{N\\epsilon}\\ln\\tfrac{E}{N\\epsilon}+(1-\\tfrac{E}{N\\epsilon})\\ln(1-\\tfrac{E}{N\\epsilon})\\big]$"),
+            eq("$\\dfrac1T=-\\dfrac{k_B}{\\epsilon}\\ln\\dfrac{E}{N\\epsilon-E}\\Rightarrow E(T)=\\dfrac{N\\epsilon}{e^{\\epsilon/k_BT}+1}$"),
+            key("负温度：能级有上限 ⇒ $\\Omega(E)$ 可随 $E$ 减少，$\\partial S/\\partial E<0$",[
+              p("越高能级粒子越多，\"加热\"反而使其冷却；实例＝激光器的亚稳态、磁自旋系统"),
+              p("与无能量上限的部分（如平动）接触即失能回到正温度")
+            ]),
+            eq("比热 $C=Nk_B(\\epsilon/k_BT)^2\\dfrac{e^{\\epsilon/k_BT}}{(e^{\\epsilon/k_BT}+1)^2}$：能隙体系低温指数趋零 ⇒ 与热三推论一致"),
+            eq("单个缺陷占据数 $p(0)=\\dfrac1{1+e^{-\\beta\\epsilon}},\\ p(1)=\\dfrac{e^{-\\beta\\epsilon}}{1+e^{-\\beta\\epsilon}}$ ⇒ 玻尔兹曼因子已现形")
+          ])
+        ])
+      ]),
+    chains:[
+      {a:"等概率原理（系综理论的第二假设）", b:"微观状态数（配分函数的前身）", why:"归一化 $\\int\\rho\\,d\\Gamma=1$ 直接定出常数 $C$，其倒数就是 $\\Omega$"},
+      {a:"玻尔兹曼熵", b:"第零定律 ⇒ 温度的统计定义", why:"两子系统熵之和取极大（鞍点）⇒ $\\partial S_1/\\partial E_1=\\partial S_2/\\partial E_2$，据此定义 $1/T$"},
+      {a:"第零定律 ⇒ 温度的统计定义", b:"第一定律 ⇒ 压强与化学势", why:"对 $\\delta V$、$\\delta N$ 取极大同样给出 $p/T$ 与 $-\\mu/T$，拼起来就是热力学第一定律"},
+      {a:"玻尔兹曼熵", b:"第二定律 ⇒ 熵增加", why:"最概然能量分配的乘积 $\\Omega_1\\Omega_2$ 压倒其他分配 ⇒ $\\Delta S\\ge0$"},
+      {a:"Sackur–Tetrode 公式", b:"$E=\\tfrac32Nk_BT$", why:"对 $\\ln\\Omega$ 求 $E,V,N$ 偏导，即得能量均分、物态方程与化学势"},
+      {a:"Gibbs 佯谬与 $N!$ 的必要性", b:"微观状态数（配分函数的前身）", why:"$\\Omega\\sim V^N$ 破坏广延性 ⇒ 必须除以 $N!$，因子来自全同粒子不可分辨"},
+      {a:"负温度：能级有上限", b:"比热 $C=Nk_B", why:"$\\Omega(E)$ 有界使 $\\partial S/\\partial E$ 可负；能隙使低温激发被指数压低"}
+    ],
+    before:[{id:"l3a", txt:"$\\rho_{eq}=\\rho(H)$ 允许取 $\\delta(H-E)$"}, {id:"l1b", txt:"特性函数 $S(E,V,N)$ 与平衡判据完全对应"}, {id:"l1a", txt:"三条热力学定律在此被\"重新发现\""}, {id:"l2", txt:"鞍点法与 Stirling 公式是 $\\ln\\Omega$ 广延性的技术保证"}],
+    after:[{id:"l3c", txt:"广延变量 $(E,V,N)$ 不便 ⇒ 转向正则/巨正则"}, {id:"l5", txt:"$h^{3N}$ 相格与全同性是量子统计的根"}, {id:"l6c", txt:"最大熵原理与 $S=-k_B\\sum p\\ln p$ 直接同源"}, {id:"l2", txt:"二能级 $\\tanh$ 型结果是 Ising 平均场的原型"}],
+    note:"讲义把微正则定位为\"逻辑起点\"：一旦 $\\Omega$ 算出（即熵求出），所有热力学性质即定；但因变量是广延量 $E,V,N$，实际操作中几乎总是改用正则或巨正则。"
+  },
+  {
+    id:"l3c", ch:3, chName:"第三章 经典统计系综理论", short:"III. 正则、巨正则与涨落", title:"第三章 经典系综理论 III — 正则/巨正则系综、配分函数与涨落理论",
+    file:"lecture3-ensemble part3.pdf", pages:13,
+    cover:"正则分布与 $Z$、$F=-k_BT\\ln Z$、能量涨落、巨正则与 $\\Xi$、$J=-k_BT\\ln\\Xi=-pV$、粒子数涨落与临界乳光、Gibbs 系综与居里定律、Einstein–Smoluchowski 涨落的准热力学理论",
+    summary:"全课程真正的工作马。三个配分函数 $\\Omega,Z,\\Xi$ 各对应一个特性函数，二阶导数给出涨落、涨落又给出响应函数（$C_V,\\kappa_T$）——\"涨落＝响应\"这条线一直延伸到第六章临界现象和第七章涨落耗散定理。",
+    key:["★ $F=-k_BT\\ln Z$，$dF=-SdT-pdV+\\mu dN$", "◇ 能量涨落 $\\langle(\\Delta E)^2\\rangle=k_BT^2C_V\\propto N$ ⇒ 相对涨落 $1/\\sqrt N$", "◇ 系综等价（热力学极限下微正则＝正则＝巨正则）", "= $J=-k_BT\\ln\\Xi=-pV$；$\\langle(\\Delta N)^2\\rangle=\\bar N^2k_BT\\kappa_T/V$"],
+    tree: root("第三章 正则与巨正则 III.D / 涨落 III.E",[
+        key("动机：微正则变量是广延量 $(E,V,N)$，不便；实际应用需固定强度量 $(T,V,N)$ 或 $(T,V,\\mu)$"),
+        sec("III.D.1 正则系综",[
+          th("定义：系统 S ＋大热源 R 构成孤立系，$T,V,N$ 固定",[
+            eq("$p(S)=\\sum_R p(S,R)=\\dfrac{\\Omega_R(E_0-E_S)}{\\Omega_{S\\oplus R}}\\propto\\exp[\\tfrac1{k_B}S_R(E_0-E_S)]$"),
+            key("必须对 $\\ln\\Omega_R$（而非 $\\Omega_R$）展开：因 $\\Omega\\sim(E_0-E_S)^M,\\ M\\sim O(N)$ ⇒ 鞍点"),
+            eq("正则分布 $\\rho=\\dfrac1Z e^{-\\beta E_s},\\qquad \\beta=\\dfrac1{k_BT}$")
+          ]),
+          eq("正则配分函数 $Z(\\beta,y)=\\sum_s e^{-\\beta E_s}=\\sum_E g(E)e^{-\\beta E}$（Zustandssumme＝态求和）"),
+          th("由 $Z$ 计算全部热力学量",[
+            eq("内能 $U=\\langle E\\rangle=-\\dfrac{\\partial\\ln Z}{\\partial\\beta}$"),
+            eq("广义力 $Y=-\\dfrac1\\beta\\dfrac{\\partial\\ln Z}{\\partial y}$；$p=\\dfrac1\\beta(\\partial\\ln Z/\\partial V)_{\\beta,N}$"),
+            eq("熵 $S=k_B\\big(\\ln Z-\\beta\\dfrac{\\partial\\ln Z}{\\partial\\beta}\\big)=-k_B\\langle\\ln p\\rangle$"),
+            key("自由能 $F=-k_BT\\ln Z$，$dF=-SdT-pdV+\\mu dN$ ⇒ $(T,V,N)$ 特性函数"),
+            eq("$E=F+TS=F-T(\\partial F/\\partial T)_V=\\dfrac{\\partial(\\beta F)}{\\partial\\beta}$")
+          ]),
+          key("能量作为随机变量",[
+            eq("$p(E)=\\dfrac{g(E)e^{-\\beta E}}Z=\\dfrac1Z\\exp\\big[-\\dfrac{F(E)}{k_BT}\\big]$，$F(E)=E-TS(E)$"),
+            p("最概然能量处 $F$ 最小 ⇒ $Z=\\sum_Ee^{-\\beta F(E)}\\approx e^{-\\beta F(E^*)}$ ⇒ $F(E^*)=-k_BT\\ln Z$")
+          ]),
+          th("能量涨落",[
+            eq("$\\langle E^2\\rangle_c=\\langle E^2\\rangle-\\langle E\\rangle^2=\\dfrac{\\partial^2\\ln Z}{\\partial\\beta^2}=-\\dfrac{\\partial\\bar E}{\\partial\\beta}=k_BT^2C_V\\propto N$"),
+            key("相对涨落 $\\dfrac{\\sqrt{\\langle(\\Delta E)^2\\rangle}}{\\bar E}\\propto\\dfrac1{\\sqrt N}$ ⇒ 宏观能量几乎确定"),
+            eq("一般累积量 $\\langle E^n\\rangle_c=(-1)^n\\partial_\\beta^n\\ln Z\\propto N$；分布近似高斯，宽度 $\\propto N^{1/2}$"),
+            op("连续相变临界点附近 $C_V$ 发散 ⇒ 上述结论失效（→第六章）")
+          ]),
+          th("微正则与正则系综等价：$N\\to\\infty$ 时正则分布在 $\\bar E$ 处急剧峰化 ⇒ 与该能微正则不可区分"),
+          eg("理想气体",[
+            eq("$Z_N=\\dfrac{V^N}{N!\\lambda_T^{3N}}\\equiv\\dfrac{Z_1^N}{N!},\\quad Z_1=\\dfrac V{\\lambda_T^3}$"),
+            key("热波长 $\\lambda_T=\\dfrac h{\\sqrt{2\\pi mk_BT}}$"),
+            eq("$F=-Nk_BT\\big[\\ln(\\tfrac{Ve}N)+\\tfrac32\\ln(\\tfrac{2\\pi mk_BT}{h^2})\\big]$"),
+            eq("$\\Rightarrow pV=Nk_BT,\\ E=\\tfrac32NkT,\\ \\mu=k_BT\\ln(n\\lambda_T^3)$"),
+            key("消去 $T$ 后与微正则 Sackur–Tetrode 完全一致 ⇒ 系综等价的具体验证")
+          ]),
+          eg("二能级缺陷（正则）：$Z=(1+e^{-\\beta\\epsilon})^N$ ⇒ $E=\\dfrac{N\\epsilon}{e^{\\epsilon/k_BT}+1}$，与微正则结果相同")
+        ]),
+        sec("III.D.2 巨正则系综",[
+          th("定义：系统与热源＋粒子源接触，$T,V,\\mu$ 固定，$E,N$ 均可交换",[
+            eq("$\\ln\\Omega_R(E_0-E_S,N_0-N)\\approx\\ln\\Omega_R(E_0,N_0)-\\beta E_S-\\alpha N$"),
+            eq("巨正则分布 $\\rho=\\dfrac1{\\Xi}e^{-\\beta E_S^{(N)}-\\alpha N}=\\dfrac1{\\Xi}e^{-\\beta(E_S^{(N)}-\\mu N)}$"),
+            eq("巨配分函数 $\\Xi=\\sum_{N,E}e^{-\\beta E_S^{(N)}-\\alpha N}$；$\\beta=1/k_BT,\\ \\alpha=-\\mu/k_BT$"),
+            key("三个系综的 links：$\\Xi=\\sum_N z^N Z_N(T,V,N),\\quad z=e^{\\beta\\mu}$（逸度）")
+          ]),
+          th("由 $\\Xi$ 计算热力学量",[
+            eq("$\\bar N=-\\dfrac{\\partial\\ln\\Xi}{\\partial\\alpha},\\quad \\bar E=U=-\\dfrac{\\partial\\ln\\Xi}{\\partial\\beta},\\quad \\bar Y_\\lambda=-\\dfrac1\\beta\\dfrac{\\partial\\ln\\Xi}{\\partial y_\\lambda}$"),
+            key("巨势 $J=F-\\mu N=-pV=-k_BT\\ln\\Xi$，$dJ=-SdT-pdV-\\bar Nd\\mu$ ⇒ $(T,V,\\mu)$ 特性函数"),
+            eq("$p=-\\big(\\partial J/\\partial V\\big)_{T,\\mu}=-J/V,\\quad S=-(\\partial J/\\partial T)_{\\mu,V},\\quad \\bar N=-(\\partial J/\\partial\\mu)_{T,V}$")
+          ]),
+          th("粒子数涨落（涨落＝响应）",[
+            eq("$\\overline{N^2}-\\bar N^2=\\Big(\\dfrac{\\partial^2\\ln\\Xi}{\\partial\\alpha^2}\\Big)=k_BT\\Big(\\dfrac{\\partial\\bar N}{\\partial\\mu}\\Big)_{T,V}$"),
+            key("$\\Rightarrow\\dfrac{\\langle(\\Delta N)^2\\rangle}{\\bar N^2}=\\dfrac{k_BT}{V}\\kappa_T\\propto\\dfrac1N$（用 Gibbs–Duhem 把 $\\partial\\mu$ 换成 $\\kappa_T$）"),
+            eg("临界点反常：二级相变点 $\\kappa_T\\to\\infty$ ⇒ 密度涨落发散、两相界面消失 ⇒ 临界乳光",[
+              p("液体近气液临界点散射骤增呈乳白；$\\mathrm{SF_6}$ 升温至 44.15 ℃ 突然不透光")
+            ]),
+            op("系综等价只在热力学极限成立：介观系统或临界点附近正则与巨正则不等价"),
+            eq("热力学极限下 $\\Xi\\approx e^{\\beta\\mu N^*-\\beta F}=e^{-\\beta J}$（鞍点＝最概然粒子数）")
+          ]),
+          eg("理想气体的巨正则计算",[
+            eq("$\\Xi=\\sum_N\\dfrac{(e^{\\beta\\mu}V/\\lambda_T^3)^N}{N!}=\\exp\\big[e^{\\beta\\mu}V/\\lambda_T^3\\big]$"),
+            eq("$p=k_BT\\,e^{\\beta\\mu}/\\lambda_T^3,\\quad \\bar N=Ve^{\\beta\\mu}/\\lambda_T^3\\Rightarrow pV=\\bar Nk_BT$"),
+            key("能量、压强、熵与微正则/正则结果完全一致 ⇒ 三系综总结"),
+            eq("微正则 $S(U,V,N)$ ｜ 正则 $F(T,V,N)=U-TS$ ｜ 巨正则 $J(T,V,\\mu)=F-\\bar N\\mu=-pV$")
+          ])
+        ]),
+        sec("III.D.3 其它一般系综（Gibbs $p$–$T$ 系综）",[
+          p("一般情形：系统与热库交换任意广延量 $y_i$，共轭强度量 $Y_i$ 固定"),
+          eq("$\\rho(E_S^{(y)},y)=\\dfrac1\\Psi e^{-\\beta E_S^{(y)}-\\gamma y},\\quad \\Psi=\\sum_{y,E}e^{-\\beta E-\\gamma y}$，$\\gamma=-Y/k_BT$（PVT 系 $\\gamma=p/k_BT$）"),
+          key("吉布斯自由能 $G=E-TS-Y_iy_i=-k_BT\\ln\\Psi$；$\\langle y_i\\rangle=k_BT\\partial_{Y_i}\\ln\\Psi=-\\partial G/\\partial Y_i$"),
+          eq("体积涨落 $\\overline{(\\Delta V)^2}=-k_BT\\big(\\partial\\bar V/\\partial p\\big)_T=k_BT\\bar V\\kappa_T$"),
+          eg("磁场中的自旋（无相互作用，$E=0$）",[
+            eq("$Z=[2\\cosh\\beta\\mu_0B]^N,\\ G=-Nk_BT\\ln[2\\cosh\\beta\\mu_0B]$"),
+            eq("$\\bar M=\\partial G/\\partial B=N\\mu_0\\tanh\\beta\\mu_0B$"),
+            key("小场展开 ⇒ 居里定律 $\\chi=(\\partial M/\\partial B)_{B=0}=\\dfrac{N\\mu_0^2}{k_BT}$",[
+              p("这是第六章 Ising 平均场的零耦合极限")
+            ]),
+            op("课后思考题：用 Gibbs 系综算理想气体配分函数（提示：最后要对体积积分）")
+          ])
+        ]),
+        sec("III.E 涨落的准热力学理论（Einstein–Smoluchowski）",[
+          op("定位：唯象理论、部分基于热力学；纯热力学无涨落概念，故称\"准\"热力学"),
+          eq("复合孤立系中 $W\\propto\\exp(\\Delta S_0/k_B)$；热源取一阶、系统保留二阶"),
+          th("涨落概率普遍公式 $W\\propto\\exp\\!\\Big(-\\dfrac{\\Delta S\\,\\Delta T-\\Delta p\\,\\Delta V}{2k_BT}\\Big)$",[
+            p("所有热力学坐标地位平等，可任选两个独立变量；也适用于系统内部\"宏观小微观大\"的子区域")
+          ]),
+          eg("选 $(V,T)$ 作独立变量",[
+            eq("$W\\propto\\exp\\big(-\\dfrac{C_V}{2k_BT^2}(\\Delta T)^2+\\dfrac{(\\partial p/\\partial V)_T}{2k_BT}(\\Delta V)^2\\big)$"),
+            key("$\\overline{(\\Delta T)^2}=\\dfrac{T^2k_B}{C_V},\\quad\\overline{(\\Delta V)^2}=V\\kappa_Tk_BT,\\quad\\overline{\\Delta T\\Delta V}=0$ ⇒ 两个高斯且统计独立"),
+            p("稳定性条件 $C_V>0,\\ \\kappa_T>0$ 正是\"概率可归一\"的要求"),
+            eq("由 $N=nV$ 得 $\\overline{(\\Delta n)^2}/n^2=\\overline{(\\Delta V)^2}/V^2=\\dfrac{k_BT}{V}\\kappa_T$ ⇒ 与巨正则完全一致")
+          ]),
+          eg("选 $(p,S)$ 作独立变量",[
+            eq("$\\overline{(\\Delta S)^2}=k_BC_p,\\quad\\overline{(\\Delta p)^2}=-k_BT\\big(\\partial p/\\partial V\\big)_S,\\quad\\overline{\\Delta S\\Delta p}=0$")
+          ]),
+          key("标度结论：广延量（$V,S$）涨落 $\\propto\\sqrt V$ ⇒ 相对涨落 $\\propto1/\\sqrt V$；强度量（$T,p$）方均根涨落本身 $\\propto1/\\sqrt V$"),
+          op("临界点附近 $\\kappa_T\\to\\infty$ ⇒ 密度涨落发散（临界乳光）；更多内容参朗道《统计物理 I》")
+        ])
+      ]),
+    chains:[
+      {a:"定义：系统 S ＋大热源 R 构成孤立系", b:"正则分布", why:"对热源熵作一阶展开 $\\ln\\Omega_R(E_0-E_S)\\approx\\ln\\Omega_R(E_0)-\\beta E_S$ ⇒ 玻尔兹曼因子"},
+      {a:"正则配分函数", b:"自由能 $F=-k_BT\\ln Z$", why:"由 $U,Y,S$ 的导数式与热力学恒等式对比，唯一确定 $F=-k_BT\\ln Z$"},
+      {a:"能量作为随机变量", b:"微正则与正则系综等价", why:"$p(E)\\propto e^{-F(E)/k_BT}$ 在 $E^*$ 处尖锐极大 ⇒ 热力学极限下最概然＝平均＝微正则值"},
+      {a:"能量涨落", b:"相对涨落", why:"$\\langle(\\Delta E)^2\\rangle=k_BT^2C_V\\propto N$ 而 $E\\propto N$ ⇒ 比值 $\\propto1/\\sqrt N$"},
+      {a:"定义：系统与热源＋粒子源接触", b:"巨配分函数", why:"把 $(E,N)$ 同时作二变量展开 ⇒ 指标 $N$ 求和即 $\\Xi$"},
+      {a:"粒子数涨落（涨落＝响应）", b:"临界点反常", why:"$\\langle(\\Delta N)^2\\rangle/\\bar N^2=(k_BT/V)\\kappa_T$：$\\kappa_T$ 发散使涨落变为宏观"},
+      {a:"三个系综的 links", b:"巨势 $J=F", why:"鞍点求和 $\\Xi\\approx e^{\\beta\\mu N^*-\\beta F}$ 与 $J=F-\\mu N$ 对比即得 $J=-k_BT\\ln\\Xi$"},
+      {a:"理想气体的巨正则计算", b:"三个系综的 links", why:"同一理想气体在三个系综下给出相同的 $p,U,S$ ⇒ 系综等价性的实证"},
+      {a:"磁场中的自旋（无相互作用，$E=0$）", b:"小场展开 ⇒ 居里定律", why:"$\\tanh x\\approx x-x^3/3$ 取线性项即得 $\\chi\\propto1/T$；此模型在第六章被加上近邻耦合"},
+      {a:"涨落概率普遍公式", b:"标度结论", why:"把普遍式按不同变量对高斯化、比较系数 ⇒ 各涨落公式与 $1/\\sqrt V$ 标度"}
+    ],
+    before:[{id:"l3a", txt:"$\\rho_{eq}=\\rho(H)$ 保证 $e^{-\\beta H}$ 是合法平衡分布"}, {id:"l3b", txt:"$S=k_B\\ln\\Omega$ 与熵极大是所有展开的起点"}, {id:"l1b", txt:"$F,G,J$ 与 Maxwell 关系、Gibbs–Duhem、稳定性条件逐一被统计实现"}, {id:"l2", txt:"鞍点法＋累积量＝本讲的两件技术工具"}],
+    after:[{id:"l4a", txt:"把 $H=\\sum p^2/2m+\\sum\\phi(r_{ij})$ 代入 $Z_N$ ⇒ 集团展开"}, {id:"l5", txt:"$\\Xi=\\sum_Nz^NZ_N$ 因子化 ⇒ 玻色/费米分布"}, {id:"l6a", txt:"Gibbs 系综与居里定律是 Ising 平均场的零耦合极限"}, {id:"l6d", txt:"涨落–响应与临界点发散＝第六章的主题"}, {id:"l7", txt:"平衡态分布已知，下一步问它如何被趋近"}],
+    note:"讲义在本讲两次强调\"有限系统中没有严格相变，奇点只来自 $V\\to\\infty$\"（粒子数涨落与 $\\Xi$ 的鞍点讨论），这句话在第四章 IV.E 李杨理论中被严格证明。"
+  },
+  {
+    id:"l4a", ch:4, chName:"第四章 经典流体", short:"I. 累积量展开与迈尔集团展开", title:"第四章 经典流体 I — 实际气体的状态方程：Cumulant 展开与 Mayer 集团展开",
+    file:"lecture4-classical fluid part1.pdf", pages:12,
+    cover:"实际气体的四条简化假设、以理想气体为基准的累积量展开、图规则与不可约集团、Mayer 函数、集团积分、Mayer 第一/第二定理、维里系数与昂尼斯方程",
+    summary:"第一次把\"相互作用\"放进配分函数。核心手法只有两步：先以理想气体测度写 $Z=Z_0\\langle e^{-\\beta U}\\rangle_0$（累积量展开），再发现直接按 $\\phi$ 展开在 $r\\to0$ 发散 ⇒ 必须重求和成 Mayer 函数 $f=e^{-\\beta\\phi}-1$。图论计数由此进入统计物理。",
+    key:["★ $Z=Z_0\\langle e^{-\\beta U}\\rangle_0$＝对理想气体的微扰论", "◇ 取 $\\ln Z$ ⇒ 只有单粒子不可约集团存活", "★ Mayer 函数 $f_{ij}=e^{-\\beta\\phi(r_{ij})}-1$ 的必然性", "◇ Mayer 第一/第二定理 ⇒ 维里系数＝星图积分"],
+    tree: root("第四章 经典流体 I",[
+        sec("IV.A 实际气体的状态方程：简化假设",[
+          p("真实气体近似符合理想气体但有系统性偏离；即使只保留短程作用也已能处理气液相变"),
+          op("四条假设",[
+            p("① 经典极限：$\\Delta\\epsilon\\ll k_BT$、$n\\lambda_T^3\\ll1$，忽略量子统计关联"),
+            p("② 只保留两体相互作用"),
+            p("③ 分子视为电中性球对称、短程、只依赖 $r_{ij}$，忽略长程库仑与极性取向"),
+            p("④ 忽略分子内部自由度")
+          ]),
+          eq("$H=\\sum_i\\dfrac{p_i^2}{2m}+\\sum_{i<j}\\phi(r_{ij})$"),
+          eq("$Z_N=\\big(\\dfrac{2\\pi m}{\\beta h^2}\\big)^{3N/2}Q_N,\\quad Q_N=\\dfrac1{N!}\\int e^{-\\beta\\sum_{i<j}\\phi}d^3r^N$",[
+            p("动量部分永远可积 ⇒ 全部难度集中在位形积分 $Q_N$；$\\phi=0$ 时 $Q_N=V^N$")
+          ])
+        ]),
+        sec("§4.1 Cumulant（累积量）展开",[
+          key("思路：以理想气体分布 $\\rho_0$ 为测度求 $\\langle e^{-\\beta U}\\rangle_0$ ⇒ 实为对理想气体的微扰论"),
+          eq("$Z=Z_0\\langle e^{-\\beta U}\\rangle_0=Z_0\\sum_l\\dfrac{(-\\beta)^l}{l!}\\langle U^l\\rangle_0,\\quad Z_0=\\dfrac1{N!}\\big(\\dfrac V{\\lambda^3}\\big)^N$"),
+          th("取对数即得累积量生成函数",[
+            eq("$\\ln Z=\\ln Z_0+\\sum_{l\\ge1}\\dfrac{(-\\beta)^l}{l!}\\langle U^l\\rangle_0^{\\,c}$；$\\langle O\\rangle=\\sum_l\\dfrac{(-\\beta)^l}{l!}\\langle O\\,U^l\\rangle_0^{c}$"),
+            eq("$\\langle U\\rangle_0^c=\\dfrac{N(N-1)}{2V}\\int d^3q\\,\\phi(q)$"),
+            eq("$\\langle U^2\\rangle_0^c=\\dfrac{N(N-1)}{2V}\\big[\\int\\phi^2-(\\int\\phi)^2\\big]$：四指标互异与单指标相同者逐项抵消")
+          ]),
+          key("图规则：$l$ 条键的点图、重排因子 $S_l$、互不相连的集团各给一个 $V$",[
+            key("非连通图与单粒子可约集团对 $\\langle U^l\\rangle_0^c$ 无贡献 ⇒ 只有单粒子不可约集团存活"),
+            p("这正是第二章\"矩＝所有图之和、累积量＝连通图之和\"的再现")
+          ]),
+          th("为什么必须是 Mayer 函数",[
+            key("直接按 $\\phi$ 展开在 $r\\to0$（$\\phi\\to\\infty$）不收敛"),
+            eq("对 2 点集团的任意键数重求和：$\\sum_p\\dfrac{(-\\beta)^p}{p!}\\int\\phi^p=\\int\\big[e^{-\\beta\\phi}-1\\big]$"),
+            eq("Mayer 函数 $f_{ij}=e^{-\\beta\\phi(r_{ij})}-1$：短程势下 $f$ 迅速趋零 ⇒ 展开参数真正变小")
+          ]),
+          eq("昂尼斯（Onnes）方程：$\\dfrac{p}{k_BT}=\\dfrac NV\\big[1+B_2(T)\\dfrac NV+B_3(T)(\\dfrac NV)^2+\\cdots\\big]$")
+        ]),
+        sec("§4.2 迈尔集团展开（Mayer & Mayer）",[
+          eq("简化版：$Q_N=\\dfrac{V^N}{N!}\\big(1+\\dfrac{N^2}{2V}\\int f\\,d^3r\\big)\\Rightarrow \\ln Q_N=N\\ln V-B_2\\dfrac{N^2}V$"),
+          th("集团积分 $b_c=\\dfrac1{n_c!V}\\sum_P\\int\\prod_{l\\in c}f_l\\,d^3r_1\\cdots d^3r_{n_c}$",[
+            eq("$b_{\\circ}=1,\\quad b_{\\circ-\\circ}=\\dfrac1{2V}\\int f_{12},\\quad b_{\\circ-\\circ-\\circ}=\\dfrac1{2V}\\int f_{12}f_{13}$"),
+            p("三粒子有两种拓扑（链、三角），四粒子出现 $\\Box,\\otimes$ 等环图；除以 $V$ 保证热力学极限不发散"),
+            p("图形法与费曼图同构：拓扑种类 × 对称数决定系数")
+          ]),
+          eq("$N$ 粒子图的分解：贡献 $\\prod_c(V^{n_c}n_c!\\,b_c)^{m_c}$，不等价图数 $W(\\{m_c\\})=\\dfrac{N!}{\\prod_cm_c!(n_c!)^{m_c}}$，约束 $\\sum_cm_cn_c=N$"),
+          th("巨正则解除粒子数约束",[
+            eq("$\\Xi=\\sum_N\\big(\\dfrac z{\\lambda_T^3}\\big)^NQ_N=\\prod_c\\exp\\big[(\\dfrac z{\\lambda_T^3})^{n_c}Vb_c\\big],\\quad z=e^{\\beta\\mu}$"),
+            key("$\\dfrac{pV}{k_BT}=\\ln\\Xi,\\quad n=\\dfrac1V\\dfrac{\\partial\\ln\\Xi}{\\partial(\\beta\\mu)}$；反解 $x=z/\\lambda_T^3$ 得 $p/k_BT=n+B_2n^2+B_3n^3+\\cdots$"),
+            p("\"固定 $N$ 的组合约束\"→\"对 $N$ 求和后指数化\"：巨正则在这里显出计算优势（第三章 III.D.2）")
+          ]),
+          th("Mayer 第一定理（维里系数＝集团积分）",[
+            eq("$\\dfrac p{k_BT}=\\sum_l\\big(\\dfrac z{\\lambda_T^3}\\big)^l\\tilde b_l,\\quad n=\\sum_ll\\big(\\dfrac z{\\lambda_T^3}\\big)^l\\tilde b_l$"),
+            key("$B_2=-\\dfrac12\\int f(r)\\,d^3r,\\quad B_3=-\\dfrac13\\int d^3r_{12}d^3r_{13}f(r_{12})f(r_{13})f(r_{12}-r_{13})$")
+          ]),
+          th("Mayer 第二定理（不可约/星图）",[
+            eq("$\\beta_k=\\dfrac1{k!V}\\int\\prod f_{ij}$（$k$ 粒子不可约星形图）$\\Rightarrow\\dfrac{pv}{k_BT}=1-\\sum_{k\\ge1}\\dfrac{k\\beta_k}{k+1}v^{-k}$"),
+            eq("$B_{k+1}=\\dfrac{k\\beta_k}{k+1}$")
+          ]),
+          key("展开的真正小参数是 $n\\lambda_T^3$",[
+            p("只对偏离理想不远的气体收敛快；密度接近液相时高阶项不可忽略 ⇒ §4.5 液体须另求）")
+          ])
+        ])
+      ]),
+    chains:[
+      {a:"$Z_N=", b:"思路：以理想气体分布 $\\rho_0$ 为测度求", why:"动量部分与理想气体相同 ⇒ 相互作用的全部效应被吸收进位形积分的平均"},
+      {a:"取对数即得累积量生成函数", b:"非连通图与单粒子可约集团对", why:"$\\ln$ 把\"所有图\"筛成\"连通图\"，这是累积量展开的核心价值"},
+      {a:"直接按 $\\phi$ 展开在 $r\\to0$（$\\phi\\to\\infty$）不收敛", b:"Mayer 函数 $f_{ij}=e^{-\\beta\\phi(r_{ij})}-1$", why:"两体集团的重求和恰好把发散的核心区指数化，$f$ 在核心区 $=-1$ 有界"},
+      {a:"巨正则解除粒子数约束", b:"Mayer 第一定理（维里系数＝集团积分）", why:"对 $N$ 求和使集团乘积指数化，$\\ln\\Xi$ 只含单连接集团，与 $z^l$ 系数对比读出 $B_l$"},
+      {a:"Mayer 第一定理（维里系数＝集团积分）", b:"Mayer 第二定理（不可约/星图）", why:" Legendre 式地反解 $z(n)$，把集团级数重排为密度级数，多出 $k/(k+1)$ 因子"},
+      {a:"展开的真正小参数是 $n\\lambda_T^3$", b:"① 经典极限：", why:"集团展开同时要求稀薄（$n\\lambda_T^3\\ll1$）与经典，两者都由第三章的单粒子配分函数给出"}
+    ],
+    before:[{id:"l3c", txt:"$Z_N$、$\\Xi=\\sum_Nz^NZ_N$、$pV=k_BT\\ln\\Xi$ 全部沿用正则/巨正则"}, {id:"l2", txt:"矩–累积量的图关系＝集团展开的组合骨架"}, {id:"l3b", txt:"$N!$ 与 $h^{3N}$ 相格保证 $S$ 广延，展开才有确定极限"}],
+    after:[{id:"l4b", txt:"$B_2(T)$ 一算出即得范德瓦尔斯方程"}, {id:"l4b", txt:"$\\kappa_T$ 与稳定性、Maxwell 构造 ⇒ 气液相变"}, {id:"l4c", txt:"李杨理论解释为什么奇点需要热力学极限"}, {id:"l6a", txt:"\"集团/图/拓扑计数\"方法在第六章高温展开中原样复现"}, {id:"l5", txt:"$n\\lambda_T^3$ 在此是微扰参数，在第五章成为简并判据"}],
+    note:"讲义把本节定位为\"对理想气体的微扰论\"；图论类比是\"图形法类似于费曼图\"。收敛性问题（密度升高后展开失效）直接引出 §4.5 液体与第六章相变。"
+  },
+  {
+    id:"l4b", ch:4, chName:"第四章 经典流体", short:"II. 维里系数、范德瓦尔斯方程与气液相变", title:"第四章 经典流体 II — 维里系数计算、范德瓦尔斯方程与气液相变的平均场理论",
+    file:"lecture4-classical fluid part2.pdf", pages:9,
+    cover:"LJ 12-6 势与硬心势的 $B_2(T)$ 计算、排除体积 $b$ 与吸引参数 $a$ 的微观诠释、范德瓦尔斯方程及其失效、平均场配分函数、化学势判据与 Maxwell 等面积法则、临界点、对应态定律与平均场临界指数",
+    summary:"从\"可算的第二维里系数\"到\"气液相变\"的一整条链：$B_2=b-a/k_BT$ ⇒ 范德瓦尔斯方程 ⇒ 负压缩率 ⇒ 均匀假设崩溃 ⇒ 巨正则鞍点取极大 ⇒ 两相共存与临界点 ⇒ 约化变量下的对应态定律。讲义在此第一次给出临界指数 $\\beta=1/2,\\delta=3,\\gamma=1$。",
+    key:["◇ $B_2(T)=b-a/k_BT$：排除体积＋长程吸引", "★ 范德瓦尔斯方程 $(p+an^2)(v-b)=k_BT$", "◇ 临界点 $T_c=8a/27Rb,\\ v_c=3b,\\ Z_c=3/8$", "★ 平均场指数 $\\beta=\\tfrac12,\\ \\delta=3,\\ \\gamma=1,\\ \\alpha=0$；实验值偏离"],
+    tree: root("第四章 经典流体 II",[
+        sec("§4.3 维里系数计算",[
+          eg("Lennard-Jones 12-6 势 $\\phi(r)=\\phi_0\\big[(\\tfrac{r_0}r)^{12}-2(\\tfrac{r_0}r)^6\\big]$",[
+            p("$r^{-12}$ 排斥为半经验项；$r^{-6}$ 吸引来自瞬时偶极的范德瓦耳斯作用，有量子力学基础")
+          ]),
+          eg("硬心（Sutherland）势：$\\phi=+\\infty\\ (r<r_0)$，$\\phi=-\\phi_0(r_0/r)^6\\ (r>r_0)$"),
+          th("第二维里系数的解析结果",[
+            eq("$B_2(T)=-\\dfrac12\\int f(r)4\\pi r^2dr=-2\\pi\\int(e^{-\\beta\\phi}-1)r^2dr$"),
+            key("$=\\dfrac{\\Omega}2(1-\\beta\\phi_0)=b-\\dfrac a{k_BT}$，$\\Omega=\\dfrac{4\\pi r_0^3}3,\\ b=\\dfrac{\\Omega}2,\\ a=\\dfrac{2\\pi\\phi_0r_0^3}3$"),
+            p("在 $r>r_0$ 区用 $\\beta\\phi_0(r_0/r)^6\\ll1$ 线性化")
+          ]),
+          eq("状态方程 $p=\\dfrac{Nk_BT}V\\big(1+\\dfrac{Nb}V\\big)-\\dfrac{N^2a}{V^2}\\cong\\dfrac{Nk_BT}{V-Nb}-\\dfrac{N^2a}{V^2}$"),
+          key("两个参数的微观诠释",[
+            key("$b$＝排除体积：逐次可用体积 $V-m\\Omega$ ⇒ 每粒子平均损失 $\\Omega/2$"),
+            key("$an^2$＝长程吸引造成的降压：边缘粒子只受 $U/2$，$\\delta n\\approx\\beta nU/2$ ⇒ $\\delta p=-n^2\\Omega\\phi_0/2$")
+          ]),
+          op("适用性的四条限制",[
+            p("只有短程力才有解析修正；$\\phi\\sim r^{-s}$ 若 $s\\le3$（如库仑 $1/r$）则 $B_2$ 发散 ⇒ 不适用于（稀薄）等离子体"),
+            p("$B_2n\\sim$ 气体密度/液体密度 $\\sim10^{-3}$（室温常压），故稀薄下修正很小，高密度失效"),
+            p("$T\\to0$ 时 $B_2$ 发散 ⇒ 展开不再成立，物理上对应冷凝/相变")
+          ])
+        ]),
+        sec("IV.B 范德瓦尔斯方程与其失效",[
+          th("范德瓦尔斯方程 $(p+\\dfrac{N^2a}{V^2})(V-Nb)=Nk_BT$；摩尔形式 $(p+a/v^2)(v-b)=RT$"),
+          key("失效的判据来自稳定性：$\\kappa_T=-\\dfrac1V(\\partial V/\\partial p)_T>0$"),
+          eq("由巨正则涨落 $\\dfrac{\\langle(\\Delta N)^2\\rangle}{\\bar N}=nk_BT\\kappa_T$（第三章结论）"),
+          th("$T<T_c$ 时出现 $(\\partial p/\\partial V)_T>0$ 的\"负可压缩性\"中段 ⇒ 均匀相不稳定 ⇒ 相分离",[
+            p("等温线的平坦段须由 Maxwell 构造补上；严格计算绝不允许非物理区，是\"隐含均匀密度\"的近似造成的")
+          ])
+        ]),
+        sec("IV.C 气液相变的平均场理论",[
+          key("平均场配分函数：排斥部分精确、吸引部分取均匀密度平均",[
+            eq("$Z(T,N,V)\\approx\\dfrac{(V-N\\Omega/2)^N}{N!\\lambda_T^{3N}}\\exp\\big[\\beta uN^2/2V\\big]$，$\\bar U=-\\dfrac{N^2}V\\dfrac u2$"),
+            eq("$F=-Nk_BT\\ln(V-\\tfrac{N\\Omega}2)+Nk_BT\\ln\\tfrac Ne+3Nk_BT\\ln\\lambda-\\dfrac{uN^2}{2V}$"),
+            eq("$p_{can}=-\\big(\\partial F/\\partial V\\big)_{T,N}=\\dfrac{Nk_BT}{V-N\\Omega/2}-\\dfrac{uN^2}{2V^2}$（即 vdW）"),
+            eq("$U=\\tfrac32Nk_BT-\\dfrac{uN^2}{2V}$")
+          ]),
+          th("巨正则下的鞍点近似",[
+            eq("$\\Xi\\approx\\exp\\{\\max_N[N\\ln(\\tfrac VN-\\tfrac\\Omega2)+\\tfrac{\\beta uN^2}{2V}+\\Delta N]\\}$，$\\Delta=1+\\beta\\mu-\\ln\\lambda_T^3$"),
+            eq("$p_{g.c.}=\\max_n\\Psi(n),\\ \\Psi=n\\Delta+n\\ln(n^{-1}-\\tfrac\\Omega2)+\\tfrac{\\beta u}2n^2$；$d\\Psi/dn=0$ 可有多解"),
+            key("相变机制：$\\ln\\Xi=\\max(\\beta Vp_{gas},\\beta Vp_{liquid})$，$T^*$ 处主导项交换 ⇒ 奇点源于 $V\\to\\infty$"),
+            key("结论：有限系统中没有相变")
+          ])
+        ]),
+        sec("IV.D 对应态定律与临界点行为",[
+          p("等温线：$T>T_c$ 全程 $(\\partial p/\\partial v)_T<0$；$T<T_c$ 中段不稳定，右段为气、左段为液"),
+          th("化学势判据（面积法）",[
+            eq("$d\\mu=-sdT+vdp$ ⇒ 等温下 $\\mu=\\mu_0+\\int_{p_0}^{p}v\\,dp$（曲线下的面积）"),
+            key("稳定相取 $\\mu$（＝每个粒子的 $G$）最小；共存条件 $\\mu_A=\\mu_B\\Leftrightarrow\\oint v\\,dp=0$"),
+            eq("Maxwell 等面积法则：$AJD$ 与 $BND$ 两块面积相等"),
+            eq("水平段上 $v=xv_A+(1-x)v_B$（杠杆法则）"),
+            p("亚稳态：过冷（过饱和）蒸气 $BN$、过热液体 $AJ$（爆沸）、$NDJ$ 为 spinodal 不稳定区")
+          ]),
+          th("临界点条件 $(\\partial p/\\partial v)_T=0,\\ (\\partial^2p/\\partial v^2)_T=0$",[
+            key("$k_BT_c=\\dfrac{8a}{27b},\\quad p_c=\\dfrac a{27b^2},\\quad v_c=3b,\\quad Z_c=\\dfrac{p_cv_c}{k_BT_c}=\\dfrac38=0.375$"),
+            p("实验值 $Z_c\\approx0.28\\sim0.33$ ⇒ 平均场系统性偏高")
+          ]),
+          th("对应态定律：$t^*=T/T_c,\\ p^*=p/p_c,\\ v^*=v/v_c$",[
+            eq("$\\big(p^*+\\dfrac3{v^{*2}}\\big)\\big(v^*-\\tfrac13\\big)=\\dfrac83t^*$"),
+            key("方程中不含任何物质参数 ⇒ 所有 vdW 气体共用一条曲面（普适性的第一次现身）")
+          ]),
+          th("平均场临界指数",[
+            eq("序参量 $v_g-v_l\\sim(T_c-T)^\\beta,\\ \\beta=\\tfrac12$"),
+            eq("临界等温线 $p-p_c\\sim(v-v_c)^\\delta,\\ \\delta=3$；$\\kappa_T\\sim(T-T_c)^{-\\gamma},\\ \\gamma=1$"),
+            key("实验值：$\\beta\\approx0.32,\\ \\delta\\approx4.8$（CO₂），$\\gamma\\approx1.2$ ⇒ 真实临界点非解析，平均场只是定性正确"),
+            p("稳定性论证要求 $\\delta P$ 展开中一、二阶系数为零、三阶为负；临界乳光"),
+            p("普适类由对称性与维度决定：气液临界与单轴铁磁（$m,\\chi$）同属一类，与朗道理论一致")
+          ])
+        ])
+      ]),
+    chains:[
+      {a:"硬心（Sutherland）势", b:"$=\\dfrac{\\Omega}2(1-\\beta\\phi_0)", why:"分区间积分：核心区 $f=-1$ 给出 $\\Omega/2$，尾部线性化给出 $-\\beta\\phi_0\\Omega/2$"},
+      {a:"$b$＝排除体积：逐次可用体积", b:"$an^2$＝长程吸引造成的降压", why:"排斥靠几何计数、吸引靠边缘粒子受力减半，两项分别给出 $b$ 与 $a$"},
+      {a:"状态方程 $p=\\dfrac{Nk_BT}V\\big(1+\\dfrac{Nb}V\\big)", b:"范德瓦尔斯方程", why:"把 $1+nb$ 重指数化为 $(1-nb)^{-1}$，即得 vdW 形式"},
+      {a:"范德瓦尔斯方程", b:"失效的判据来自稳定性", why:"vdW 等温线在低温段出现正斜率，违反 $\\kappa_T>0$"},
+      {a:"失效的判据来自稳定性", b:"巨正则下的鞍点近似", why:"密度不稳定 ⇒ 必须允许非均匀（两相）解，把 $\\Xi$ 改成对密度取极大"},
+      {a:"相变机制：$\\ln\\Xi=\\max", b:"结论：有限系统中没有相变", why:"两个解析分支的极大值交换只在 $V\\to\\infty$ 时才产生真正的不可导点"},
+      {a:"化学势判据（面积法）", b:"Maxwell 等面积法则", why:"$\\mu_A=\\mu_B$ 即 $\\int v\\,dp=0$，环路面积相等"},
+      {a:"临界点条件", b:"对应态定律：", why:"用 $p_c,v_c,T_c$ 约去 $a,b$ ⇒ 状态方程化为无参形式"},
+      {a:"临界点条件", b:"平均场临界指数", why:"在临界点附近把 $p(v)$ 按 $\\delta v$ 展开，一阶二阶系数为零 ⇒ $\\delta=3$；由共存线得 $\\beta=1/2$"}
+    ],
+    before:[{id:"l4a", txt:"$B_2(T)$ 来自集团展开的首阶结果"}, {id:"l3c", txt:"$\\Xi$、鞍点近似、$\\langle(\\Delta N)^2\\rangle$ 与 $\\kappa_T$ 全是第三章工具"}, {id:"l1b", txt:"$d\\mu=-sdT+vdp$、$G$ 最小与稳定性条件在此被直接使用"}],
+    after:[{id:"l4c", txt:"\"奇点需要热力学极限\"由李杨零点理论严格化"}, {id:"l6b", txt:"Ising 平均场给出完全相同的一组指数（$\\chi\\leftrightarrow\\kappa_T$）"}, {id:"l6c", txt:"$f(m)$ 幂级数展开＝vdW 临界点展开的抽象版"}, {id:"l6d", txt:"平均场为何失效（涨落）在第六章 Landau-Ginzburg 中回答"}],
+    note:"讲义在此把\"对应态定律\"作为普适性的第一个实例：不同物质的临界行为只差一个尺度变换；真正与实验不符的是指数值（$\\delta=3$ 对 $4.8$），这个偏差正是第六章的主题。"
+  },
+  {
+    id:"l4c", ch:4, chName:"第四章 经典流体", short:"III. 液体、等离子体与李杨理论", title:"第四章 经典流体 III — 液体分布函数、稀薄等离子体与 Lee–Yang 相变理论",
+    file:"lecture4-classical fluid part3.pdf", pages:20,
+    cover:"约化分布函数与对分布函数 $g(r)$、内能/结构因子/涨落与维里两式、Debye–Hückel 屏蔽与环图重求和、李杨定理（零点与热力学极限）、格气模型的显式一级相变例",
+    summary:"半选讲性质的一讲，但给出了两条重要\"补课\"：其一，密度高了集团展开失效 ⇒ 改用分布函数 $g(r)$（液体）与平均场屏蔽（等离子体）；其二，把\"相变＝解析函数序列的极限失去解析性\"严格化，即李杨零点理论——第六章全部相变讨论的数学基础。",
+    key:["★ $g(r)$ 同时联系内能、散射 $S(q)$ 与 $\\kappa_T$", "◇ 两条物态方程（涨落式与维里式）严格成立，可作近似自洽判据", "◇ Debye 屏蔽 $\\kappa^2=\\dfrac{4\\pi e^2}{k_BT}\\sum n_{i0}z_i^2$ 与 $\\kappa^3$ 非解析修正", "★ 李杨定理：相变 ⇔ $\\Xi$ 的零点在 $V\\to\\infty$ 时汇于正实轴"],
+    tree: root("第四章 经典流体 III",[
+        sec("§4.5 液体的热力学性质（讲义注明：不要求）",[
+          key("为什么需要新语言：集团展开是对 $n\\lambda_T^3$ 的展开，密度变大（低温高密）后级数不再适用 ⇒ 液体比气体更难"),
+          th("约化分布函数 $n_l(x_1\\cdots x_l)=\\sum_{i\\ne j\\ne\\cdots}\\langle\\delta(x_1-r_i)\\cdots\\delta(x_l-r_m)\\rangle$",[
+            eq("$n_1=N/V=n$（均匀流体），$\\int d\\mathbf x\\,n_1=N$；$n_2$ 是密度–密度关联函数"),
+            p("平移不变性：均匀流体 $n_2=n_2(x_1-x_2)$；固体只保留晶格平移对称；液晶还依赖方向")
+          ]),
+          key("对分布函数 $n_2(|x_1-x_2|)=(N/V)^2g(|x_1-x_2|)$，$g(r\\to\\infty)\\to1$；$h(r)=g(r)-1$ 为对关联函数"),
+          eq("A. 内能：$\\langle H\\rangle=\\dfrac{3Nk_BT}2+\\dfrac{N^2}{2V}\\int d^3r\\,U(r)g(r)$"),
+          eq("B. 结构因子：$S(q)-1=\\dfrac NV\\int d^3r[g(r)-1]e^{-i\\mathbf q\\cdot\\mathbf r}$",[
+            p("散射几率 $W\\propto|u(q)|^2NS(q)$ ⇒ 中子/X 光实验可直接测 $g(r)$")
+          ]),
+          th("C. 涨落（压缩）物态方程：$\\displaystyle\\int d\\mathbf x\\,[g-1]=k_BT\\kappa_T-\\dfrac1n$",[
+            eq("理想气体 $g=1,\\ k_BT\\kappa_T=1/n$；液体 $0<nk_BT\\kappa_T<1$（几乎不可压）；固体 $\\kappa_T=0$"),
+            key("临界点 $\\kappa_T\\to\\infty$ ⇔ $h(r)$ 大 $r$ 衰减慢（长程关联）→ 第六章"),
+            p("散射实验本质上是巨正则系综")
+          ]),
+          th("D. 维里物态方程：$P=\\dfrac{Nk_BT}V-\\dfrac{n^2}6\\int d\\mathbf x\\,[\\mathbf x\\cdot\\nabla\\phi(x)]\\,g(x)$",[
+            p("用位力定理 $-\\overline{\\sum\\dot p_iq_i}=3Nk_BT$ 与标度 $r=Lr'$ 导出"),
+            key("C 与 D 两式都严格成立（只假设经典二体势）；近似下二者不一致可作可信度判据")
+          ]),
+          op("E. $g$ 的计算：Ornstein–Zernike 方程的 Percus–Yevick 近似（刚球结果好，但没有统一理论）、Monte Carlo、分子动力学（时间平均代替系综平均，$\\sim10^5$ 粒子够用；近临界需更大样本）")
+        ]),
+        sec("§4.6 稀薄等离子体的统计性质（选讲）",[
+          key("稀薄条件 $n\\ll(k_BT/z^2e^2)^3$：势能 $(ze)^2n^{1/3}\\ll k_BT$"),
+          th("Debye–Hückel 平均场",[
+            eq("$n_i(r)=n_{i0}e^{-z_ie\\phi/k_BT}\\approx n_{i0}-\\dfrac{n_{i0}ez_i}{k_BT}\\phi$"),
+            eq("代入 $\\nabla^2\\phi=-4\\pi e\\sum z_in_i$ 加电中性 $\\sum n_{i0}z_i=0\\Rightarrow\\nabla^2\\phi-\\kappa^2\\phi=0$"),
+            key("$\\kappa^2=\\xi_D^{-2}=\\dfrac{4\\pi e^2}{k_BT}\\sum_in_{i0}z_i^2$（Debye 屏蔽长度）"),
+            eq("屏蔽（汤川）势 $\\phi(r)=\\dfrac{ez_i}re^{-\\kappa r}$")
+          ]),
+          th("自由能与压强的非解析修正",[
+            eq("$F=F_0-\\dfrac{2e^3}3\\sqrt{\\dfrac{\\pi}{Vk_BT}}\\big(\\sum N_iz_i^2\\big)^{3/2}$"),
+            key("形如 $\\kappa^3\\sim n^{3/2}$ 的项无法由任何有限阶维里展开得到 ⇒ 长程力导致非解析"),
+            eq("溶液推广：$G=\\sum_iN_i(g_i+k_BT\\ln x_i)-\\dfrac{Vk_BT}{12\\pi}\\kappa^3$，得 Debye–Hückel 活度系数 $\\ln\\gamma_\\pm$"),
+            op("长程情形 $\\tau_c/\\tau_x\\approx nd^3\\gg1$ 应改用 Vlasov 方程而非 Boltzmann 方程（Poisson–Boltzmann）")
+          ]),
+          th("环图重求和（Kardar 5.1）",[
+            p("$N$ 电子＋均匀正电背景，$\\tilde\\phi(\\omega)=e^2/\\omega^2$（$\\omega=0$ 取 0 以保证 $\\int\\phi=0$）"),
+            eq("$S_l\\approx\\dfrac{(l-1)!}2N^l,\\quad R_l=\\dfrac1{V^{l-1}}\\int\\dfrac{d^3\\omega}{(2\\pi)^3}\\tilde\\phi^l\\Rightarrow\\ln Z_{rings}=\\ln Z_0+\\dfrac V{12\\pi}\\kappa^3$"),
+            key("$n^3\\lambda\\ll1$ 取节点最少的图；$\\gg1$ 取环状（最多节点）图 ⇒ 重求和的选择由参数决定")
+          ])
+        ]),
+        sec("IV.E 李（T. D. Lee）–杨（C. N. Yang）相变理论",[
+          key("中心问题：单一热力学表达式能否描述相变 ⇔ 配分函数是否具有奇异性"),
+          th("有限体积无奇异性；只有热力学极限（$V\\to\\infty$，$N/V$ 固定）下解析函数序列的极限才可以非解析",[
+            p("凝聚问题一般评述（Pathria）：$f(v,T)$ 上凸、$(\\partial p/\\partial v)_T\\le0$，严格计算绝无非物理区"),
+            p("平直段与两端尖角只在 $N\\to\\infty$ 存在；有限系统的\"相变\"全被圆滑掉")
+          ]),
+          eq("$\\Xi(z,T,V)=\\sum_{N\\ge0}Z_Nz^N$ 是 $z$ 的多项式（最高次 $N_m\\sim V/\\sigma^3$），且 $\\Xi\\ge1$ ⇒ $V$ 有限时 $\\ln\\Xi$ 品优"),
+          eq("$\\big(\\partial p/\\partial\\bar v\\big)_{V,T}=-\\dfrac{k_BT}{V^2}\\dfrac{\\bar N^3}{\\overline{N^2}-\\bar N^2}\\le0$；相变区 $\\overline{(\\delta N)^2}\\sim O(\\bar N^2)$（宏观涨落）"),
+          th("李–杨定理",[
+            key("定理一：$z>0$ 时 $\\lim_{V\\to\\infty}\\dfrac1V\\ln\\Xi$ 存在，是 $z$ 的连续非递减函数（表面积增不快于 $V^{2/3}$ 时与容器形状无关）"),
+            key("定理二：若复 $z$ 平面区域 $R$（含正实轴一段）内无 $\\Xi$ 的零点，则收敛均匀且极限在 $R$ 内解析")
+          ]),
+          th("相变机制：$V\\to\\infty$ 时零点密度连续化，并在某 $z_c$ 汇集到正实轴 ⇒ $p(z),\\bar n(z)$ 奇异",[
+            p("$\\ln\\Xi/V$ 本身连续，但其导数可不连续 ⇒ 相变的级数由导数不连续的阶数决定")
+          ]),
+          eg("格气模型的显式例子",[
+            eq("$\\Xi=\\dfrac{(1+z)^V(1-z^V)}{1-z}$，零点 $z=-1$ 与 $z=e^{ik2\\pi/V}$ 布满单位圆，$V\\to\\infty$ 汇于 $z=1$"),
+            eq("$p/k_BT=\\ln(1+z)\\ (z<1)$；$=\\ln(1+z)+\\ln z\\ (z>1)$"),
+            eq("消去 $z$：$\\dfrac p{k_BT}=\\ln\\dfrac v{v-1}\\ (v>2)$；$=\\ln2$（$\\tfrac23<v<2$ 水平段）；$=\\ln\\dfrac{v(1-v)}{(2v-1)^2}$（$\\tfrac12<v<\\tfrac23$）"),
+            key("水平段＝一级相变：密度不连续跳跃，而压强保持唯一")
+          ]),
+          op("思考题：$\\phi=+\\infty(r\\le\\sigma),\\ -\\kappa e^{-\\kappa r}(r>\\sigma)$ 求物态方程、$\\kappa\\to0$ 与范氏气体比较、求临界指数（Kac–Uhlenbeck–Hemmer 1963）")
+        ])
+      ]),
+    chains:[
+      {a:"为什么需要新语言：集团展开是对", b:"约化分布函数", why:"密相下级数发散 ⇒ 改以 $n_l$（等价于所有关联信息）为基本未知量"},
+      {a:"对分布函数", b:"A. 内能", why:"把 $\\sum_{i<j}U(r_{ij})$ 用 $n_2$ 写出，即得 $g(r)$ 的积分表达"},
+      {a:"B. 结构因子", b:"散射几率", why:"$S(q)$ 是 $g-1$ 的 Fourier 变换，故散射实验直接读出它"},
+      {a:"C. 涨落（压缩）物态方程", b:"D. 维里物态方程", why:"两式分别来自巨正则密度涨落与位力定理，严格成立 ⇒ 近似下一致性可作检验"},
+      {a:"稀薄条件", b:"Debye–Hückel 平均场", why:"势能远小于热能 ⇒ 玻尔兹曼因子线性化，得屏蔽方程"},
+      {a:"形如 $\\kappa^3\\sim n^{3/2}$ 的项无法由任何有限阶维里展开得到", b:"环图重求和（Kardar 5.1）", why:"非解析项来自把某类图（环）无穷阶求和的结果"},
+      {a:"有限体积无奇异性；只有热力学极限", b:"李–杨定理", why:"多项式的根只能在极限下汇聚成曲线并触及正实轴，此时导数才可不连续"},
+      {a:"相变机制：$V\\to\\infty$ 时零点密度连续化", b:"格气模型的显式例子", why:"格气把 $\\Xi$ 写成闭式，可直接看到单位圆上的零点汇于 $z=1$ 产生水平段"}
+    ],
+    before:[{id:"l4a", txt:"集团展开的失效构成本节的动机"}, {id:"l4b", txt:"\"有限系统无相变\"与负压缩率的困惑在此被严格化"}, {id:"l3c", txt:"$\\overline{(\\Delta N)^2}=k_BT\\kappa_T\\bar N^2/V$ 与巨正则语言全部沿用"}],
+    after:[{id:"l6c", txt:"\"相变＝解析性丧失\"是第六章朗道理论的数学前提"}, {id:"l6d", txt:"$g(r)$ 的长程衰减＝关联长度发散，第六章给出 $\\xi\\sim|T-T_c|^{-\\nu}$"}, {id:"l6e", txt:"李杨零点的图景与高温展开/对偶互为补充：都研究配分函数的解析结构"}, {id:"l7", txt:"长程系统改用 Vlasov 方程＝第七章非平衡动理论的入口"}],
+    note:"讲义在本节两处标注\"不要求/选讲\"（§4.5、§4.6），但 IV.E 李杨理论是理解\"为什么必须取热力学极限才有相变\"的关键论证。"
+  },
+  {
+    id:"l5", ch:5, chName:"第五章 量子理想气体", short:"玻色/费米分布与 BEC", title:"第五章 量子理想气体 — 玻色/费米分布、弱简并修正与玻色–爱因斯坦凝聚",
+    file:"lecture5-quantum gas.pdf", pages:18,
+    cover:"近独立子系的平均分布（MB/BE/FD）、理想玻色气体的特性函数、态密度与玻色积分、简并参数 $n\\lambda_T^3$、BEC 的三条论证、临界温度与凝聚分数、压强/内能/热容的幂律、磁光 traps 中的 BEC",
+    summary:"第三章巨正则的一次完整\"实弹演习\"：$\\Xi$ 对近独立模因子化 ⇒ 直接读出平均占据数。玻色气体因 $g_{3/2}(z)$ 有上限 $\\zeta(3/2)=2.612$ 而产生矛盾，矛盾的另一面就是玻色–爱因斯坦凝聚——统计物理中第一个\"由纯统计关联（而非力学相互作用）驱动的相变\"。",
+    key:["★ $\\bar a_s=1/(e^{\\alpha+\\beta\\epsilon_s}\\pm1)$：玻色/费米分布", "◇ 非简并条件 $e^\\alpha\\gg1\\Leftrightarrow n\\lambda_T^3\\ll1$ ⇒ 回到 MB 分布", "★ BEC 判据 $n\\lambda_T^3=\\zeta(3/2)=2.612$ ⇒ $T_c=\\dfrac{2\\pi\\hbar^2}{mk_B}(n/\\zeta(3/2))^{2/3}$", "= $N_0/N=1-(T/T_c)^{3/2}$，$U\\propto T^{5/2}$，$C_V\\propto T^{3/2}$"],
+    tree: root("第五章 量子理想气体",[
+        key("对象：满足玻色/费米分布的近独立子系；若考虑相互作用则称\"量子液体\"，本课不讨论"),
+        sec("V.A 玻色、费米分布的推导（讲义标注：回顾）",[
+          key("1.1 近独立子系的平均分布：分布 $\\{a_s\\}$ ＝粒子按单粒子态的占据数",[
+            eq("$E=\\sum_s\\epsilon_sa_s,\\qquad N=\\sum_sa_s$"),
+            th("可分辨与不可分辨的差别",[
+              eq("可分辨 $S=(s_1,\\dots,s_N)$ ⇒ Maxwell–Boltzmann"),
+              eq("不可分辨 $S=(a_1,a_2,\\dots)$ ⇒ Bose–Einstein / Fermi–Dirac"),
+              key("全同性原理决定\"态\"的描述方式，而不是动力学")
+            ])
+          ]),
+          eq("A) 可分辨（正则）：$Z=z^N,\\ \\bar a_s=Ne^{-\\beta\\epsilon_s}/z=e^{-\\alpha-\\beta\\epsilon_s}$（MB 分布）"),
+          th("B) 不可分辨（巨正则）",[
+            key("$\\Xi=\\prod_s\\big(1\\pm e^{-\\beta\\epsilon_s-\\alpha}\\big)^{\\pm1}$（＋ 费米，－ 玻色）",[
+              p("此因子化只对 $\\Xi$ 严格成立（正则下不成立）：对 $N$ 求和解除了 $\\sum a_s=N$ 的约束")
+            ]),
+            eq("平均占据数 $\\bar a_{s_0}=\\dfrac{\\partial\\zeta_{s_0}}{\\partial\\alpha}=\\dfrac1{e^{\\alpha+\\beta\\epsilon_{s_0}}\\pm1}$；按能级乘简并度 $\\varrho_l$"),
+            key("非简并条件 $e^\\alpha\\gg1\\Leftrightarrow\\bar a_l/\\varrho_l\\ll1$",[
+              p("此时两粒子同占一态的概率可忽略 ⇒ 全同性失效 ⇒ 回到 MB 分布")
+            ]),
+            p("评述：三种分布仅对近独立子系严格成立；最概然分布＝系综平均（宏观极大值极其尖锐）")
+          ]),
+          op("1.2 理想玻色气体（讲义要求\"自行回顾\"）",[
+            eq("$\\ln\\Xi=-\\sum_l\\varrho_l\\ln\\big[1-e^{-(\\alpha+\\beta\\epsilon_l)}\\big],\\ J=-k_BT\\ln\\Xi$"),
+            eq("$\\bar N=-\\partial_\\alpha\\ln\\Xi,\\quad \\bar E=-\\partial_\\beta\\ln\\Xi,\\quad \\bar Y_\\lambda=-\\beta^{-1}\\partial_{y_\\lambda}\\ln\\Xi$"),
+            key("熵的量子残余：$S=S_{MB}-k_B\\ln N!$，其余热力学量与经典完全相同"),
+            p("经典极限的两个条件：i) 非简并 $e^\\alpha\\gg1$；ii) 准连续 $\\Delta\\epsilon\\ll k_BT$（求和→ $\\int d\\omega/h^r$）"),
+            eq("单原子气体 $\\ln\\Xi=e^{-\\alpha}V/\\lambda_T^3$：热波长在此首次出现")
+          ]),
+          sec("1.3（弱简并）非相对论理想玻色气体",[
+            key("态密度 $D(\\epsilon)d\\epsilon=g\\dfrac{2\\pi V}{h^3}(2m)^{3/2}\\epsilon^{1/2}d\\epsilon,\\ g=2s+1$",[
+              p("由 $\\epsilon=\\hbar^2(2\\pi/L)^2\\boldsymbol n^2/2m$ 与 $s=0$；$\\Delta\\epsilon\\propto L^{-2}\\ll k_BT$"),
+              key("$\\epsilon^{1/2}$ 因子使 $\\epsilon=0$ 的态被积分\"吞掉\" ⇒ 低温必须单独处理（BEC 的技术根源）")
+            ]),
+            th("化学势的符号：玻色气体必须 $\\mu\\le0$（$\\alpha\\ge0$）",[
+              p("否则存在某能级使 $\\bar a_l\\to\\infty$，与 $N$ 有限矛盾")
+            ]),
+            key("玻色积分 $g_s(z)=\\dfrac1{\\Gamma(s)}\\displaystyle\\int_0^\\infty\\dfrac{t^{s-1}dt}{z^{-1}e^t-1}=\\sum_{j\\ge1}\\dfrac{z^j}{j^s}$，$z=e^{-\\alpha}$，$g_s(1)=\\zeta(s)$"),
+            eq("$\\ln\\Xi=\\dfrac V{\\lambda_T^3}g_{5/2}(z),\\quad \\dfrac{N}{}: \\ n\\lambda_T^3=g_{3/2}(z),\\quad U=\\dfrac32k_BT\\dfrac V{\\lambda_T^3}g_{5/2}(z),\\ p=\\dfrac{2U}{3V}$"),
+            key("简并参数 $y=n\\lambda_T^3=\\lambda_T^3/v$ ＝一个热波长内的粒子数：$y\\ll1$ 弱简并，$y\\gtrsim1$ 强简并"),
+            eq("弱简并状态方程：$\\dfrac{pV}{Nk_BT}=\\dfrac{g_{5/2}(z)}{g_{3/2}(z)}=1-\\dfrac y{2^{5/2}}-\\cdots<1$",[
+              key("量子修正为负 ⇒ \"统计关联等效于吸引\"，但它不是力学相互作用（费米符号相反）")
+            ])
+          ])
+        ]),
+        sec("V.B 玻色–爱因斯坦凝聚（BEC）",[
+          th("A) 为什么会发生 BEC：三条并列论证",[
+            p("粒子数视角：$\\mu\\le0$，$T\\downarrow\\Rightarrow\\mu\\uparrow$，到 $T_c$ 时 $\\mu\\to0$ 并被\"冻结\""),
+            key("$y$ 视角的矛盾：$y=n\\lambda_T^3\\propto T^{-3/2}$ 可任意大，但 $g_{3/2}(z)\\le\\zeta(3/2)=2.612$ ⇒ 积分代替求和失效"),
+            p("基态视角：$\\bar a_l$ 随 $\\epsilon_l$ 单调下降，基态 $\\boldsymbol n=(0,0,0)$ 占据数最大"),
+            eq("把基态拆出来：$\\ln\\Xi=\\dfrac V{\\lambda_T^3}g_{5/2}(z)-\\ln(1-z),\\quad N=\\dfrac V{\\lambda_T^3}g_{3/2}(z)+\\dfrac z{1-z}$"),
+            key("激发态饱和：$N_{ex}=\\dfrac V{\\lambda_T^3}\\zeta(3/2)$，多余粒子全部进入基态 $N_0=N-\\dfrac V{\\lambda_T^3}\\zeta(3/2)$")
+          ]),
+          th("临界温度与凝聚分数",[
+            key("$T_c=\\dfrac{2\\pi\\hbar^2}{mk_B}\\big(\\dfrac n{\\zeta(3/2)}\\big)^{2/3}=\\dfrac1{(2.612)^{2/3}}\\dfrac{h^2}{2\\pi mk_B}n^{2/3}$"),
+            eq("统一判据 $\\lambda_T^3/v=g_{3/2}(1)=\\zeta(3/2)\\approx2.612$"),
+            key("$n_0(T)=n\\big[1-(T/T_c)^{3/2}\\big],\\quad T\\to0\\Rightarrow N_0=N$")
+          ]),
+          key("物理图像",[
+            key("凝聚发生在动量空间（$p=0$），实空间波函数依然均匀"),
+            p("凝聚体对 $E,p,S$ 的贡献均为 0；由统计关联而非动力学引起"),
+            p("提高 $T_c$ 的办法：减小 $m$、增大 $n$（但密度太高会液化/固化）"),
+            eg("实验实现：激光制冷（多普勒冷却）＋磁约束；$^{87}$Rb、$^{23}$Na（斥力）、$^{7}$Li（吸力）；与超高精度原子钟相关")
+          ]),
+          p("B) 活度 $z$ 随 $(T,v)$ 变化：$T<T_c$ 时 $z\\simeq1$（两相共存区，$g_{3/2},g_{5/2}$ 在 $z\\simeq1$ 处不敏感）；$T\\to0$ 时 $z=\\tfrac N{N+1}=1-O(1/N)$；高温低密回到 $z=\\lambda_T^3/v$"),
+          th("C) 压强、内能、熵与热容",[
+            eq("$T>T_c$：$p=nk_BT\\,g_{5/2}/g_{3/2}$；$T<T_c$：$p=\\dfrac{k_BT}{\\lambda_T^3}\\zeta(5/2)\\propto T^{5/2}$ 与 $v$ 无关（$\\approx0.5134\\,\\tfrac NV k_BT_c(T/T_c)^{5/2}$）"),
+            p("$p$–$v$ 等温线：$v<v_c$ 为水平段（$\\zeta(5/2)=1.341$）；两侧 $p$ 与 $\\partial p/\\partial v$ 均连续，但 $\\kappa_T\\to\\infty$（$\\epsilon=0$ 的粒子不带动量 ⇒ 无穷可压缩）"),
+            eq("相变线 $\\dfrac{dp_0}{dT}=\\dfrac{5p}{2T}=\\dfrac{L}{Tv_c}$，$p_0v_c^{5/3}=$ const；潜热 $L\\approx1.28\\,k_BT$，$\\Delta v=v_c$ ⇒ 具一级相变特征"),
+            eq("$U=0.770\\,Nk_BT(T/T_c)^{3/2}\\propto T^{5/2}$（基态贡献为 0）"),
+            key("$C_V=\\dfrac52\\dfrac UT=1.925Nk_B(T/T_c)^{3/2}\\propto T^{3/2}\\to0$（$T<T_c$）；$T>T_c$：$C_V=\\tfrac32Nk_B[1+0.0884y+\\cdots]$，在 $T_c$ 达极大"),
+            th("相变级数：$C_V$ 在 $T_c$ 连续（因 $g_{1/2}(1)\\to\\infty$）但 $dC_V/dT$ 跃变 ⇒ 按 Ehrenfest 定义为三级相变"),
+            eq("$S\\propto T^{3/2}\\to0$ ⇒ 符合第三定律；$F=U-TS=-\\tfrac23U$（$\\mu=0\\Rightarrow F=-pV=J$）"),
+            eq("绝热线 $vT^{3/2}=$ const、$pv^{5/3}=$ const；$\\gamma=\\dfrac53\\dfrac{g_{5/2}g_{1/2}}{g_{3/2}^2}\\ne\\tfrac53$（留作练习）"),
+            op("历史注记：$^4$He 超流一度被认作 BEC，实由原子相互作用引起，且是二级相变")
+          ]),
+          eg("扩展：磁光陷阱（三维谐振势）中的 BEC",[
+            eq("$\\epsilon=\\sum_i\\hbar\\omega_i(n_i+\\tfrac12),\\quad D(\\epsilon)=\\dfrac{\\epsilon^2}{2\\hbar^3\\omega_x\\omega_y\\omega_z}\\propto\\epsilon^2\\ne\\epsilon^{1/2}$"),
+            eq("$k_BT_c=\\hbar(\\omega_x\\omega_y\\omega_z)^{1/3}\\big(N/\\zeta(3)\\big)^{1/3},\\quad N_0/N=1-(T/T_c)^3$"),
+            key("态密度幂次改变 ⇒ 临界温度与序参量的幂次全变：幂律由 $g(\\epsilon)$ 决定")
+          ]),
+          op("本讲未包含（属后续内容）：理想费米气体的费米能 $\\epsilon_F$ 与简并压、光气体 $U\\propto T^4$、声子德拜 $T^3$ 定律")
+        ])
+      ]),
+    chains:[
+      {a:"全同性原理决定\"态\"的描述方式，而不是动力学", b:"可分辨与不可分辨的差别", why:"不可标记的粒子只能用占据数集合 $\\{a_s\\}$ 描述，故计数方式（进而分布函数）根本改变"},
+      {a:"平均占据数", b:"非简并条件", why:"$e^\\alpha\\gg1$ 时分母中的 $\\pm1$ 可忽略 ⇒ BE/FD 同时退化为 MB"},
+      {a:"B) 不可分辨（巨正则）", b:"平均占据数", why:"$\\ln\\Xi=\\sum_s\\zeta_s$ 对 $\\alpha$ 求导即得 $\\bar a_s$；巨正则把 $\\sum a_s=N$ 的约束解除"},
+      {a:"熵的量子残余", b:"经典极限的两个条件", why:"非简并＋准连续同时满足时，除熵差 $-k_B\\ln N!$ 外一切与经典相同"},
+      {a:"态密度 $D(\\epsilon)d\\epsilon=g", b:"玻色积分", why:"$\\epsilon^{1/2}$ 的态密度与玻色因子相乘，积分恰好化成 $g_{5/2},g_{3/2}$"},
+      {a:"$\\epsilon^{1/2}$ 因子使 $\\epsilon=0$ 的态被积分\"吞掉\"", b:"基态视角：$\\bar a_l$ 随 $\\epsilon_l$ 单调下降", why:"积分丢掉了基态的宏观占据 ⇒ 必须把 $\\epsilon=0$ 单独分离出来"},
+      {a:"$y$ 视角的矛盾：", b:"临界温度与凝聚分数", why:"$y$ 可超过 $g_{3/2}$ 的上界 $\\zeta(3/2)$ ⇒ 超出部分只能进基态，等式在 $T_c$ 处定出临界温度"},
+      {a:"化学势的符号：玻色气体必须", b:"$y$ 视角的矛盾：", why:"$\\mu$ 被钉在 $\\le0$、到 $T_c$ 冻结于 0 ⇒ 激发态粒子数不能再随 $T$ 增长"},
+      {a:"激发态饱和：", b:"$n_0(T)=n", why:"$N_{ex}\\propto T^{3/2}$ 而 $N$ 固定 ⇒ 差值给出凝聚分数 $1-(T/T_c)^{3/2}$"},
+      {a:"$U=0.770", b:"相变级数：", why:"同一个 $g_{5/2}(1)$ 积分给出 $U\\propto T^{5/2}$，求导即得 $C_V\\propto T^{3/2}$ 与其导数跃变"}
+    ],
+    before:[{id:"l3c", txt:"$\\Xi$、$J=-k_BT\\ln\\Xi$、$\\bar N=-\\partial_\\alpha\\ln\\Xi$ 等全部公式直接沿用"}, {id:"l3b", txt:"$N!$ 与相格 $h^{3N}$ 在本章由全同性原理\"第一性\"给出"}, {id:"l2", txt:"最概然分布＝系综平均（宏观极大值的尖锐性）"}, {id:"l1b", txt:"第三定律的低温比热幂次在此得到微观解释"}],
+    after:[{id:"l6c", txt:"$n_0$ 是序参量的原型：$T_c$ 下连续出现、幂律 $1-(T/T_c)^{3/2}$"}, {id:"l6c", txt:"Ehrenfest 分类、$C_V$ 跃变直接对接朗道理论"}, {id:"l4b", txt:"$p$–$v$ 水平段与潜热＝一级相变几何，与 vdW 逐点相似"}, {id:"l4c", txt:"相变只能在热力学极限出现的又一实例（$z\\to1,\\ \\mu\\to0$）"}, {id:"l6e", txt:"$D(\\epsilon)$ 的幂次决定所有临界幂律，与第六章维度依赖同源"}],
+    note:"讲义点明两件事：BEC 完全由统计关联（而非力学相互作用）驱动；并澄清\"单一巨配分函数可以同时描述多相\"，回应了历史上对统计方法能否描述相变的疑虑。"
+  },
+  {
+    id:"l6a", ch:6, chName:"第六章 二级相变的平均场理论", short:"I. 微观模型：Ising 与晶格模型", title:"第六章 二级相变的平均场理论 I — 微观模型：交换作用、Ising 与晶格气",
+    file:"lecture6-phase transition part1.pdf", pages:10,
+    cover:"相变与奇异性的关系、交换作用的量子起源、Ising/XY/海森堡/SK 模型、序参量与自发磁化、简并度计数与晶格气、三种模型的相互映射、五种求解方法与本课程的范围",
+    summary:"本章全章只干一件事：以 Ising 模型为样本，说明\"相互作用＋大量自由度\"如何产生奇异性。part1 建立模型并交代一件事——$Z$ 有 $2^N$ 项，近独立子系的一切技巧在此失效，因此必须引入近似方法（平均场）或严格的图展开。",
+    key:["★ 无相互作用 ⇒ 热力学函数光滑；有不可移除的相互作用 ⇒ 奇异性＝相变", "◇ 交换作用 $E_{ex}=-J\\vec S_1\\cdot\\vec S_2$ 是纯量子效应（全同＋库仑）", "= Ising 模型 $H=-J\\sum_{\\langle ij\\rangle}\\sigma_i\\sigma_j-\\mu H_{ext}\\sum_i\\sigma_i$", "◇ 晶格气 ↔ 铁磁 ↔ 二元合金的映射 ⇒ 普适性的雏形"],
+    tree: root("第六章 二级相变的平均场理论 I",[
+        key("目录全貌（讲义开篇列出）：VI.A 微观模型｜VI.B Ising 平均场｜VI.C 最大熵与 Bragg–Williams｜VI.D Landau 理论｜VI.E 临界点涨落与关联｜VI.F 严格解·高温展开·对偶｜VI.G 连续对称性｜VI.H 对称性破缺与普适性"),
+        sec("VI.A 微观模型",[
+          key("两类现象的对照：无相互作用（比热、黑体辐射、BE 凝聚）⇒ 热力学函数光滑；相互作用不可\"移除\" ⇒ 奇异性＝相变"),
+          th("自旋模型的微观机制：交换作用",[
+            p("全同费米子要求 $\\Psi=\\phi\\otimes\\chi$ 反对称：三重态 $S=1$ 配空间反对称、单态 $S=0$ 配空间对称"),
+            eq("$\\langle r_1r_2\\rangle=\\langle r\\rangle_a\\langle r\\rangle_b\\pm|\\langle r\\rangle_{ab}|^2\\Rightarrow$ 库仑能 $K\\mp J$"),
+            key("$E_{ex}=-J\\,\\vec S_1\\cdot\\vec S_2$：$J>0$ 铁磁、$J<0$ 反铁磁",[
+              p("纯量子效应、无经典对应；随距离指数衰减 ⇒ 只保留近邻相互作用")
+            ])
+          ]),
+          eg("Ising 模型（Lenz 1920 提出、Ising 1925 求解一维）",[
+            eq("$H=-J\\sum_{\\langle ij\\rangle}\\sigma_i\\sigma_j-\\mu H_{\\rm ext}\\sum_i\\sigma_i,\\qquad \\sigma_i=\\pm1$"),
+            key("一维在 $T\\ne0$ 无相变（严格解见 part4）")
+          ]),
+          eg("连续对称性的兄弟模型",[
+            eq("XY／海森堡／$O(n)$：$H=-J\\sum_{\\langle ij\\rangle}\\vec S_i\\cdot\\vec S_j$，$\\vec S_i$ 限制在单位圆/单位球/$(S_i^a)^2$ 之和为 1"),
+            p("XY ＝ 非线性 $O(2)$ 模型，海森堡 ＝ $O(3)$；另有量子版本")
+          ]),
+          op("SK 自旋玻璃【扩展】：$H=-\\sum_{ij}J_{ij}\\sigma_i\\sigma_j$，$\\langle J_{ij}\\rangle=0,\\ \\langle J_{ij}J_{kl}\\rangle=J^2\\delta_{ik}\\delta_{jl}$；Parisi 解（2021 年诺贝尔奖），用于神经网络"),
+          key("序参量与自发磁化",[
+            eq("$M\\propto\\langle\\sigma_i\\rangle$；$H_{ext}=0$ 而 $m\\ne0$ 即铁磁相，临界温度＝居里温度"),
+            p("$J>0$ 只是\"可能\"铁磁，还需考察统计涨落能否维持长程序")
+          ]),
+          sec("VI.A-B 其他晶格模型与简并度计数",[
+            eq("$N_++N_-=N,\\ qN_+=2N_{++}+N_{+-},\\ qN_-=2N_{--}+N_{+-}$"),
+            eq("$H_N=-J\\big(\\tfrac12qN-2qN_++4N_{++}\\big)-H(2N_+-N)$ ⇒ 问题化为求 $g(N_+,N_{++})$"),
+            eg("晶格气模型（李、杨 1952）：$E=-\\epsilon_0N_{aa}$，$\\Xi=\\sum_{N_a}z^{N_a}\\sum' g(N_a,N_{aa})e^{\\beta\\epsilon_0N_{aa}}$"),
+            th("对应态（模型之间的映射）",[
+              key("晶格气 ↔ 铁磁体 ↔ 二元合金：$N_a\\leftrightarrow N_+$、$\\epsilon_0\\leftrightarrow4J$、$z\\leftrightarrow e^{-2\\beta(qJ-H)}$、$\\bar N_a/N\\leftrightarrow\\tfrac12(\\bar m+1)$"),
+              p("同一数学结构 ⇒ 普适性思想的雏形")
+            ]),
+            key("相变是合作现象：模型虽简化，但保留了\"长程序可被逐点传递\"的本质")
+          ]),
+          sec("VI.A-C 求解方法",[
+            eq("$Z=\\sum_{\\{\\sigma_i\\}}e^{-\\beta H(\\{\\sigma_i\\})}$ 共 $2^N$ 项 ⇒ 禁用近独立子系理论，必须使用普遍系综"),
+            th("五条路线",[
+              key("① 平均场：图像清晰，但低维定量甚至定性常错"),
+              key("② 高温展开：远离临界点正确，临界点处级数发散"),
+              p("③ 重整化群：只在临界区有效，需配合 $\\epsilon$-展开或数值"),
+              p("④ Monte Carlo；⑤ 严格解"),
+              op("讲义注明：方法 ③④ 本课程不涉及")
+            ]),
+            th("Onsager 1944：二维 Ising 是第一个非平庸严格解",[
+              p("可解性源于二维共形群的无穷对称性")
+            ]),
+            key("平均场与维度无关；只有高维时它才定量正确")
+          ])
+        ])
+      ]),
+    chains:[
+      {a:"全同费米子要求", b:"$E_{ex}=-J\\,\\vec S_1\\cdot\\vec S_2$", why:"波函数反对称使自旋三重态/单态对应不同的空间关联，库仑能因此分裂为 $K\\mp J$，形式上等同于自旋耦合"},
+      {a:"随距离指数衰减 ⇒ 只保留近邻相互作用", b:"Ising 模型（Lenz 1920 提出、Ising 1925 求解一维）", why:"交换作用只作用于近邻，自旋取两个投影 ⇒ 得到最简的格点模型"},
+      {a:"$J>0$ 只是\"可能\"铁磁，还需考察统计涨落能否维持长程序", b:"序参量与自发磁化", why:"是否真的出现 $m\\ne0$ 是统计问题，须由配分函数判断"},
+      {a:"$Z=\\sum_{\\{\\sigma_i\\}}e^", b:"五条路线", why:"$2^N$ 项使近独立技巧失效 ⇒ 只能取近似（平均场）、图展开（高温）、或严格解"},
+      {a:"晶格气 ↔ 铁磁体 ↔ 二元合金：", b:"平均场与维度无关；只有高维时它才定量正确", why:"模型间的映射说明临界行为只依赖对称性与维数，不依赖微观细节"},
+      {a:"两类现象的对照", b:"一维在", why:"一维虽有相互作用仍无相变 ⇒ 奇异性还需维度（涨落不能破坏长程序），part4 严格解给出"}
+    ],
+    before:[{id:"l3c", txt:"$Z=\\sum e^{-\\beta H}$ 与吉布斯系综形式完全一致"}, {id:"l3b", txt:"二能级系统的 $\\tanh$ 型结果（part1 的自旋模型是其单点极限）"}, {id:"l5", txt:"BEC 作为\"无相互作用也相变\"的反例，界定了本章的讨论范围"}, {id:"l4b", txt:"气液临界指数与对应态定律：本章将给出同一组数字"}],
+    after:[{id:"l6b", txt:"平均场近似：把 $2^N$ 项问题降为单点自旋"}, {id:"l6c", txt:"Bragg–Williams 用组合熵重做同一件事"}, {id:"l6d", txt:"涨落与关联解释平均场何时失效"}, {id:"l6e", txt:"高温展开与对偶给出二维精确 $T_c$，检验平均场"}],
+    note:"讲义在本讲明确交代方法论立场：模型是\"最简但保留本质\"的（合作现象），并坦率指出平均场在低维会出错——这个错误本身就是后两节（涨落、严格解）存在的理由。"
+  },
+  {
+    id:"l6b", ch:6, chName:"第六章 二级相变的平均场理论", short:"II. Ising 模型的平均场近似", title:"第六章 二级相变的平均场理论 II — Weiss 分子场、自洽方程与全套平均场临界指数",
+    file:"lecture6-phase transition part2.pdf", pages:7,
+    cover:"Gibbs 系综回顾与居里定律、Weiss 分子场与解耦推导、自洽方程 $m=\\tanh[\\beta(qJm+\\mathcal H)]$、分岔与 $T_c=qJ/k_B$、指数 $\\beta=1/2,\\delta=3,\\gamma=1,\\alpha=0$、随机混合等价与短程序缺失",
+    summary:"本讲只做一次近似：把近邻自旋换成它的平均值。代价是丢掉关联，好处是一切都能解析算出，并第一次给出\"临界指数\"这套语言。讲义结尾点题：平均场自由能正是朗道假设的形式，所以朗道二级相变理论 ≡ 平均场。",
+    key:["★ Weiss 分子场 $\\mathcal H_{eff}=qJm$ 与解耦近似", "= 自洽方程 $m=\\tanh[\\beta(qJm+\\mathcal H)]$", "◇ $k_BT_c=qJ$；平均场 $T_c$ 与维度无关（这是它的错误）", "★ $\\beta=\\tfrac12,\\ \\gamma=\\gamma'=1,\\ \\delta=3,\\ \\alpha=0$；$C$ 有限跃变"],
+    tree: root("第六章 平均场近似 VI.B",[
+        sec("1. Gibbs 系综理论回顾（复习第三章）",[
+          p("无相互作用时 $E=0$，$p_{\\{\\sigma_i\\}}=Z^{-1}e^{\\beta h\\sum\\sigma_i}$，$h=\\mu_0H_{ext}$"),
+          eq("$Z(N,T,H)=[2\\cosh(\\beta h)]^N,\\quad G=-k_BT\\ln Z=-Nk_BT\\ln[2\\cosh(\\beta h)]$"),
+          eq("$M=-\\partial G/\\partial H=N\\mu_0\\tanh(\\beta\\mu_0H)$"),
+          key("居里定律 $\\chi=(\\partial M/\\partial H)_{H=0}=\\dfrac{N\\mu_0^2}{k_BT}$"),
+          eq("$H_{enthalpy}=-\\mathcal HM,\\quad C_{\\mathcal H}=-\\mathcal H\\,\\partial M/\\partial T$")
+        ]),
+        sec("2. 平均场近似",[
+          key("出发点：单点能 $H_i=-\\sigma_i\\big(\\mathcal H+J\\sum_{\\langle ij\\rangle}\\sigma_j\\big)$，括号内是涨落的等效分子场"),
+          eq("Weiss 分子场 $\\mathcal H_{eff}=\\big\\langle J\\sum_{\\langle ij\\rangle}\\sigma_j\\big\\rangle=qJm$",[
+            p("$q$ 为配位数：三维立方 $q=6$、二维三角 $q=6$；周期性边界 ⇒ 所有格点等价")
+          ]),
+          th("解耦的严格推导",[
+            key("$\\sigma_i\\sigma_j\\approx\\langle\\sigma_i\\rangle\\sigma_j+\\langle\\sigma_j\\rangle\\sigma_i-\\langle\\sigma_i\\rangle\\langle\\sigma_j\\rangle$（丢掉涨落×涨落项）"),
+            eq("$H_{mf}=-\\sum_i(Jqm+\\mathcal H)\\sigma_i+\\dfrac{JNq}2m^2$"),
+            p("常数项 $H_0$ 在求 $m$ 时可丢弃，但在自由能与比热中必须保留")
+          ]),
+          eq("$Z=\\big(2\\cosh[\\beta(\\mathcal H+\\mathcal H_{eff})]\\big)^N,\\quad m=\\dfrac1{N\\beta}\\partial_{\\mathcal H}\\ln Z=\\tanh[\\beta(\\mathcal H+\\mathcal H_{eff})]$"),
+          th("自洽方程（本讲的心脏）",[
+            key("$m=\\tanh[\\beta(qJm+\\mathcal H)]$ ⇔ $\\mathcal H_{eff}=qJ\\tanh[\\beta(\\mathcal H+\\mathcal H_{eff})]$"),
+            eq("零场下 $m=\\tanh(\\beta qJm)$"),
+            key("分岔：$qJ/k_BT<1$ 只有零解；$>1$ 出现一对反号非零解且自由能更低"),
+            p("$H\\to0^+$ 选定其中一个解 ⇒ 自发破缺 $Z_2$（上下）对称性")
+          ]),
+          key("临界温度 $k_BT_c=qJ$",[
+            op("平均场给出的 $T_c$ 与维度无关 ⇒ 三维立方与二维三角得到同一 $T_c$，讲义明确标注这是错误的")
+          ]),
+          sec("临界指数（平均场全套）",[
+            eq("汪志诚式展开：$\\tanh(\\beta\\mathcal H)=\\dfrac{m-\\tanh\\beta qJm}{1-m\\tanh\\beta qJm}\\approx m[(1-T_c/T)+m^2(T_c/T-(T_c/T)^2+\\tfrac13(T_c/T)^3)]$"),
+            key("$\\beta=\\tfrac12$：$m^2\\approx3(T_c-T)/T$，即 $m\\sim(1-T/T_c)^{1/2}$；$T\\to0$：$m\\sim1-2e^{-2T_c/T}$"),
+            eq("$\\delta=3$：$T=T_c$ 时 $m\\approx\\mathcal H^{1/3}$（讲义注明数值与实验有偏差）"),
+            th("$\\gamma=\\gamma'=1$（Curie–Weiss 型）",[
+              eq("$T>T_c:\\ \\chi\\sim1/[k_B(T-T_c)]$；$T<T_c:\\ \\chi=1/[2k_B(T_c-T)]$；$T\\to0:\\ \\chi\\approx(4/k_BT)e^{-2T_c/T}\\to0$")
+            ]),
+            eq("$\\alpha=0$：$\\langle H_{mf}\\rangle=-\\dfrac{NJq}2m^2$ ⇒ $C_{\\mathcal H}(T_c^-)=\\tfrac32Nk_B$、$C_{\\mathcal H}(T_c^+)=0$：不发散但有有限跃变（平均场的标志）"),
+            eq("位形熵 $S_{\\mathcal H=0}(T_c)=Nk_B\\displaystyle\\int_0^1\\tanh^{-1}m\\,dm=Nk_B\\ln2$",[
+              p("$T>T_c$ 时 $2^N$ 个态等概率 ⇒ 无位形序")
+            ])
+          ]),
+          th("与随机混合的等价（平均场的隐含义）",[
+            key("$\\bar N_{++}/(qN/2)=(\\bar N_+/N)^2$：近邻对完全随机 ⇒ 平均场中没有短程序"),
+            op("修正办法：Bethe／准化学近似（讲义留作作业）")
+          ]),
+          key("结论：平均场自由能正是朗道假设的形式 ⇒ 朗道二级相变理论 ≡ 平均场；全部指数与气液临界指数相同")
+        ])
+      ]),
+    chains:[
+      {a:"无相互作用时", b:"居里定律", why:"单点配分函数 $2\\cosh\\beta h$ 在小场下线性化即得 $\\chi\\propto1/T$"},
+      {a:"Weiss 分子场", b:"解耦的严格推导", why:"把 $\\sigma_i\\sigma_j$ 写成平均值加涨落并略去涨落乘积项，正是 $\\mathcal H_{eff}=qJm$ 的来源"},
+      {a:"解耦的严格推导", b:"自洽方程（本讲的心脏）", why:"解耦后系统成为\"外场中的独立自旋\"，$m=\\tanh$ 与 $\\mathcal H_{eff}=qJm$ 联立即自洽"},
+      {a:"分岔：", b:"临界温度 $k_BT_c=qJ$", why:"$m=\\tanh(\\beta qJm)$ 在 $m\\to0$ 处斜率 $\\beta qJ=1$ 即分岔条件"},
+      {a:"自洽方程（本讲的心脏）", b:"$\\beta=\\tfrac12$", why:"对 $\\tanh$ 保留到三次项，$m^2$ 与 $T_c-T$ 成正比 ⇒ 序参量指数 $1/2$"},
+      {a:"自洽方程（本讲的心脏）", b:"\\gamma=\\gamma'=1$（Curie–Weiss 型）", why:"自洽式对外场求导得 $\\chi=\\chi_0/[1-\\beta qJ(1-m^2)]$，在 $T_c$ 两侧都是一次极点"},
+      {a:"$T=T_c$ 时", b:"$\\delta=3$", why:"$T=T_c$ 时自洽方程只剩 $m\\propto m^3$ 与 $\\mathcal H$ 平衡 ⇒ $m\\propto\\mathcal H^{1/3}$"},
+      {a:"位形熵", b:"$\\alpha=0$", why:"$\\langle H\\rangle\\propto-m^2$ 对 $T$ 求导 ⇒ 比热在 $T_c$ 两侧为常数，只有跃变无发散"},
+      {a:"$\\bar N_{++}/(qN/2)=(\\bar N_+/N)^2$", b:"分岔：", why:"随机混合假设与\"忽略涨落关联\"是同一件事的两种说法，也是低维失败的根源"}
+    ],
+    before:[{id:"l3c", txt:"\"$Z=[2\\cosh]^N$、$M=-\\partial G/\\partial H$\"逐字来自第三章 Gibbs 系综"}, {id:"l1b", txt:"$C$ 的跃变与 Ehrenfest 分类、稳定性条件（$C>0$）"}, {id:"l4b", txt:"范德瓦尔斯气体给出完全相同的一组指数"}],
+    after:[{id:"l6c", txt:"Bragg–Williams 用混合熵变分重做本讲，并证明二者等价"}, {id:"l6c", txt:"把 $F(m)$ 展开即得朗道自由能 ⇒ 平均场＝朗道"}, {id:"l6d", txt:"被丢掉的\"涨落×涨落\"项正是 Landau–Ginzburg 研究的对象"}, {id:"l6e", txt:"二维精确 $T_c$（$\\sinh2\\beta_cJ=1$）与 $\\beta=1/8$ 用来检验平均场"}],
+    note:"讲义批注风格坦率：平均场 $T_c$ 与维度无关\"实际错误\"、$\\delta=3$ \"数值与实验有偏差\"、$T_c$ 的定量错误\"只因近似\"。这些自我否定正是本章后两节的动机。"
+  },
+  {
+    id:"l6c", ch:6, chName:"第六章 二级相变的平均场理论", short:"III. 最大熵、Bragg–Williams 与 Landau 理论", title:"第六章 二级相变的平均场理论 III — 最大熵原理、Bragg–Williams 近似与 Landau 理论",
+    file:"lecture6-phase transition part3.pdf", pages:9,
+    cover:"最大熵原理导出正则系综、Bragg–Williams 自由能与自洽方程、Landau 理论的基本假设与临界指数、Ehrenfest 分类、序参量与对称性自发破缺、一级相变与三临界点、普适性",
+    summary:"本讲把视角从\"具体模型\"抬到\"一般原理\"：先说明最大熵与吉布斯系综等价，再用组合熵重做平均场（Bragg–Williams），最后抽象出朗道理论——只依赖对称性与解析性两条假设，就推出与模型细节无关的一整套临界指数。",
+    key:["◇ 最大熵 ⇒ $p_i\\propto e^{-\\beta f_i}$：与吉布斯系综等价的框架", "★ Bragg–Williams 自由能 $F(m)$ 与自洽方程同 VI.B 全同", "★ Landau 假设 $f=f_0+\\tfrac a2M^2+\\tfrac b4M^4$，$a=a_0t$", "◇ 一级相变需 $b<0,c>0$；三临界点 $a=b=0$"],
+    tree: root("第六章 最大熵 / Bragg–Williams / Landau VI.C–VI.D",[
+        sec("VI.C-1 最大熵原理（讲义标注：选讲）",[
+          key("定位：系综理论是统计物理的基础框架，而最大熵原理是它的等价框架"),
+          eq("$S=-k_B\\sum_{i=1}^{\\Omega}p_i\\ln p_i$，约束 $\\sum p_i=1,\\ \\sum p_if_i=f$"),
+          th("拉格朗日乘子变分",[
+            eq("$p_i=e^{\\lambda-1-\\beta f_i},\\quad Z(\\beta)=\\sum_ie^{-\\beta f_i}=e^{1-\\lambda},\\quad f=-\\partial_\\beta\\ln Z$"),
+            key("取 $f_i=E_i$ 即正则系综，$\\beta=1/k_BT$"),
+            eq("自由能说法：$\\min_i\\,Tk_B\\sum\\{\\beta p_iE_i+p_i\\ln p_i-\\lambda p_i\\}\\Rightarrow p_i=e^{-\\beta E_i}/Z$"),
+            op("巨正则需再加 $\\langle N\\rangle$ 约束（讲义要求课下证明）"),
+            key("无约束时 $p_i=1/\\Omega$ ⇒ 正是微正则的等几率原理：三条系综在一次变分中同时出现")
+          ])
+        ]),
+        sec("VI.C-2 Bragg–Williams 近似——再看平均场",[
+          key("统计独立假设：$p_\\pm=(1\\pm m)/2$，$m=\\langle\\sigma_i\\rangle=p_+-p_-$，各 $\\{\\sigma_i\\}$ 互不关联 ⇒ 系统变成近独立顺磁系"),
+          th("Bragg–Williams 自由能",[
+            eq("$F=-\\dfrac{NqJ}2m^2-N\\mathcal Hm+Nk_BT\\Big[\\dfrac{1+m}2\\ln\\dfrac{1+m}2+\\dfrac{1-m}2\\ln\\dfrac{1-m}2\\Big]$"),
+            p("第一项＝用 $p_\\pm$ 加权的 $\\langle E\\rangle$；第二项 Zeeman 能；第三项＝混合熵，$S=k_B\\ln\\dfrac{N!}{N_+!N_-!}$"),
+            op("讲义排版中出现的 $\\tfrac{1+m^2}2$ 等应为 $\\big(\\tfrac{1\\pm m}2\\big)$［存疑］")
+          ]),
+          key("极小条件 $-qJm-\\mathcal H+k_BT\\tanh^{-1}m=0\\iff m=\\tanh[\\beta(qJm+\\mathcal H)]$ ⇒ 与 VI.B 自洽方程完全相同"),
+          eq("$\\mathcal H=0$ ⇒ $T_c=qJ/k_B$，且所有临界指数与平均场一致"),
+          th("Landau 展开：把 BW 自由能按 $m$ 展开",[
+            eq("$\\dfrac F N=-k_BT\\ln2+\\dfrac{m^2}2(k_BT-qJ)+\\dfrac{k_BT}{12}m^4+\\cdots$"),
+            p("用到 $\\tfrac{1+m}2\\ln\\tfrac{1+m}2+\\tfrac{1-m}2\\ln\\tfrac{1-m}2\\approx-\\ln2+\\tfrac{m^2}2+\\tfrac{m^4}{12}+\\tfrac{m^6}{30}$"),
+            key("二次项系数在 $T_c$ 变号、其余系数恒正 ⇒ 直接印证朗道的基本假设：平均场 ≡ 朗道")
+          ])
+        ]),
+        sec("VI.D 相变的 Landau 理论（唯象，本质即平均场）",[
+          th("Ehrenfest 分类",[
+            eq("$d\\mu=-sdT+vdp$"),
+            key("一级相变：$\\mu_\\alpha=\\mu_\\beta$ 但 $\\Delta s,\\Delta v\\ne0$（有潜热、有体积突跳）"),
+            key("二级相变：$s,v$ 连续而二阶导数（$C,\\kappa,\\chi$）跃变"),
+            p("实际二级相变的二阶导数是发散的 ⇒ 更常称\"连续相变\"")
+          ]),
+          key("两个核心概念",[
+            key("序参量：可为标量、矢量、张量或复数（铁磁 $m$、超导 $\\psi$）"),
+            key("对称性自发破缺：高温相保留哈密顿量的对称性，低温相不保留"),
+            th("Ising 的 $Z_2$：$H(h=0)=-J\\sum\\sigma_i\\sigma_j$ 在 $\\sigma_i\\to-\\sigma_i$ 下不变 ⇒ $m\\ne0$ 即自发破缺"),
+            p("一级相变也可以引入序参量，但序参量可不连续跃变")
+          ]),
+          eq("临界指数定义（$t=(T-T_c)/T_c$）：$\\xi\\sim|t|^{-\\nu},\\ C_v\\sim|t|^{-\\alpha},\\ \\chi\\sim|t|^{-\\gamma},\\ m\\sim(-t)^{\\beta},\\ M(t=0,H)\\sim H^{1/\\delta}$"),
+          th("Landau 基本假设",[
+            key("i. $f=f_0+\\dfrac a2M^2+\\dfrac b4M^4$；ii. $f(M)=f(-M)$（$Z_2$ 对称）；iii. 真实态取极小；iv. $a=a_0t$（$a_0>0$）、$b>0$ 视为常数"),
+            eq("$M_0=\\sqrt{-a/b}\\propto(-t)^{1/2}$（$\\beta=\\tfrac12$）"),
+            eq("$\\chi=\\partial M/\\partial H=|t|^{-1}$（$\\gamma=1$）；$t=0$ 时 $M=H^{1/3}$（$\\delta=3$）"),
+            eq("$\\Delta C_H=\\dfrac{a_0^2}{2b}T_c$（$\\alpha=0$）；$S=S_0-a_0M^2$ 连续 ⇒ 无潜热")
+          ]),
+          eg("临界乳光",[
+            p("$T\\to T_c$ 时 $\\kappa_T\\to\\infty$、密度涨落发散、界面消失"),
+            eq("$\\mathrm{SF_6}$ 升温至 44.15 ℃ 突然不透光，再升温又重透明；de la Tour 1822 年首次观察临界现象")
+          ]),
+          th("一级相变的 Landau 理论",[
+            eq("$f=f_0+\\dfrac a2M^2+\\dfrac b4M^4+\\dfrac c6M^6$，$b<0,\\ c>0$"),
+            key("$\\partial_Mf|_{M_0}=0$ 且 $f(M_0)=f(0)$（两阱同深）⇒ $M_0^2=-\\dfrac{3b}{4c},\\ a(T_c^{(1)})=\\dfrac{3b^2}{16c}>0$"),
+            p("序参量有限跃变；一级相变发生在\"二级would-be\"温度之上")
+          ]),
+          op("三临界点【选读，Kerson Huang】：存在第二参量 $\\Delta$ 使 $a(\\Delta,T)=b(\\Delta,T)=0$（不要与水三相点混淆）",[
+            eq("$\\beta_t=\\tfrac14,\\ \\beta_u=\\tfrac12,\\ \\gamma_t=1,\\ \\gamma_u=2,\\ \\alpha_t=\\tfrac12,\\ \\alpha_u=-1$"),
+            key("一、二级相变曲线在 $\\Delta$–$T$ 平面光滑衔接（斜率同为 $-a_T/a_\\Delta$）；各组指数均满足 Rushbrooke 关系 $\\alpha+2\\beta+\\gamma=2$")
+          ]),
+          key("普适性（universality）",[
+            key("不同体系给出相同临界指数 ⇒ 普适类"),
+            eq("范氏气体气液临界（序参量 $\\rho_l-\\rho_g$）同样是 $\\beta=\\tfrac12,\\delta=3,\\gamma=1,\\alpha=0$"),
+            op("局限：Landau/平均场只给定性或定量偏低的预言；精确值需重整化群、Monte Carlo")
+          ])
+        ])
+      ]),
+    chains:[
+      {a:"拉格朗日乘子变分", b:"无约束时", why:"约束越少分布越均匀：只有归一化约束时 $p_i$ 全相等 ⇒ 微正则"},
+      {a:"统计独立假设：", b:"Bragg–Williams 自由能", why:"独立概率 $p_\\pm$ 使能量与熵都只依赖 $m$ ⇒ $F$ 成为单变量函数"},
+      {a:"Bragg–Williams 自由能", b:"极小条件", why:"$\\partial F/\\partial m=0$ 展开即得 $\\tanh^{-1}m=\\beta(qJm+\\mathcal H)$"},
+      {a:"Landau 展开：把 BW 自由能按", b:"Landau 基本假设", why:"二次系数 $\\propto(T-T_c)$ 变号、四次系数恒正 ⇒ 朗道的两条假设由 BW 显式给出"},
+      {a:"Ehrenfest 分类", b:"两个核心概念", why:"连续/不连续的分类引出\"什么量在变\"——即序参量与它的对称性"},
+      {a:"Landau 基本假设", b:"一级相变的 Landau 理论", why:"若四次项系数 $b<0$，必须由六次项稳定 ⇒ 出现双阱同深的跳跃"},
+      {a:"一级相变的 Landau 理论", b:"三临界点【选读，Kerson Huang】", why:"再引入一个参量使 $a=b=0$，一、二级曲线的分界点即三临界点"},
+      {a:"$M_0=\\sqrt{-a/b}\\propto(-t)^{1/2}$", b:"临界乳光", why:"$a\\to0$ 使 $\\chi\\propto1/a$ 发散，流体中 $\\chi\\leftrightarrow\\kappa_T$ ⇒ 密度涨落发散"}
+    ],
+    before:[{id:"l6b", txt:"BW 近似与 Weiss 平均场给出同一自洽方程与同一组指数"}, {id:"l3b", txt:"最大熵与玻尔兹曼熵 $S=k_B\\langle-\\ln\\rho\\rangle$ 同源"}, {id:"l3c", txt:"$f_i=E_i$ 变分结果就是正则分布；加 $\\langle N\\rangle$ 约束即巨正则"}, {id:"l4b", txt:"气液临界指数与普适类：范氏气体与铁磁同属一类"}, {id:"l1b", txt:"$d\\mu=-sdT+vdp$、$G$ 极小与稳定性条件是朗道假设的热力学依据"}],
+    after:[{id:"l6d", txt:"把 $m$ 允许随空间变化 ⇒ Landau–Ginzburg 泛函与关联长度"}, {id:"l6e", txt:"$\\alpha=0,\\delta=3$ 与 Onsager 的 $\\alpha=0(\\log),\\delta=15$ 对照 ⇒ 涨落修正"}, {id:"l5", txt:"BEC 的 $n_0$ 与三级相变：Ehrenfest 分类的另一实例"}],
+    note:"讲义在本讲两次强调等价性：\"一种等价的统计物理框架是最大熵原理\"，以及 BW 的\"统计独立\"、VI.B 的\"忽略关联项\"、\"随机混合\"三点互相印证。"
+  },
+  {
+    id:"l6d", ch:6, chName:"第六章 二级相变的平均场理论", short:"IV. 涨落与关联、一维严格解", title:"第六章 二级相变的平均场理论 IV — Landau–Ginzburg 涨落、关联长度与一维 Ising 严格解",
+    file:"lecture6-phase transition part4.pdf", pages:9,
+    cover:"Landau–Ginzburg 自由能泛函、序参量涨落的对角化与高斯权重、关联函数 $C(r)$ 与关联长度 $\\xi$、$\\nu=1/2$ 与 $\\eta=0$、涨落–响应关系、平均场为何失效、转移矩阵求一维 Ising 严格解",
+    summary:"平均场把 $m$ 当常数，本讲允许它随空间变化并统计地处理这些涨落。结果是：关联函数呈 Ornstein–Zernike 型 $e^{-r/\\xi}/r$，$\\xi\\sim|T-T_c|^{-1/2}$ 在临界点发散——发散既是\"平均场失效\"的原因，也是\"普适性\"的原因。附带的收益是一维 Ising 的严格解：$T_c=0$，说明平均场连定性都会错。",
+    key:["★ $F[m]=\\int d^3r[f_0+\\tfrac a2m^2+\\tfrac b4m^4+\\tfrac d2(\\nabla m)^2]$", "◇ $\\langle|\\tilde m_k|^2\\rangle=\\dfrac{Vk_BT}{a+dk^2}$ ⇒ $C(r)=\\dfrac{k_BT}{4\\pi d}\\dfrac{e^{-r/\\xi}}r$", "★ $\\xi=\\sqrt{d/a}\\sim|T-T_c|^{-1/2}$（$\\nu=\\tfrac12$），$T=T_c$ 时 $C\\sim r^{-1}$（$\\eta=0$）", "◇ 一维：$m=\\tanh$ 型解给出 $T_c=0$，$\\xi^{-1}=\\ln(\\lambda_+/\\lambda_-)$"],
+    tree: root("第六章 涨落与关联 VI.E / 一维严格解 VI.F.1",[
+        sec("VI.E-1 平均场下的关联函数",[
+          key("动机：朗道理论假设序参量均匀，但涨落并不均匀 ⇒ 需要推广到 $m\\to m(\\vec r)$"),
+          op("讲义注明：严格说\"朗道–金兹堡\"是描述超导体与外电磁场相互作用的模型，此处只是借用其精神"),
+          eq("Landau–Ginzburg 自由能泛函 $F[m]=\\displaystyle\\int d^3r\\big[f_0+\\dfrac{a(T)}2m^2+\\dfrac{b(T)}4m^4+\\dfrac{d(T)}2(\\nabla m)^2+\\cdots\\big]$",[
+            p("梯度项＝序参量不均匀的代价；$d>0$"),
+            key("连续介质前提：元胞\"宏观小微观大\"，$m(\\vec r)$ 的特征尺度远大于格距 ⇒ 临界点因 $\\xi\\to\\infty$ 而自洽")
+          ]),
+          eq("均匀解 $\\bar m^2=-a/b\\ (T<T_c)$ 或 $0\\ (T>T_c)$，$a=a_0(T-T_c)$"),
+          key("关联函数 $C(\\vec r_1,\\vec r_2)=\\langle\\delta m(\\vec r_1)\\delta m(\\vec r_2)\\rangle$；平移不变 ⇒ 只依赖 $\\vec r_1-\\vec r_2$"),
+          th("对角化与高斯权重",[
+            eq("$C(\\vec r)=\\dfrac1{V^2}\\sum_k\\langle|\\tilde m_k|^2\\rangle e^{i\\vec k\\cdot\\vec r}$ ⇒ \"关联 ⇔ 涨落\""),
+            eq("准热力学权重 $W\\propto e^{-\\Delta F/k_BT}$，$\\Delta F=\\dfrac1{2V}\\sum_k(a+dk^2)|\\tilde m_k|^2$ ⇒ 各模独立高斯"),
+            key("$\\langle|\\tilde m_k|^2\\rangle=\\dfrac{Vk_BT}{a+dk^2}$（Ornstein–Zernike 型；讲义未用此名）")
+          ]),
+          th("实空间结果（围道积分，类比屏蔽库仑势/Jackson 的亥姆霍兹方程）",[
+            eq("$C(\\vec r)=\\dfrac{k_BT}{4\\pi d}\\dfrac{e^{-r/\\xi}}{r},\\qquad \\xi=\\sqrt{d/a}$"),
+            key("$\\xi\\sim|T-T_c|^{-\\nu}$，平均场给 $\\nu=\\tfrac12$"),
+            eq("$T=T_c$（$a=0$）时 $C(r)\\sim r^{-D+2-\\eta}$，平均场给 $\\eta=0$，实验值 $\\sim0.1$"),
+            p("破缺相只需把 $a\\to2|a|$（$m^2$ 展开后二次项翻倍）")
+          ])
+        ]),
+        sec("VI.E-2 涨落–响应",[
+          eq("$\\kappa_T=-\\dfrac1V(\\partial V/\\partial p)_T\\sim|t|^{-\\gamma},\\quad\\chi\\sim|t|^{-\\gamma}$"),
+          eq("巨正则 $\\dfrac{\\langle(\\Delta N)^2\\rangle}{\\bar N^2}=\\dfrac{k_BT\\kappa_T}V\\propto\\dfrac1N$（第三章结论）"),
+          key("涨落–压缩率 $\\displaystyle\\int d\\vec x\\,[g-1]=k_BT\\kappa_T-\\dfrac1n$ —— 讲义称这是\"涨落–耗散定理的平衡极限\""),
+          eq("磁性版本 $\\chi=\\beta(\\langle M^2\\rangle-\\langle M\\rangle^2)=\\beta\\mu_0^2\\sum_{ij}g(i,j)$",[
+            key("响应函数＝涨落＝关联函数的积分：三条等式把 III.E、IV 与本章串成同一条线")
+          ])
+        ]),
+        sec("VI.E-3 平均场最后一瞥",[
+          key("失败的原因只有一个：忽略了涨落"),
+          key("$\\xi\\to\\infty$ ⇒ 系统无特征尺度（无标度/自相似）⇒ 标度律 ⇒ 普适性的来源"),
+          op("平均场成立条件的定判据：Ginzburg 判据（1960），讲义仅作指引")
+        ]),
+        sec("VI.F.1 一维 Ising 严格解（转移矩阵）",[
+          th("转移矩阵法",[
+            eq("$M_{\\sigma\\sigma'}=\\exp\\{\\beta[J\\sigma\\sigma'+\\tfrac h2(\\sigma+\\sigma') ]\\}$"),
+            eq("$Z_N=\\mathrm{Tr}\\,M^N=\\lambda_+^N+\\lambda_-^N\\xrightarrow[N\\to\\infty]{}\\lambda_+^N,\\quad G=-Nk_BT\\ln\\lambda_+$"),
+            eq("$\\lambda_\\pm=e^{\\beta J}\\cosh\\beta h\\pm\\sqrt{e^{2\\beta J}\\sinh^2\\beta h+e^{-2\\beta J}}$")
+          ]),
+          key("序参量 $m=\\dfrac{\\sinh\\beta h}{\\sqrt{\\sinh^2\\beta h+e^{-4\\beta J}}}$",[
+            key("有限温度下 $h\\to0$ 时 $m=0$ ⇒ 无自发磁化，$T_c=0$（平均场在低维定性即错）"),
+            p("$T\\to0$ 时 $m\\to1$；$J=0$ 退回顺磁 $m=\\tanh\\beta h$")
+          ]),
+          eq("磁化率 $\\chi_0=\\dfrac{N\\mu_0^2}{k_BT}e^{2J/k_BT}$：奇异性是指数型而非幂律"),
+          eq("内能与比热 $U=-NJ\\tanh\\beta J,\\quad C_0=Nk_B(\\beta J)^2\\mathrm{sech}^2\\beta J$：处处光滑无奇点"),
+          th("自由边界与关联函数",[
+            eq("$Z_N=2[2\\cosh\\beta J]^{N-1}$（热力学极限下与周期边界相同）"),
+            key("$C(i,i+j)=\\tanh^j(\\beta J)=e^{-j/\\xi},\\quad \\xi=-1/\\ln\\tanh\\beta J$；通式 $\\xi^{-1}=\\ln(\\lambda_+/\\lambda_-)$"),
+            eq("$T\\to0$：$\\xi\\approx\\tfrac12e^{2\\beta J}\\to\\infty$ ⇒ 零温才是一维的临界点；高温 $\\xi\\to0$"),
+            key("结论：低温下平均场最差（关联长），高温下平均场良好（关联短）")
+          ])
+        ])
+      ]),
+    chains:[
+      {a:"朗道理论假设序参量均匀，但涨落并不均匀", b:"Landau–Ginzburg 自由能泛函", why:"把 $m\\to m(\\vec r)$ 并加梯度项，即从代数方程升级为场论"},
+      {a:"Landau–Ginzburg 自由能泛函", b:"对角化与高斯权重", why:"傅里叶变换使梯度项对角化，各模独立高斯积分可直接算 $\\langle|\\tilde m_k|^2\\rangle$"},
+      {a:"$\\langle|\\tilde m_k|^2\\rangle=", b:"实空间结果（围道积分，类比屏蔽库仑势/Jackson 的亥姆霍兹方程）", why:"对 $1/(a+dk^2)$ 作三维傅里叶逆变换（围道积分）即得 $e^{-r/\\xi}/r$"},
+      {a:"均匀解", b:"$\\xi\\sim|T-T_c|^{-\\nu}$", why:"$\\xi=\\sqrt{d/a}$ 而 $a=a_0(T-T_c)$ ⇒ $\\nu=1/2$"},
+      {a:"磁性版本", b:"涨落–压缩率", why:"$\\chi=\\beta\\langle(\\Delta M)^2\\rangle$ 与 $\\int(g-1)=k_BT\\kappa_T-1/n$ 是同一类\"响应＝关联\"等式"},
+      {a:"$\\xi\\to\\infty$ ⇒ 系统无特征尺度", b:"失败的原因只有一个：忽略了涨落", why:"关联长度发散使涨落覆盖所有尺度，均匀序参量的假设彻底崩溃"},
+      {a:"转移矩阵法", b:"序参量", why:"热力学极限下只剩最大本征值，$m=-(1/N)\\partial G/\\partial h$ 由 $\\lambda_\\pm$ 直接求出"},
+      {a:"有限温度下", b:"$T_c=0$（平均场在低维定性即错）", why:"$e^{-4\\beta J}\\ne0$ 使分母不为零 ⇒ 任意有限温度下 $m(h\\to0)=0$"},
+      {a:"自由边界与关联函数", b:"结论：低温下平均场最差", why:"$\\xi=-1/\\ln\\tanh\\beta J$ 给出关联长度随温度的变化，与 $qJ$ 无关的平均场无法反映"}
+    ],
+    before:[{id:"l6c", txt:"LG 泛函就是 VI.C–VI.D 的朗道自由能加上梯度项"}, {id:"l6b", txt:"$\\bar m^2=-a/b$ 即平均场自洽方程的小场展开"}, {id:"l3c", txt:"准热力学涨落公式 $W\\propto e^{\\Delta S_0/k_BT}$ 与 $\\langle(\\Delta N)^2\\rangle$ 被直接沿用"}, {id:"l2", txt:"独立高斯模＋Wick 定理是关联计算的技术基础"}, {id:"l4c", txt:"$g(r)$ 与结构因子 $S(q)$ 的语言来自第四章液体一节"}],
+    after:[{id:"l6e", txt:"高温展开/对偶给出二维精确结果，与本讲 $\\nu=1/2,\\eta=0$ 作定量对照"}, {id:"l6e", txt:"$O(n)$ 连续对称性下横向涨落无能隙 ⇒ Goldstone 模与 Mermin–Wagner"}, {id:"l7", txt:"涨落–压缩率被讲义指明为\"涨落–耗散定理的平衡极限\"，直接通向第七章"}],
+    note:"讲义在此处把三条\"响应＝涨落＝关联\"的等式并列，等于给全课程做一次收束：第三章的能量/粒子数涨落、第四章的压缩率求和规则、第六章的磁化率，其实是同一件事。"
+  },
+  {
+    id:"l6e", ch:6, chName:"第六章 二级相变的平均场理论", short:"V. 高温展开、对偶、精确解与普适性", title:"第六章 二级相变的平均场理论 V — 二维 Ising 高温展开与对偶、Onsager 解、连续对称性与普适性",
+    file:"lecture6-phase transition part5.pdf", pages:16,
+    cover:"键展开与闭合图计数、低温（畴壁）展开、对偶晶格与 Kramers–Wannier 精确 $T_c$、Onsager 自由能与对数比热、杨振宁自发磁化与二维精确指数、海森堡模型的 Goldstone 模、Mermin–Wagner 定理、对称性破缺与普适类",
+    summary:"收束全章的一讲：不靠平均场，只用图计数＋对偶变换就定出二维精确 $T_c$，再由 Onsager/杨振宁给出真正正确的临界指数（$\\beta=1/8$ 而非 $1/2$）。后半部分把\"对称性\"提升为主角：连续对称性产生无隙 Goldstone 模，进而使二维不可能有长程序。",
+    key:["◇ 键展开：只有闭合图贡献，$v=\\tanh\\beta J$ 为展开参数", "★ 对偶 $\\sinh(2\\beta J)\\sinh(2\\beta^*J)=1$ ⇒ K–W 精确 $T_c$：$\\sinh(2\\beta_cJ)=1$", "◇ Onsager：比热对数发散（$\\alpha=0$，但为对数型）；杨振宁 $m=[1-\\sinh^{-4}(2\\beta J)]^{1/8}$", "★ 二维精确指数 $\\beta=\\tfrac18,\\nu=1,\\eta=\\tfrac14,\\gamma=\\tfrac74,\\delta=15$ 全部满足标度律"],
+    tree: root("第六章 严格解、对偶与普适性 VI.F.2–VI.H",[
+        sec("VI.F.2 二维 Ising 的高温展开与对偶",[
+          th("键展开（高展开）",[
+            key("$e^{\\beta J\\sigma_i\\sigma_j}=\\cosh\\beta J\\,[1+v\\,\\sigma_i\\sigma_j],\\quad v=\\tanh\\beta J$"),
+            eq("$Z=[\\cosh\\beta J]^{2N}\\sum_{\\{\\sigma\\}}\\prod_{\\langle ij\\rangle}(1+v\\sigma_i\\sigma_j)$（正方晶格 $q=4$、键数 $\\eta=2N$）"),
+            eq("对每个 $\\sigma_i=\\pm1$ 求和：$\\sum\\sigma_i^p=0$（$p$ 为奇）⇒ 每个顶点必须连偶数条键 ⇒ 只有闭合图贡献"),
+            eq("$Z=2^N[\\cosh\\beta J]^{2N}\\sum_r n(r)v^r$，首个非零项 $r=4$（最小方格）"),
+            eq("$d$ 维：$\\big[1+\\tfrac{d(d-1)N}2v^4+d(d-1)(2d-3)Nv^6+\\cdots\\big]$"),
+            p("讲义明确类比：这与 Mayer 集团展开／费曼图是同一套\"图＋拓扑计数\"")
+          ]),
+          th("解析性与奇点定位",[
+            key("$T>T_c$ 处级数必收敛，临界点处发散 ⇒ 奇点由展开半径给出"),
+            p("一维演示：开链无闭合图 ⇒ $Z_N=2^N[\\cosh\\beta J]^{N-1}$，$\\langle\\sigma_m\\sigma_n\\rangle=v^{|m-n|}$"),
+            p("闭链：$Z_N=2^N(\\cosh^N\\beta J+\\sinh^N\\beta J)$，$\\langle\\sigma_m\\sigma_n\\rangle=\\dfrac{v^{|m-n|}+v^{N-|m-n|}}{1+v^N}$")
+          ]),
+          th("低温展开（畴壁图像）",[
+            eq("$H=-J(\\eta-2N_{+-})\\Rightarrow Z_N=e^{\\beta J\\eta}\\sum_rm(r)e^{-2\\beta Jr}$"),
+            p("图形变为包围畴的封闭曲线；例：$q=2d$ 时 $1+N(e^{-2K})^{4d}+\\cdots$；二维 $Z_N=e^{2K}[1+N(e^{-2K})^4+2N(e^{-2K})^6]$")
+          ]),
+          th("对偶晶格与 Kramers–Wannier 变换",[
+            key("作图法：新格点取原方格中心，键的中垂线相交 ⇒ 四方自对偶、三角 ⇄ 六角"),
+            eq("$n(r)=m^{D}(r),\\quad m(r)=n^{D}(r)$（高温图与低温畴壁一一对应）"),
+            key("对偶变换：$\\tanh\\beta^*J=e^{-2\\beta J}$ ⇔ $\\beta^*J=-\\tfrac12\\ln\\tanh\\beta J$ ⇔ $\\sinh(2\\beta J)\\sinh(2\\beta^*J)=1$"),
+            eq("$Z_N(T)=[\\sinh(2\\beta^*J)]^{-N}Z_N(T^*)$，即 $[\\sinh2\\beta J]^{-N/2}Z_N(T)$ 对偶不变；$T\\to\\infty\\Leftrightarrow T^*\\to0$"),
+            th("Kramers–Wannier（1941）精确 $T_c$",[
+              key("若自由能只有一个奇点，则它必须落在对偶不动点 $T_c=T_c^*$ ⇒ $\\sinh(2\\beta_cJ)=1$"),
+              eq("$\\beta_cJ=\\tfrac12\\sinh^{-1}1=\\tfrac12\\ln(1+\\sqrt2)=0.4407$，等价于 $\\tanh(\\beta_cJ)=\\sqrt2-1$"),
+              eq("三角晶格 $\\beta_cJ=\\tfrac12\\sinh^{-1}(1/\\sqrt3)=0.2747$；六角 $0.6585$"),
+              key("配位数 $q$ 越高 $T_c$ 越高 ⇒ 与平均场 $T_c=qJ/k_B$ 定性一致，但数值不同")
+            ])
+          ]),
+          th("Onsager（1944）严格解与杨振宁（1952）自发磁化",[
+            eq("$Q=\\Big[2\\cosh2K+\\dfrac1{2\\pi}\\int_0^\\pi\\ln\\big(1+\\sqrt{1-\\delta^2\\sin^2\\varphi}\\big)d\\varphi\\Big]^N,\\quad \\delta=\\dfrac{2\\sinh2K}{\\cosh^22K}$"),
+            key("$\\delta=1$ 处积分发散 ⇒ 奇点位置即 $T_c$"),
+            eq("内能在 $T_c$ 连续（每自旋 $-\\sqrt2J$、曲率无穷）⇒ 无潜热"),
+            key("比热对数奇异：$C_0/Nk_B\\simeq\\dfrac8\\pi\\big[\\ln\\tfrac4{\\kappa'},-1+\\tfrac\\pi4\\big]$ ⇒ $\\alpha=\\alpha'=0$，但是对数型（非平均场的有限跃变）"),
+            th("杨振宁：$m=\\big[1-\\sinh^{-4}(2\\beta J)\\big]^{1/8}\\ (T\\le T_c)$，$T>T_c$ 时 $m=0$"),
+            key("二维精确指数：$\\beta=\\tfrac18,\\ \\nu=\\nu'=1,\\ \\eta=\\tfrac14,\\ \\gamma=\\gamma'=\\tfrac74,\\ \\delta=15$",[
+              eq("$g(r)\\propto r^{-1/4}$（$T=T_c$）"),
+              key("全部满足标度律 $\\gamma=\\beta(\\delta-1)$ ⇒ $\\delta=15$"),
+              op("对比平均场：$\\beta=\\tfrac12\\to\\tfrac18$、$\\nu=\\tfrac12\\to1$、$\\eta=0\\to\\tfrac14$，差异正是 VI.E 所说的涨落修正")
+            ])
+          ])
+        ]),
+        sec("VI.G 连续对称性系统（Heisenberg / XY）",[
+          th("0. 无相互作用（Langevin 顺磁）",[
+            eq("$z_1=\\dfrac{4\\pi}{\\beta h}\\sinh\\beta h,\\quad\\langle S_z\\rangle=L(\\beta h)$"),
+            eq("Langevin 函数 $L(x)=\\coth x-\\dfrac1x\\approx\\dfrac x3$（小场）")
+          ]),
+          eq("1. 铁磁 A) 海森堡 Weiss 平均场：$h_{eff}=qJm_z$，$m_z=L[\\beta(h_{eff}+h)]$ ⇒ $T_c=\\dfrac{qJ}{3k_B}$",[
+            op("平均场指数与 Ising 完全相同；讲义批注：这只是近似的产物，实际并不正确")
+          ]),
+          eq("B) Bragg–Williams 推广：$\\rho_i=\\dfrac{e^{\\beta\\vec S_i\\cdot\\vec h'_i}}{z_i}$，$\\vec h'_i=J\\sum_{j\\{i\\}}\\mathbf m_j+\\vec h_i$，用拉氏乘子处理 $\\int d\\Omega_i\\rho_i=1$"),
+          th("2. 对称性与 Goldstone 模",[
+            eq("$O(3)$ 自由能 $F[\\mathbf m]=\\displaystyle\\int d^3r\\big[\\dfrac a2m_\\alpha m_\\alpha+\\dfrac d2(\\nabla m_\\alpha)^2+\\dfrac b4(m_\\alpha m_\\alpha)^2\\big]$"),
+            key("$\\bar m^2=-a/b$ 固定、方向 $\\mathbf n$ 任意 ⇒ \"墨西哥帽\"、基态无穷简并"),
+            eq("分解 $\\mathbf m=\\bar m\\mathbf n+\\boldsymbol\\phi$：纵向（Higgs 模式）有能隙 $M=1/\\xi\\ne0$，$C=\\dfrac{k_BT}{4\\pi d}\\dfrac{e^{-r/\\xi}}r$"),
+            key("横向（Goldstone/Nambu 模式）：$a\\equiv0$、能隙为零 ⇒ $C(r)\\sim1/r$；$O(n)$ 模型有 $n-1$ 支"),
+            eq("横向磁化率 $\\chi_T(k)=C(k)/k_BT$，$\\chi_T=\\dfrac1{k_BT}\\int d^3r\\,C(r)\\to\\infty$：无穷小场即可转动磁化方向"),
+            th("Mermin–Wagner（-Hohenberg/Coleman）定理：二维连续对称性系统在有限温度无二级相变（长程序被 Goldstone 涨落破坏）",[
+              op("证明超出本课程；一维无相变的道理相同")
+            ])
+          ])
+        ]),
+        sec("VI.H 对称性破缺与普适性",[
+          key("总纲：高温相保留哈密顿量的对称性，低温相破缺它（Anderson 所谓\"自发\"破缺）",[
+            eq("Ising：$Z_2\\to\\{1\\}$；XY：$O(2)\\to Z_2$；Heisenberg：$O(3)\\to O(2)$（$O(2)\\subset O(3)$）")
+          ]),
+          th("普适性（universality）",[
+            key("临界指数只依赖对称性＋空间维数，与晶格类型等微观细节无关"),
+            p("理由：$\\xi\\to\\infty$ ⇒ 只有大尺度自由度重要；前提是相互作用短程"),
+            key("$T_c$ 本身并不普适（它依赖微观细节）"),
+            eq("讲义注：\"Ising 的临界指数在气液临界点亦被发现\" ⇒ 气液与单轴铁磁同属一个普适类")
+          ]),
+          key("无标度性/自相似 ⇒ 标度律 ⇒ 重整化群的基础",[
+            p("临界区域内\"没有合适的尺子\"，故只能用无量纲组合与幂律描述")
+          ])
+        ])
+      ]),
+    chains:[
+      {a:"$\\sum\\sigma_i^p=0$", b:"只有闭合图贡献", why:"未成键的奇数次自旋求和为零，故仅每个顶点度数为偶的图存活"},
+      {a:"$T>T_c$ 处级数必收敛，临界点处发散", b:"低温展开（畴壁图像）", why:"高温图与低温畴壁给出同一点集函数的两种展开 ⇒ 暗示二者由变换相连"},
+      {a:"对偶晶格与 Kramers–Wannier 变换", b:"Kramers–Wannier（1941）精确", why:"高温级数与低温级数一一对应 ⇒ 若自由能只有一个奇点，它必为对偶不动点"},
+      {a:"$\\sinh(2\\beta_cJ)=1$", b:"配位数 $q$ 越高", why:"不动点方程给出精确 $T_c$；比较不同晶格的数值即可检验\"平均场只抓到 $q$  dependence\""},
+      {a:"Onsager（1944）严格解与杨振宁（1952）自发磁化", b:"比热对数奇异：", why:"$\\delta=1$ 处对数积分发散 ⇒ 内能连续而比热对数发散，说明相变确为二级"},
+      {a:"杨振宁：", b:"二维精确指数：", why:"$m\\sim(1-T/T_c)^{1/8}$、$g(r)\\sim r^{-1/4}$、$\\chi\\sim|t|^{-7/4}$ 一起构成一套自指标的指数集"},
+      {a:"$\\beta=\\tfrac18", b:"对比平均场：", why:"与 VI.B/VI.E 的 $\\beta=1/2,\\nu=1/2,\\eta=0$ 逐项对照 ⇒ 平均场的偏差定量化"},
+      {a:"$\\bar m^2=-a/b$ 固定、方向", b:"横向（Goldstone/Nambu 模式）：", why:"沿帽底的转动方向自由能不变 ⇒ 无恢复力 ⇒ 无能隙模式"},
+      {a:"横向磁化率", b:"Mermin–Wagner（-Hohenberg/Coleman）定理：二维连续对称性系统在有限温度无二级相变（长程序被 Goldstone 涨落破坏）", why:"$\\int d^3r\\,C(r)$ 在大 $r$ 红外发散 ⇒ 二维时长程序被涨落摧毁"},
+      {a:"临界指数只依赖对称性＋空间维数，与晶格类型等微观细节无关", b:"$T_c$ 本身并不普适（它依赖微观细节）", why:"普适性只管奇异部分（幂律），振幅与 $T_c$ 仍含微观信息"}
+    ],
+    before:[{id:"l6d", txt:"平均场指数 $\\nu=1/2,\\eta=0$ 与\"涨落导致失效\"在此被精确定量"}, {id:"l6d", txt:"一维 $T_c=0$ 与二维 $T_c>0$：涨落的决定性作用"}, {id:"l4a", txt:"集团展开的\"图＋对称数\"计数法在键展开中原样复现"}, {id:"l4c", txt:"奇点必须出现在热力学极限：李杨理论的一般陈述"}, {id:"l6c", txt:"序参量、对称性自发破缺与普适类概念的正式登场"}],
+    after:[{id:"l7", txt:"$\\chi_T(k)=C(k)/k_BT$：用外场探测平衡涨落，即涨落–耗散定理的雏形"}, {id:"l5", txt:"Goldstone 模与超流/声子的无隙谱：连续对称性破缺的共同后果"}],
+    note:"这是全章的\"审判日\"：平均场说 $\\beta=1/2$，Onsager–杨振宁说 $1/8$；对偶变换不依赖任何近似就定出 $T_c$。讲义借此把主题从\"配分函数怎么算\"转为\"对称性与维数决定了什么\"。"
+  },
+  {
+    id:"l7", ch:7, chName:"第七章 非平衡态统计", short:"玻尔兹曼方程、H 定理与输运", title:"第七章 非平衡态统计 — 玻尔兹曼方程、H 定理与输运系数",
+    file:"lecture7-nonequilibrium.pdf", pages:13,
+    cover:"局域平衡假设与分布函数 $f$、漂移项与碰撞项、分子混沌假设、玻尔兹曼微分积分方程、H 定理与熵、细致平衡与 Maxwell 分布、弛豫时间近似、粘滞/电导/热导与 Wiedemann–Franz 定律",
+    summary:"最后一章回到第三章留下的问题：微观动力学可逆（刘维尔定理），宏观过程为何不可逆？玻尔兹曼的答案是引入\"分子混沌假设\"——唯一非力学的输入。有了它就有 $dH/dt\\le0$，热力学第二定律第一次获得统计证明；线性化之后又顺带给出粘滞、电导、热导的微观表达式。",
+    key:["◇ 玻尔兹曼方程 $\\partial_t f+\\vec v\\cdot\\nabla_rf+\\vec F\\cdot\\nabla_pf=(\\partial f/\\partial t)_{coll}$", "★ 分子混沌假设 $f^{(2)}=f^{(1)}f^{(1)}$：唯一的非力学输入", "◇ H 定理 $dH/dt\\le0$，$S=-k_BH+C$ ⇒ 熵增加", "◇ 细致平衡 ⇒ $\\ln f$ 为相加性守恒量之组合 ⇒ Maxwell 分布"],
+    tree: root("第七章 非平衡态统计",[
+        sec("引言：为什么需要非平衡统计",[
+          eg("典型不可逆过程：扩散（高密→低密）、热传导、粘滞、金属在外场中的导电"),
+          eq("研究对象：$f$ 随时间与空间演化、且伴随不可逆过程；比平衡态统计复杂得多"),
+          key("玻尔兹曼的理论分工：处理\"离平衡不远\"的问题（Boltzmann/Chapman/Enskog）",[
+            p("远离平衡的基础是 BBGKY 序列（Born–Bogoliubov–Green–Kirkwood–Yvon）关于几率分布函数的无穷耦合方程链，必须截断近似")
+          ])
+        ]),
+        sec("VII.A 玻尔兹曼微分积分方程",[
+          key("局域平衡假设：取宏观小、微观大的体积元，其中子系统仍可看作平衡 ⇒ 任意时刻可定义 $T(\\vec r)$"),
+          key("单粒子分布函数 $f(\\vec r,\\vec v,t)d^3rd^3v$ ＝ $t$ 时刻位于该相体积元内的平均分子数"),
+          th("漂移项（无碰撞）",[
+            eq("$\\big(\\partial f/\\partial t\\big)_D=-\\big[\\nabla_r\\cdot(f\\dot{\\vec r})+\\nabla_v\\cdot(f\\dot{\\vec v})\\big]$"),
+            p("由六维体积元六对超平面的进出计数得到（散度的定义）")
+          ]),
+          eq("二体弹性碰撞守恒：$m_1\\vec v_1+m_2\\vec v_2=m_1\\vec v_1^\\prime+m_2\\vec v_2^\\prime$，动能守恒，$(\\vec v_2^\\prime-\\vec v_1^\\prime)\\cdot\\vec n=-(\\vec v_2-\\vec v_1)\\cdot\\vec n$"),
+          eq("$\\vec v_1^\\prime=\\vec v_1+\\dfrac{2m_2}{m_1+m_2}[(\\vec v_2-\\vec v_1)\\cdot\\vec n]\\vec n$"),
+          key("正/反碰撞对称：$(\\vec v_1,\\vec v_2)\\xrightarrow{\\vec n}(\\vec v_1^\\prime,\\vec v_2^\\prime)$ 与 $\\xrightarrow{-\\vec n}$ 等价，源于经典力学的时间反演不变 $t\\to-t$"),
+          eq("元碰撞数 $f_1f_2\\,d^3v_1d^3v_2\\,\\Lambda d\\Omega\\,dt\\,d^3r$，$\\Lambda=R_{12}^2v_r\\cos\\theta$"),
+          eq("碰撞项 $\\Big(\\dfrac{\\partial f}{\\partial t}\\Big)_C=\\displaystyle\\int(f_1^\\prime f^\\prime-f_1f)\\,d^3v_1\\,\\Lambda d\\Omega$"),
+          th("玻尔兹曼微分积分方程",[
+            key("$\\dfrac{\\partial f}{\\partial t}+\\vec v\\cdot\\nabla_rf+\\vec F\\cdot\\nabla_pf=\\Big(\\dfrac{\\partial f}{\\partial t}\\Big)_{coll}$"),
+            p("关于 $f$ 的非线性微分–积分方程（碰撞项含积分 ⇒ \"微分积分方程\"）")
+          ]),
+          key("分子混沌性假设（碰撞数假设 / Stosszahlansatz）",[
+            eq("$f^{(2)}(\\vec r_1,\\vec v_1,\\vec r_2,\\vec v_2,t)\\overset{?}{=}f^{(1)}(1)f^{(1)}(2)$"),
+            key("碰前忽略统计关联；否则一体方程牵出二体、二体牵出三体 ⇒ 无法闭合（BBGKY 链）"),
+            p("这是本章唯一非力学的输入，也是不可逆性的全部来源")
+          ]),
+          eq("量子推广（Uehling–Uhlenbeck）：费米 $f_1f_2\\to f_1f_2(1-f_1^\\prime)(1-f_2^\\prime)$，玻色 $f\\to f(1+f)$",[
+            op("严格量子理论中并不存在 $f(\\vec r,\\vec v,t)$，只在准经典近似下可用")
+          ])
+        ]),
+        sec("VII.B 玻尔兹曼 H 定理",[
+          key("H 函数（1872）$H=\\displaystyle\\int f\\ln f\\ d^3rd^3v$；因 $f\\sim p$，等价于 $H=\\sum_sp_s\\ln p_s$（第二章的语言）"),
+          th("证明的三步",[
+            p("① 漂移项对 $dH/dt$ 无贡献：高斯定理＋封闭器壁 $\\oint d\\Sigma\\cdot\\vec v f\\ln f=0$，以及 $\\nabla_v\\cdot\\vec F=0$、$v\\to\\infty$ 时 $f=0$"),
+            p("② 碰撞项对 $\\vec v\\leftrightarrow\\vec v_1$ 互换、正反碰撞互换各取一次平均（三次平均）"),
+            key("③ 结论 $\\dfrac{dH}{dt}=-\\dfrac14\\int(\\ln ff_1-\\ln f_1^\\prime f^\\prime)(ff_1-f_1^\\prime f^\\prime)\\,d^3rd^3vd^3v_1\\Lambda d\\Omega\\le0$",[
+              p("$\\ln$ 单调增 ⇒ 两因子同号 ⇒ 被积式非负")
+            ])
+          ]),
+          key("熵与 H：$S=-k_BH+C$ ⇒ H 定理即熵增加原理",[
+            p("此处 $S$ 是不可逆过程热力学的局域熵，以局域平衡假设为前提"),
+            eq("与 Sackur–Tetrode 对照定出常数 $C=Nk_B\\big[1+\\ln(m/h)^3\\big]$")
+          ]),
+          th("可逆性争论（洛施密特佯谬式质疑）",[
+            key("H 不是纯力学量而是统计量：宏观上 $H$ 增加\"比文盲随机选字恰好排出《红楼梦》\"的几率还微乎其微"),
+            p("于是微观可逆与宏观不可逆并不矛盾：不可逆是概率陈述，不是动力学定理")
+          ])
+        ]),
+        sec("VII.C 细致平衡条件与平衡分布",[
+          key("细致平衡条件：等号成立当且仅当 $ff_1=f_1^\\prime f^\\prime$，即元碰撞数＝元反碰撞数"),
+          p("一般情况下\"细致平衡 ⇒ 平衡\"但反之未必；对满足玻尔兹曼方程的系统二者充要"),
+          th("平衡分布",[
+            eq("$\\ln f_1+\\ln f_2=\\ln f_1^\\prime+\\ln f_2^\\prime$ ⇒ $\\ln f$ 必为五个相加性守恒量 $1,\\ m\\vec v,\\ \\tfrac12mv^2$ 的线性组合"),
+            key("$\\Rightarrow$ Maxwell 分布 $f=n\\big(\\dfrac m{2\\pi k_BT}\\big)^{3/2}\\exp\\big[-\\dfrac m{2k_BT}(\\vec v-\\vec v_0)^2\\big]$")
+          ]),
+          eq("再由 $\\vec v\\cdot\\nabla_rf+\\vec F\\cdot\\nabla_vf=0$ 按 $\\vec v$ 的幂次比较：",[
+            p("$|\\vec v|^3$ ⇒ $\\nabla T=0$（温度均匀）"),
+            p("$|\\vec v|^2$ ⇒ $\\vec v_0=\\vec a+\\vec\\omega\\times\\vec r$（只能是匀平动＋匀转动）"),
+            p("$|\\vec v|$ ⇒ $n=n_0\\exp\\big(\\tfrac m{2k_BT}v_0^2-\\tfrac m{k_BT}\\varphi\\big)$（Boltzmann 分布）"),
+            p("$|\\vec v|^0$ ⇒ $\\vec v_0\\cdot\\vec F=0$")
+          ]),
+          eg("重力场中以 $\\vec\\omega$ 转动的容器：$n=n_0\\exp\\big(\\dfrac{m\\omega^2}{2k_BT}r^2-\\dfrac{mgz}{k_BT}\\big)$"),
+          eq("量子气体的对应：$f_1f_2(1-f_1^\\prime)(1-f_2^\\prime)=f_1^\\prime f_2^\\prime(1-f_1)(1-f_2)$ ⇒ $\\dfrac f{1-f}$ 为相加守恒 ⇒ $f=\\dfrac1{e^{\\beta(\\epsilon-\\mu)}+1}$",[
+            key("平衡分布由动理论\"再推导\"一遍，与第三章系综结果完全一致")
+          ])
+        ]),
+        sec("VII.D 弛豫时间近似与输运现象",[
+          th("D.1 弛豫时间近似（BGK 型闭合）",[
+            key("$\\Big(\\dfrac{\\partial f}{\\partial t}\\Big)_C=-\\dfrac{f-f_0}{\\tau_0}=-\\dfrac{\\delta f}{\\tau_0},\\qquad \\delta f\\sim e^{-t/\\tau_0}$"),
+            eq("$\\tau_0$ 与两次碰撞的平均间隔同量级：$\\bar\\lambda=\\bar v\\bar\\tau_0$"),
+            key("非线性微分积分方程 ⇒ 线性偏微分方程：这是可算的关键一步")
+          ]),
+          eg("D.2 流体粘滞",[
+            eq("牛顿粘滞定律 $p_{xy}=\\eta\\,dv_0(x)/dx$"),
+            eq("$f=f_0+f_1$，$f_1\\simeq\\tau_0v_1\\dfrac{\\partial f_0}{\\partial v_2}\\dfrac{dv_0}{dx}$ ⇒ $\\eta=nm\\overline{v_1^2}\\bar\\tau_0=nk_BT\\bar\\tau_0=nk_BT\\bar\\lambda/\\bar v$"),
+            key("结论：$\\eta\\propto\\sqrt T$ 且与密度无关"),
+            p("物理学史：$\\eta\\propto\\sqrt T$ 由麦克斯韦 1860 年首先得到，他自疑并致函 Stokes 求教；Stokes 回信称与流体力学常识不符（密度趋于零时粘滞系数应趋于零），后被实验证实")
+          ]),
+          eg("D.3 金属电导率（Drude–Sommerfeld）",[
+            eq("欧姆定律 $J_3=\\sigma\\mathsf E$（一般形式 $J_i=\\sigma_{ij}\\mathsf E_j$，电导张量）"),
+            eq("$J_3=(-e)\\displaystyle\\int fv_3\\dfrac{2m^3}{h^3}d^3v$，配 $-\\dfrac e m\\mathsf E\\dfrac{\\partial f}{\\partial v_3}=\\dfrac{f-f_0}{\\tau_0}$"),
+            key("$\\sigma=\\dfrac{ne^2}m\\tau_F,\\quad\\tau_F=\\tau_0(\\epsilon_F)$（只有费米面附近电子参与）"),
+            p("Drude 模型能解释 $\\sigma$，但解释不了电子几乎不贡献 $C_V$ 与 Lorenz 数；Sommerfeld 模型全部解决")
+          ]),
+          eg("D.4 金属热导率",[
+            eq("傅里叶定律 $J_q=-\\kappa\\nabla T$，$J_q=\\dfrac{2m^3}{h^3}\\int d^3v\\,(\\epsilon-\\mu)\\vec vf$"),
+            eq("$f_1\\simeq\\tau_0(\\epsilon-\\mu)\\dfrac{\\partial f_0}{\\partial\\epsilon}\\dfrac{\\vec v\\cdot\\nabla T}T$，配合 $g(\\epsilon)=\\dfrac{4\\pi}{h^3}(2m)^{3/2}\\epsilon^{1/2}$ 与 Sommerfeld 展开"),
+            key("$\\kappa=\\dfrac{\\pi^2}3\\dfrac{n\\tau_F}{m}k_B^2T$")
+          ]),
+          th("Wiedemann–Franz 定律",[
+            eq("$L=\\dfrac{\\kappa}{\\sigma T}=\\dfrac{\\pi^2}3\\dfrac{k_B^2}{e^2}$（Drude 给出 $L=2k_B^2/e^2$）"),
+            key("$\\sigma$ 与 $\\kappa$ 由同一个 $\\tau_F$ 决定、$n$ 相消 ⇒ 普适常数")
+          ]),
+          op("讲义在 VII.A 前言中提到\"最后将简略讨论涨落现象\"，但本章正文止于 D.4：菲克扩散定律的定量式、Onsager 倒易关系、爱因斯坦关系 $D=\\mu k_BT$、朗之万方程与主方程均未展开［存疑／未出现］")
+        ])
+      ]),
+    chains:[
+      {a:"局域平衡假设", b:"单粒子分布函数", why:"只有每个小元胞近似平衡，才能给 $f$ 配上局部的 $T(\\vec r)$"},
+      {a:"分子混沌性假设（碰撞数假设 / Stosszahlansatz）", b:"玻尔兹曼微分积分方程", why:"把 $f^{(2)}$ 因子化后，碰撞项只含 $f$ 本身 ⇒ 方程对单粒子分布闭合"},
+      {a:"正/反碰撞对称：", b:"证明的三步", why:"正反碰撞互换（时间反演）与 $\\vec v\\leftrightarrow\\vec v_1$ 互换允许把碰撞项写成对称乘积形式"},
+      {a:"③ 结论", b:"熵与 H：", why:"被积式两因子同号使 $dH/dt\\le0$，配 $S=-k_BH+C$ 即得熵增加"},
+      {a:"H 不是纯力学量而是统计量", b:"可逆性争论（洛施密特佯谬式质疑）", why:"不可逆来自概率上的压倒性，而非动力学定律 ⇒ 与刘维尔定理不矛盾"},
+      {a:"细致平衡条件：等号成立当且仅当", b:"平衡分布", why:"$ff_1=f_1^\\prime f_2^\\prime$ 使 $\\ln f$ 成为碰撞中相加守恒量的组合，而该守恒量只有 $1,m\\vec v,\\tfrac12mv^2$"},
+      {a:"再由 $\\vec v\\cdot\\nabla_rf", b:"Maxwell 分布", why:"平衡只是 $\\partial_t f=0$ 的一种可能，还要漂移项同时为零，逐幂次比较得 $\\nabla T=0$ 与转动限制"},
+      {a:"弛豫时间近似（BGK 型闭合）", b:"D.2 流体粘滞", why:"把碰撞项线性化后，$f_1$ 可由漂移项代数解出，输运系数成为 $\\tau_0$ 的矩"},
+      {a:"D.3 金属电导率（Drude–Sommerfeld）", b:"D.4 金属热导率", why:"同一线性化玻尔兹曼方程，电流与热流的定义式不同 ⇒ 两系数含同一 $\\tau_F$"},
+      {a:"$\\sigma=\\dfrac{ne^2}m\\tau_F", b:"Wiedemann–Franz 定律", why:"$\\kappa/\\sigma T$ 中 $n,m,\\tau_F$ 全部相消，只剩 $k_B^2/e^2$ 的普适组合"}
+    ],
+    before:[{id:"l1a", txt:"第二定律的熵表述：$dS\\ge\\delta Q/T$、孤立系熵不减"}, {id:"l1b", txt:"热三与\"不可逆性是集体行为\"的评论在此兑现"}, {id:"l3a", txt:"刘维尔定理：$d\\rho/dt=0$、时间反演不变 ⇒ 单靠力学推不出 $dH/dt\\le0$"}, {id:"l3b", txt:"Maxwell 分布曾由微正则导出，此处由动理论重得"}, {id:"l2", txt:"$f\\sim p$、$H=\\sum p\\ln p$ 就是概率/信息熵；分子混沌＝统计独立"}, {id:"l6d", txt:"\"涨落–压缩率是涨落–耗散定理的平衡极限\"一句直接指向本章"}],
+    after:[{id:"l3a", txt:"反向闭环：本章解释了为何 III.B 必须额外引入统计假设"}, {id:"l6e", txt:"$\\chi_T(k)=C(k)/k_BT$：用外场探测平衡涨落的思路在此完成"}],
+    note:"讲义开篇的史述即本章纲领：玻尔兹曼\"首先研究了稀薄气体趋于平衡的问题，推导出了著名的玻耳兹曼微分积分方程。后来，他又证明了 H 定理，从而在非平衡态时给出了熵的统计诠释。\"——至此第一章的熵、第二章的概率、第三章的刘维尔定理全部闭合。"
+  }
+];
+
+const BY_ID = {}; LECTURES.forEach(l=>BY_ID[l.id]=l);
+
+/* ================= 状态 ================= */
+const S = { cur:null, depth:5, links:true, rel:true, panel:true, scale:1, tx:20, ty:20, pos:{}, collapsed:new Set() };
+const $ = (s)=>document.querySelector(s);
+const nodesEl=$('#nodes'), edgesEl=$('#edges'), stage=$('#stage'), wrap=$('#wrap'), sc=$('#scroller');
+
+/* ================= MathJax ================= */
+let mjQueue=[];
+window.__mjFlush=()=>{ const q=mjQueue; mjQueue=[]; q.forEach(f=>f()); if(S.cur) render(); else drawGlobal(); };
+/* CDN 被墙或很慢时不能卡住渲染：3.5 秒后放弃等待，按原始 LaTeX 继续排版 */
+setTimeout(()=>{ if(!window.__mjReady && !window.__mjFailed){ window.__mjFailed=true; const q=mjQueue; mjQueue=[]; q.forEach(f=>f()); if(S.cur) render(); } },3500);
+function typeset(el){
+  const els=Array.isArray(el)?el:[el];
+  return new Promise(res=>{
+    if(window.__mjReady && window.MathJax && MathJax.typesetPromise){
+      MathJax.typesetPromise(els).then(()=>res()).catch(()=>res());
+    } else if(window.__mjFailed){ res(); }
+    else { mjQueue.push(res); }
+  });
+}
+function showWarn(){ if(window.__mjFailed) $('#mjwarn').style.display='block'; }
+/* 同一条公式只排版一次；来回切换讲义/折叠展开时直接复用结果 */
+const MJ_CACHE=new Map();
+function cachedTypeset(container, token){
+  const need=[];
+  container.querySelectorAll('.node .tx').forEach(sp=>{
+    const raw=sp.dataset.raw||'';
+    if(MJ_CACHE.has(raw)) sp.innerHTML=MJ_CACHE.get(raw);
+    else if(raw.includes('$')) need.push(sp);
+  });
+  /* 分小批排版：每批之间让出主线程，避免切换讲义时界面卡住 */
+  let idx=0;
+  const step=()=>{
+    if(token!==undefined && token!==RENDER_ID) return Promise.resolve();   /* 已切到别的讲义：放弃剩余批次 */
+    if(idx>=need.length) return Promise.resolve();
+    const batch=need.slice(idx, idx+24); idx+=24;
+    return typeset(batch).then(()=>{
+      batch.forEach(sp=>{ if(sp.innerHTML.includes('mjx-container')) MJ_CACHE.set(sp.dataset.raw, sp.innerHTML); });
+      return new Promise(r=>setTimeout(()=>r(),0));
+    }).then(step);
+  };
+  return step();
+}
+
+/* ================= 工具 ================= */
+function walk(n, fn, d=0, par=null){ fn(n,d,par); (n.c||[]).forEach(k=>walk(k,fn,d+1,n)); }
+function countNodes(n){ let s=1; (n.c||[]).forEach(k=>s+=countNodes(k)); return s; }
+function visibleKids(n, d){
+  if(S.collapsed.has(nid(n))) return [];
+  return d>=S.depth ? [] : (n.c||[]);
+}
+function nid(n){ return S.cur+'::'+(n.__id||''); }
+// path map is built per render
+let PATH = new Map();
+function buildPath(root){
+  PATH=new Map();
+  const rec=(n,pre)=>{ const id=pre+'/'+(n.t||'').slice(0,24); n.__id=id; PATH.set(id,n); (n.c||[]).forEach(k=>rec(k,id)); };
+  rec(root,'');
+}
+function findNode(root, term){
+  if(!term) return null;
+  const nz=(s)=>s.replace(/\\/g,'').toLowerCase();
+  const q=nz(term);
+  let hit=null;
+  walk(root,(n)=>{ if(!hit && n.t && nz(n.t).includes(q)) hit=n; });
+  return hit;
+}
+function expandTo(target){
+  // set collapsed so that target visible: walk parent chain
+  const chain=[]; let cur=target;
+  while(cur){ chain.push(cur.__id); cur=parentOf(cur); }
+  chain.forEach(id=>S.collapsed.delete(S.cur+'::'+id));
+}
+function parentOf(node){
+  const l=BY_ID[S.cur]; let found=null;
+  walk(l.tree,(n,d,par)=>{ if(n===node) found=par; });
+  return found;
+}
+
+/* ================= 布局 ================= */
+const GX=36, GY=12, PAD=22;
+function badge(k){
+  return {root:'章',sec:'§',key:'★',thm:'◇',eq:'∑',eg:'例',opt:'⚠',p:'·'}[k]||'·';
+}
+let RENDER_ID=0;
+async function render(){
+  const me=++RENDER_ID;
+  const L=S.cur && BY_ID[S.cur]; if(!L) return;
+  $('#h-title').textContent = L.title;
+  $('#h-file').textContent = L.file+' · '+L.pages+' 页';
+  $('#sum').innerHTML = '<b>本讲主线：</b>'+L.summary;
+  $('#h-count').textContent = L.pages+' 页 · '+countNodes(L.tree)+' 个节点';
+  document.querySelectorAll('.lbtn').forEach(b=>b.classList.toggle('act', b.dataset.id===S.cur));
+  nodesEl.innerHTML=''; edgesEl.innerHTML='';
+  nodesEl.style.width='6000px'; nodesEl.style.height='6000px';   /* 测量期给足宽度，排版后收回 */
+  buildPath(L.tree);
+  drawPanels(L);
+
+  /* 1) 建 DOM（绝对定位、先堆叠） */
+  const items=[];
+  const rec=(n,d,par)=>{
+    const el=document.createElement('div');
+    el.className='node '+n.k;
+    const b=document.createElement('span'); b.className='bd'; b.textContent=badge(n.k);
+    el.appendChild(b);
+    const tx=document.createElement('span'); tx.className='tx'; tx.dataset.raw=n.t;
+    tx.appendChild(document.createTextNode(n.t)); el.appendChild(tx);
+    const kids = visibleKids(n,d);
+    if((n.c||[]).length){
+      const sp=document.createElement('span'); sp.className='kids';
+      sp.textContent = S.collapsed.has(S.cur+'::'+n.__id) ? ' ＋'+(n.c.length) : ' −';
+      el.appendChild(sp);
+      el.classList.add('has-k');
+      el.addEventListener('click',()=>{ 
+        const id=S.cur+'::'+n.__id;
+        if(S.collapsed.has(id)) S.collapsed.delete(id); else S.collapsed.add(id);
+        render();
+      });
+    }
+    el.dataset.id=n.__id;
+    if(n.__flash){ el.dataset.flash='1'; n.__flash=false; }
+    nodesEl.appendChild(el);
+    n.__el=el; n.__d=d;
+    items.push({n,d,par});
+    kids.forEach(k=>rec(k,d+1,n));
+    n.__vis=kids;
+  };
+  rec(L.tree,0,null);
+
+  /* 1) 先按未排版内容即时布局一次，MathJax 排完再重排一次（避免点击卡顿） */
+  const drawLayout = (force) => {
+    /* 2) 测量 + 按层排布 */
+    const dw={};
+    items.forEach(({n})=>{ n.__w=n.__el.offsetWidth; n.__h=n.__el.offsetHeight;
+      dw[n.__d]=Math.max(dw[n.__d]||0,n.__w); });
+    const dx=[PAD]; for(let d=1;d<=Math.max(...items.map(i=>i.d));d++) dx[d]=dx[d-1]+dw[d-1]+GX;
+    const H=(n)=>{ const k=n.__vis; if(!k.length){n.__sh=n.__h;return n.__h;} 
+      let s=0; k.forEach((c,i)=>{ s+=H(c); if(i)s+=GY; }); n.__sh=Math.max(n.__h,s); return n.__sh; };
+    const rootH=H(L.tree);
+    const place=(n,top)=>{ const x=dx[n.__d]; n.__x=x; n.__y=top+(n.__sh-n.__h)/2;
+      n.__el.style.transform='translate('+n.__x+'px,'+n.__y+'px)';
+      n.__el.__x=n.__x; n.__el.__y=n.__y; n.__el.__w=n.__w; n.__el.__h=n.__h;
+      const k=n.__vis; if(k.length){ let sum=0; k.forEach((c,i)=>{sum+=c.__sh; if(i)sum+=GY;});
+        let cy=top+(n.__sh-sum)/2; k.forEach(c=>{ place(c,cy); cy+=c.__sh+GY; }); } };
+    place(L.tree, PAD);
+
+    let maxX=0,maxY=0;
+    items.forEach(({n})=>{ maxX=Math.max(maxX,n.__x+n.__w); maxY=Math.max(maxY,n.__y+n.__h); });
+    stage.style.width=(maxX+PAD)+'px'; stage.style.height=(maxY+PAD)+'px';
+    nodesEl.style.width=(maxX+PAD)+'px'; nodesEl.style.height=(maxY+PAD)+'px';
+    edgesEl.setAttribute('width',maxX+PAD); edgesEl.setAttribute('height',maxY+PAD);
+
+    /* 4) 树边 */
+    let svg='';
+    items.forEach(({n})=>{ (n.__vis||[]).forEach(c=>{
+      const x1=n.__x+n.__w, y1=n.__y+n.__h/2, x2=c.__x, y2=c.__y+c.__h/2, mx=(x1+x2)/2;
+      svg+='<path d="M'+x1+','+y1+' C'+mx+','+y1+' '+mx+','+y2+' '+x2+','+y2+'" fill="none" '+
+           'stroke="'+edgeColor(c.k)+'" stroke-width="1.5" opacity=".85"/>';
+    }); });
+
+    /* 5) 推导链叠加边 */
+    S.pos={};
+    if(S.links && L.chains){
+      L.chains.forEach((ch,i)=>{
+        const a=findNode(L.tree,ch.a), b=findNode(L.tree,ch.b);
+        const va = a && a.__el && a.__el.parentNode && a.__x!==undefined && PATH.has(a.__id) && a.__el.offsetParent!==null;
+        const vb = b && b.__el && b.__el.parentNode && b.__x!==undefined && b.__el.offsetParent!==null;
+        if(a&&b&&a.__el&&b.__el&&a.__x!==undefined&&b.__x!==undefined){
+          const x1=a.__x+a.__w, y1=a.__y+a.__h/2, x2=b.__x, y2=b.__y+b.__h/2;
+          const dy=y2-y1, bow=30+18*Math.min(3,Math.abs(dy)/160);
+          const d='M'+x1+','+y1+' C'+(x1+bow*2.2)+','+(y1+dy*0.15)+' '+(x2-bow*2.2)+','+(y2-dy*0.15)+' '+x2+','+y2;
+          svg+='<g class="cl" data-i="'+i+'" style="cursor:pointer">'+
+               '<path d="'+d+'" fill="none" stroke="'+ '#ea580c' +'" stroke-width="2" stroke-dasharray="6 4" opacity=".72" marker-end="url(#ar)"/>'+
+               '<circle cx="'+((x1+x2)/2)+'" cy="'+((y1+y2)/2 - (i%2?16:-16))+'" r="9.5" fill="#ea580c"/>'+
+               '<text x="'+((x1+x2)/2)+'" y="'+((y1+y2)/2 - (i%2?16:-16)+3.6)+'" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">'+(i+1)+'</text>'+
+               '</g>';
+          S.pos[ch.a]=a; S.pos[ch.b]=b;
+        }
+      });
+    }
+    edgesEl.innerHTML='<defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" '+
+      'markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ea580c"/></marker></defs>'+svg;
+    edgesEl.querySelectorAll('.cl').forEach(g=>{
+      g.addEventListener('click',()=>{ focusChain(BY_ID[S.cur], +g.dataset.i); });
+    });
+
+    fitView(!!force);
+  };
+  drawLayout();
+  const done = Promise.all([typeset([$('#head'), $('#panels')]), cachedTypeset(wrap, me)]).then(()=>{ if(me===RENDER_ID && S.cur===L.id) drawLayout(true); });
+  done.then(()=>{ if(me===RENDER_ID && S.cur===L.id) setTimeout(()=>drawLayout(false),0); });
+  showWarn();
+  return done;
+}
+function focusChain(L, i){
+  const c=(L.chains||[])[i]; if(!c) return;
+  buildPath(L.tree);
+  const targets=[];
+  [c.a,c.b].forEach(term=>{
+    const n=findNode(L.tree, term); if(!n) return;
+    let cur=n; const chain=[];
+    while(cur){ chain.push(cur.__id); cur=parentOf(cur); }
+    chain.forEach(id=>S.collapsed.delete(S.cur+'::'+id));
+    n.__flash=true; targets.push(n);
+  });
+  if(!targets.length) return;
+  const saveDepth=S.depth; S.depth=9;
+  render().then(()=>{
+    S.depth=saveDepth;
+    const fl=[...nodesEl.querySelectorAll('.node')].filter(e=>e.dataset.flash==='1');
+    if(fl.length){
+      fl.forEach(e=>{e.classList.add('flash'); setTimeout(()=>e.classList.remove('flash'),2600);});
+      centerOn(Math.min(...fl.map(e=>e.__x||0))-150, Math.min(...fl.map(e=>e.__y||0)));
+    }
+    document.querySelectorAll('#panels .chain').forEach(el=>{
+      if(+el.dataset.i===i){ el.style.background='#fed7aa'; setTimeout(()=>el.style.background='',900); }
+    });
+  });
+}
+function edgeColor(k){
+  return {sec:'#93c5fd',key:'#fbbf24',thm:'#c4b5fd',eq:'#cbd5e1',eg:'#6ee7b7',opt:'#e2e8f0',root:'#111827',p:'#d7dde5'}[k]||'#d7dde5';
+}
+
+/* ================= 右侧面板 ================= */
+function drawPanels(L){
+  const el=$('#panels');
+  if(!S.panel || !L){ el.style.display='none'; return; }
+  let h='';
+  if(L.key&&L.key.length){
+    h+='<h3>本讲重点 <span class="x">×</span></h3>';
+    h+='<div class="keys">'+L.key.map(k=>'<div class="kp">'+esc(k)+'</div>').join('')+'</div>';
+  }
+  if(S.links && L.chains && L.chains.length){
+    h+='<h3 style="margin-top:12px">推导链（点开可定位）</h3>';
+    L.chains.forEach((c,i)=>{
+      /* 面板里的推导链标签：去编号前缀，截断时不留下半个公式 */
+      const lab=(term)=>{
+        const n=findNode(L.tree,term); const full=n? n.t : term;
+        let s=full.replace(/^\s*(?:[IVX]+\.[A-Za-z0-9.\-]*|§+\s*[0-9IVXA-Za-z.\-]*|[0-9]+\.)\s*/,'');
+        const colon=s.indexOf('：');
+        if(colon>5 && colon<20) s=s.slice(colon+1);
+        if(s.length>30){
+          let cut=s.slice(0,30);
+          if(((cut.match(/\$/g)||[]).length)%2===1){
+            const first=s.indexOf('$');
+            cut = (first>0 && first<24) ? s.slice(0,first) : (s.match(/^\$[^$]*\$/)||[''])[0];
+          }
+          s=(cut||s.slice(0,20)).trim()+'…';
+        }
+        return {short:s, full};
+      };
+      const A=lab(c.a), B=lab(c.b);
+      h+='<div class="chain" data-i="'+i+'" title="'+esc(A.full)+' ⇒ '+esc(B.full)+'"><span class="num">'+(i+1)+
+         '</span><b>'+esc(A.short)+'</b> ⇒ <b>'+esc(B.short)+'</b><div class="why">'+esc(c.why||'')+'</div></div>';
+    });
+  }
+  if(S.rel){
+    if(L.before&&L.before.length){
+      h+='<h3 style="margin-top:14px">承前（本讲用到的前序结果）</h3><div class="rel">';
+      L.before.forEach(b=>{ h+='<span class="chip" data-j="'+b.id+'">← '+esc(b.txt)+'</span>'; });
+      h+='</div>';
+    }
+    if(L.after&&L.after.length){
+      h+='<h3 style="margin-top:12px">启后（本讲铺垫的后续）</h3><div class="rel">';
+      L.after.forEach(b=>{ h+='<span class="chip out" data-j="'+b.id+'">→ '+esc(b.txt)+'</span>'; });
+      h+='</div>';
+    }
+    if(L.note) h+='<div class="note">'+esc(L.note)+'</div>';
+  }
+  el.innerHTML=h; el.style.display='block';
+  el.querySelectorAll('.chain').forEach(d=>d.addEventListener('click',()=>focusChain(L,+d.dataset.i)));
+  el.querySelectorAll('.chip').forEach(c=>c.addEventListener('click',()=>{ go(c.dataset.j); }));
+  const x=el.querySelector('.x'); if(x) x.addEventListener('click',()=>{el.style.display='none';});
+}
+function esc(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+/* ================= 视图控制 ================= */
+function applyT(){
+  stage.style.transform='scale('+S.scale+')';
+  const sw=parseFloat(stage.style.width)||0, sh=parseFloat(stage.style.height)||0;
+  sc.style.width=Math.max(sw*S.scale,1)+'px'; sc.style.height=Math.max(sh*S.scale,1)+'px';
+}
+function centerOn(x,y){ if(!isFinite(x)||!isFinite(y)) return; wrap.scrollLeft=Math.max(0,x*S.scale-wrap.clientWidth*0.36); wrap.scrollTop=Math.max(0,y*S.scale-wrap.clientHeight*0.42); }
+function fitView(force){
+  const w=wrap.clientWidth-( $('#panels').style.display==='block'?418:40 );
+  const sw=parseFloat(stage.style.width)||w;
+  if(!force && S.__fitted && S.cur===S.__fittedL) return;
+  /* 导图很高：只按宽度适配（不超过 1:1），纵向用滚动条 */
+  S.scale=Math.max(.5, Math.min(1, (w-28)/sw));
+  S.__fitted=true; S.__fittedL=S.cur; applyT();
+  /* 根节点在竖直方向居中，所以初始要滚到根而不是顶部 */
+  const rt=document.querySelector('#nodes .node.root');
+  wrap.scrollLeft=0;
+  wrap.scrollTop=Math.max(0,(rt&&rt.__y!==undefined ? rt.__y*S.scale : 0)-36);
+}
+function panBy(dx,dy){ wrap.scrollLeft+=dx; wrap.scrollTop+=dy; }
+wrap.addEventListener('wheel',e=>{
+  if(!S.cur || e.shiftKey) return;              /* shift+滚轮 = 正常纵向滚动 */
+  e.preventDefault();
+  const r=wrap.getBoundingClientRect(), mx=e.clientX-r.left, my=e.clientY-r.top;
+  const cx=(wrap.scrollLeft+mx)/S.scale, cy=(wrap.scrollTop+my)/S.scale;
+  const ns=Math.min(2.2, Math.max(.3, S.scale*Math.exp(-e.deltaY*0.0012)));
+  S.scale=ns; applyT();
+  wrap.scrollLeft=cx*ns-mx; wrap.scrollTop=cy*ns-my;
+},{passive:false});
+let drag=null;
+wrap.addEventListener('mousedown',e=>{ if(e.target.closest('.node')||e.target.closest('#panels'))return;
+  drag={x:e.clientX,y:e.clientY,sl:wrap.scrollLeft,st:wrap.scrollTop}; wrap.style.cursor='grabbing'; });
+window.addEventListener('mousemove',e=>{ if(!drag)return;
+  wrap.scrollLeft=drag.sl-(e.clientX-drag.x); wrap.scrollTop=drag.st-(e.clientY-drag.y); });
+window.addEventListener('mouseup',()=>{ drag=null; wrap.style.cursor=''; });
+
+/* ================= 导航 ================= */
+function go(id){
+  if(id==='global'){ showGlobal(); return; }
+  S.cur=id; S.depth=+( $('#b-depth').value||4);
+  S.collapsed=new Set(); S.__fitted=false;
+  $('#global').style.display='none'; wrap.style.display='block'; $('#head').style.display='block';
+  prune();
+  render();
+}
+function prune(){
+  // collapse nodes deeper than depth-1 automatically to keep first view calm
+}
+function focusNode(term){
+  const L=BY_ID[S.cur]; buildPath(L.tree);
+  const t=findNode(L.tree, term); if(!t) return false;
+  let cur=t; const chain=[];
+  while(cur){ chain.push(cur.__id); cur=parentOf(cur); }
+  chain.forEach(id=>S.collapsed.delete(S.cur+'::'+id));
+  const want=t.__id; t.__flash=true;
+  const saveDepth=S.depth; S.depth=Math.max(S.depth, depthOf(L.tree, want)+1);
+  render().then(()=>{
+    S.depth=saveDepth;
+    const el=[...nodesEl.querySelectorAll('.node')].find(e=>e.dataset.id===want);
+    if(el){
+      el.classList.add('flash'); setTimeout(()=>el.classList.remove('flash'),2600);
+      centerOn(el.__x||0, el.__y||0);
+    }
+  });
+  return true;
+}
+function depthOf(root, id){ let best=-1; (function w(n,d){ if(n.__id===id) best=Math.max(best,d); (n.c||[]).forEach(k=>w(k,d+1)); })(root,0); return best<0?9:best; }
+$('#search').addEventListener('keydown',e=>{
+  if(e.key!=='Enter')return;
+  const q=e.target.value.trim(); if(!q)return;
+  const cur=BY_ID[S.cur]&&findNode(BY_ID[S.cur].tree,q);
+  if(cur){ focusNode(q); return; }
+  for(const L of LECTURES){ buildPath(L.tree); if(findNode(L.tree,q)){ go(L.id); setTimeout(()=>focusNode(q),260); return; } }
+  alert('未在讲义中找到：'+q);
+});
+
+/* ================= 全局图 ================= */
+const GCH=[
+ {id:'ch1',n:'第一章 热力学回顾',ids:['l1a','l1b'],x:60,y:60,w:210,color:'#2563eb'},
+ {id:'ch2',n:'第二章 概率论初步',ids:['l2'],x:60,y:190,w:210,color:'#0891b2'},
+ {id:'ch3',n:'第三章 经典系综理论',ids:['l3a','l3b','l3c'],x:360,y:120,w:220,color:'#6d28d9'},
+ {id:'ch4',n:'第四章 经典流体',ids:['l4a','l4b','l4c'],x:680,y:40,w:210,color:'#059669'},
+ {id:'ch5',n:'第五章 量子理想气体',ids:['l5'],x:680,y:200,w:210,color:'#d97706'},
+ {id:'ch6',n:'第六章 二级相变平均场',ids:['l6a','l6b','l6c','l6d','l6e'],x:950,y:120,w:215,color:'#dc2626'},
+ {id:'ch7',n:'第七章 非平衡态统计',ids:['l7'],x:360,y:290,w:220,color:'#4f46e5'}
+];
+function drawGlobal(){
+  $('#head').style.display='none'; wrap.style.display='none'; $('#global').style.display='block';
+  let s='<svg id="gsvg" width="1240" height="400" viewBox="0 0 1240 400">';
+  s+='<defs><marker id="ga" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#64748b"/></marker></defs>';
+  const edges=[
+    ['ch1','ch3','系综重推热力学定律'],
+    ['ch2','ch3','概率语言与鞍点法'],
+    ['ch1','ch7','熵增加 ⇔ H 定理'],
+    ['ch3','ch4','Z_N / Ξ 计算引擎'],
+    ['ch3','ch5','巨正则 → BE/FD 分布'],
+    ['ch3','ch6','涨落-响应、有限系统无相变'],
+    ['ch3','ch7','刘维尔定理的局限'],
+    ['ch4','ch6','平均场与临界指数'],
+    ['ch5','ch6','序参量幂律、热力学极限奇点'],
+    ['ch2','ch7','统计独立性假设'],
+  ];
+  edges.forEach(([a,b,t])=>{
+    const A=GCH.find(g=>g.id===a), B=GCH.find(g=>g.id===b);
+    const x1=A.x+A.w, y1=A.y+30, x2=B.x, y2=B.y+30;
+    const mx=(x1+x2)/2;
+    const d = x2<x1 ? 'M'+x1+','+y1+' C'+(x1+80)+','+(y1-58)+' '+(x2-80)+','+(y2-58)+' '+x2+','+y2
+                    : 'M'+x1+','+y1+' C'+mx+','+y1+' '+mx+','+y2+' '+x2+','+y2;
+    s+='<path d="'+d+'" fill="none" stroke="#64748b" stroke-width="1.6" marker-end="url(#ga)" opacity=".8"/>';
+    const lx=(x1+x2)/2, ly=(x2<x1? Math.min(y1,y2)-72 : (y1+y2)/2);
+    s+='<text x="'+lx+'" y="'+ly+'" font-size="11" fill="#475569" text-anchor="middle">'+t+'</text>';
+  });
+  GCH.forEach(g=>{
+    s+='<g style="cursor:pointer" data-c="'+g.id+'">'+
+       '<rect x="'+g.x+'" y="'+g.y+'" width="'+g.w+'" height="62" rx="11" fill="#fff" stroke="'+g.color+'" stroke-width="2"/>'+
+       '<rect x="'+g.x+'" y="'+g.y+'" width="6" height="62" rx="3" fill="'+g.color+'"/>'+
+       '<text x="'+(g.x+16)+'" y="'+(g.y+25)+'" font-size="14" font-weight="700" fill="#111827">'+g.n+'</text>'+
+       '<text x="'+(g.x+16)+'" y="'+(g.y+45)+'" font-size="11" fill="#6b7280">'+g.ids.length+' 份讲义 · 点击查看</text></g>';
+  });
+  s+='</svg>';
+  let steps = GLOBAL_MAIN.map((x,i)=>'<div class="step"><div class="n">'+(i+1)+'</div><div class="tx">'+x.t+
+      (x.id?' <span class="jump" data-j="'+x.id+'">['+x.jt+']</span>':'')+'<br><em>'+x.e+'</em></div></div>').join('');
+  let rows = GLOBAL_FORMULAS.map(r=>'<tr><td class="f">'+r[0]+'</td><td>'+r[1]+'</td><td>'+r[2]+
+      (r[3]?' <span class="jump" data-j="'+r[3]+'" style="color:var(--accent);cursor:pointer;text-decoration:underline dotted">跳转</span>':'')+'</td></tr>').join('');
+  $('#global').innerHTML=
+   '<h2>全局关系图：从热力学到非平衡态</h2>'+
+   '<p class="lede">七章之间只有一条主干：<b>第一章</b>给出宏观唯象定律与态函数，<b>第二章</b>提供概率语言，'+
+   '<b>第三章</b>用等几率原理＋刘维尔定理造出三个系综配分函数（整门课的计算引擎），'+
+   '<b>第四、五章</b>把配分函数分别用于"有相互作用的经典气体"和"无相互作用但全同的量子气体"，'+
+   '<b>第六章</b>在两章的临界现象之上抽象出序参量、对称性破缺与普适类，<b>第七章</b>回到第三章留下的问题：'+
+   '微观可逆的刘维尔动力学如何产生宏观不可逆的熵增加。</p>'+
+   '<div id="gw">'+s+'</div>'+
+   '<div class="legend"><span><i style="color:#2563eb">§</i>小节</span><span><i style="color:#b45309">★</i>重点</span>'+
+   '<span><i style="color:#6d28d9">◇</i>定理</span><span><i style="color:#334155">∑</i>公式</span>'+
+   '<span><i style="color:#047857">例</i>模型/实例</span><span><i style="color:#94a3b8">⚠</i>不要求/选讲</span>'+
+   '<span><i style="color:#ea580c">━┅</i>推导关系</span></div>'+
+   '<div class="card"><h3>贯穿七章的主线推导</h3>'+steps+'</div>'+
+   '<div class="card"><h3>公式与定理速查（按讲义顺序）</h3><table class="tbl"><thead><tr><th>公式</th><th>含义</th><th>出处</th><th></th></tr></thead><tbody>'+rows+'</tbody></table></div>'+
+   '<div class="card"><h3>讲义文件清单</h3><table class="tbl"><thead><tr><th>#</th><th>文件</th><th>页</th><th>覆盖内容</th></tr></thead><tbody>'+
+     LECTURES.map((L,i)=>'<tr><td>'+(i+1)+'</td><td class="f"><span class="jump" data-j="'+L.id+'" style="color:var(--accent);cursor:pointer;text-decoration:underline dotted">'+L.file+'</span></td><td>'+L.pages+'</td><td>'+L.cover+'</td></tr>').join('')+
+     '</tbody></table></div>';
+  $('#global').querySelectorAll('[data-j]').forEach(x=>x.addEventListener('click',()=>go(x.dataset.j)));
+  $('#global').querySelectorAll('[data-c]').forEach(g=>g.addEventListener('click',()=>go(GCH.find(c=>c.id===g.dataset.c).ids[0])));
+  typeset($('#global'));
+}
+const GLOBAL_MAIN=[
+ {t:'热力学第零定律：热的平衡具有可传递性',e:'⇒ 温度是态函数，可写物态方程 $F(x_i,\\theta)=0$。热力学里它只能靠实验；统计物理要把它推导出来。',id:'l1a',jt:'第一章 I.B'},
+ {t:'热力学第一定律：能量守恒、第一类永动机不可能',e:'⇒ 内能 $U$ 存在，$dU=\\delta Q+\\delta W=\\delta Q+\\sum Y_idy_i$。',id:'l1a',jt:'第一章 I.C'},
+ {t:'热力学第二定律（Kelvin / Clausius 表述）',e:'⇒ 卡诺定理（可逆机效率最高、只依赖两热源温度）⇒ 绝对温标 $Q_2/Q_1=T_2/T_1$。',id:'l1a',jt:'第一章 I.D–I.E'},
+ {t:'卡诺定理推广到任意循环',e:'⇒ 克劳修斯不等式 $\\oint\\delta Q/T\\le0$ ⇒ 可逆时积分与路径无关 ⇒ 熵 $S$ 作为态函数存在 ⇒ 熵增加原理。',id:'l1a',jt:'第一章 I.F'},
+ {t:'对 $U,H,F,G$ 做勒让德变换 ＋ 广延性',e:'⇒ 四个特性函数与 $\\mu dN$、Gibbs–Duhem、麦克斯韦关系、相律、稳定性条件 $C_V\\ge0,\\kappa_T\\ge0$。',id:'l1b',jt:'第一章 I.H–I.K'},
+ {t:'宏观量是大量粒子的统计和',e:'⇒ 概率语言：矩／累积量、中心极限定理给出相对涨落 $\\sim1/\\sqrt N$，鞍点法＋Stirling 使"最大项＝总和"。',id:'l2',jt:'第二章 II.B–II.F'},
+ {t:'等几率原理 ＋ 刘维尔定理（$d\\rho/dt=0$）',e:'⇒ 平衡分布只能是 $\\rho_{eq}=\\rho(H)$；等几率作为独立公设给出 $\\rho\\propto\\delta(H-E)$。',id:'l3a',jt:'第三章 III.A–III.B'},
+ {t:'$S=k_B\\ln\\Omega$ ＋ 熵极大',e:'⇒ 重新推出第零/第一/第二定律、$p,\\mu,T$ 的定义，以及 Sackur–Tetrode、$pV=Nk_BT$、$N!$ 与 Gibbs 佯谬。',id:'l3b',jt:'第三章 III.C'},
+ {t:'系统与热源（＋粒子源）接触，对 $\\ln\\Omega_R$ 做鞍点展开',e:'⇒ 正则 $\\rho=e^{-\\beta H}/Z,\\ F=-k_BT\\ln Z$；巨正则 $\\rho=e^{-\\beta(H-\\mu N)}/\\Xi,\\ J=-k_BT\\ln\\Xi=-pV$。',id:'l3c',jt:'第三章 III.D'},
+ {t:'对配分函数再求导（$\\partial_\\beta\\ln Z$、$\\partial_\\mu\\ln\\Xi$）',e:'⇒ 涨落＝响应：$\\langle(\\Delta E)^2\\rangle=k_BT^2C_V$、$\\langle(\\Delta N)^2\\rangle=k_BT\\bar N^2\\kappa_T/V$ ⇒ 相对涨落 $1/\\sqrt N$ ⇒ 系综等价。',id:'l3c',jt:'第三章 III.D–III.E'},
+ {t:'把 $H=\\sum p^2/2m+\\sum\\phi(r_{ij})$ 代入 $Z_N$，取累积量并重求和',e:'⇒ Mayer 函数与集团展开 ⇒ $B_2=b-a/k_BT$ ⇒ 范德瓦尔斯方程 ⇒ 临界点、对应态定律、平均场指数 $\\beta=\\tfrac12,\\delta=3,\\gamma=1$。',id:'l4b',jt:'第四章 IV.A–IV.D'},
+ {t:'密度升高使 $n\\lambda_T^3$ 展开失效',e:'⇒ 改用分布函数 $g(r)$、Debye 屏蔽；相变的严格基础：李杨零点定理——奇点只在 $V\\to\\infty$ 出现。',id:'l4c',jt:'第四章 §4.5–IV.E'},
+ {t:'全同性原理 ＋ 巨正则对 $N$ 求和',e:'⇒ $\\Xi=\\prod_s(1\\pm e^{-\\beta\\epsilon_s-\\alpha})^{\\pm1}$ ⇒ 玻色/费米分布；经典极限条件 $n\\lambda_T^3\\ll1$。',id:'l5',jt:'第五章 V.A'},
+ {t:'玻色气体的 $n\\lambda_T^3=g_{3/2}(z)$ 有上限 $\\zeta(3/2)=2.612$',e:'⇒ 矛盾迫使基态单独处理 ⇒ BEC：$T_c=\\frac{2\\pi\\hbar^2}{mk_B}(n/\\zeta(3/2))^{2/3}$，$n_0/n=1-(T/T_c)^{3/2}$。',id:'l5',jt:'第五章 V.B'},
+ {t:'近邻耦合的自旋系统：$2^N$ 项无法精确求',e:'⇒ Weiss 分子场解耦 ⇒ 自洽方程 $m=\\tanh[\\beta(qJm+H)]$ ⇒ $k_BT_c=qJ$ 与全套平均场指数；Bragg–Williams 用混合熵重做，朗道理论把它公理化。',id:'l6b',jt:'第六章 VI.A–VI.D'},
+ {t:'允许序参量随空间变化并统计处理其涨落（Landau–Ginzburg）',e:'⇒ $C(r)\\propto e^{-r/\\xi}/r$，$\\xi\\sim|T-T_c|^{-1/2}$；$\\xi\\to\\infty$ 既解释平均场失效，也解释普适性。',id:'l6d',jt:'第六章 VI.E'},
+ {t:'不用近似：键展开＋对偶变换（$\\sinh2\\beta J\\sinh2\\beta^*J=1$）',e:'⇒ Kramers–Wannier 精确 $T_c$；Onsager 比热对数发散、杨振宁 $m\\sim(1-T/T_c)^{1/8}$ ⇒ 平均场指数被定量修正。',id:'l6e',jt:'第六章 VI.F'},
+ {t:'连续对称性 ⇒ 破缺相有无能隙方向（Goldstone 模）',e:'⇒ $C(r)\\sim1/r$、红外发散 ⇒ Mermin–Wagner：二维不可能有长程序；临界指数只依赖对称性＋维数。',id:'l6e',jt:'第六章 VI.G–VI.H'},
+ {t:'最后回到第一章留下的问题：微观可逆如何产生宏观不可逆',e:'⇒ 分子混沌假设（唯一的非力学输入）⇒ 玻尔兹曼方程 ⇒ H 定理 $dH/dt\\le0$，$S=-k_BH+C$ ⇒ 熵增加获得统计证明；线性化后给出 $\\eta,\\sigma,\\kappa$ 与 Wiedemann–Franz 定律。',id:'l7',jt:'第七章'}
+];
+const GLOBAL_FORMULAS=[
+ ['$dU=TdS+\\sum_iY_idy_i+\\mu dN$','热力学基本微分方程，讲义称"最核心"','第一章 I.G','l1b'],
+ ['$\\eta=1-T_2/T_1$','卡诺热机效率：绝对温标的操作定义','第一章 I.D–I.E','l1a'],
+ ['$\\oint\\delta Q/T\\le0\\Rightarrow dS=\\delta Q_{rev}/T$','克劳修斯不等式 ⇒ 熵存在；孤立系 $\\Delta S\\ge0$','第一章 I.F','l1a'],
+ ['$C_p-C_V=TV\\alpha^2/\\kappa_T\\ge0$','热容差与稳定性，第五章 BEC 的 $C_V$ 反例参照','第一章 I.I','l1b'],
+ ['$(\\partial p/\\partial V)_T=(\\partial^2p/\\partial V^2)_T=0$','临界点条件 → 第四章 $T_c,p_c,v_c$ 与第六章指数','第一章 I.K / 第四章 IV.D','l4b'],
+ ['$\\ln\\tilde p(k)=\\sum_n(-ik)^n\\langle x^n\\rangle_c/n!$','累积量生成函数＝连通图之和（集团展开的骨架）','第二章 II.B','l2'],
+ ['$\\sigma/\\langle X\\rangle\\sim1/\\sqrt N$','中心极限定理 ⇒ 宏观量的确定性','第二章 II.E','l2'],
+ ['$\\int dx\\,e^{N\\phi}\\approx e^{N\\phi_{max}}\\sqrt{2\\pi/N|\\phi^{\\prime\\prime}|}$','鞍点法：正则/巨正则推导与 $\\ln\\Omega$ 广延性的工具','第二章 II.F','l2'],
+ ['$d\\tilde\\rho/dt=0,\\quad\\partial_t\\rho=\\{H,\\rho\\}$','刘维尔定理／方程：相体积守恒','第三章 III.B','l3a'],
+ ['$\\rho_{eq}=\\rho(H)$','平衡分布只能是 $H$ 的函数 ⇒ 允许 $\\delta(H-E)$ 与 $e^{-\\beta H}$','第三章 III.B','l3a'],
+ ['$S=k_B\\ln\\Omega$','玻尔兹曼熵：热力学第二定律的统计内容','第三章 III.C','l3b'],
+ ['$\\Omega=\\frac1{N!h^{Nr}}\\int d\\mathbf p\\,d\\mathbf q$','微正则态计数；$N!$ 解决 Gibbs 佯谬','第三章 III.C','l3b'],
+ ['$Z=\\sum_se^{-\\beta E_s},\\quad F=-k_BT\\ln Z$','正则配分函数与自由能＝整门课的计算引擎','第三章 III.D.1','l3c'],
+ ['$\\langle(\\Delta E)^2\\rangle=k_BT^2C_V$','能量涨落＝响应（热容）','第三章 III.D.1','l3c'],
+ ['$\\Xi=\\sum_Nz^NZ_N,\\ J=-k_BT\\ln\\Xi=-pV$','巨配分函数与巨势；通向量子气体与集团展开','第三章 III.D.2','l3c'],
+ ['$\\overline{(\\Delta N)^2}/\\bar N^2=(k_BT/V)\\kappa_T$','粒子数涨落＝压缩率 ⇒ 临界乳光','第三章 III.D–III.E','l3c'],
+ ['$\\rho\\propto e^{-\\beta E}\\Rightarrow W\\propto e^{-\\Delta S\\Delta T/2k_BT}$','Einstein–Smoluchowski 涨落的准热力学普遍式','第三章 III.E','l3c'],
+ ['$f_{ij}=e^{-\\beta\\phi(r_{ij})}-1$','Mayer 函数：重求和核心区发散后的自然变量','第四章 §4.1','l4a'],
+ ['$B_2=-\\tfrac12\\int f\\,d^3r=b-a/k_BT$','第二维里系数＝两体集团积分','第四章 §4.2–4.3','l4b'],
+ ['$(p+an^2)(v-b)=k_BT$','范德瓦尔斯方程：排斥给排除体积、吸引给内压','第四章 IV.B','l4b'],
+ ['$T_c=\\tfrac{8a}{27Rb},\\ v_c=3b,\\ Z_c=3/8$','临界参量与"普适"的临界压缩比（平均场值）','第四章 IV.D','l4b'],
+ ['$(p^*+3/v^{*2})(v^*-1/3)=8t^*/3$','对应态定律：不含物质参数','第四章 IV.D','l4b'],
+ ['$\\beta=\\tfrac12,\\ \\delta=3,\\ \\gamma=1,\\ \\alpha=0$','平均场临界指数（气液与铁磁共有）','第四章 IV.D','l4b'],
+ ['$\\int d\\mathbf x[g(r)-1]=k_BT\\kappa_T-1/n$','涨落（压缩）物态方程：结构＝热力学','第四章 §4.5','l4c'],
+ ['$\\nabla^2\\phi-\\kappa^2\\phi=0,\\ \\phi\\propto e^{-\\kappa r}/r$','Debye–Hückel 屏蔽；长程力给出 $\\kappa^3$ 非解析修正','第四章 §4.6','l4c'],
+ ['相变 ⇔ $\\Xi(z)$ 的零点汇于正实轴','李–杨定理：奇点只能来自热力学极限','第四章 IV.E','l4c'],
+ ['$\\bar a_s=1/(e^{\\alpha+\\beta\\epsilon_s}\\pm1)$','玻色/费米分布；经典极限条件 $n\\lambda_T^3\\ll1$','第五章 V.A','l5'],
+ ['$g_s(z)=\\sum_jz^j/j^s,\\ g_s(1)=\\zeta(s)$','玻色积分：一切幂律的母函数','第五章 V.A','l5'],
+ ['$T_c=\\dfrac{2\\pi\\hbar^2}{mk_B}\\big(n/\\zeta(3/2)\\big)^{2/3}$','BEC 临界温度；$\\lambda_T^3/v=\\zeta(3/2)$ 为判据','第五章 V.B','l5'],
+ ['$n_0/n=1-(T/T_c)^{3/2},\\ U\\propto T^{5/2}$','序参量幂律与热容异常（三级相变）','第五章 V.B','l5'],
+ ['$H=-J\\sum_{\\langle ij\\rangle}\\sigma_i\\sigma_j-\\mu H_{ext}\\sum_i\\sigma_i$','Ising 模型：交换作用的量子起源 $E_{ex}=-J\\vec S_1\\cdot\\vec S_2$','第六章 VI.A','l6a'],
+ ['$m=\\tanh[\\beta(qJm+\\mathcal H)],\\ k_BT_c=qJ$','平均场自洽方程与临界温度','第六章 VI.B','l6b'],
+ ['$F=-\\tfrac{NqJ}2m^2+Nk_BT[\\tfrac{1+m}2\\ln\\tfrac{1+m}2+\\cdots]$','Bragg–Williams 自由能＝平均场的熵版本','第六章 VI.C','l6c'],
+ ['$f=f_0+\\tfrac a2M^2+\\tfrac b4M^4,\\ a=a_0(T-T_c)$','朗道自由能：只依赖对称性与解析性','第六章 VI.D','l6c'],
+ ['$F[m]=\\int d^3r[f_0+\\tfrac a2m^2+\\tfrac b4m^4+\\tfrac d2(\\nabla m)^2]$','Landau–Ginzburg 泛函：允许序参量不均匀','第六章 VI.E','l6d'],
+ ['$C(r)=\\dfrac{k_BT}{4\\pi d}\\dfrac{e^{-r/\\xi}}r,\\ \\xi=\\sqrt{d/a}$','Ornstein–Zernike 型关联与关联长度发散（$\\nu=\\tfrac12$）','第六章 VI.E','l6d'],
+ ['$\\chi=\\beta(\\langle M^2\\rangle-\\langle M\\rangle^2)$','涨落–响应的一般形式（第三章 $C_V$、$\\kappa_T$ 的自旋版）','第六章 VI.E','l6d'],
+ ['$Z_N=\\mathrm{Tr}\\,M^N\\to\\lambda_+^N,\\ T_c=0$','一维 Ising 严格解：无有限温相变','第六章 VI.F.1','l6d'],
+ ['$e^{\\beta J\\sigma_i\\sigma_j}=\\cosh\\beta J(1+v\\sigma_i\\sigma_j),\\ v=\\tanh\\beta J$','键展开：只有闭合图贡献','第六章 VI.F.2','l6e'],
+ ['$\\tanh\\beta^*J=e^{-2\\beta J}$（$\\sinh2\\beta J\\sinh2\\beta^*J=1$）','Kramers–Wannier 对偶 ⇒ 不动点给精确 $T_c$','第六章 VI.F.2','l6e'],
+ ['$m=[1-\\sinh^{-4}(2\\beta J)]^{1/8}$','杨振宁自发磁化：$\\beta=\\tfrac18$ 而非 $\\tfrac12$','第六章 VI.F.2','l6e'],
+ ['$\\xi^{-1}=\\ln(\\lambda_+/\\lambda_-)$','一维关联长度；$T\\to0$ 才发散（零温＝临界点）','第六章 VI.F.1','l6d'],
+ ['$\\partial_tf+\\vec v\\cdot\\nabla_rf+\\vec F\\cdot\\nabla_pf=(\\partial f/\\partial t)_{coll}$','玻尔兹曼微分积分方程','第七章 VII.A','l7'],
+ ['$f^{(2)}(1,2)=f^{(1)}(1)f^{(1)}(2)$','分子混沌假设：不可逆性的唯一来源','第七章 VII.A','l7'],
+ ['$dH/dt\\le0,\\ S=-k_BH+C$','H 定理 ⇒ 熵增加原理的统计证明','第七章 VII.B','l7'],
+ ['$ff_1=f_1^\\prime f^\\prime\\Rightarrow$ Maxwell 分布','细致平衡 ⇒ 平衡分布：与第三章结果闭环','第七章 VII.C','l7'],
+ ['$\\eta=nk_BT\\bar\\tau_0,\\ \\sigma=ne^2\\tau_F/m,\\ \\kappa=\\tfrac{\\pi^2}3\\tfrac{n\\tau_F}{m}k_B^2T$','弛豫时间近似给出的三个输运系数','第七章 VII.D','l7'],
+ ['$L=\\kappa/(\\sigma T)=\\tfrac{\\pi^2}3k_B^2/e^2$','Wiedemann–Franz 定律：普适常数的统计来源','第七章 VII.D','l7']
+];
+
+/* ================= 按钮 ================= */
+$('#b-expand').onclick=()=>{S.collapsed.clear();S.depth=9;$('#b-depth').value='9';render();};
+$('#b-collapse').onclick=()=>{S.collapsed.clear();buildPath(BY_ID[S.cur].tree);
+  walk(BY_ID[S.cur].tree,(n,d)=>{ if(d>=1&&(n.c||[]).length) S.collapsed.add(S.cur+'::'+n.__id); });
+  // keep sections open one level
+  buildPath(BY_ID[S.cur].tree);
+  walk(BY_ID[S.cur].tree,(n,d)=>{ if(d>=2&&(n.c||[]).length) S.collapsed.delete(S.cur+'::'+n.__id); });
+  S.depth=3; $('#b-depth').value='3'; render();};
+$('#b-depth').onchange=e=>{S.depth=+e.target.value; S.collapsed.clear(); render();};
+$('#b-links').onclick=e=>{S.links=!S.links; e.target.classList.toggle('on',S.links); render();};
+$('#b-rel').onclick=e=>{S.rel=!S.rel; e.target.classList.toggle('on',S.rel); drawPanels(BY_ID[S.cur]); typeset($('#panels'));};
+$('#b-panel').onclick=e=>{S.panel=!S.panel; e.target.classList.toggle('on',S.panel); drawPanels(BY_ID[S.cur]); typeset($('#panels')); fitView(true);};
+$('#b-fit').onclick=()=>fitView(true);
+$('#b-in').onclick=()=>{S.scale=Math.min(2.2,S.scale*1.15);applyT();};
+$('#b-out').onclick=()=>{S.scale=Math.max(.2,S.scale/1.15);applyT();};
+$('#b-print').onclick=()=>{S.__fitted=false;fitView(true);setTimeout(()=>window.print(),150);};
+$('#gopen').onclick=()=>showGlobal();
+function showGlobal(){ S.cur=null; document.querySelectorAll('.lbtn').forEach(b=>b.classList.remove('act'));
+  $('#panels').style.display='none'; drawGlobal(); showWarn(); }
+window.addEventListener('resize',()=>{ if(S.cur) fitView(true); });
+window.addEventListener('keydown',e=>{
+  if(e.target && /INPUT|SELECT|TEXTAREA/.test(e.target.tagName)) return;
+  const k=e.key;
+  if(k==='+'||k==='='){S.scale=Math.min(2.2,S.scale*1.15);applyT();}
+  else if(k==='-'||k==='_'){S.scale=Math.max(.25,S.scale/1.15);applyT();}
+  else if(k==='0'){fitView(true);}
+  else if(k==='ArrowLeft'){panBy(90,0);} else if(k==='ArrowRight'){panBy(-90,0);}
+  else if(k==='ArrowUp'){panBy(0,90);} else if(k==='ArrowDown'){panBy(0,-90);}
+  else if(k==='['){step(-1);} else if(k===']'){step(1);}
+});
+function step(dir){
+  const i=LECTURES.findIndex(l=>l.id===S.cur); const j=(i+dir+LECTURES.length)%LECTURES.length;
+  go(LECTURES[j].id);
+}
+
+/* ================= 启动 ================= */
+(function init(){
+  const nav=$('#navlist'); let html='', ch=0;
+  LECTURES.forEach(L=>{
+    if(L.ch!==ch){ if(ch) html+='</div>'; ch=L.ch; html+='<div class="grp"><div class="gt">'+L.chName+'</div>'; }
+    html+='<div class="lbtn" data-id="'+L.id+'" title="'+esc(L.title)+'"><span class="pp">'+L.pages+'p</span><span>'+L.short+'</span></div>';
+  });
+  nav.innerHTML=html+'</div>';
+  nav.querySelectorAll('.lbtn').forEach(b=>b.onclick=()=>go(b.dataset.id));
+  if(window.innerWidth<1300){ S.panel=false; $('#b-panel').classList.remove('on'); }
+  go(LECTURES[0].id);
+})();
+</script>
+</body>
+</html>
