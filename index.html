@@ -3,39 +3,23 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#05060B">
+<meta name="theme-color" content="#07080D">
 <title>Bob C.'s Page</title>
 <style>
     :root {
-        /* iOS 系统色（深色模式变体） */
-        --sys-blue: #0A84FF;
-        --sys-green: #30D158;
-        --sys-orange: #FF9F0A;
-        --sys-pink: #FF375F;
-        --sys-purple: #BF5AF2;
-        --sys-teal: #40C8E0;
-        --sys-red: #FF453A;
-        --sys-indigo: #5E5CE6;
+        --surface: rgba(255, 255, 255, 0.055);
+        --surface-hover: rgba(255, 255, 255, 0.085);
+        --line: rgba(255, 255, 255, 0.09);
+        --line-hover: rgba(255, 255, 255, 0.16);
 
-        /* 液态玻璃 2.0 —— 磨砂为主，无边缘光照 */
-        --glass-fill: rgba(255, 255, 255, 0.14);
-        --glass-fill-hover: rgba(255, 255, 255, 0.185);
-        --glass-rim: rgba(255, 255, 255, 0.13);
-        --glass-blur: 42px;
-        --glass-sat: 155%;
-
-        --shadow-card: 0 1px 1px rgba(0, 0, 0, 0.18), 0 10px 26px -8px rgba(0, 0, 0, 0.55);
-        --shadow-hover: 0 2px 3px rgba(0, 0, 0, 0.2), 0 20px 42px -10px rgba(0, 0, 0, 0.62);
-
-        --radius-card: 26px;
-        --radius-icon: 17px;
+        --radius-card: 22px;
+        --radius-icon: 16px;
 
         --ease-ios: cubic-bezier(0.32, 0.72, 0, 1);
-        --ease-spring: cubic-bezier(0.34, 1.35, 0.5, 1);
 
         --label: #fff;
-        --label-2: rgba(235, 235, 245, 0.62);
-        --label-3: rgba(235, 235, 245, 0.38);
+        --label-2: rgba(235, 235, 245, 0.60);
+        --label-3: rgba(235, 235, 245, 0.34);
     }
 
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -44,273 +28,161 @@
         font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
                      "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei UI", "Microsoft YaHei",
                      "Noto Sans SC", system-ui, sans-serif;
-        background: #05060B;
+        /* 纯静态底色，颜色全部交给固定的 .wallpaper 层 */
+        background: #07080D;
         color: var(--label);
         line-height: 1.5;
         min-height: 100vh;
         min-height: 100svh;
-        padding: clamp(48px, 9vh, 92px) 20px calc(160px + env(safe-area-inset-bottom));
+        padding: clamp(44px, 8vh, 80px) 20px 64px;
         overflow-x: hidden;
         color-scheme: dark;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
-        text-rendering: optimizeLegibility;
         -webkit-tap-highlight-color: transparent;
     }
 
-    /* ---------- 壁纸 ---------- */
+    .container {
+        max-width: 640px;
+        margin: 0 auto;
+        position: relative;
+    }
 
+    /* ---------- 背景 ---------- */
+
+    /* 固定层 + 纯渐变：无 blur、无动画、无混合模式。
+       只栅格化一次，滚动由合成器处理，不触发重绘。 */
     .wallpaper {
         position: fixed;
         inset: 0;
         z-index: -1;
-        overflow: hidden;
         pointer-events: none;
-        background:
-            radial-gradient(90% 55% at 50% -8%, rgba(120, 120, 230, 0.22) 0%, transparent 72%),
-            radial-gradient(120% 90% at 50% 110%, #0B0E1A 0%, #070812 45%, #05060B 100%);
+        background-color: #07080D;
+        background-image:
+            radial-gradient(70% 62% at 24% 0%, rgba(94, 92, 230, 0.55) 0%, rgba(94, 92, 230, 0.16) 46%, transparent 76%),
+            radial-gradient(60% 55% at 102% 26%, rgba(10, 132, 255, 0.38) 0%, rgba(10, 132, 255, 0.10) 50%, transparent 78%),
+            radial-gradient(62% 58% at -2% 84%, rgba(191, 90, 242, 0.30) 0%, rgba(191, 90, 242, 0.08) 52%, transparent 78%),
+            radial-gradient(46% 42% at 98% 102%, rgba(64, 200, 224, 0.15) 0%, rgba(64, 200, 224, 0.035) 55%, transparent 80%);
     }
 
-    .bloom {
-        position: absolute;
-        border-radius: 50%;
-        filter: blur(112px);
-        will-change: transform;
-    }
-
-    .bloom-1 {
-        width: 760px; height: 760px;
-        top: -280px; left: -220px;
-        background: radial-gradient(circle, rgba(94, 92, 230, 0.50) 0%, rgba(94, 92, 230, 0.15) 48%, transparent 72%);
-        animation: drift1 38s ease-in-out infinite;
-    }
-
-    .bloom-2 {
-        width: 680px; height: 680px;
-        bottom: -300px; right: -240px;
-        background: radial-gradient(circle, rgba(10, 132, 255, 0.36) 0%, rgba(10, 132, 255, 0.11) 48%, transparent 72%);
-        animation: drift2 46s ease-in-out infinite;
-    }
-
-    .bloom-3 {
-        width: 560px; height: 560px;
-        bottom: -180px; left: -140px;
-        background: radial-gradient(circle, rgba(191, 90, 242, 0.34) 0%, rgba(191, 90, 242, 0.10) 48%, transparent 72%);
-        animation: drift3 32s ease-in-out infinite;
-    }
-
-    .bloom-4 {
-        width: 460px; height: 460px;
-        top: 12%; right: -160px;
-        background: radial-gradient(circle, rgba(64, 200, 224, 0.24) 0%, rgba(64, 200, 224, 0.07) 48%, transparent 72%);
-        animation: drift1 42s ease-in-out infinite reverse;
-    }
-
-    /* 中等尺度的光斑：给玻璃提供可折射的细节，磨砂/通透的差别由此显现 */
-    .orb {
-        position: absolute;
-        border-radius: 50%;
-        will-change: transform;
-    }
-
-    .orb-1 {
-        width: 320px; height: 320px;
-        top: 28%; left: -9%;
-        background: radial-gradient(circle at 38% 34%, rgba(64, 200, 224, 0.40) 0%, rgba(64, 200, 224, 0.10) 55%, transparent 73%);
-        filter: blur(26px);
-        animation: drift3 27s ease-in-out infinite;
-    }
-
-    .orb-2 {
-        width: 300px; height: 300px;
-        top: 50%; right: -16%;
-        background: radial-gradient(circle at 40% 38%, rgba(255, 159, 10, 0.24) 0%, rgba(255, 159, 10, 0.06) 55%, transparent 73%);
-        filter: blur(28px);
-        animation: drift2 33s ease-in-out infinite;
-    }
-
-    .orb-3 {
-        width: 360px; height: 360px;
-        top: 72%; left: 16%;
-        background: radial-gradient(circle at 45% 40%, rgba(255, 55, 95, 0.32) 0%, rgba(255, 55, 95, 0.07) 55%, transparent 73%);
-        filter: blur(30px);
-        animation: drift1 38s ease-in-out infinite reverse;
-    }
-
-    @keyframes drift1 {
-        0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
-        50%      { transform: translate3d(70px, 60px, 0) scale(1.12); }
-    }
-
-    @keyframes drift2 {
-        0%, 100% { transform: translate3d(0, 0, 0) scale(1.06); }
-        50%      { transform: translate3d(-80px, -50px, 0) scale(1); }
-    }
-
-    @keyframes drift3 {
-        0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
-        50%      { transform: translate3d(60px, -70px, 0) scale(1.1); }
-    }
-
-    .grain {
-        position: absolute;
-        inset: 0;
-        opacity: 0.045;
-        mix-blend-mode: overlay;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23g)'/%3E%3C/svg%3E");
-        background-size: 160px 160px;
-    }
-
-    /* ---------- 布局 ---------- */
-
-    .container {
-        max-width: 660px;
-        margin: 0 auto;
-        position: relative;
-        z-index: 1;
-    }
+    /* ---------- 头部 ---------- */
 
     .hero {
         text-align: center;
-        margin-bottom: clamp(28px, 5vh, 46px);
-        animation: riseIn 0.9s var(--ease-spring) backwards;
+        margin-bottom: 32px;
+        animation: riseIn 0.5s var(--ease-ios) backwards;
     }
 
     .avatar {
-        position: relative;
-        width: 112px;
-        height: 112px;
-        margin: 0 auto 22px;
+        width: 96px;
+        height: 96px;
+        margin: 0 auto 18px;
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 50px;
+        font-size: 44px;
         line-height: 1;
-        background: var(--glass-fill);
-        border: 1px solid var(--glass-rim);
-        backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
-        -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
-        box-shadow: var(--shadow-card), 0 24px 60px -22px rgba(110, 105, 255, 0.75);
-        transition: background 0.3s ease, border-color 0.3s ease;
-    }
-
-    .avatar::before {
-        content: "";
-        position: absolute;
-        inset: 5px;
-        border-radius: 50%;
-        background: linear-gradient(180deg,
-                    rgba(255, 255, 255, 0.18) 0%,
-                    rgba(255, 255, 255, 0.03) 58%,
-                    rgba(255, 255, 255, 0) 100%);
-        box-shadow: inset 0 0.5px 0.5px rgba(255, 255, 255, 0.3);
+        background: var(--surface);
+        border: 1px solid var(--line);
     }
 
     h1 {
-        font-size: clamp(2.1rem, 6.5vw, 2.7rem);
+        font-size: clamp(1.9rem, 6vw, 2.35rem);
         font-weight: 700;
         letter-spacing: -0.022em;
         line-height: 1.12;
     }
 
     .subtitle {
-        margin-top: 10px;
-        font-size: 1rem;
+        margin-top: 8px;
+        font-size: 0.9375rem;
         font-weight: 400;
         color: var(--label-2);
-        letter-spacing: 0.005em;
     }
 
-    /* ---------- 玻璃卡片 ---------- */
+    /* ---------- 列表 ---------- */
 
     .app-list {
         list-style: none;
         display: flex;
         flex-direction: column;
-        gap: 12px;
+        gap: 10px;
     }
 
     .app-card {
         display: flex;
         align-items: center;
-        gap: 16px;
-        padding: 16px 18px;
+        gap: 15px;
+        padding: 14px 16px;
         border-radius: var(--radius-card);
         corner-shape: squircle;
-        background: var(--glass-fill);
-        border: 1px solid var(--glass-rim);
-        backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
-        -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
-        box-shadow: var(--shadow-card), inset 0 1px 1px rgba(255, 255, 255, 0.07);
+        background: var(--surface);
+        border: 1px solid var(--line);
         text-decoration: none;
         color: inherit;
         cursor: pointer;
-        animation: riseIn 0.85s var(--ease-spring) backwards;
-        animation-delay: calc(var(--i) * 70ms + 120ms);
-        transition: transform 0.4s var(--ease-ios),
-                    background 0.25s ease,
-                    border-color 0.25s ease,
-                    box-shadow 0.4s var(--ease-ios);
+        animation: riseIn 0.5s var(--ease-ios) backwards;
+        animation-delay: calc(var(--i) * 50ms + 60ms);
+        transition: transform 0.3s var(--ease-ios),
+                    background-color 0.2s ease,
+                    border-color 0.2s ease;
     }
 
     .app-card:active {
-        transform: scale(0.977);
-        transition-duration: 0.12s;
+        transform: scale(0.985);
+        transition-duration: 0.1s;
     }
 
     @media (hover: hover) {
         .app-card:hover {
-            transform: translateY(-2px) scale(1.012);
-            background: var(--glass-fill-hover);
-            border-color: rgba(255, 255, 255, 0.22);
-            box-shadow: var(--shadow-hover), inset 0 1px 1px rgba(255, 255, 255, 0.09);
+            transform: translateY(-1px);
+            background: var(--surface-hover);
+            border-color: var(--line-hover);
         }
 
         .app-card:hover .chevron {
             transform: translateX(3px);
-            background-color: rgba(255, 255, 255, 0.62);
+            background-color: rgba(255, 255, 255, 0.58);
+        }
+
+        .app-card:hover .icon {
+            transform: scale(1.04);
         }
     }
 
-    /* 分层图标：色板 + 玻璃内层 + 字形 */
+    /* 分层图标：色板 + 内层高光 + 字形（纯渐变，无滤镜） */
     .icon {
         position: relative;
         flex-shrink: 0;
-        width: 58px;
-        height: 58px;
+        width: 54px;
+        height: 54px;
         border-radius: var(--radius-icon);
         corner-shape: squircle;
         display: flex;
         align-items: center;
         justify-content: center;
         background: linear-gradient(155deg, var(--c1) 0%, var(--c2) 100%);
-        box-shadow: 0 1px 1.5px rgba(0, 0, 0, 0.3), 0 7px 18px -7px rgba(0, 0, 0, 0.75);
-        transition: transform 0.45s var(--ease-spring);
+        transition: transform 0.3s var(--ease-ios);
     }
 
     .icon::before {
         content: "";
         position: absolute;
-        inset: 4.5px;
+        inset: 4px;
         border-radius: calc(var(--radius-icon) - 4px);
         corner-shape: squircle;
         background: linear-gradient(180deg,
-                    rgba(255, 255, 255, 0.30) 0%,
-                    rgba(255, 255, 255, 0.07) 52%,
+                    rgba(255, 255, 255, 0.26) 0%,
+                    rgba(255, 255, 255, 0.06) 52%,
                     rgba(255, 255, 255, 0) 100%);
-        box-shadow: inset 0 0.5px 0.5px rgba(255, 255, 255, 0.35);
     }
 
     .glyph {
         position: relative;
-        font-size: 26px;
+        font-size: 24px;
         line-height: 1;
-        filter: drop-shadow(0 1.5px 2.5px rgba(0, 0, 0, 0.38));
-    }
-
-    @media (hover: hover) {
-        .app-card:hover .icon { transform: scale(1.06); }
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
     }
 
     .text {
@@ -321,163 +193,45 @@
 
     .card-title {
         display: block;
-        font-size: 1.0625rem;
+        font-size: 1.03125rem;
         font-weight: 600;
         letter-spacing: -0.01em;
-        transition: text-shadow 0.3s ease;
     }
 
     .card-desc {
         display: block;
-        margin-top: 3px;
+        margin-top: 2px;
         font-size: 0.8125rem;
         font-weight: 400;
         color: var(--label-2);
-        line-height: 1.45;
-        transition: text-shadow 0.3s ease;
+        line-height: 1.4;
     }
 
     .chevron {
         flex-shrink: 0;
         width: 9px;
-        height: 16px;
+        height: 15px;
         background-color: var(--label-3);
         -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 9 16'%3E%3Cpath d='M1.5 1.5 7.5 8 1.5 14.5' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
         mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 9 16'%3E%3Cpath d='M1.5 1.5 7.5 8 1.5 14.5' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
-        transition: transform 0.35s var(--ease-ios), background-color 0.25s ease;
-    }
-
-    /* “最透明”档位的可读性补偿 */
-    body.ultra .card-title,
-    body.ultra .card-desc,
-    body.ultra h1,
-    body.ultra .subtitle {
-        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.55);
-    }
-
-    /* ---------- 底部悬浮玻璃控件 ---------- */
-
-    .glass-bar {
-        position: fixed;
-        left: 0;
-        right: 0;
-        bottom: max(20px, env(safe-area-inset-bottom));
-        margin-inline: auto;
-        width: min(460px, calc(100vw - 32px));
-        display: flex;
-        align-items: center;
-        gap: 14px;
-        padding: 12px 20px;
-        border-radius: 26px;
-        corner-shape: squircle;
-        background: var(--glass-fill);
-        border: 1px solid var(--glass-rim);
-        backdrop-filter: blur(calc(var(--glass-blur) * 1.15)) saturate(var(--glass-sat));
-        -webkit-backdrop-filter: blur(calc(var(--glass-blur) * 1.15)) saturate(var(--glass-sat));
-        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.22), 0 14px 36px -10px rgba(0, 0, 0, 0.7);
-        z-index: 10;
-        animation: riseIn 0.9s var(--ease-spring) 0.55s backwards;
-        transition: background 0.25s ease, border-color 0.25s ease;
-    }
-
-    .bar-glyph {
-        width: 22px;
-        height: 22px;
-        flex-shrink: 0;
-        color: rgba(255, 255, 255, 0.6);
-    }
-
-    .glass-bar input[type="range"] {
-        -webkit-appearance: none;
-        appearance: none;
-        flex: 1;
-        height: 22px;
-        background: transparent;
-        cursor: pointer;
-        margin: 0;
-    }
-
-    .glass-bar input[type="range"]::-webkit-slider-runnable-track {
-        height: 6px;
-        border-radius: 3px;
-        background: linear-gradient(90deg,
-                    rgba(255, 255, 255, 0.88) 0%,
-                    rgba(255, 255, 255, 0.88) var(--pct, 30%),
-                    rgba(120, 120, 128, 0.42) var(--pct, 30%),
-                    rgba(120, 120, 128, 0.42) 100%);
-    }
-
-    .glass-bar input[type="range"]::-webkit-slider-thumb {
-        -webkit-appearance: none;
-        appearance: none;
-        width: 22px;
-        height: 22px;
-        margin-top: -8px;
-        border-radius: 50%;
-        background: #fff;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35), 0 3px 8px rgba(0, 0, 0, 0.22);
-        transition: transform 0.2s var(--ease-ios);
-    }
-
-    .glass-bar input[type="range"]:active::-webkit-slider-thumb {
-        transform: scale(1.1);
-    }
-
-    .glass-bar input[type="range"]::-moz-range-track {
-        height: 6px;
-        border-radius: 3px;
-        background: rgba(120, 120, 128, 0.42);
-    }
-
-    .glass-bar input[type="range"]::-moz-range-progress {
-        height: 6px;
-        border-radius: 3px;
-        background: rgba(255, 255, 255, 0.88);
-    }
-
-    .glass-bar input[type="range"]::-moz-range-thumb {
-        width: 22px;
-        height: 22px;
-        border: none;
-        border-radius: 50%;
-        background: #fff;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35), 0 3px 8px rgba(0, 0, 0, 0.22);
-    }
-
-    .bar-label {
-        flex-shrink: 0;
-        min-width: 3.4em;
-        text-align: right;
-        font-size: 0.75rem;
-        font-weight: 600;
-        color: var(--label-2);
-        letter-spacing: 0.02em;
+        transition: transform 0.25s var(--ease-ios), background-color 0.2s ease;
     }
 
     /* ---------- 动效 ---------- */
 
     @keyframes riseIn {
-        from { opacity: 0; transform: translateY(16px) scale(0.985); }
-        to   { opacity: 1; transform: translateY(0) scale(1); }
+        from { opacity: 0; transform: translateY(10px); }
+        to   { opacity: 1; transform: translateY(0); }
     }
 
-    /* ---------- 降级与适配 ---------- */
-
-    @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-        :root {
-            --glass-fill: rgba(26, 28, 40, 0.86);
-            --glass-fill-hover: rgba(34, 36, 50, 0.9);
-        }
-    }
+    /* ---------- 适配 ---------- */
 
     @media (max-width: 480px) {
-        :root { --radius-card: 22px; --radius-icon: 15px; }
-        .app-card { gap: 14px; padding: 14px 16px; }
-        .icon { width: 52px; height: 52px; }
-        .glyph { font-size: 24px; }
-        .card-title { font-size: 1rem; }
-        .avatar { width: 96px; height: 96px; font-size: 44px; margin-bottom: 18px; }
-        .glass-bar { gap: 12px; padding: 11px 18px; }
+        :root { --radius-card: 19px; --radius-icon: 14px; }
+        .app-card { gap: 13px; padding: 13px 14px; }
+        .icon { width: 50px; height: 50px; }
+        .glyph { font-size: 22px; }
+        .avatar { width: 84px; height: 84px; font-size: 38px; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -491,16 +245,7 @@
 </head>
 <body>
 
-    <div class="wallpaper" aria-hidden="true">
-        <span class="bloom bloom-1"></span>
-        <span class="bloom bloom-2"></span>
-        <span class="bloom bloom-3"></span>
-        <span class="bloom bloom-4"></span>
-        <span class="orb orb-1"></span>
-        <span class="orb orb-2"></span>
-        <span class="orb orb-3"></span>
-        <span class="grain"></span>
-    </div>
+    <div class="wallpaper" aria-hidden="true"></div>
 
     <main class="container">
         <header class="hero">
@@ -573,51 +318,5 @@
         </ul>
     </main>
 
-    <div class="glass-bar">
-        <svg class="bar-glyph" viewBox="0 0 24 24" aria-hidden="true">
-            <circle cx="9.5" cy="12" r="6.6" fill="none" stroke="currentColor" stroke-width="1.6"/>
-            <circle cx="14.5" cy="12" r="6.6" fill="currentColor" opacity="0.4"/>
-        </svg>
-        <input id="glassSlider" type="range" min="0" max="100" value="0"
-               aria-label="液态玻璃透明度">
-        <span class="bar-label" id="glassLabel">磨砂</span>
-    </div>
-
-    <script>
-        (function () {
-            var root = document.documentElement;
-            var slider = document.getElementById('glassSlider');
-            var label = document.getElementById('glassLabel');
-            var levels = [[97, '最透明'], [67, '通透'], [34, '均衡'], [0, '磨砂']];
-            var STORE_KEY = 'liquidGlassLevel';
-
-            function apply(value) {
-                var t = value / 100;
-                var fill = 0.14 - 0.122 * t;
-                root.style.setProperty('--glass-fill', 'rgba(255,255,255,' + fill.toFixed(4) + ')');
-                root.style.setProperty('--glass-fill-hover', 'rgba(255,255,255,' + (fill + 0.045).toFixed(4) + ')');
-                root.style.setProperty('--glass-rim', 'rgba(255,255,255,' + (0.13 + 0.09 * t).toFixed(3) + ')');
-                root.style.setProperty('--glass-blur', (42 - 40.5 * t).toFixed(1) + 'px');
-                root.style.setProperty('--glass-sat', (155 + 70 * t).toFixed(0) + '%');
-                slider.style.setProperty('--pct', value + '%');
-                label.textContent = levels.filter(function (lv) { return value >= lv[0]; })[0][1];
-                document.body.classList.toggle('ultra', value >= 97);
-            }
-
-            slider.addEventListener('input', function () {
-                apply(+slider.value);
-            });
-
-            slider.addEventListener('change', function () {
-                try { localStorage.setItem(STORE_KEY, slider.value); } catch (e) {}
-            });
-
-            var saved = null;
-            try { saved = localStorage.getItem(STORE_KEY); } catch (e) {}
-            if (saved !== null) slider.value = saved;
-
-            apply(+slider.value);
-        })();
-    </script>
 </body>
 </html>
