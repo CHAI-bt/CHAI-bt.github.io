@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -28,6 +28,7 @@
     </script>
     <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
     </script>
+    <link rel="stylesheet" href="../assets/theme.css">
     <style>
         /* 全局样式 */
         * {
@@ -37,18 +38,18 @@
         }
 
         body {
-            background: #f8f9fc;
-            font-family: 'Times New Roman', 'Noto Serif SC', serif;
-            color: #1e2a3a;
+            background: var(--bg);
+            font-family: var(--font-serif);
+            color: var(--ink);
             line-height: 1.8;
-            padding: 20px 0 60px 0;
+            padding: 0 0 60px 0;
             overflow-x: hidden;
         }
 
         .container {
             max-width: 1000px;
             margin: 0 auto;
-            padding: 0 24px;
+            padding: 24px 24px 0;
         }
 
         /* 主标题 */
@@ -66,14 +67,14 @@
             display: block;
             font-size: 1rem;
             font-weight: 400;
-            color: #4a5a72;
+            color: var(--ink-2);
             margin-top: 8px;
             letter-spacing: 4px;
         }
 
         /* 章节卡片 */
         .section {
-            background: #ffffff;
+            background: var(--surface);
             border-radius: 16px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
             padding: 32px 40px;
@@ -89,7 +90,7 @@
             font-size: 1.7rem;
             font-weight: 700;
             color: #0b1a2f;
-            border-left: 5px solid #3a6ea5;
+            border-left: 5px solid var(--accent);
             padding-left: 18px;
             margin-bottom: 22px;
             line-height: 1.3;
@@ -104,10 +105,10 @@
         .subsection-title {
             font-size: 1.25rem;
             font-weight: 600;
-            color: #1f3a5f;
+            color: var(--ink);
             margin: 28px 0 14px 0;
             padding-left: 12px;
-            border-bottom: 1px dashed #dce3ed;
+            border-bottom: 1px dashed var(--line);
             padding-bottom: 6px;
         }
 
@@ -142,7 +143,7 @@
         /* 引用/提示框 */
         .note-box {
             background: #f0f4fa;
-            border-left: 4px solid #3a6ea5;
+            border-left: 4px solid var(--accent);
             padding: 16px 22px;
             margin: 18px 0 22px 0;
             border-radius: 0 8px 8px 0;
@@ -150,7 +151,7 @@
         }
         .note-box .label {
             font-weight: 700;
-            color: #1f3a5f;
+            color: var(--ink);
             margin-right: 6px;
         }
 
@@ -199,15 +200,15 @@
         }
         th,
         td {
-            border: 1px solid #dce3ed;
+            border: 1px solid var(--line);
             padding: 10px 16px;
             text-align: left;
             vertical-align: top;
         }
         th {
-            background: #eef3f9;
+            background: var(--surface-2);
             font-weight: 600;
-            color: #1f3a5f;
+            color: var(--ink);
         }
         tr:nth-child(even) {
             background: #f8fafc;
@@ -229,7 +230,7 @@
             left: 0;
             width: 0%;
             height: 3px;
-            background: linear-gradient(90deg, #3a6ea5, #7b5ea7);
+            background: linear-gradient(90deg, var(--accent), #7b5ea7);
             z-index: 300;
             transition: width 0.1s;
         }
@@ -244,8 +245,8 @@
             height: 44px;
             border: none;
             border-radius: 50%;
-            background: #3a6ea5;
-            color: #ffffff;
+            background: var(--accent);
+            color: var(--accent-ink);
             font-size: 1.2rem;
             cursor: pointer;
             opacity: 0;
@@ -306,7 +307,7 @@
         /* 键盘焦点可见性 */
         a:focus-visible,
         button:focus-visible {
-            outline: 2px solid #3a6ea5;
+            outline: 2px solid var(--accent);
             outline-offset: 2px;
         }
 
@@ -384,14 +385,14 @@
         /* 侧边栏导航 */
         .sidebar {
             position: fixed;
-            top: 0;
+            top: var(--header-h);
             left: 0;
             width: 240px;
-            height: 100vh;
+            height: calc(100vh - var(--header-h));
             overflow-y: auto;
             overscroll-behavior: contain;
-            background: #ffffff;
-            border-right: 1px solid #e2e8f0;
+            background: var(--surface);
+            border-right: 1px solid var(--line);
             padding: 24px 16px;
             z-index: 100;
             box-shadow: 2px 0 12px rgba(0, 0, 0, 0.04);
@@ -402,12 +403,12 @@
         .sidebar-title {
             font-size: 0.85rem;
             font-weight: 700;
-            color: #4a5a72;
+            color: var(--ink-2);
             text-transform: uppercase;
             letter-spacing: 1px;
             margin-bottom: 16px;
             padding-bottom: 10px;
-            border-bottom: 1px solid #e2e8f0;
+            border-bottom: 1px solid var(--line);
         }
 
         .sidebar-nav {
@@ -431,8 +432,8 @@
         }
 
         .sidebar-nav a:hover {
-            background: #eef3f9;
-            color: #1f3a5f;
+            background: var(--surface-2);
+            color: var(--ink);
         }
 
         .sidebar-nav a.active {
@@ -456,14 +457,14 @@
         .sidebar-toggle {
             display: none;
             position: fixed;
-            top: 16px;
+            top: calc(var(--header-h) + 12px);
             left: 16px;
             z-index: 200;
             width: 40px;
             height: 40px;
-            border: 1px solid #dce3ed;
+            border: 1px solid var(--line);
             border-radius: 8px;
-            background: #ffffff;
+            background: var(--surface);
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
             cursor: pointer;
             align-items: center;
@@ -476,7 +477,7 @@
         }
 
         .sidebar-toggle:hover {
-            background: #eef3f9;
+            background: var(--surface-2);
         }
 
         .sidebar-toggle span {
@@ -585,6 +586,13 @@
     </style>
 </head>
 <body>
+
+    <header class="site-header">
+        <a class="site-brand" href="../index.html"><span class="brand-mark" aria-hidden="true"></span>Bob C.</a>
+        <nav class="site-nav">
+            <a href="../index.html">返回主页</a>
+        </nav>
+    </header>
 
     <!-- 阅读进度条 -->
     <div class="progress-bar" id="progressBar"></div>

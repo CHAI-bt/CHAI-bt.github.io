@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>图片转 ASCII 艺术</title>
+    <link rel="stylesheet" href="../assets/theme.css">
     <style>
         * {
             margin: 0;
@@ -12,23 +13,20 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background: #1a1a2e;
-            color: #eee;
             min-height: 100vh;
-            padding: 20px;
         }
 
         .container {
             max-width: 1200px;
             margin: 0 auto;
+            padding: 24px 20px 48px;
         }
 
         h1 {
             text-align: center;
             margin-bottom: 24px;
             font-size: 1.8rem;
-            color: #e94560;
+            color: var(--accent);
         }
 
         .controls {
@@ -39,8 +37,9 @@
             justify-content: center;
             margin-bottom: 20px;
             padding: 16px;
-            background: #16213e;
-            border-radius: 8px;
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: var(--radius-md);
         }
 
         .control-group {
@@ -51,12 +50,12 @@
 
         label {
             font-size: 0.9rem;
-            color: #aaa;
+            color: var(--ink-2);
         }
 
         input[type="range"] {
             width: 120px;
-            accent-color: #e94560;
+            accent-color: var(--accent);
         }
 
         input[type="file"] {
@@ -66,28 +65,28 @@
         .btn {
             padding: 8px 20px;
             border: none;
-            border-radius: 6px;
+            border-radius: var(--radius-sm);
             cursor: pointer;
             font-size: 0.95rem;
             transition: background 0.2s;
         }
 
         .btn-primary {
-            background: #e94560;
-            color: white;
+            background: var(--accent);
+            color: var(--accent-ink);
         }
 
         .btn-primary:hover {
-            background: #c73e54;
+            background: var(--accent-strong);
         }
 
         .btn-secondary {
-            background: #0f3460;
-            color: white;
+            background: var(--surface-2);
+            color: var(--ink);
         }
 
         .btn-secondary:hover {
-            background: #0a2647;
+            background: var(--surface-3);
         }
 
         .char-set-selector {
@@ -98,31 +97,31 @@
 
         .char-set-btn {
             padding: 4px 12px;
-            border: 1px solid #444;
+            border: 1px solid var(--line);
             background: transparent;
-            color: #ccc;
-            border-radius: 4px;
+            color: var(--ink-2);
+            border-radius: var(--radius-sm);
             cursor: pointer;
             font-size: 0.85rem;
         }
 
         .char-set-btn.active {
-            border-color: #e94560;
-            background: #e94560;
-            color: white;
+            border-color: var(--accent);
+            background: var(--accent);
+            color: var(--accent-ink);
         }
 
         .output-wrapper {
-            background: #0d1117;
-            border-radius: 8px;
+            background: var(--code-bg);
+            border-radius: var(--radius-md);
             padding: 16px;
             overflow: auto;
             max-height: 80vh;
-            border: 1px solid #333;
+            border: 1px solid var(--line);
         }
 
         #asciiOutput {
-            font-family: "Courier New", "Consolas", "Monaco", monospace;
+            font-family: var(--font-mono);
             font-size: 8px;
             line-height: 1;
             white-space: pre;
@@ -143,33 +142,40 @@
 
         .preview-box h3 {
             font-size: 0.9rem;
-            color: #888;
+            color: var(--ink-3);
             margin-bottom: 8px;
         }
 
         #previewImage {
             max-width: 400px;
             max-height: 300px;
-            border-radius: 4px;
+            border-radius: var(--radius-sm);
             display: none;
         }
 
         .info {
             text-align: center;
-            color: #666;
+            color: var(--ink-3);
             font-size: 0.85rem;
             margin-top: 12px;
         }
 
         .stats {
             text-align: center;
-            color: #888;
+            color: var(--ink-3);
             font-size: 0.8rem;
             margin-top: 8px;
         }
     </style>
 </head>
 <body>
+    <header class="site-header">
+        <a class="site-brand" href="../index.html"><span class="brand-mark" aria-hidden="true"></span>Bob C.</a>
+        <nav class="site-nav">
+            <a href="../index.html">返回主页</a>
+        </nav>
+    </header>
+
     <div class="container">
         <h1>🖼️ 图片转 ASCII 艺术</h1>
 
@@ -356,19 +362,19 @@
             URL.revokeObjectURL(url);
         });
 
-        // 拖拽上传
+        // 拖拽上传（高亮用令牌色，离开时交还给 theme.css）
         document.body.addEventListener('dragover', (e) => {
             e.preventDefault();
-            document.body.style.background = '#2a2a4e';
+            document.body.style.background = 'var(--surface-2)';
         });
 
         document.body.addEventListener('dragleave', () => {
-            document.body.style.background = '#1a1a2e';
+            document.body.style.background = '';
         });
 
         document.body.addEventListener('drop', (e) => {
             e.preventDefault();
-            document.body.style.background = '#1a1a2e';
+            document.body.style.background = '';
             const file = e.dataTransfer.files[0];
             if (file && file.type.startsWith('image/')) {
                 const reader = new FileReader();

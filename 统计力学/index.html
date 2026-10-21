@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-theme="light">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -17,44 +17,47 @@ window.__mjFailed = false;
         src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
         onload="window.__mjReady=true;window.__mjFlush&&window.__mjFlush();"
         onerror="window.__mjFailed=true;window.__mjFlush&&window.__mjFlush();"></script>
+<link rel="stylesheet" href="../assets/theme.css">
 <style>
 :root{
-  --bg:#f5f6f8; --panel:#ffffff; --ink:#1f2530; --muted:#6b7482;
-  --line:#cbd5e1; --accent:#2563eb; --key:#b45309; --thm:#6d28d9;
+  /* 基础令牌（bg/ink/line/accent/字体/圆角）来自 assets/theme.css；此处仅保留页面语义色 */
+  --panel:var(--surface); --muted:var(--ink-2);
+  --key:#b45309; --thm:#6d28d9;
   --eg:#047857; --opt:#94a3b8; --link:#ea580c;
-  --shadow:0 1px 2px rgba(16,24,40,.06),0 4px 14px rgba(16,24,40,.06);
+  --shadow:var(--shadow-1);
 }
 *{box-sizing:border-box}
 html,body{height:100%}
 body{
   margin:0; background:var(--bg); color:var(--ink);
-  font:14px/1.6 "Segoe UI","Microsoft YaHei","Source Han Sans SC",system-ui,sans-serif;
-  display:flex; overflow:hidden;
+  font:14px/1.6 var(--font-sans);
+  display:flex; flex-direction:column; overflow:hidden;
 }
+.app-row{display:flex; flex:1; min-height:0; overflow:hidden}
 /* ---------- sidebar ---------- */
 #side{
-  width:290px; min-width:290px; height:100%; overflow:auto;
-  background:#111827; color:#e5e7eb; padding:16px 12px 40px;
+  width:290px; min-width:290px; height:auto; overflow:auto;
+  background:#10141c; color:#e6eaf2; padding:16px 12px 40px;
 }
 #side h1{font-size:16px;margin:0 0 4px}
-#side .sub{font-size:12px;color:#9ca3af;margin-bottom:12px}
-#search{width:100%;padding:7px 9px;border-radius:7px;border:1px solid #374151;
-  background:#1f2937;color:#f9fafb;font-size:13px}
+#side .sub{font-size:12px;color:rgba(235,238,245,.62);margin-bottom:12px}
+#search{width:100%;padding:7px 9px;border-radius:7px;border:1px solid rgba(255,255,255,.14);
+  background:#1a2029;color:#f9fafb;font-size:13px}
 .grp{margin-top:16px}
 .grp>.gt{font-size:12px;color:#93c5fd;letter-spacing:.5px;text-transform:uppercase;
   margin:0 0 6px;font-weight:700}
 .lbtn{display:flex;gap:7px;align-items:baseline;padding:5px 8px;border-radius:6px;
   cursor:pointer;font-size:13px;color:#d1d5db;line-height:1.35}
-.lbtn:hover{background:#1f2937}
-.lbtn.act{background:#2563eb;color:#fff}
+.lbtn:hover{background:#1a2029}
+.lbtn.act{background:var(--accent);color:#fff}
 .lbtn .pp{color:#6b7280;font-size:11px;flex:none}
 .lbtn.act .pp{color:#dbeafe}
-.gbtn{display:block;margin:6px 0 0;padding:7px 9px;border-radius:7px;background:#0b3b8c;
-  color:#fff;font-size:13px;cursor:pointer;border:1px solid #1d4ed8}
-.gbtn:hover{background:#1d4ed8}
+.gbtn{display:block;margin:6px 0 0;padding:7px 9px;border-radius:7px;background:var(--accent);
+  color:#fff;font-size:13px;cursor:pointer;border:1px solid var(--accent-strong)}
+.gbtn:hover{background:var(--accent-strong)}
 #side .foot{margin-top:18px;font-size:11px;color:#6b7280;line-height:1.5}
 /* ---------- main ---------- */
-#main{flex:1;height:100%;display:flex;flex-direction:column;min-width:0}
+#main{flex:1;height:auto;display:flex;flex-direction:column;min-width:0}
 #head{background:var(--panel);border-bottom:1px solid var(--line);padding:10px 18px 8px;
   box-shadow:var(--shadow);z-index:5}
 #head .ht{display:flex;flex-wrap:wrap;gap:10px;align-items:baseline}
@@ -157,6 +160,11 @@ button.tb.on{background:var(--accent);border-color:var(--accent);color:#fff}
 </style>
 </head>
 <body>
+<header class="site-header">
+  <a class="site-brand" href="../index.html"><span class="brand-mark" aria-hidden="true"></span>Bob C.</a>
+  <nav class="site-nav"><a href="../index.html">返回主页</a></nav>
+</header>
+<div class="app-row">
 <nav id="side">
   <h1>统计力学讲义 · 思维导图</h1>
   <div class="sub">16 份讲义 / 7 章 · 重点公式、定理与推导关系</div>
@@ -203,6 +211,7 @@ button.tb.on{background:var(--accent);border-color:var(--accent);color:#fff}
   </div>
 
   <div id="global"></div>
+</div>
 </div>
 <div id="mjwarn">公式渲染库（MathJax CDN）加载失败：已按原始 LaTeX 显示，联网后刷新即可。</div>
 

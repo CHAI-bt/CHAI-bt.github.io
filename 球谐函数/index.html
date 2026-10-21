@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,12 +7,13 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <link rel="stylesheet" href="../assets/theme.css">
   <style>
     .paper-grid {
-      background-color: #121418;
+      background-color: var(--code-bg);
       background-image: 
-        linear-gradient(to right, rgba(255, 255, 255, 0.07) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+        linear-gradient(to right, var(--grid) 1px, transparent 1px),
+        linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
       background-size: 18px 18px;
     }
     .tnum { font-feature-settings: "tnum"; font-variant-numeric: tabular-nums; }
@@ -23,12 +24,21 @@
     }
   </style>
 </head>
-<body class="bg-[#0b0c0e] flex items-center justify-center min-h-screen p-4 text-[#e6edf3]">
+<body class="flex flex-col min-h-screen">
 
-  <div class="flex flex-col w-full max-w-[480px] bg-[#16191f] p-4 rounded-md border border-[#2b303a] shadow-2xl">
+  <header class="site-header">
+    <a class="site-brand" href="../index.html"><span class="brand-mark" aria-hidden="true"></span>Bob C.</a>
+    <nav class="site-nav">
+      <a href="../index.html">返回主页</a>
+    </nav>
+  </header>
+
+  <main class="flex flex-1 items-center justify-center p-4">
+
+  <div class="flex flex-col w-full max-w-[480px] bg-[color:var(--surface)] p-4 rounded-md border border-[color:var(--line)] shadow-2xl">
     
     <!-- 3D 视口 -->
-    <div class="paper-grid relative aspect-square w-full rounded-sm border border-[#2b303a] overflow-hidden cursor-grab active:cursor-grabbing">
+    <div class="paper-grid relative aspect-square w-full rounded-sm border border-[color:var(--line)] overflow-hidden cursor-grab active:cursor-grabbing">
       <div id="canvas-container" class="absolute inset-0"></div>
     </div>
 
@@ -37,28 +47,30 @@
       <div id="presets-group" class="flex items-end gap-1.5"></div>
 
       <div class="flex items-center gap-3">
-        <div class="flex items-center gap-1 text-[11px] font-mono text-[#8b949e]">
+        <div class="flex items-center gap-1 text-[11px] font-mono text-[color:var(--ink-2)]">
           <span>l:</span>
           <input id="input-l" type="number" min="0" max="6" value="3" 
-            class="w-5 text-center border-b border-[#484f58] bg-transparent text-white outline-none focus:border-[#58a6ff] tnum">
+            class="w-5 text-center border-b border-[color:var(--line)] bg-transparent text-[color:var(--ink)] outline-none focus:border-[color:var(--accent)] tnum">
           <span>m:</span>
           <input id="input-m" type="number" min="-6" max="6" value="3" 
-            class="w-6 text-center border-b border-[#484f58] bg-transparent text-white outline-none focus:border-[#58a6ff] tnum">
-          <button id="btn-apply" class="text-[10px] px-1.5 py-0.5 bg-[#21262d] hover:bg-[#30363d] text-gray-200 border border-[#363b42] rounded transition-colors">确定</button>
+            class="w-6 text-center border-b border-[color:var(--line)] bg-transparent text-[color:var(--ink)] outline-none focus:border-[color:var(--accent)] tnum">
+          <button id="btn-apply" class="text-[10px] px-1.5 py-0.5 bg-[color:var(--surface-2)] hover:bg-[color:var(--surface-3)] text-[color:var(--ink)] border border-[color:var(--line)] rounded transition-colors">确定</button>
         </div>
 
-        <p class="font-mono text-xs text-[#8b949e] tracking-tight">
-          Y(<span id="label-l" class="tnum font-semibold text-white">3</span>,<span id="label-m" class="tnum font-semibold text-white">3</span>)
+        <p class="font-mono text-xs text-[color:var(--ink-2)] tracking-tight">
+          Y(<span id="label-l" class="tnum font-semibold text-[color:var(--ink)]">3</span>,<span id="label-m" class="tnum font-semibold text-[color:var(--ink)]">3</span>)
         </p>
       </div>
     </div>
 
     <!-- 说明文本及当前采样切片数提示 -->
-    <div class="mt-2 flex items-center justify-between text-[12px] text-[#8b949e] select-none h-8">
+    <div class="mt-2 flex items-center justify-between text-[12px] text-[color:var(--ink-2)] select-none h-8">
       <p id="orb-description" class="leading-relaxed"></p>
-      <span id="slice-count-badge" class="font-mono text-[10px] text-[#58a6ff] bg-[#1b222d] px-1.5 py-0.5 rounded border border-[#2b384a] whitespace-nowrap ml-2">切片: 46</span>
+      <span id="slice-count-badge" class="font-mono text-[10px] text-[color:var(--accent)] bg-[color:var(--surface-2)] px-1.5 py-0.5 rounded border border-[color:var(--line)] whitespace-nowrap ml-2">切片: 46</span>
     </div>
   </div>
+
+  </main>
 
   <script>
     const PRESETS = [
@@ -301,9 +313,9 @@
         const isActive = (bl === l && bm === m);
         btn.setAttribute('aria-pressed', isActive);
         if (isActive) {
-          line.className = "w-px h-4 bg-white transition-[height,background-color] duration-150";
+          line.className = "w-px h-4 bg-[color:var(--ink)] transition-[height,background-color] duration-150";
         } else {
-          line.className = "w-px h-2 bg-[#484f58] group-hover:h-3 group-hover:bg-[#8b949e] transition-[height,background-color] duration-150";
+          line.className = "w-px h-2 bg-[color:var(--ink-3)] group-hover:h-3 group-hover:bg-[color:var(--ink-2)] transition-[height,background-color] duration-150";
         }
       });
 
@@ -319,7 +331,7 @@
       btn.dataset.l = p.l;
       btn.dataset.m = p.m;
       btn.className = "tick-btn group flex h-5 w-5 items-end justify-center focus:outline-none";
-      btn.innerHTML = `<span class="w-px h-2 bg-[#484f58] transition-[height,background-color] duration-150"></span>`;
+      btn.innerHTML = `<span class="w-px h-2 bg-[color:var(--ink-3)] transition-[height,background-color] duration-150"></span>`;
       btn.onclick = () => applyState(p.l, p.m);
       presetsGroup.appendChild(btn);
     });

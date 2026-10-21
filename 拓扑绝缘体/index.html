@@ -1,39 +1,39 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>拓扑绝缘体：从能带拓扑到测量现象｜三讲知识总览</title>
 <meta name="description" content="《量子材料的物性》前三讲拓扑绝缘体知识总览：底层性质、推论性质与测量现象的三层因果图。">
+<link rel="stylesheet" href="../assets/theme.css">
 <style>
 :root{
-  --paper:#F7F4EC;
-  --paper-deep:#EFE9DD;
-  --card:#FFFEFA;
-  --ink:#17242C;
-  --ink-soft:#2E3B42;
-  --muted:#5C6468;
-  --faint:#8A8B84;
-  --line:#D9D2C3;
-  --line-strong:#C4BAA7;
+  /* 基础中性色 / 强调色 / 字体栈来自 assets/theme.css（light）；
+     此处仅保留页面语义色（三层因果分类）与衬线标题特征 */
+  --paper:var(--bg);
+  --paper-deep:var(--surface-2);
+  --card:var(--surface);
+  --ink-soft:var(--ink-2);
+  --muted:var(--ink-2);
+  --faint:var(--ink-3);
+  --line-strong:var(--line);
   --micro:#315B7D;
   --micro-bg:#E8F0F4;
   --derived:#7A4E7E;
   --derived-bg:#F0E8F0;
   --measured:#4F6B45;
   --measured-bg:#EAF0E4;
-  --accent:#B0542D;
-  --accent-soft:#F5E3D8;
+  --accent-soft:var(--surface-2);
   --ok:#2F6B4F;
   --strong:#94651F;
   --open:#8A3B3B;
   --proposal:#6B5B95;
   --serif:"Songti SC","STSong","STZhongsong","SimSun","Noto Serif CJK SC",serif;
-  --sans:"PingFang SC","Microsoft YaHei","Noto Sans CJK SC","Source Han Sans SC",sans-serif;
-  --mono:"Cascadia Mono","Consolas","SFMono-Regular","Menlo",monospace;
+  --sans:var(--font-sans);
+  --mono:var(--font-mono);
   --max:1180px;
-  --radius:10px;
-  --shadow:0 1px 0 rgba(23,36,44,.04),0 10px 30px rgba(23,36,44,.045);
+  --radius:var(--radius-md);
+  --shadow:var(--shadow-1);
   --ease:cubic-bezier(.22,.61,.36,1);
 }
 *{box-sizing:border-box}
@@ -67,9 +67,8 @@ sub,sup{font-size:.72em;line-height:0}
 /* ---------- masthead ---------- */
 .masthead{
   position:sticky;top:0;z-index:50;
-  background:rgba(247,244,236,.9);
+  background:var(--header-bg);
   border-bottom:1px solid var(--line);
-  backdrop-filter:blur(14px);
 }
 .masthead-inner{
   max-width:var(--max);margin:0 auto;padding:10px 28px;
@@ -556,6 +555,7 @@ footer{padding:30px 0 50px;border-top:1px solid var(--line);font-size:11.5px;col
       <span class="brand-text"><strong>拓扑绝缘体 · 三讲</strong><span>quantum materials · lectures 1–3</span></span>
     </a>
     <nav class="nav" aria-label="页面导航">
+      <a href="../index.html">返回主页</a>
       <a href="#map">三层图</a>
       <a href="#lectures">三讲脉络</a>
       <a href="#figures">关键图版</a>
