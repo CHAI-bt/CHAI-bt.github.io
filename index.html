@@ -1,321 +1,593 @@
 <!DOCTYPE html>
-<html lang="zh-CN" data-theme="dark">
+<html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#07080D">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#F4F6FB">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0B0F19">
 <title>Bob C.'s Page</title>
-<link rel="stylesheet" href="assets/theme.css">
+<script>
+  // 在首次绘制前应用已保存的选择，避免深浅色闪变
+  (function () {
+    try {
+      var t = localStorage.getItem('appearance');
+      if (t === 'light' || t === 'dark') {
+        document.documentElement.setAttribute('data-theme', t);
+      }
+    } catch (e) {}
+  })();
+</script>
 <style>
-    :root {
-        /* 页面局部令牌；共享令牌（色板/字体/圆角/墨色）来自 assets/theme.css */
-        --card: rgba(255, 255, 255, 0.055);
-        --card-hover: rgba(255, 255, 255, 0.085);
-        --line-hover: rgba(255, 255, 255, 0.16);
+  :root {
+    color-scheme: light dark;
 
-        --radius-card: var(--radius-xl);
-        --radius-icon: var(--radius-lg);
+    /* 浅色（默认） */
+    --bg: #F4F6FB;
+    --card: rgba(255, 255, 255, 0.62);
+    --card-hover: rgba(255, 255, 255, 0.82);
+    --ink: #10131a;
+    --ink-2: rgba(28, 34, 48, 0.60);
+    --line: rgba(16, 24, 40, 0.10);
+    --line-hover: rgba(16, 24, 40, 0.26);
+    --accent: #3b6cf6;
+    --accent-soft: rgba(59, 108, 246, 0.10);
+    --chev-hover: rgba(16, 24, 40, 0.85);
+    --panel: rgba(255, 255, 255, 0.92);
+    --hover-row: rgba(16, 24, 40, 0.06);
 
-        --ease-ios: cubic-bezier(0.32, 0.72, 0, 1);
+    --glow-1: radial-gradient(58% 46% at 16% 0%, rgba(79, 124, 255, 0.16) 0%, transparent 70%);
+    --glow-2: radial-gradient(52% 42% at 90% 20%, rgba(122, 92, 255, 0.12) 0%, transparent 72%);
+    --glow-3: radial-gradient(62% 48% at 28% 100%, rgba(56, 189, 248, 0.10) 0%, transparent 72%);
 
-        --label: var(--ink);
-        --label-2: var(--ink-2);
-        --label-3: var(--ink-3);
+    --radius: 14px;
+    --shadow: 0 1px 2px rgba(16, 24, 40, 0.05), 0 10px 26px -14px rgba(16, 24, 40, 0.16);
+    --shadow-hover: 0 2px 4px rgba(16, 24, 40, 0.07), 0 18px 40px -16px rgba(16, 24, 40, 0.22);
+
+    --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+
+  /* 手动指定：深色 */
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+
+    --bg: #0B0F19;
+    --card: rgba(255, 255, 255, 0.06);
+    --card-hover: rgba(255, 255, 255, 0.09);
+    --ink: #f2f5fa;
+    --ink-2: rgba(235, 238, 245, 0.60);
+    --line: rgba(255, 255, 255, 0.10);
+    --line-hover: rgba(255, 255, 255, 0.30);
+    --accent: #6f9bff;
+    --accent-soft: rgba(111, 155, 255, 0.16);
+    --chev-hover: rgba(255, 255, 255, 0.90);
+    --panel: rgba(21, 26, 36, 0.92);
+    --hover-row: rgba(255, 255, 255, 0.08);
+
+    --glow-1: radial-gradient(58% 46% at 16% 0%, rgba(79, 124, 255, 0.26) 0%, transparent 70%);
+    --glow-2: radial-gradient(52% 42% at 90% 20%, rgba(122, 92, 255, 0.20) 0%, transparent 72%);
+    --glow-3: radial-gradient(62% 48% at 28% 100%, rgba(56, 189, 248, 0.12) 0%, transparent 72%);
+
+    --shadow: 0 1px 1px rgba(0, 0, 0, 0.18), 0 10px 26px -14px rgba(0, 0, 0, 0.55);
+    --shadow-hover: 0 2px 3px rgba(0, 0, 0, 0.22), 0 18px 40px -16px rgba(0, 0, 0, 0.70);
+  }
+
+  /* 手动指定：浅色（只修正浏览器 UI 配色） */
+  :root[data-theme="light"] {
+    color-scheme: light;
+  }
+
+  /* 跟随系统 */
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme]) {
+      color-scheme: dark;
+
+      --bg: #0B0F19;
+      --card: rgba(255, 255, 255, 0.06);
+      --card-hover: rgba(255, 255, 255, 0.09);
+      --ink: #f2f5fa;
+      --ink-2: rgba(235, 238, 245, 0.60);
+      --line: rgba(255, 255, 255, 0.10);
+      --line-hover: rgba(255, 255, 255, 0.30);
+      --accent: #6f9bff;
+      --accent-soft: rgba(111, 155, 255, 0.16);
+      --chev-hover: rgba(255, 255, 255, 0.90);
+      --panel: rgba(21, 26, 36, 0.92);
+      --hover-row: rgba(255, 255, 255, 0.08);
+
+      --glow-1: radial-gradient(58% 46% at 16% 0%, rgba(79, 124, 255, 0.26) 0%, transparent 70%);
+      --glow-2: radial-gradient(52% 42% at 90% 20%, rgba(122, 92, 255, 0.20) 0%, transparent 72%);
+      --glow-3: radial-gradient(62% 48% at 28% 100%, rgba(56, 189, 248, 0.12) 0%, transparent 72%);
+
+      --shadow: 0 1px 1px rgba(0, 0, 0, 0.18), 0 10px 26px -14px rgba(0, 0, 0, 0.55);
+      --shadow-hover: 0 2px 3px rgba(0, 0, 0, 0.22), 0 18px 40px -16px rgba(0, 0, 0, 0.70);
     }
+  }
 
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  *, *::before, *::after { box-sizing: border-box; }
 
-    body {
-        font-family: var(--font-sans);
-        /* 纯静态底色，颜色全部交给固定的 .wallpaper 层 */
-        background: #07080D;
-        color: var(--label);
-        line-height: 1.5;
-        min-height: 100vh;
-        min-height: 100svh;
-        padding: clamp(44px, 8vh, 80px) 20px 64px;
-        overflow-x: hidden;
-        color-scheme: dark;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-        -webkit-tap-highlight-color: transparent;
+  html, body { margin: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+                 "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    background-color: var(--bg);
+    background-image: var(--glow-1), var(--glow-2), var(--glow-3);
+    background-repeat: no-repeat;
+    color: var(--ink);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .page {
+    max-width: 520px;
+    min-height: 100svh;
+    margin: 0 auto;
+    padding: clamp(64px, 10vh, 96px) 20px 32px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  /* ---------- 外观设置 ---------- */
+
+  .settings {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    z-index: 30;
+  }
+
+  .settings-btn {
+    width: 38px;
+    height: 38px;
+    padding: 0;
+    display: grid;
+    place-items: center;
+    border-radius: 11px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    color: var(--ink-2);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    box-shadow: var(--shadow);
+    cursor: pointer;
+    transition: color 0.18s ease, border-color 0.18s ease, background-color 0.18s ease;
+  }
+
+  .settings-btn:hover,
+  .settings-btn[aria-expanded="true"] {
+    color: var(--ink);
+    border-color: var(--line-hover);
+    background: var(--card-hover);
+  }
+
+  .settings-btn:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .settings-btn svg { width: 18px; height: 18px; }
+
+  .settings-panel {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    width: 178px;
+    padding: 8px;
+    border-radius: 12px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
+    box-shadow: var(--shadow-hover);
+    animation: pop 0.16s var(--ease) backwards;
+  }
+
+  .settings-panel[hidden] { display: none; }
+
+  .settings-title {
+    margin: 2px 8px 6px;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    color: var(--ink-2);
+  }
+
+  .settings-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px;
+    border-radius: 8px;
+    font-size: 14px;
+    color: var(--ink);
+    cursor: pointer;
+  }
+
+  .settings-option:hover { background: var(--hover-row); }
+
+  .settings-option input {
+    width: 15px;
+    height: 15px;
+    margin: 0;
+    accent-color: var(--accent);
+  }
+
+  @keyframes pop {
+    from { opacity: 0; transform: translateY(-4px) scale(0.98); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  /* ---------- 身份区 ---------- */
+
+  .hero {
+    text-align: center;
+    margin-bottom: clamp(28px, 5vh, 44px);
+    animation: rise 0.5s var(--ease) backwards;
+  }
+
+  .mark {
+    display: block;
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 18px;
+  }
+
+  .hero h1 {
+    margin: 0;
+    font-size: clamp(28px, 7vw, 34px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+  }
+
+  .tagline {
+    margin: 8px 0 0;
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--ink-2);
+  }
+
+  /* ---------- 链接区 ---------- */
+
+  .links ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .link {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 16px;
+    border-radius: var(--radius);
+    background: var(--card);
+    border: 1px solid var(--line);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    box-shadow: var(--shadow);
+    color: inherit;
+    text-decoration: none;
+    animation: rise 0.5s var(--ease) backwards;
+    animation-delay: calc(var(--i, 0) * 60ms + 100ms);
+    transition: transform 0.18s var(--ease),
+                border-color 0.18s ease,
+                box-shadow 0.18s var(--ease),
+                background-color 0.18s ease;
+  }
+
+  .link:hover {
+    transform: translateY(-2px);
+    background: var(--card-hover);
+    border-color: var(--line-hover);
+    box-shadow: var(--shadow-hover);
+  }
+
+  .link:active {
+    transform: translateY(0);
+  }
+
+  .link:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-color: var(--accent);
+  }
+
+  .ico {
+    flex: none;
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    display: grid;
+    place-items: center;
+    background: var(--accent-soft);
+    color: var(--accent);
+    transition: background-color 0.18s ease;
+  }
+
+  .ico svg {
+    width: 19px;
+    height: 19px;
+  }
+
+  .txt {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .t {
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+
+  .d {
+    font-size: 13.5px;
+    font-weight: 400;
+    color: var(--ink-2);
+    overflow-wrap: break-word;
+  }
+
+  .chev {
+    flex: none;
+    width: 18px;
+    height: 18px;
+    color: var(--ink-2);
+    transition: transform 0.18s var(--ease), color 0.18s ease;
+  }
+
+  .link:hover .chev,
+  .link:focus-visible .chev {
+    transform: translateX(3px);
+    color: var(--chev-hover);
+  }
+
+  /* ---------- 页脚 ---------- */
+
+  .foot {
+    margin-top: clamp(28px, 5vh, 44px);
+    text-align: center;
+    font-size: 12px;
+    color: var(--ink-2);
+    opacity: 0.75;
+  }
+
+  /* ---------- 入场动效 ---------- */
+
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (min-width: 768px) {
+    .page { padding-left: 24px; padding-right: 24px; }
+    .link { padding: 16px 18px; gap: 16px; }
+    .ico { width: 40px; height: 40px; }
+    .ico svg { width: 20px; height: 20px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero, .link, .settings-panel {
+      animation: none;
     }
-
-    .container {
-        max-width: 640px;
-        margin: 0 auto;
-        position: relative;
+    .link, .ico, .chev, .settings-btn {
+      transition: none;
     }
-
-    /* ---------- 背景 ---------- */
-
-    /* 固定层 + 纯渐变：无 blur、无动画、无混合模式。
-       只栅格化一次，滚动由合成器处理，不触发重绘。 */
-    .wallpaper {
-        position: fixed;
-        inset: 0;
-        z-index: -1;
-        pointer-events: none;
-        background-color: #07080D;
-        background-image:
-            radial-gradient(70% 62% at 24% 0%, rgba(94, 92, 230, 0.55) 0%, rgba(94, 92, 230, 0.16) 46%, transparent 76%),
-            radial-gradient(60% 55% at 102% 26%, rgba(10, 132, 255, 0.38) 0%, rgba(10, 132, 255, 0.10) 50%, transparent 78%),
-            radial-gradient(62% 58% at -2% 84%, rgba(191, 90, 242, 0.30) 0%, rgba(191, 90, 242, 0.08) 52%, transparent 78%),
-            radial-gradient(46% 42% at 98% 102%, rgba(64, 200, 224, 0.15) 0%, rgba(64, 200, 224, 0.035) 55%, transparent 80%);
-    }
-
-    /* ---------- 头部 ---------- */
-
-    .hero {
-        text-align: center;
-        margin-bottom: 32px;
-        animation: riseIn 0.5s var(--ease-ios) backwards;
-    }
-
-    .avatar {
-        width: 96px;
-        height: 96px;
-        margin: 0 auto 18px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 44px;
-        line-height: 1;
-        background: var(--card);
-        border: 1px solid var(--line);
-    }
-
-    h1 {
-        font-size: clamp(1.9rem, 6vw, 2.35rem);
-        font-weight: 700;
-        letter-spacing: -0.022em;
-        line-height: 1.12;
-    }
-
-    .subtitle {
-        margin-top: 8px;
-        font-size: 0.9375rem;
-        font-weight: 400;
-        color: var(--label-2);
-    }
-
-    /* ---------- 列表 ---------- */
-
-    .app-list {
-        list-style: none;
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-    }
-
-    .app-card {
-        display: flex;
-        align-items: center;
-        gap: 15px;
-        padding: 14px 16px;
-        border-radius: var(--radius-card);
-        corner-shape: squircle;
-        background: var(--card);
-        border: 1px solid var(--line);
-        text-decoration: none;
-        color: inherit;
-        cursor: pointer;
-        animation: riseIn 0.5s var(--ease-ios) backwards;
-        animation-delay: calc(var(--i) * 50ms + 60ms);
-        transition: transform 0.3s var(--ease-ios),
-                    background-color 0.2s ease,
-                    border-color 0.2s ease;
-    }
-
-    .app-card:active {
-        transform: scale(0.985);
-        transition-duration: 0.1s;
-    }
-
-    @media (hover: hover) {
-        .app-card:hover {
-            transform: translateY(-1px);
-            background: var(--card-hover);
-            border-color: var(--line-hover);
-        }
-
-        .app-card:hover .chevron {
-            transform: translateX(3px);
-            background-color: rgba(255, 255, 255, 0.58);
-        }
-
-        .app-card:hover .icon {
-            transform: scale(1.04);
-        }
-    }
-
-    /* 分层图标：色板 + 内层高光 + 字形（纯渐变，无滤镜） */
-    .icon {
-        position: relative;
-        flex-shrink: 0;
-        width: 54px;
-        height: 54px;
-        border-radius: var(--radius-icon);
-        corner-shape: squircle;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: linear-gradient(155deg, var(--c1) 0%, var(--c2) 100%);
-        transition: transform 0.3s var(--ease-ios);
-    }
-
-    .icon::before {
-        content: "";
-        position: absolute;
-        inset: 4px;
-        border-radius: calc(var(--radius-icon) - 4px);
-        corner-shape: squircle;
-        background: linear-gradient(180deg,
-                    rgba(255, 255, 255, 0.26) 0%,
-                    rgba(255, 255, 255, 0.06) 52%,
-                    rgba(255, 255, 255, 0) 100%);
-    }
-
-    .glyph {
-        position: relative;
-        font-size: 24px;
-        line-height: 1;
-        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-    }
-
-    .text {
-        flex: 1;
-        min-width: 0;
-        text-align: left;
-    }
-
-    .card-title {
-        display: block;
-        font-size: 1.03125rem;
-        font-weight: 600;
-        letter-spacing: -0.01em;
-    }
-
-    .card-desc {
-        display: block;
-        margin-top: 2px;
-        font-size: 0.8125rem;
-        font-weight: 400;
-        color: var(--label-2);
-        line-height: 1.4;
-    }
-
-    .chevron {
-        flex-shrink: 0;
-        width: 9px;
-        height: 15px;
-        background-color: var(--label-3);
-        -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 9 16'%3E%3Cpath d='M1.5 1.5 7.5 8 1.5 14.5' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
-        mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 9 16'%3E%3Cpath d='M1.5 1.5 7.5 8 1.5 14.5' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
-        transition: transform 0.25s var(--ease-ios), background-color 0.2s ease;
-    }
-
-    /* ---------- 动效 ---------- */
-
-    @keyframes riseIn {
-        from { opacity: 0; transform: translateY(10px); }
-        to   { opacity: 1; transform: translateY(0); }
-    }
-
-    /* ---------- 适配 ---------- */
-
-    @media (max-width: 480px) {
-        :root { --radius-card: 19px; --radius-icon: 14px; }
-        .app-card { gap: 13px; padding: 13px 14px; }
-        .icon { width: 50px; height: 50px; }
-        .glyph { font-size: 22px; }
-        .avatar { width: 84px; height: 84px; font-size: 38px; }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-        *, *::before, *::after {
-            animation-duration: 0.001ms !important;
-            animation-iteration-count: 1 !important;
-            transition-duration: 0.001ms !important;
-        }
-    }
+    .link:hover { transform: none; }
+  }
 </style>
 </head>
 <body>
 
-    <div class="wallpaper" aria-hidden="true"></div>
+<div class="settings" id="settings">
+  <button class="settings-btn" id="settingsBtn" type="button"
+          aria-label="外观设置" aria-expanded="false" aria-controls="settingsPanel">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <line x1="21" y1="4" x2="14" y2="4"/><line x1="10" y1="4" x2="3" y2="4"/>
+      <line x1="21" y1="12" x2="12" y2="12"/><line x1="8" y1="12" x2="3" y2="12"/>
+      <line x1="21" y1="20" x2="16" y2="20"/><line x1="12" y1="20" x2="3" y2="20"/>
+      <line x1="14" y1="2" x2="14" y2="6"/><line x1="8" y1="10" x2="8" y2="14"/><line x1="16" y1="18" x2="16" y2="22"/>
+    </svg>
+  </button>
+  <div class="settings-panel" id="settingsPanel" role="group" aria-label="外观" hidden>
+    <p class="settings-title">外观</p>
+    <label class="settings-option"><input type="radio" name="appearance" value="system">跟随系统</label>
+    <label class="settings-option"><input type="radio" name="appearance" value="light">浅色</label>
+    <label class="settings-option"><input type="radio" name="appearance" value="dark">深色</label>
+  </div>
+</div>
 
-    <main class="container">
-        <header class="hero">
-            <div class="avatar">🎓</div>
-            <h1>Bob C.</h1>
-            <p class="subtitle">Peking University · School of Physics</p>
-        </header>
+<div class="page">
 
-        <ul class="app-list">
-            <li>
-                <a class="app-card" href="electrodynamics/index.html" style="--i:0; --c1:#FF9F0A; --c2:#FF6B00;">
-                    <span class="icon"><span class="glyph">⚡</span></span>
-                    <span class="text">
-                        <span class="card-title">电动力学笔记</span>
-                        <span class="card-desc">考试题记录 · 公式推导与物理图像</span>
-                    </span>
-                    <span class="chevron" aria-hidden="true"></span>
-                </a>
-            </li>
-            <li>
-                <a class="app-card" href="image_to_ascii/index.html" style="--i:1; --c1:#FF375F; --c2:#BF5AF2;">
-                    <span class="icon"><span class="glyph">🎨</span></span>
-                    <span class="text">
-                        <span class="card-title">图片转 ASCII 艺术</span>
-                        <span class="card-desc">上传图片 → 字符画输出</span>
-                    </span>
-                    <span class="chevron" aria-hidden="true"></span>
-                </a>
-            </li>
-            <li>
-                <a class="app-card" href="球谐函数/index.html" style="--i:2; --c1:#40C8E0; --c2:#0A84FF;">
-                    <span class="icon"><span class="glyph">⭕</span></span>
-                    <span class="text">
-                        <span class="card-title">绘制球谐函数</span>
-                        <span class="card-desc">量子力学、电动力学</span>
-                    </span>
-                    <span class="chevron" aria-hidden="true"></span>
-                </a>
-            </li>
-            <li>
-                <a class="app-card" href="博饼/index.html" style="--i:3; --c1:#FF453A; --c2:#C2185B;">
-                    <span class="icon"><span class="glyph">🎲</span></span>
-                    <span class="text">
-                        <span class="card-title">博饼模拟器</span>
-                        <span class="card-desc">闽南民俗</span>
-                    </span>
-                    <span class="chevron" aria-hidden="true"></span>
-                </a>
-            </li>
-            <li>
-                <a class="app-card" href="统计力学/index.html" style="--i:4; --c1:#30D158; --c2:#00A88F;">
-                    <span class="icon"><span class="glyph">📊</span></span>
-                    <span class="text">
-                        <span class="card-title">统计力学思维导图</span>
-                        <span class="card-desc">2026年秋季学期，黄华卿老师</span>
-                    </span>
-                    <span class="chevron" aria-hidden="true"></span>
-                </a>
-            </li>
-            <li>
-                <a class="app-card" href="拓扑绝缘体/index.html" style="--i:5; --c1:#5E5CE6; --c2:#00C7BE;">
-                    <span class="icon"><span class="glyph">🌀</span></span>
-                    <span class="text">
-                        <span class="card-title">拓扑绝缘体 · 三讲总览</span>
-                        <span class="card-desc">《量子材料的物性》 · 从能带拓扑到测量现象</span>
-                    </span>
-                    <span class="chevron" aria-hidden="true"></span>
-                </a>
-            </li>
-        </ul>
-    </main>
+  <header class="hero">
+    <svg class="mark" viewBox="0 0 64 64" aria-hidden="true">
+      <defs>
+        <linearGradient id="markGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#4f7cff"/>
+          <stop offset="1" stop-color="#7a5cff"/>
+        </linearGradient>
+      </defs>
+      <rect width="64" height="64" rx="18" fill="url(#markGrad)"/>
+      <text x="32" y="44" text-anchor="middle" font-size="30" font-weight="700"
+            fill="#ffffff" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">B</text>
+    </svg>
+    <h1>Bob C.</h1>
+    <p class="tagline">Peking University · School of Physics</p>
+  </header>
+
+  <nav class="links" aria-label="页面链接">
+    <ul>
+      <li>
+        <a class="link" href="electrodynamics/index.html" target="_blank" rel="noopener noreferrer">
+          <span class="ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          </span>
+          <span class="txt">
+            <span class="t">电动力学笔记</span>
+            <span class="d">考试题记录 · 公式推导与物理图像</span>
+          </span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
+        </a>
+      </li>
+      <li>
+        <a class="link" href="image_to_ascii/index.html" target="_blank" rel="noopener noreferrer">
+          <span class="ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+          </span>
+          <span class="txt">
+            <span class="t">图片转 ASCII 艺术</span>
+            <span class="d">上传图片 → 字符画输出</span>
+          </span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
+        </a>
+      </li>
+      <li>
+        <a class="link" href="球谐函数/index.html" target="_blank" rel="noopener noreferrer">
+          <span class="ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><ellipse cx="12" cy="12" rx="4.2" ry="9"/></svg>
+          </span>
+          <span class="txt">
+            <span class="t">绘制球谐函数</span>
+            <span class="d">量子力学、电动力学</span>
+          </span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
+        </a>
+      </li>
+      <li>
+        <a class="link" href="博饼/index.html" target="_blank" rel="noopener noreferrer">
+          <span class="ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8.5" cy="8.5" r="1.15" fill="currentColor" stroke="none"/><circle cx="15.5" cy="8.5" r="1.15" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.15" fill="currentColor" stroke="none"/><circle cx="8.5" cy="15.5" r="1.15" fill="currentColor" stroke="none"/><circle cx="15.5" cy="15.5" r="1.15" fill="currentColor" stroke="none"/></svg>
+          </span>
+          <span class="txt">
+            <span class="t">博饼模拟器</span>
+            <span class="d">闽南民俗</span>
+          </span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
+        </a>
+      </li>
+      <li>
+        <a class="link" href="统计力学/index.html" target="_blank" rel="noopener noreferrer">
+          <span class="ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20v-8"/><path d="M12 20V5"/><path d="M19 20v-5"/><path d="M3 20h18"/></svg>
+          </span>
+          <span class="txt">
+            <span class="t">统计力学思维导图</span>
+            <span class="d">2026年秋季学期，黄华卿老师</span>
+          </span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
+        </a>
+      </li>
+      <li>
+        <a class="link" href="拓扑绝缘体/index.html" target="_blank" rel="noopener noreferrer">
+          <span class="ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 8.5 4.7L12 12.4 3.5 7.7 12 3Z"/><path d="m3.5 12 8.5 4.7 8.5-4.7"/><path d="m3.5 16.3 8.5 4.7 8.5-4.7"/></svg>
+          </span>
+          <span class="txt">
+            <span class="t">拓扑绝缘体 · 三讲总览</span>
+            <span class="d">《量子材料的物性》 · 从能带拓扑到测量现象</span>
+          </span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <footer class="foot">Bob C.'s Page</footer>
+
+</div>
+
+<script>
+  // 按顺序给卡片编号，供入场错峰使用；新增 <li> 无需手动改序号
+  document.querySelectorAll('.link').forEach(function (el, i) {
+    el.style.setProperty('--i', i);
+  });
+</script>
+
+<script>
+  (function () {
+    var KEY = 'appearance';
+    var root = document.documentElement;
+    var wrap = document.getElementById('settings');
+    var btn = document.getElementById('settingsBtn');
+    var panel = document.getElementById('settingsPanel');
+    var radios = panel.querySelectorAll('input[name="appearance"]');
+
+    function stored() {
+      try {
+        var v = localStorage.getItem(KEY);
+        if (v === 'light' || v === 'dark') return v;
+      } catch (e) {}
+      return 'system';
+    }
+
+    function syncMeta(value) {
+      var COLORS = { light: '#F4F6FB', dark: '#0B0F19' };
+      document.querySelectorAll('meta[name="theme-color"]').forEach(function (m) {
+        if (value === 'light' || value === 'dark') {
+          m.setAttribute('content', COLORS[value]);
+        } else {
+          var isDark = (m.getAttribute('media') || '').indexOf('dark') > -1;
+          m.setAttribute('content', isDark ? COLORS.dark : COLORS.light);
+        }
+      });
+    }
+
+    function apply(value) {
+      if (value === 'light' || value === 'dark') {
+        root.setAttribute('data-theme', value);
+      } else {
+        root.removeAttribute('data-theme');
+      }
+      syncMeta(value);
+      try { localStorage.setItem(KEY, value); } catch (e) {}
+    }
+
+    // 单选初始状态与已保存的选择对齐
+    var initial = stored();
+    syncMeta(initial);
+    radios.forEach(function (r) { r.checked = (r.value === initial); });
+
+    radios.forEach(function (r) {
+      r.addEventListener('change', function () {
+        if (r.checked) apply(r.value);
+      });
+    });
+
+    function open() {
+      panel.hidden = false;
+      btn.setAttribute('aria-expanded', 'true');
+    }
+    function close() {
+      panel.hidden = true;
+      btn.setAttribute('aria-expanded', 'false');
+    }
+
+    btn.addEventListener('click', function () {
+      if (panel.hidden) open(); else close();
+    });
+
+    document.addEventListener('click', function (e) {
+      if (!panel.hidden && !wrap.contains(e.target)) close();
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && !panel.hidden) {
+        close();
+        btn.focus();
+      }
+    });
+  })();
+</script>
 
 </body>
 </html>
