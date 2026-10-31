@@ -36,9 +36,15 @@ body{
 .app-row{display:flex; flex:1; min-height:0; overflow:hidden}
 /* ---------- sidebar ---------- */
 #side{
-  width:290px; min-width:290px; height:auto; overflow:auto;
+  width:290px; min-width:290px; height:auto; overflow-y:auto; overflow-x:hidden;
   background:#10141c; color:#e6eaf2; padding:16px 12px 40px;
+  overscroll-behavior:contain; scrollbar-gutter:stable;
+  scrollbar-width:thin; scrollbar-color:#4b5563 #10141c;
 }
+#side::-webkit-scrollbar{width:10px}
+#side::-webkit-scrollbar-track{background:transparent}
+#side::-webkit-scrollbar-thumb{background:#4b5563;border-radius:6px;border:2px solid #10141c}
+#side::-webkit-scrollbar-thumb:hover{background:#6b7280}
 #side h1{font-size:16px;margin:0 0 4px}
 #side .sub{font-size:12px;color:rgba(235,238,245,.62);margin-bottom:12px}
 #search{width:100%;padding:7px 9px;border-radius:7px;border:1px solid rgba(255,255,255,.14);
@@ -56,6 +62,11 @@ body{
   color:#fff;font-size:13px;cursor:pointer;border:1px solid var(--accent-strong)}
 .gbtn:hover{background:var(--accent-strong)}
 #side .foot{margin-top:18px;font-size:11px;color:#6b7280;line-height:1.5}
+/* 窄窗口：收紧侧栏与右侧面板，把宽度让给导图 */
+@media (max-width:1200px){
+  #side{width:238px;min-width:238px;padding:14px 10px 32px}
+  #panels{flex-basis:280px;width:280px;min-width:280px}
+}
 /* ---------- main ---------- */
 #main{flex:1;height:auto;display:flex;flex-direction:column;min-width:0}
 #head{background:var(--panel);border-bottom:1px solid var(--line);padding:10px 18px 8px;
@@ -72,16 +83,21 @@ button.tb:hover{border-color:var(--accent);color:var(--accent)}
 button.tb.on{background:var(--accent);border-color:var(--accent);color:#fff}
 #bar .sp{flex:1}
 #bar .lbl{font-size:12px;color:var(--muted)}
-#wrap{flex:1;position:relative;overflow:auto;background:
+#wrap{flex:1;position:relative;overflow:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#c7cfda transparent;background:
   radial-gradient(circle at 1px 1px, #e2e8f0 1px, transparent 0) 0 0/22px 22px}
 #stage{position:absolute;top:0;left:0;transform-origin:0 0;will-change:transform}
 #scroller{position:absolute;top:0;left:0;pointer-events:none}
+#wrap::-webkit-scrollbar{width:12px;height:12px}
+#wrap::-webkit-scrollbar-track{background:transparent}
+#wrap::-webkit-scrollbar-thumb{background:#c7cfda;border-radius:7px;border:3px solid transparent;background-clip:content-box}
+#wrap::-webkit-scrollbar-thumb:hover{background:#9aa6b6;background-clip:content-box}
+#mjpre{position:fixed;left:-100000px;top:0;width:420px;visibility:hidden;pointer-events:none}
 #edges{position:absolute;top:0;left:0;overflow:visible;pointer-events:none}
 #nodes{position:absolute;top:0;left:0;width:6000px;height:6000px}
 /* ---------- nodes ---------- */
 .node{position:absolute;max-width:368px;padding:5px 9px;border-radius:8px;background:#fff;
   border:1px solid var(--line);box-shadow:var(--shadow);font-size:13px;line-height:1.45;
-  cursor:default;transition:box-shadow .15s, transform .05s}
+  cursor:default;transition:box-shadow .15s;will-change:transform,opacity}
 .node .bd{display:inline-block;font-size:10px;font-weight:700;padding:0 5px;border-radius:9px;
   margin-right:6px;vertical-align:1px;background:#eef2ff;color:#4338ca}
 .node .kids{font-size:10px;color:var(--opt);margin-left:6px}
@@ -104,9 +120,12 @@ button.tb.on{background:var(--accent);border-color:var(--accent);color:#fff}
 .node:hover{box-shadow:0 3px 10px rgba(16,24,40,.16)}
 .node.has-k{cursor:pointer}
 /* ---------- panels ---------- */
-#panels{position:absolute;right:14px;top:14px;width:400px;max-height:calc(100% - 28px);
-  overflow:auto;background:rgba(255,255,255,.97);border:1px solid var(--line);border-radius:10px;
-  box-shadow:var(--shadow);padding:12px 14px;font-size:13px;display:none}
+#workspace{flex:1;display:flex;min-height:0;min-width:0}
+#panels{flex:0 0 clamp(300px,30%,382px);width:clamp(300px,30%,382px);min-width:300px;height:100%;overflow-y:auto;overscroll-behavior:contain;
+  background:#fff;border-left:1px solid var(--line);padding:14px 16px 40px;font-size:13px;display:none;
+  scrollbar-width:thin;scrollbar-color:#c7cfda transparent}
+#panels::-webkit-scrollbar{width:10px}
+#panels::-webkit-scrollbar-thumb{background:#c7cfda;border-radius:6px;border:2px solid #fff}
 #panels h3{font-size:14px;margin:0 0 8px;display:flex;align-items:center;gap:8px}
 #panels h3 .x{margin-left:auto;cursor:pointer;color:var(--muted);font-size:16px;line-height:1}
 .keys{margin-bottom:4px}
@@ -132,7 +151,7 @@ button.tb.on{background:var(--accent);border-color:var(--accent);color:#fff}
 #global p.lede{max-width:1000px;color:#374151}
 #gw{background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);
   padding:8px;margin:16px 0;overflow:auto}
-#gsvg{display:block}
+#gsvg{display:block;width:1060px;height:400px}
 .card{background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);
   padding:14px 18px;margin:16px 0;max-width:1180px}
 .card h3{margin:0 0 10px;font-size:16px}
@@ -153,8 +172,12 @@ button.tb.on{background:var(--accent);border-color:var(--accent);color:#fff}
 .legend i{font-style:normal;font-weight:700;margin-right:4px}
 #mjwarn{display:none;position:fixed;left:14px;bottom:14px;background:#7f1d1d;color:#fee2e2;
   padding:8px 12px;border-radius:8px;font-size:12px;z-index:99;box-shadow:var(--shadow)}
+@media (prefers-reduced-motion: reduce){
+  .node{transition:none!important}
+}
 @media print{
   #side,#bar,#panels,#mjwarn{display:none!important}
+  #workspace{display:block}
   body{overflow:visible;height:auto}#wrap{overflow:visible}#scroller{display:none}
 }
 </style>
@@ -171,7 +194,12 @@ button.tb.on{background:var(--accent);border-color:var(--accent);color:#fff}
   <input id="search" placeholder="搜索公式或概念，回车跳转定位…">
   <div class="gbtn" id="gopen">◉ 全局关系图（七章依赖 + 主线推导）</div>
   <div id="navlist"></div>
-  <div class="foot">
+  <div class="foot" style="border-top:1px solid #1f2937;padding-top:10px;margin-top:16px">
+    <b style="color:#9ca3af">操作</b><br>
+    滚轮 / Shift+滚轮：上下、左右滚动　·　Ctrl + 滚轮：缩放<br>
+    拖动空白处或方向键：平移　·　[ ] ：切换讲义　·　0 ：适应宽度
+  </div>
+  <div class="foot" style="margin-top:10px">
     数据由 16 份 PDF 正文逐节整理而成。星标 ★ 为本讲重点；
     ◇ 定理、= 公式、例 模型实例、⚠ 讲义注明"不要求/选讲"。<br>
     橙色连线 = 推导关系（可点右上"推导链"开关）。
@@ -201,13 +229,16 @@ button.tb.on{background:var(--accent);border-color:var(--accent);color:#fff}
     </div>
   </div>
 
-  <div id="wrap">
-    <div id="scroller"></div>
-    <div id="stage">
-      <svg id="edges"></svg>
-      <div id="nodes"></div>
+  <div id="workspace">
+    <div id="wrap">
+      <div id="scroller"></div>
+      <div id="mjpre"></div>
+      <div id="stage">
+        <svg id="edges"></svg>
+        <div id="nodes"></div>
+      </div>
     </div>
-    <div id="panels"></div>
+    <aside id="panels"></aside>
   </div>
 
   <div id="global"></div>
@@ -1705,15 +1736,21 @@ function typeset(el){
 }
 function showWarn(){ if(window.__mjFailed) $('#mjwarn').style.display='block'; }
 /* 同一条公式只排版一次；来回切换讲义/折叠展开时直接复用结果 */
+const REDUCE_MOTION = false;   /* 明确要求有过渡效果：忽略系统“减少动态效果”，否则整张图会瞬移 */
 const MJ_CACHE=new Map();
-function cachedTypeset(container, token){
+/* 建好 DOM 后先把已缓存的排版结果同步塞回节点：
+   这样第一次测量拿到的就是最终尺寸，折叠展开不会出现"先按原始 LaTeX 排一遍、公式排完再跳一次" */
+function injectCache(container){
   const need=[];
   container.querySelectorAll('.node .tx').forEach(sp=>{
     const raw=sp.dataset.raw||'';
     if(MJ_CACHE.has(raw)) sp.innerHTML=MJ_CACHE.get(raw);
     else if(raw.includes('$')) need.push(sp);
   });
-  /* 分小批排版：每批之间让出主线程，避免切换讲义时界面卡住 */
+  return need;
+}
+/* 分小批排版剩余公式：每批之间让出主线程，避免切换讲义时界面卡住 */
+function typesetMissing(need, token){
   let idx=0;
   const step=()=>{
     if(token!==undefined && token!==RENDER_ID) return Promise.resolve();   /* 已切到别的讲义：放弃剩余批次 */
@@ -1725,6 +1762,30 @@ function cachedTypeset(container, token){
     }).then(step);
   };
   return step();
+}
+/* 后台预热：把该讲义"尚未展开过"的公式也先排好并缓存，
+   于是以后任何一次展开/折叠都是单遍布局，不再抖动 */
+let WARM_STARTED=false;
+function prewarmAll(){
+  if(WARM_STARTED) return; WARM_STARTED=true;
+  /* 把全部讲义里尚未排版的公式在后台逐批排好并缓存：
+     这样切到任何一讲、展开任何节点，第一次测量就是最终尺寸，不会有二次跳动 */
+  const queue=[];
+  LECTURES.forEach(L=>walk(L.tree, n=>{ if(n.t && n.t.indexOf('$')>=0 && !MJ_CACHE.has(n.t)) queue.push(n.t); }));
+  if(!queue.length) return;
+  const box=$('#mjpre');
+  let i=0;
+  const step=()=>{
+    if(i>=queue.length) return;
+    const batch=queue.slice(i, i+14); i+=14;
+    box.innerHTML='';
+    const spans=batch.map(tx=>{ const sp=document.createElement('span'); sp.textContent=tx; sp.dataset.raw=tx; box.appendChild(sp); return sp; });
+    typeset(spans).then(()=>{
+      spans.forEach(sp=>{ if(sp.innerHTML.indexOf('mjx-container')>=0) MJ_CACHE.set(sp.dataset.raw, sp.innerHTML); });
+      setTimeout(step, 25);
+    });
+  };
+  setTimeout(step, 800);
 }
 
 /* ================= 工具 ================= */
@@ -1776,6 +1837,9 @@ async function render(){
   $('#sum').innerHTML = '<b>本讲主线：</b>'+L.summary;
   $('#h-count').textContent = L.pages+' 页 · '+countNodes(L.tree)+' 个节点';
   document.querySelectorAll('.lbtn').forEach(b=>b.classList.toggle('act', b.dataset.id===S.cur));
+  /* 记录重排前每个节点的位置，用于 FLIP 过渡 */
+  S.__prev=new Map();
+  nodesEl.querySelectorAll('.node').forEach(el=>{ if(el.__x!==undefined) S.__prev.set(el.dataset.id,{x:el.__x,y:el.__y}); });
   nodesEl.innerHTML=''; edgesEl.innerHTML='';
   nodesEl.style.width='6000px'; nodesEl.style.height='6000px';   /* 测量期给足宽度，排版后收回 */
   buildPath(L.tree);
@@ -1791,29 +1855,67 @@ async function render(){
     const tx=document.createElement('span'); tx.className='tx'; tx.dataset.raw=n.t;
     tx.appendChild(document.createTextNode(n.t)); el.appendChild(tx);
     const kids = visibleKids(n,d);
-    if((n.c||[]).length){
+    /* 小节（含根节点）是不可再折叠的下限：折叠到“小节”为止，不能再收成只剩一个章节点 */
+    const isSec=(n.k==='sec' || n.k==='root');
+    const cid=S.cur+'::'+n.__id;
+    if(isSec && (n.c||[]).length && !S.collapsed.has(cid)) el.title='小节是最外层：不能再收起（用顶部“收起到小节”可一次收到这一层）';
+    if((n.c||[]).length && !isSec){
       const sp=document.createElement('span'); sp.className='kids';
-      sp.textContent = S.collapsed.has(S.cur+'::'+n.__id) ? ' ＋'+(n.c.length) : ' −';
+      sp.textContent = S.collapsed.has(cid) ? ' ＋'+(n.c.length) : ' −';
       el.appendChild(sp);
       el.classList.add('has-k');
       el.addEventListener('click',()=>{ 
-        const id=S.cur+'::'+n.__id;
-        if(S.collapsed.has(id)) S.collapsed.delete(id); else S.collapsed.add(id);
-        render();
+        if(S.__animBusy) return;
+        const id=cid;
+        const willCollapse=!S.collapsed.has(id);
+        setAnchor(n);                                   /* 保持该节点在屏幕上不动 */
+        if(willCollapse){
+          /* 折叠：先让子孙节点与连线淡出，再重排（重排时其余节点用 FLIP 平滑滑动） */
+          const pre=n.__id+'/';
+          nodesEl.querySelectorAll('.node').forEach(e=>{
+            if(e.dataset.id && e.dataset.id.indexOf(pre)===0){
+              e.style.transition='opacity .12s ease'; e.style.opacity='0';
+            }
+          });
+          edgesEl.querySelectorAll('path[data-child]').forEach(p=>{
+            if((p.getAttribute('data-child')||'').indexOf(pre)===0){
+              p.style.transition='opacity .12s ease'; p.style.opacity='0';
+            }
+          });
+          const inSub=(x)=>x===n.__id || (x||'').indexOf(pre)===0;
+          edgesEl.querySelectorAll('g.cl').forEach(g=>{
+            if(inSub(g.dataset.a) || inSub(g.dataset.b)){
+              g.style.transition='opacity .12s ease'; g.style.opacity='0';
+            }
+          });
+          S.__animBusy=true;
+          setTimeout(()=>{ S.__animBusy=false; S.collapsed.add(id); render(); }, 110);
+        } else {
+          S.collapsed.delete(id); render();
+        }
+      });
+    } else if((n.c||[]).length && isSec && S.collapsed.has(cid)){
+      /* 小节只有在被“收起到小节”收起后才显示 ＋ 标记；点击只做展开 */
+      const sp=document.createElement('span'); sp.className='kids'; sp.textContent=' ＋'+n.c.length;
+      el.appendChild(sp);
+      el.classList.add('has-k');
+      el.addEventListener('click',()=>{
+        if(S.__animBusy) return;
+        setAnchor(n); S.collapsed.delete(cid); render();
       });
     }
     el.dataset.id=n.__id;
     if(n.__flash){ el.dataset.flash='1'; n.__flash=false; }
     nodesEl.appendChild(el);
-    n.__el=el; n.__d=d;
+    n.__el=el; n.__d=d; n.__rendered=me;
     items.push({n,d,par});
     kids.forEach(k=>rec(k,d+1,n));
     n.__vis=kids;
   };
   rec(L.tree,0,null);
 
-  /* 1) 先按未排版内容即时布局一次，MathJax 排完再重排一次（避免点击卡顿） */
-  const drawLayout = (force) => {
+  /* 1) 同步塞回已缓存的公式排版，再做第一遍布局（此时尺寸已是最终值，不跳） */
+  const drawLayout = (force, final) => {
     /* 2) 测量 + 按层排布 */
     const dw={};
     items.forEach(({n})=>{ n.__w=n.__el.offsetWidth; n.__h=n.__el.offsetHeight;
@@ -1822,12 +1924,55 @@ async function render(){
     const H=(n)=>{ const k=n.__vis; if(!k.length){n.__sh=n.__h;return n.__h;} 
       let s=0; k.forEach((c,i)=>{ s+=H(c); if(i)s+=GY; }); n.__sh=Math.max(n.__h,s); return n.__sh; };
     const rootH=H(L.tree);
+    const prevNodes=(S.__prev||new Map());   /* 上一帧的节点位置（用于新链起点） */
+    /* 记录节点此刻在屏幕上的真实位置（若上一次动画还没结束，就从途中的位置续接） */
+    const live=new Map();
+    items.forEach(({n})=>{
+      const cs=getComputedStyle(n.__el).transform;
+      if(cs && cs!=='none'){
+        const m=cs.match(/matrix\(([^)]*)\)/);
+        if(m){ const v=m[1].split(',').map(parseFloat); live.set(n.__id,{x:v[4],y:v[5]}); }
+      }
+    });
     const place=(n,top)=>{ const x=dx[n.__d]; n.__x=x; n.__y=top+(n.__sh-n.__h)/2;
-      n.__el.style.transform='translate('+n.__x+'px,'+n.__y+'px)';
       n.__el.__x=n.__x; n.__el.__y=n.__y; n.__el.__w=n.__w; n.__el.__h=n.__h;
       const k=n.__vis; if(k.length){ let sum=0; k.forEach((c,i)=>{sum+=c.__sh; if(i)sum+=GY;});
         let cy=top+(n.__sh-sum)/2; k.forEach(c=>{ place(c,cy); cy+=c.__sh+GY; }); } };
     place(L.tree, PAD);
+
+    /* FLIP：起点 = 动画中途的真实位置（live）或重排前的旧位置（S.__prev），终点 = 新布局 */
+    const prev=S.__prev || new Map();
+    let moved=0;
+    items.forEach(({n})=>{
+      const el=n.__el, from=live.get(n.__id) || prev.get(n.__id);
+      const same=(el.__tx===n.__x && el.__ty===n.__y && el.style.opacity==='1');
+      if(same) return;                                /* 目标未变：保持现状，别打断正在跑的过渡 */
+      if(from){
+        const dx0=Math.abs(from.x-n.__x), dy0=Math.abs(from.y-n.__y);
+        el.style.transition='none';
+        if(dx0+dy0>0.5){ el.style.transform='translate('+from.x+'px,'+from.y+'px) scale(1)'; moved++; }
+        else { el.style.transform='translate('+n.__x+'px,'+n.__y+'px) scale(1)'; }
+        el.style.opacity='1';
+      } else {                                        /* 新出现的节点：原地淡入放大 */
+        el.style.transition='none';
+        el.style.transform='translate('+n.__x+'px,'+n.__y+'px) scale(.97)';
+        el.style.opacity='0'; moved++;
+      }
+    });
+    void nodesEl.offsetHeight;                        /* 强制回流，让起点生效 */
+    items.forEach(({n})=>{
+      const el=n.__el;
+      if(el.__tx===n.__x && el.__ty===n.__y && el.style.opacity==='1') return;
+      el.style.transition='transform .32s cubic-bezier(.2,.75,.25,1), opacity .24s ease';
+      el.style.transform='translate('+n.__x+'px,'+n.__y+'px) scale(1)';
+      el.style.opacity='1';
+      el.__tx=n.__x; el.__ty=n.__y;
+    });
+    S.__prev=new Map(); items.forEach(({n})=>S.__prev.set(n.__id,{x:n.__x,y:n.__y}));
+    if(moved && !REDUCE_MOTION){
+      edgesEl.style.transition='opacity .18s ease'; edgesEl.style.opacity='0.25';
+      requestAnimationFrame(()=>{ edgesEl.style.opacity='1'; });
+    }
 
     let maxX=0,maxY=0;
     items.forEach(({n})=>{ maxX=Math.max(maxX,n.__x+n.__w); maxY=Math.max(maxY,n.__y+n.__h); });
@@ -1835,50 +1980,45 @@ async function render(){
     nodesEl.style.width=(maxX+PAD)+'px'; nodesEl.style.height=(maxY+PAD)+'px';
     edgesEl.setAttribute('width',maxX+PAD); edgesEl.setAttribute('height',maxY+PAD);
 
-    /* 4) 树边 */
-    let svg='';
+    /* 4) 连线数据：树边 + 推导链（随后与节点同步补间） */
+    const treeEdges=[];
     items.forEach(({n})=>{ (n.__vis||[]).forEach(c=>{
       const x1=n.__x+n.__w, y1=n.__y+n.__h/2, x2=c.__x, y2=c.__y+c.__h/2, mx=(x1+x2)/2;
-      svg+='<path d="M'+x1+','+y1+' C'+mx+','+y1+' '+mx+','+y2+' '+x2+','+y2+'" fill="none" '+
-           'stroke="'+edgeColor(c.k)+'" stroke-width="1.5" opacity=".85"/>';
+      treeEdges.push({key:n.__id+'>'+c.__id, child:c.__id,
+                      p:[x1,y1,mx,y1,mx,y2,x2,y2], color:edgeColor(c.k)});
     }); });
 
-    /* 5) 推导链叠加边 */
-    S.pos={};
+    const chainEdges=[];
     if(S.links && L.chains){
       L.chains.forEach((ch,i)=>{
         const a=findNode(L.tree,ch.a), b=findNode(L.tree,ch.b);
-        const va = a && a.__el && a.__el.parentNode && a.__x!==undefined && PATH.has(a.__id) && a.__el.offsetParent!==null;
-        const vb = b && b.__el && b.__el.parentNode && b.__x!==undefined && b.__el.offsetParent!==null;
-        if(a&&b&&a.__el&&b.__el&&a.__x!==undefined&&b.__x!==undefined){
-          const x1=a.__x+a.__w, y1=a.__y+a.__h/2, x2=b.__x, y2=b.__y+b.__h/2;
-          const dy=y2-y1, bow=30+18*Math.min(3,Math.abs(dy)/160);
-          const d='M'+x1+','+y1+' C'+(x1+bow*2.2)+','+(y1+dy*0.15)+' '+(x2-bow*2.2)+','+(y2-dy*0.15)+' '+x2+','+y2;
-          svg+='<g class="cl" data-i="'+i+'" style="cursor:pointer">'+
-               '<path d="'+d+'" fill="none" stroke="'+ '#ea580c' +'" stroke-width="2" stroke-dasharray="6 4" opacity=".72" marker-end="url(#ar)"/>'+
-               '<circle cx="'+((x1+x2)/2)+'" cy="'+((y1+y2)/2 - (i%2?16:-16))+'" r="9.5" fill="#ea580c"/>'+
-               '<text x="'+((x1+x2)/2)+'" y="'+((y1+y2)/2 - (i%2?16:-16)+3.6)+'" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">'+(i+1)+'</text>'+
-               '</g>';
-          S.pos[ch.a]=a; S.pos[ch.b]=b;
-        }
+        /* 任一端当前被折叠/隐藏时不画，否则会留下悬空的旧位置连线 */
+        if(!a||!b||a.__rendered!==me||b.__rendered!==me||a.__x===undefined||b.__x===undefined) return;
+        const x1=a.__x+a.__w, y1=a.__y+a.__h/2, x2=b.__x, y2=b.__y+b.__h/2;
+        const dy=y2-y1, bow=30+18*Math.min(3,Math.abs(dy)/160);
+        const mk=(X1,Y1,X2,Y2)=>{ const dY=Y2-Y1, bw=30+18*Math.min(3,Math.abs(dY)/160);
+          return [X1,Y1,X1+bw*2.2,Y1+dY*0.15,X2-bw*2.2,Y2-dY*0.15,X2,Y2,(X1+X2)/2,(Y1+Y2)/2-(i%2?16:-16)]; };
+        const o1=prevNodes.get(a.__id), o2=prevNodes.get(b.__id);
+        chainEdges.push({key:'c'+i, i, a:a.__id, b:b.__id, p:mk(x1,y1,x2,y2),
+          p0:(o1&&o2)? mk(o1.x+a.__w, o1.y+a.__h/2, o2.x, o2.y+b.__h/2) : null});
+        S.pos[ch.a]=a; S.pos[ch.b]=b;
       });
     }
-    edgesEl.innerHTML='<defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" '+
-      'markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ea580c"/></marker></defs>'+svg;
-    edgesEl.querySelectorAll('.cl').forEach(g=>{
-      g.addEventListener('click',()=>{ focusChain(BY_ID[S.cur], +g.dataset.i); });
-    });
+    paintEdges(treeEdges, chainEdges, 320);
 
-    fitView(!!force);
+    if(!applyAnchor()) fitView(!!force);
+    if(final) S.anchor=null;
   };
+  const need = injectCache(wrap);
   drawLayout();
-  const done = Promise.all([typeset([$('#head'), $('#panels')]), cachedTypeset(wrap, me)]).then(()=>{ if(me===RENDER_ID && S.cur===L.id) drawLayout(true); });
-  done.then(()=>{ if(me===RENDER_ID && S.cur===L.id) setTimeout(()=>drawLayout(false),0); });
-  showWarn();
+  const done = Promise.all([typeset([$('#head'), $('#panels')]), typesetMissing(need, me)]).then(()=>{ if(me===RENDER_ID && S.cur===L.id) drawLayout(false, true); });
+  done.then(()=>{ if(me===RENDER_ID && S.cur===L.id) prewarmAll(); });
+    showWarn();
   return done;
 }
 function focusChain(L, i){
   const c=(L.chains||[])[i]; if(!c) return;
+  S.anchor=null;
   buildPath(L.tree);
   const targets=[];
   [c.a,c.b].forEach(term=>{
@@ -1966,21 +2106,124 @@ function applyT(){
   sc.style.width=Math.max(sw*S.scale,1)+'px'; sc.style.height=Math.max(sh*S.scale,1)+'px';
 }
 function centerOn(x,y){ if(!isFinite(x)||!isFinite(y)) return; wrap.scrollLeft=Math.max(0,x*S.scale-wrap.clientWidth*0.36); wrap.scrollTop=Math.max(0,y*S.scale-wrap.clientHeight*0.42); }
+/* ---------- 连线的补间绘制：与节点动画同一条缓动曲线 ---------- */
+const SVGNS='http://www.w3.org/2000/svg';
+const EDGE_PREV=new Map();                       /* key -> {p} 上一帧的实际位置（用于续接动画） */
+const EDGE_TARGET=new Map();                     /* key -> p 上一次的“目标”几何（用于判断是否真的变了） */
+const EDGE_EASE=(()=>{                            /* cubic-bezier(.2,.75,.25,1) */
+  const p1x=.2,p1y=.75,p2x=.25,p2y=1;
+  const cx=3*p1x, bx=3*(p2x-p1x)-cx, ax=1-cx-bx;
+  const cy=3*p1y, by=3*(p2y-p1y)-cy, ay=1-cy-by;
+  const fx=t=>((ax*t+bx)*t+cx)*t, fy=t=>((ay*t+by)*t+cy)*t;
+  const dfx=t=>(3*ax*t+2*bx)*t+cx;
+  return x=>{ let t=x; for(let i=0;i<6;i++){ const e=fx(t)-x; if(Math.abs(e)<1e-4) break; const d=dfx(t); if(Math.abs(d)<1e-6) break; t-=e/d; } return fy(Math.max(0,Math.min(1,t))); };
+})();
+function paintEdges(tree, chain, dur){
+  /* 几何完全没变（比如公式排版后的第二次重排）：直接保持现有 DOM，
+     这样正在进行的补间不会被打断，也不会白重建一遍 */
+  const same=(a,b)=>a&&a.length===b.length&&a.every((v,i)=>Math.abs(v-b[i])<0.5);
+  const unchanged = EDGE_TARGET.size===tree.length+chain.length &&
+    tree.every(e=>same(EDGE_TARGET.get(e.key), e.p)) &&
+    chain.every(e=>same(EDGE_TARGET.get(e.key), e.p));
+  if(unchanged) return;                            /* 目标没变：保留正在进行的补间，不重画 */
+  edgesEl.innerHTML='<defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" '+
+    'markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ea580c"/></marker></defs>';
+  const jobs=[];
+  tree.forEach(e=>{
+    const el=document.createElementNS(SVGNS,'path');
+    el.setAttribute('fill','none');
+    el.setAttribute('stroke',e.color);
+    el.setAttribute('stroke-width','1.6');
+    el.setAttribute('data-child',e.child);
+    edgesEl.appendChild(el);
+    const prev=EDGE_PREV.get(e.key);
+    EDGE_TARGET.set(e.key, e.p);
+    jobs.push({el, from:prev?prev.p:e.p, to:e.p, key:e.key, fresh:!prev});
+  });
+  chain.forEach(e=>{
+    const g=document.createElementNS(SVGNS,'g');
+    g.setAttribute('class','cl'); g.dataset.i=e.i; g.style.cursor='pointer';
+    g.dataset.a=e.a||''; g.dataset.b=e.b||'';
+    const path=document.createElementNS(SVGNS,'path');
+    path.setAttribute('fill','none'); path.setAttribute('stroke','#ea580c');
+    path.setAttribute('stroke-width','2'); path.setAttribute('stroke-dasharray','6 4');
+    path.setAttribute('marker-end','url(#ar)');
+    g.appendChild(path);
+    const c=document.createElementNS(SVGNS,'circle');
+    c.setAttribute('r','9.5'); c.setAttribute('fill','#ea580c'); g.appendChild(c);
+    const tx=document.createElementNS(SVGNS,'text');
+    tx.setAttribute('font-size','11'); tx.setAttribute('fill','#fff');
+    tx.setAttribute('text-anchor','middle'); tx.setAttribute('font-weight','700');
+    tx.textContent=String(e.i+1); g.appendChild(tx);
+    edgesEl.appendChild(g);
+    g.addEventListener('click',()=>focusChain(BY_ID[S.cur], e.i));
+    const prev=EDGE_PREV.get(e.key);
+    EDGE_TARGET.set(e.key, e.p);
+    const start=prev?prev.p:(e.p0||e.p);
+    jobs.push({el:path, from:start, to:e.p, key:e.key, fresh:!prev&&!e.p0, g, c, t:tx});
+  });
+  const apply=(j,k)=>{
+    const p=j.to.map((v,i)=>j.from[i]+(v-j.from[i])*k);
+    j.el.setAttribute('d','M'+p[0].toFixed(2)+','+p[1].toFixed(2)+' C'+p[2].toFixed(2)+','+p[3].toFixed(2)+
+      ' '+p[4].toFixed(2)+','+p[5].toFixed(2)+' '+p[6].toFixed(2)+','+p[7].toFixed(2));
+    if(j.c){                                       /* 徽标跟线一起插值（p[8],p[9]） */
+      j.c.setAttribute('cx',p[8]); j.c.setAttribute('cy',p[9]);
+      j.t.setAttribute('x',p[8]);  j.t.setAttribute('y',p[9]+3.6);
+      j.g.style.opacity = j.fresh ? String(Math.max(0,k)) : '1';
+    }
+    j.el.style.opacity = j.fresh ? String(0.85*k) : '0.85';
+    EDGE_PREV.set(j.key,{p});
+  };
+  /* 先画到最终状态：即使动画不运行（后台标签页 / 减少动效），连线也一定存在 */
+  jobs.forEach(j=>apply(j,1));
+  if(!dur || REDUCE_MOTION || document.visibilityState==='hidden') return;
+  jobs.forEach(j=>apply(j,0));                     /* 回到起点，再补间过去 */
+  const t0=performance.now();
+  let done=false;
+  const step=(now)=>{
+    if(done) return;
+    if(document.visibilityState==='hidden'){ done=true; clearInterval(iv); jobs.forEach(j=>apply(j,1)); return; }
+    const k=Math.min(1,(now-t0)/dur);
+    jobs.forEach(j=>apply(j,EDGE_EASE(k)));
+    if(k>=1){ done=true; clearInterval(iv); }
+  };
+  /* rAF + 定时器双保险：某些情况下（窗口被遮挡、远程桌面）浏览器会节流 rAF，
+     只靠 rAF 的话连线会直接跳到终点，看起来就是“没有动画” */
+  requestAnimationFrame(step);
+  let last=performance.now();
+  const iv=setInterval(()=>{ const n=performance.now(); if(n-last>12) { last=n; step(n); } }, 24);
+}
 function fitView(force){
-  const w=wrap.clientWidth-( $('#panels').style.display==='block'?418:40 );
+  const w=wrap.clientWidth-20;
   const sw=parseFloat(stage.style.width)||w;
-  if(!force && S.__fitted && S.cur===S.__fittedL) return;
-  /* 导图很高：只按宽度适配（不超过 1:1），纵向用滚动条 */
-  S.scale=Math.max(.5, Math.min(1, (w-28)/sw));
-  S.__fitted=true; S.__fittedL=S.cur; applyT();
-  /* 根节点在竖直方向居中，所以初始要滚到根而不是顶部 */
+  /* 只有在“切换到新讲义 / 点适应宽度 / 面板宽度改变”时才重新适配，
+     折叠展开节点时不再动缩放和滚动位置 */
+  const refit = !!force || S.needFit || !S.__fitted || S.cur!==S.__fittedL;
+  if(!refit) return;
+  S.scale=Math.max(.42, Math.min(1, (w-28)/sw));
+  S.__fitted=true; S.__fittedL=S.cur; S.needFit=false;
+  applyT();
+  /* 根节点在整棵树竖直中央：把它放在视口偏上位置，左右两翼同时可见 */
   const rt=document.querySelector('#nodes .node.root');
   wrap.scrollLeft=0;
-  wrap.scrollTop=Math.max(0,(rt&&rt.__y!==undefined ? rt.__y*S.scale : 0)-36);
+  wrap.scrollTop=Math.max(0,(rt&&rt.__y!==undefined? rt.__y*S.scale : 0)-wrap.clientHeight*0.38);
+}
+/* 记住“某个节点此刻在屏幕上的位置”，重排后把它钉回原处 */
+function setAnchor(node){
+  if(!node || node.__x===undefined) return;
+  S.anchor={node, sx:node.__x*S.scale-wrap.scrollLeft, sy:node.__y*S.scale-wrap.scrollTop};
+}
+function applyAnchor(){
+  const a=S.anchor;
+  if(!a || !a.node || a.node.__x===undefined) return false;
+  wrap.scrollLeft=Math.max(0, a.node.__x*S.scale-a.sx);
+  wrap.scrollTop =Math.max(0, a.node.__y*S.scale-a.sy);
+  return true;
 }
 function panBy(dx,dy){ wrap.scrollLeft+=dx; wrap.scrollTop+=dy; }
 wrap.addEventListener('wheel',e=>{
-  if(!S.cur || e.shiftKey) return;              /* shift+滚轮 = 正常纵向滚动 */
+  if(!S.cur) return;
+  if(!(e.ctrlKey||e.metaKey)) return;           /* 普通滚轮 / shift+滚轮 = 浏览器原生滚动 */
   e.preventDefault();
   const r=wrap.getBoundingClientRect(), mx=e.clientX-r.left, my=e.clientY-r.top;
   const cx=(wrap.scrollLeft+mx)/S.scale, cy=(wrap.scrollTop+my)/S.scale;
@@ -1999,8 +2242,8 @@ window.addEventListener('mouseup',()=>{ drag=null; wrap.style.cursor=''; });
 function go(id){
   if(id==='global'){ showGlobal(); return; }
   S.cur=id; S.depth=+( $('#b-depth').value||4);
-  S.collapsed=new Set(); S.__fitted=false;
-  $('#global').style.display='none'; wrap.style.display='block'; $('#head').style.display='block';
+  S.collapsed=new Set(); S.anchor=null; S.needFit=true; S.__prev=new Map(); EDGE_PREV.clear(); EDGE_TARGET.clear();
+  $('#global').style.display='none'; $('#workspace').style.display='flex'; $('#head').style.display='block';
   prune();
   render();
 }
@@ -2009,6 +2252,7 @@ function prune(){
 }
 function focusNode(term){
   const L=BY_ID[S.cur]; buildPath(L.tree);
+  S.anchor=null;
   const t=findNode(L.tree, term); if(!t) return false;
   let cur=t; const chain=[];
   while(cur){ chain.push(cur.__id); cur=parentOf(cur); }
@@ -2037,17 +2281,17 @@ $('#search').addEventListener('keydown',e=>{
 
 /* ================= 全局图 ================= */
 const GCH=[
- {id:'ch1',n:'第一章 热力学回顾',ids:['l1a','l1b'],x:60,y:60,w:210,color:'#2563eb'},
- {id:'ch2',n:'第二章 概率论初步',ids:['l2'],x:60,y:190,w:210,color:'#0891b2'},
- {id:'ch3',n:'第三章 经典系综理论',ids:['l3a','l3b','l3c'],x:360,y:120,w:220,color:'#6d28d9'},
- {id:'ch4',n:'第四章 经典流体',ids:['l4a','l4b','l4c'],x:680,y:40,w:210,color:'#059669'},
- {id:'ch5',n:'第五章 量子理想气体',ids:['l5'],x:680,y:200,w:210,color:'#d97706'},
- {id:'ch6',n:'第六章 二级相变平均场',ids:['l6a','l6b','l6c','l6d','l6e'],x:950,y:120,w:215,color:'#dc2626'},
- {id:'ch7',n:'第七章 非平衡态统计',ids:['l7'],x:360,y:290,w:220,color:'#4f46e5'}
+ {id:'ch1',n:'第一章 热力学回顾',ids:['l1a','l1b'],x:40,y:56,w:200,color:'#2563eb'},
+ {id:'ch2',n:'第二章 概率论初步',ids:['l2'],x:40,y:196,w:200,color:'#0891b2'},
+ {id:'ch3',n:'第三章 经典系综理论',ids:['l3a','l3b','l3c'],x:300,y:120,w:205,color:'#6d28d9'},
+ {id:'ch4',n:'第四章 经典流体',ids:['l4a','l4b','l4c'],x:565,y:36,w:200,color:'#059669'},
+ {id:'ch5',n:'第五章 量子理想气体',ids:['l5'],x:565,y:206,w:200,color:'#d97706'},
+ {id:'ch6',n:'第六章 二级相变平均场',ids:['l6a','l6b','l6c','l6d','l6e'],x:825,y:120,w:205,color:'#dc2626'},
+ {id:'ch7',n:'第七章 非平衡态统计',ids:['l7'],x:300,y:296,w:205,color:'#4f46e5'}
 ];
 function drawGlobal(){
-  $('#head').style.display='none'; wrap.style.display='none'; $('#global').style.display='block';
-  let s='<svg id="gsvg" width="1240" height="400" viewBox="0 0 1240 400">';
+  $('#head').style.display='none'; $('#workspace').style.display='none'; $('#global').style.display='block';
+  let s='<svg id="gsvg" width="1060" height="400" viewBox="0 0 1060 400">';
   s+='<defs><marker id="ga" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#64748b"/></marker></defs>';
   const edges=[
     ['ch1','ch3','系综重推热力学定律'],
@@ -2177,18 +2421,19 @@ const GLOBAL_FORMULAS=[
 ];
 
 /* ================= 按钮 ================= */
-$('#b-expand').onclick=()=>{S.collapsed.clear();S.depth=9;$('#b-depth').value='9';render();};
+$('#b-expand').onclick=()=>{setAnchor(BY_ID[S.cur].tree);S.collapsed.clear();S.depth=9;$('#b-depth').value='9';render();};
 $('#b-collapse').onclick=()=>{S.collapsed.clear();buildPath(BY_ID[S.cur].tree);
   walk(BY_ID[S.cur].tree,(n,d)=>{ if(d>=1&&(n.c||[]).length) S.collapsed.add(S.cur+'::'+n.__id); });
   // keep sections open one level
   buildPath(BY_ID[S.cur].tree);
   walk(BY_ID[S.cur].tree,(n,d)=>{ if(d>=2&&(n.c||[]).length) S.collapsed.delete(S.cur+'::'+n.__id); });
+  setAnchor(BY_ID[S.cur].tree);
   S.depth=3; $('#b-depth').value='3'; render();};
-$('#b-depth').onchange=e=>{S.depth=+e.target.value; S.collapsed.clear(); render();};
+$('#b-depth').onchange=e=>{setAnchor(BY_ID[S.cur].tree); S.depth=+e.target.value; S.collapsed.clear(); render();};
 $('#b-links').onclick=e=>{S.links=!S.links; e.target.classList.toggle('on',S.links); render();};
 $('#b-rel').onclick=e=>{S.rel=!S.rel; e.target.classList.toggle('on',S.rel); drawPanels(BY_ID[S.cur]); typeset($('#panels'));};
-$('#b-panel').onclick=e=>{S.panel=!S.panel; e.target.classList.toggle('on',S.panel); drawPanels(BY_ID[S.cur]); typeset($('#panels')); fitView(true);};
-$('#b-fit').onclick=()=>fitView(true);
+$('#b-panel').onclick=e=>{S.panel=!S.panel; e.target.classList.toggle('on',S.panel); drawPanels(BY_ID[S.cur]); typeset($('#panels')); S.anchor=null; S.needFit=true; fitView(true);};
+$('#b-fit').onclick=()=>{S.anchor=null;S.needFit=true;fitView(true);};
 $('#b-in').onclick=()=>{S.scale=Math.min(2.2,S.scale*1.15);applyT();};
 $('#b-out').onclick=()=>{S.scale=Math.max(.2,S.scale/1.15);applyT();};
 $('#b-print').onclick=()=>{S.__fitted=false;fitView(true);setTimeout(()=>window.print(),150);};
